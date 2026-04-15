@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manos con Mucho que Contar · Inma Merino Rus</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAFAF7;
+    --bg2: #F2F0E8;
+    --ink: #1C1C1A;
+    --ink2: #5A5A55;
+    --ink3: #9A9A90;
+    --coral: #D85A30;
+    --coral-light: #FAECE7;
+    --coral-mid: #F0997B;
+    --teal: #0F6E56;
+    --teal-light: #E1F5EE;
+    --teal-mid: #1D9E75;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --purple: #534AB7;
+    --purple-light: #EEEDFE;
+    --green: #3B6D11;
+    --green-light: #EAF3DE;
+    --card-bg: #FFFFFF;
+    --border: rgba(28,28,26,0.10);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(250,250,247,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; color: var(--ink);
+  }
+  .logo-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--coral); display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .logo-text { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; line-height: 1.2; }
+  .logo-text span { display: block; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 400; color: var(--ink3); letter-spacing: 0.08em; text-transform: uppercase; }
+  nav ul { list-style: none; display: flex; gap: 2rem; }
+  nav ul a { text-decoration: none; color: var(--ink2); font-size: 14px; font-weight: 500; transition: color .2s; }
+  nav ul a:hover { color: var(--coral); }
+  nav ul a.active { color: var(--coral); }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 6rem 2rem 4rem;
+    max-width: 900px; margin: 0 auto; text-align: center;
+  }
+  .hero-badge {
+    display: inline-block; margin-bottom: 1.5rem;
+    background: var(--coral-light); color: var(--coral);
+    font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 6px 16px; border-radius: 100px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 900; line-height: 1.1;
+    color: var(--ink); margin-bottom: 1.5rem;
+  }
+  .hero h1 em { font-style: italic; color: var(--coral); }
+  .hero p {
+    font-size: 1.15rem; color: var(--ink2); line-height: 1.7;
+    max-width: 520px; margin: 0 auto 2.5rem;
+  }
+  .btn-primary {
+    display: inline-block; padding: 14px 32px;
+    background: var(--coral); color: white;
+    font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
+    border-radius: 100px; text-decoration: none;
+    transition: background .2s, transform .15s;
+  }
+  .btn-primary:hover { background: #B84A22; transform: translateY(-1px); }
+
+  /* ── STATS ── */
+  .stats {
+    display: flex; justify-content: center; gap: 3rem;
+    padding: 2rem; border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2); margin: 0;
+  }
+  .stat { text-align: center; }
+  .stat strong { display: block; font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--ink); }
+  .stat span { font-size: 13px; color: var(--ink3); }
+
+  /* ── AREAS / FILTROS ── */
+  .section { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
+  .section-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;
+  }
+  .section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 700;
+  }
+
+  .filters {
+    display: flex; gap: 0.5rem; flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+  }
+  .filter-btn {
+    padding: 8px 18px; border-radius: 100px;
+    border: 1.5px solid var(--border);
+    background: white; color: var(--ink2);
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: all .2s;
+  }
+  .filter-btn:hover { border-color: var(--coral); color: var(--coral); }
+  .filter-btn.active {
+    background: var(--coral); color: white; border-color: var(--coral);
+  }
+
+  /* ── SEARCH ── */
+  .search-bar {
+    display: flex; align-items: center;
+    background: white; border: 1.5px solid var(--border);
+    border-radius: 100px; padding: 0 1rem;
+    max-width: 360px; gap: 8px;
+  }
+  .search-bar svg { flex-shrink: 0; color: var(--ink3); }
+  .search-bar input {
+    border: none; outline: none; background: transparent;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink);
+    padding: 10px 0; width: 100%;
+  }
+  .search-bar input::placeholder { color: var(--ink3); }
+
+  /* ── GRID ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform .2s, box-shadow .2s;
+    cursor: pointer;
+    display: flex; flex-direction: column;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(28,28,26,0.10); }
+
+  .card-thumb {
+    width: 100%; height: 190px; overflow: hidden;
+    background: var(--bg2);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .card-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .card-thumb .placeholder {
+    font-size: 3rem; opacity: 0.3;
+  }
+  .card-thumb .area-badge {
+    position: absolute; top: 12px; left: 12px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 100px;
+  }
+
+  .card-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
+  .card-body h3 { font-size: 1rem; font-weight: 600; line-height: 1.4; margin-bottom: 0.5rem; }
+  .card-body p { font-size: 13px; color: var(--ink2); line-height: 1.6; flex: 1; }
+
+  .card-footer {
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card-author { font-size: 12px; color: var(--ink3); }
+  .card-level {
+    font-size: 11px; font-weight: 600;
+    padding: 3px 10px; border-radius: 100px;
+    background: var(--bg2); color: var(--ink2);
+  }
+
+  /* ── COLORES POR ÁREA ── */
+  .area-fonologica { background: var(--teal-light); color: var(--teal); }
+  .area-discriminacion { background: var(--amber-light); color: var(--amber); }
+  .area-memoria { background: var(--purple-light); color: var(--purple); }
+  .area-atencion { background: var(--coral-light); color: var(--coral); }
+  .area-lectoescritura { background: var(--green-light); color: var(--green); }
+
+  /* thumb colors por área */
+  .thumb-fonologica { background: #9FE1CB; }
+  .thumb-discriminacion { background: #FAC775; }
+  .thumb-memoria { background: #AFA9EC; }
+  .thumb-atencion { background: #F0997B; }
+  .thumb-lectoescritura { background: #C0DD97; }
+
+  /* ── CÓMO AÑADIR SECCIÓN ── */
+  .how-to {
+    background: var(--ink);
+    color: white;
+    padding: 4rem 2rem;
+  }
+  .how-to-inner { max-width: 900px; margin: 0 auto; }
+  .how-to h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; margin-bottom: 0.5rem;
+  }
+  .how-to p { color: rgba(255,255,255,0.6); margin-bottom: 2.5rem; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+  .step {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: var(--radius-sm); padding: 1.5rem;
+  }
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem; font-weight: 900;
+    color: var(--coral); line-height: 1; margin-bottom: 0.75rem;
+  }
+  .step h4 { font-size: 15px; font-weight: 600; margin-bottom: 0.4rem; }
+  .step p { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6; }
+  .step code {
+    font-family: 'Courier New', monospace; font-size: 11px;
+    background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;
+    color: var(--coral-mid);
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(28,28,26,0.6); z-index: 200;
+    align-items: center; justify-content: center; padding: 2rem;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: white; border-radius: var(--radius);
+    max-width: 800px; width: 100%;
+    max-height: 85vh; overflow-y: auto;
+    animation: slideUp .25s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(20px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+  .modal-header { padding: 1.5rem 1.5rem 1rem; display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
+  .modal-header h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; }
+  .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--ink3); flex-shrink: 0; padding: 0; }
+  .modal-close:hover { color: var(--ink); }
+  .modal-iframe { width: 100%; height: 480px; border: none; border-top: 1px solid var(--border); }
+  .modal-meta { padding: 1rem 1.5rem; font-size: 13px; color: var(--ink2); display: flex; gap: 1rem; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center; padding: 2rem;
+    font-size: 13px; color: var(--ink3);
+    border-top: 1px solid var(--border);
+  }
+  footer a { color: var(--coral); text-decoration: none; }
+
+  /* ── EMPTY STATE ── */
+  .empty { text-align: center; padding: 4rem 2rem; color: var(--ink3); }
+  .empty p { font-size: 1rem; margin-top: 0.5rem; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    nav ul { display: none; }
+    .stats { gap: 1.5rem; }
+    .hero h1 { font-size: 2.4rem; }
+    .section-header { flex-direction: column; }
+    .search-bar { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">
+    <div class="logo-icon">🤲</div>
+    <div class="logo-text">
+      Manos con Mucho que Contar
+      <span>by Inma Merino Rus · AL &amp; Logopedia</span>
+    </div>
+  </a>
+  <ul>
+    <li><a href="#actividades" class="active">Actividades</a></li>
+    <li><a href="#como-anadir">Cómo añadir</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Repositorio de Actividades Interactivas</div>
+  <h1>Recursos para <em>Audición</em><br>y Lenguaje</h1>
+  <p>Actividades interactivas de conciencia fonológica, discriminación auditiva, memoria, atención y lectoescritura. Creadas con cariño para el aula de AL.</p>
+  <a href="#actividades" class="btn-primary">Explorar actividades</a>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><strong id="stat-total">0</strong><span>actividades</span></div>
+  <div class="stat"><strong>5</strong><span>áreas</span></div>
+  <div class="stat"><strong>∞</strong><span>con cariño</span></div>
+</div>
+
+<!-- ACTIVIDADES -->
+<div class="section" id="actividades">
+  <div class="section-header">
+    <h2>Explorar actividades</h2>
+    <div class="search-bar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="search" placeholder="Buscar actividad...">
+    </div>
+  </div>
+
+  <div class="filters" id="filters">
+    <button class="filter-btn active" data-area="todas">Todas</button>
+    <button class="filter-btn" data-area="fonologica">Conciencia fonológica</button>
+    <button class="filter-btn" data-area="discriminacion">Discriminación auditiva</button>
+    <button class="filter-btn" data-area="memoria">Memoria</button>
+    <button class="filter-btn" data-area="atencion">Atención</button>
+    <button class="filter-btn" data-area="lectoescritura">Lectoescritura</button>
+  </div>
+
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none">
+    <p style="font-size:2rem">🔍</p>
+    <p>No se encontraron actividades con ese filtro.</p>
+  </div>
+</div>
+
+<!-- CÓMO AÑADIR -->
+<div class="how-to" id="como-anadir">
+  <div class="how-to-inner">
+    <h2>Cómo añadir una actividad</h2>
+    <p>Es muy sencillo — solo edita el array <code style="color:var(--coral-mid);background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px;">actividades</code> en el archivo HTML.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h4>Abre el HTML</h4>
+        <p>Edita el archivo <code>index.html</code> con cualquier editor de texto (el Bloc de Notas también sirve).</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h4>Copia un bloque</h4>
+        <p>Copia uno de los objetos del array y cambia el título, descripción, área y URL de tu actividad.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h4>Pega la URL</h4>
+        <p>Pega la URL de tu actividad HTML (de NogalesPT u otra web) en el campo <code>url</code>.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <h4>Sube a GitHub</h4>
+        <p>Arrastra el archivo a tu repositorio de GitHub Pages y se publica automáticamente.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  Hecho con 🤲 por <a href="#">Inma Merino Rus</a> · Maestra de Audición y Lenguaje &amp; Logopeda
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modal-title">Actividad</h2>
+      <button class="modal-close" id="modal-close">✕</button>
+    </div>
+    <div class="modal-meta" id="modal-meta"></div>
+    <iframe class="modal-iframe" id="modal-iframe" src="" title="Actividad interactiva"></iframe>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  AQUÍ AÑADES TUS ACTIVIDADES
+//  Copia un bloque { } y pega los datos de tu actividad
+// ═══════════════════════════════════════════════════════════════
+const actividades = [
+  {
+    titulo: "Rimas: ¿Qué palabra rima?",
+    descripcion: "El alumnado identifica qué palabra rima con la imagen presentada. Trabaja la conciencia fonológica a nivel de rima.",
+    area: "fonologica",
+    nivel: "Infantil / 1º Primaria",
+    url: "https://nogalespt.com",  // ← sustituye por la URL de tu actividad
+    imagen: ""
+  },
+  {
+    titulo: "Sílabas iniciales: Encuentra la intrusa",
+    descripcion: "Discriminación de la sílaba inicial. El alumno debe encontrar la imagen que no empieza igual que las demás.",
+    area: "fonologica",
+    nivel: "1º - 2º Primaria",
+    url: "https://nogalespt.com",
+    imagen: ""
+  },
+  {
+    titulo: "Fonema /r/: Discriminación auditiva",
+    descripcion: "Actividad de discriminación del fonema vibrante. Pulsa cuando escuches la /r/ entre otros sonidos.",
+    area: "discriminacion",
+    nivel: "2º - 3º Primaria",
+    url: "https://nogalespt.com",
+    imagen: ""
+  },
+  {
+    titulo: "Sonidos del entorno: ¿De dónde viene?",
+    descripcion: "El alumno escucha sonidos cotidianos y los relaciona con su imagen correspondiente. Trabaja la discriminación auditiva no verbal.",
+    area: "discriminacion",
+    nivel: "Infantil",
+    url: "https://nogalespt.com",
+    imagen: ""
+  },
+  {
+    titulo: "Memoria visual: ¿Qué ha cambiado?",
+    descripcion: "Se muestran dos escenas casi iguales y el alumno debe encontrar las diferencias apoyándose en la memoria visual.",
+    area: "memoria",
+    nivel: "Todos los niveles",
+    url: "https://nogalespt.com",
+    imagen: ""
+  },
+  {
+    titulo: "Memoria auditiva: Secuencia de palabras",
+    descripcion: "Escucha y repite secuencias de palabras cada vez más largas. Entrena la memoria auditiva a corto plazo.",
+    area: "memoria",
+    nivel: "1º - 4º Primaria",
+    url: "https://nogalespt.com",
+    imagen: ""
+  },
+  {
+    titulo: "Atención sostenida: Tacha la figura",
+    descripcion: "Actividad de cancelación: el alumno tacha solo la figura objetivo entre distractores. Trabaja la atención selectiva y sostenida.",
+    area: "atencion",
+    nivel: "Infantil / Primaria",
+    url: "https://nogalespt.com",
+    imagen: ""
+  },
+  {
+    titulo: "Lectura global: Palabras de alta frecuencia",
+    descripcion: "Método global de lectura con las palabras más frecuentes. Relaciona imagen con palabra escrita.",
+    area: "lectoescritura",
+    nivel: "Infantil / 1º Primaria",
+    url: "https://nogalespt.com",
+    imagen: ""
+  },
+  {
+    titulo: "Sinfones FL/GL/CL: Discriminación",
+    descripcion: "Actividad de conciencia fonológica y discriminación auditiva para trabajar los grupos consonánticos más frecuentes.",
+    area: "fonologica",
+    nivel: "2º - 3º Primaria",
+    url: "https://nogalespt.com",
+    imagen: ""
+  },
+  {
+    titulo: "Construye la frase: Sintaxis básica",
+    descripcion: "El alumnado ordena las palabras para construir frases correctas. Trabaja la conciencia sintáctica y la lectoescritura.",
+    area: "lectoescritura",
+    nivel: "1º - 3º Primaria",
+    url: "https://nogalespt.com",
+    imagen: ""
+  },
+  {
+    titulo: "Pares mínimos: /p/ - /b/",
+    descripcion: "Discriminación de pares mínimos que se distinguen únicamente por el rasgo de sonoridad. Ideal para dislalias.",
+    area: "discriminacion",
+    nivel: "2º - 4º Primaria",
+    url: "https://nogalespt.com",
+    imagen: ""
+  },
+  {
+    titulo: "Atención dividida: Dos cosas a la vez",
+    descripcion: "El alumno debe atender a dos estímulos simultáneos. Actividad progresiva para trabajar la atención dividida.",
+    area: "atencion",
+    nivel: "3º - 6º Primaria",
+    url: "https://nogalespt.com",
+    imagen: ""
+  },
+];
+
+// Iconos y colores por área
+const areaConfig = {
+  fonologica:    { label: "Conciencia fonológica", emoji: "🎵", thumb: "thumb-fonologica", badge: "area-fonologica" },
+  discriminacion:{ label: "Discriminación auditiva", emoji: "👂", thumb: "thumb-discriminacion", badge: "area-discriminacion" },
+  memoria:       { label: "Memoria", emoji: "🧠", thumb: "thumb-memoria", badge: "area-memoria" },
+  atencion:      { label: "Atención", emoji: "🎯", thumb: "thumb-atencion", badge: "area-atencion" },
+  lectoescritura:{ label: "Lectoescritura", emoji: "✏️", thumb: "thumb-lectoescritura", badge: "area-lectoescritura" },
+};
+
+let filtroActual = "todas";
+let busqueda = "";
+
+function renderGrid() {
+  const grid = document.getElementById("grid");
+  const empty = document.getElementById("empty");
+  const filtradas = actividades.filter(a => {
+    const matchArea = filtroActual === "todas" || a.area === filtroActual;
+    const matchBusqueda = a.titulo.toLowerCase().includes(busqueda) || a.descripcion.toLowerCase().includes(busqueda);
+    return matchArea && matchBusqueda;
+  });
+
+  document.getElementById("stat-total").textContent = actividades.length;
+
+  if (filtradas.length === 0) {
+    grid.innerHTML = "";
+    empty.style.display = "block";
+    return;
+  }
+  empty.style.display = "none";
+
+  grid.innerHTML = filtradas.map((a, i) => {
+    const cfg = areaConfig[a.area];
+    const imgHtml = a.imagen
+      ? `<img src="${a.imagen}" alt="${a.titulo}">`
+      : `<div class="placeholder">${cfg.emoji}</div>`;
+    return `
+      <div class="card" onclick="abrirModal(${actividades.indexOf(a)})">
+        <div class="card-thumb ${cfg.thumb}">
+          ${imgHtml}
+          <span class="area-badge ${cfg.badge}">${cfg.label}</span>
+        </div>
+        <div class="card-body">
+          <h3>${a.titulo}</h3>
+          <p>${a.descripcion}</p>
+        </div>
+        <div class="card-footer">
+          <span class="card-author">Inma Merino Rus</span>
+          <span class="card-level">${a.nivel}</span>
+        </div>
+      </div>`;
+  }).join("");
+}
+
+// Filtros
+document.getElementById("filters").addEventListener("click", e => {
+  if (!e.target.matches(".filter-btn")) return;
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  e.target.classList.add("active");
+  filtroActual = e.target.dataset.area;
+  renderGrid();
+});
+
+// Búsqueda
+document.getElementById("search").addEventListener("input", e => {
+  busqueda = e.target.value.toLowerCase().trim();
+  renderGrid();
+});
+
+// Modal
+function abrirModal(idx) {
+  const a = actividades[idx];
+  const cfg = areaConfig[a.area];
+  document.getElementById("modal-title").textContent = a.titulo;
+  document.getElementById("modal-meta").innerHTML = `
+    <span class="area-badge ${cfg.badge}" style="position:static;border-radius:100px;">${cfg.label}</span>
+    <span>📚 Nivel: ${a.nivel}</span>
+    <span>👩‍🏫 Inma Merino Rus</span>`;
+  document.getElementById("modal-iframe").src = a.url;
+  document.getElementById("modal").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+document.getElementById("modal-close").addEventListener("click", cerrarModal);
+document.getElementById("modal").addEventListener("click", e => {
+  if (e.target === document.getElementById("modal")) cerrarModal();
+});
+function cerrarModal() {
+  document.getElementById("modal").classList.remove("open");
+  document.getElementById("modal-iframe").src = "";
+  document.body.style.overflow = "";
+}
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener("click", e => {
+    const target = document.querySelector(a.getAttribute("href"));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: "smooth" }); }
+  });
+});
+
+renderGrid();
+</script>
+</body>
+</html>

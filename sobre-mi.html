@@ -4,31 +4,31 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sobre mí · Inma Merino Rus</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #FAFAF7;
-    --bg2: #F2F0E8;
-    --ink: #1C1C1A;
-    --ink2: #5A5A55;
-    --ink3: #9A9A90;
-    --coral: #D85A30;
-    --coral-light: #FAECE7;
-    --teal: #0F6E56;
-    --teal-light: #E1F5EE;
-    --amber: #BA7517;
-    --amber-light: #FAEEDA;
-    --purple: #534AB7;
-    --purple-light: #EEEDFE;
-    --green: #3B6D11;
-    --green-light: #EAF3DE;
-    --border: rgba(28,28,26,0.10);
-    --radius: 16px;
+    --bg: #F5FAFA;
+    --bg2: #E8F4F2;
+    --ink: #1A3A38;
+    --ink2: #4A706D;
+    --ink3: #8AADAA;
+    --coral: #2A9D8F;
+    --coral-light: #E0F5F2;
+    --teal: #1A7A6E;
+    --teal-light: #D4F0EC;
+    --amber: #E07A50;
+    --amber-light: #FEF0EA;
+    --purple: #2A7D8C;
+    --purple-light: #E0F2F5;
+    --green: #3D8C6E;
+    --green-light: #E0F5EC;
+    --border: rgba(26,58,56,0.10);
+    --radius: 20px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
  
   body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Nunito', sans-serif;
     background: var(--bg);
     color: var(--ink);
     min-height: 100vh;
@@ -37,7 +37,7 @@
   /* NAV */
   nav {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(250,250,247,0.92);
+    background: rgba(245,250,250,0.96);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
     padding: 0 2rem;
@@ -53,8 +53,8 @@
     background: var(--coral); display: flex; align-items: center; justify-content: center;
     font-size: 18px;
   }
-  .logo-text { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; line-height: 1.2; }
-  .logo-text span { display: block; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 400; color: var(--ink3); letter-spacing: 0.08em; text-transform: uppercase; }
+  .logo-text { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 700; line-height: 1.2; }
+  .logo-text span { display: block; font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 400; color: var(--ink3); letter-spacing: 0.08em; text-transform: uppercase; }
   nav ul { list-style: none; display: flex; gap: 2rem; }
   nav ul a { text-decoration: none; color: var(--ink2); font-size: 14px; font-weight: 500; transition: color .2s; }
   nav ul a:hover { color: var(--coral); }
@@ -83,10 +83,10 @@
     box-shadow: 0 0 0 8px rgba(216,90,48,0.15);
   }
   .foto-wrapper img {
-    width: 100%; height: 100%; object-fit: cover; object-position: center top;
+    width: 100%; height: 100%; object-fit: cover;
   }
   .sobre-hero h1 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Fraunces', serif;
     font-size: clamp(2rem, 5vw, 3.2rem);
     font-weight: 900; color: white;
     position: relative; z-index: 1;
@@ -136,7 +136,7 @@
  
   /* FORMACIÓN */
   .seccion-titulo {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Fraunces', serif;
     font-size: 1.6rem; font-weight: 700;
     margin-bottom: 1.5rem; margin-top: 3rem;
   }
@@ -170,7 +170,7 @@
     margin-bottom: 3rem;
   }
   .repo-bloque h3 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Fraunces', serif;
     font-size: 1.4rem; margin-bottom: 1rem;
   }
   .repo-bloque h3 em { font-style: italic; color: var(--coral); }
@@ -184,7 +184,7 @@
     display: inline-flex; align-items: center; gap: 8px;
     padding: 12px 28px;
     background: var(--coral); color: white;
-    font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600;
+    font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 600;
     border-radius: 100px; text-decoration: none;
     transition: background .2s, transform .15s;
   }
@@ -228,7 +228,7 @@
     <img src="https://i.postimg.cc/tJdB3pkj/Gemini-Generated-Image-6yby9z6yby9z6yby.png" alt="Inma Merino Rus">
   </div>
   <h1>Inma <em>Merino</em> Rus</h1>
-  <p class="subtitulo">Maestra AL · PT · Logopeda · LSE</p>
+  <p class="subtitulo">Maestra AL · PT · Logopeda · Intérprete LSE</p>
 </div>
  
 <!-- CONTENIDO -->
@@ -304,8 +304,6 @@
 <!-- FOOTER -->
 <footer>
   Hecho con 🤲 por <a href="sobre-mi.html">Inma Merino Rus</a> · Maestra de Audición y Lenguaje &amp; Logopeda
-  <br><br>
-  <a href="index.html" style="color:var(--coral);font-weight:600;">← Volver a las actividades</a>
 </footer>
  
 </body>

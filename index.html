@@ -4,45 +4,45 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manos con Mucho que Contar · Inma Merino Rus</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #FAFAF7;
-    --bg2: #F2F0E8;
-    --ink: #1C1C1A;
-    --ink2: #5A5A55;
-    --ink3: #9A9A90;
-    --coral: #D85A30;
-    --coral-light: #FAECE7;
-    --coral-mid: #F0997B;
-    --teal: #0F6E56;
-    --teal-light: #E1F5EE;
-    --teal-mid: #1D9E75;
-    --amber: #BA7517;
-    --amber-light: #FAEEDA;
-    --purple: #534AB7;
-    --purple-light: #EEEDFE;
-    --green: #3B6D11;
-    --green-light: #EAF3DE;
+    --bg: #F5FAFA;
+    --bg2: #E8F4F2;
+    --ink: #1A3A38;
+    --ink2: #4A706D;
+    --ink3: #8AADAA;
+    --coral: #2A9D8F;
+    --coral-light: #E0F5F2;
+    --coral-mid: #52BEB2;
+    --teal: #1A7A6E;
+    --teal-light: #D4F0EC;
+    --teal-mid: #3AA99A;
+    --amber: #E07A50;
+    --amber-light: #FEF0EA;
+    --purple: #2A7D8C;
+    --purple-light: #E0F2F5;
+    --green: #3D8C6E;
+    --green-light: #E0F5EC;
     --card-bg: #FFFFFF;
-    --border: rgba(28,28,26,0.10);
-    --radius: 16px;
-    --radius-sm: 10px;
+    --border: rgba(26,58,56,0.10);
+    --radius: 20px;
+    --radius-sm: 12px;
   }
- 
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
- 
+
   body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Nunito', sans-serif;
     background: var(--bg);
     color: var(--ink);
     min-height: 100vh;
   }
- 
+
   /* ── NAV ── */
   nav {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(250,250,247,0.92);
+    background: rgba(245,250,250,0.96);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
     padding: 0 2rem;
@@ -58,16 +58,21 @@
     background: var(--coral); display: flex; align-items: center; justify-content: center;
     font-size: 18px;
   }
-  .logo-text { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; line-height: 1.2; }
-  .logo-text span { display: block; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 400; color: var(--ink3); letter-spacing: 0.08em; text-transform: uppercase; }
+  .logo-text { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 700; line-height: 1.2; }
+  .logo-text span { display: block; font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 400; color: var(--ink3); letter-spacing: 0.08em; text-transform: uppercase; }
   nav ul { list-style: none; display: flex; gap: 2rem; }
   nav ul a { text-decoration: none; color: var(--ink2); font-size: 14px; font-weight: 500; transition: color .2s; }
   nav ul a:hover { color: var(--coral); }
   nav ul a.active { color: var(--coral); }
- 
+
   /* ── HERO ── */
+  .hero-wrapper {
+    background: linear-gradient(160deg, #D4F0EC 0%, #E8F4F2 60%, #F0FAF8 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 1px 0;
+  }
   .hero {
-    padding: 6rem 2rem 4rem;
+    padding: 6rem 2rem 5rem;
     max-width: 900px; margin: 0 auto; text-align: center;
   }
   .hero-badge {
@@ -77,7 +82,7 @@
     padding: 6px 16px; border-radius: 100px;
   }
   .hero h1 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Fraunces', serif;
     font-size: clamp(2.8rem, 6vw, 5rem);
     font-weight: 900; line-height: 1.1;
     color: var(--ink); margin-bottom: 1.5rem;
@@ -90,23 +95,23 @@
   .btn-primary {
     display: inline-block; padding: 14px 32px;
     background: var(--coral); color: white;
-    font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
+    font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 600;
     border-radius: 100px; text-decoration: none;
     transition: background .2s, transform .15s;
   }
   .btn-primary:hover { background: #B84A22; transform: translateY(-1px); }
- 
+
   /* ── STATS ── */
   .stats {
     display: flex; justify-content: center; gap: 3rem;
     padding: 2rem; border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
-    background: var(--bg2); margin: 0;
+    background: linear-gradient(135deg, #D4F0EC 0%, #E0F2F5 100%); margin: 0;
   }
   .stat { text-align: center; }
-  .stat strong { display: block; font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--ink); }
+  .stat strong { display: block; font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 700; color: var(--ink); }
   .stat span { font-size: 13px; color: var(--ink3); }
- 
+
   /* ── AREAS / FILTROS ── */
   .section { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
   .section-header {
@@ -114,10 +119,10 @@
     margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;
   }
   .section-header h2 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Fraunces', serif;
     font-size: 1.8rem; font-weight: 700;
   }
- 
+
   .filters {
     display: flex; gap: 0.5rem; flex-wrap: wrap;
     margin-bottom: 2.5rem;
@@ -126,14 +131,14 @@
     padding: 8px 18px; border-radius: 100px;
     border: 1.5px solid var(--border);
     background: white; color: var(--ink2);
-    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+    font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 500;
     cursor: pointer; transition: all .2s;
   }
   .filter-btn:hover { border-color: var(--coral); color: var(--coral); }
   .filter-btn.active {
     background: var(--coral); color: white; border-color: var(--coral);
   }
- 
+
   /* ── SEARCH ── */
   .search-bar {
     display: flex; align-items: center;
@@ -144,18 +149,18 @@
   .search-bar svg { flex-shrink: 0; color: var(--ink3); }
   .search-bar input {
     border: none; outline: none; background: transparent;
-    font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink);
+    font-family: 'Nunito', sans-serif; font-size: 14px; color: var(--ink);
     padding: 10px 0; width: 100%;
   }
   .search-bar input::placeholder { color: var(--ink3); }
- 
+
   /* ── GRID ── */
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
   }
- 
+
   .card {
     background: var(--card-bg);
     border: 1px solid var(--border);
@@ -166,7 +171,7 @@
     display: flex; flex-direction: column;
   }
   .card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(28,28,26,0.10); }
- 
+
   .card-thumb {
     width: 100%; height: 190px; overflow: hidden;
     background: var(--bg2);
@@ -182,11 +187,11 @@
     font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
     padding: 4px 12px; border-radius: 100px;
   }
- 
+
   .card-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
   .card-body h3 { font-size: 1rem; font-weight: 600; line-height: 1.4; margin-bottom: 0.5rem; }
   .card-body p { font-size: 13px; color: var(--ink2); line-height: 1.6; flex: 1; }
- 
+
   .card-footer {
     padding: 1rem 1.25rem;
     border-top: 1px solid var(--border);
@@ -198,23 +203,23 @@
     padding: 3px 10px; border-radius: 100px;
     background: var(--bg2); color: var(--ink2);
   }
- 
+
   /* ── COLORES POR ÁREA ── */
-  .area-fonologica { background: var(--teal-light); color: var(--teal); }
-  .area-discriminacion { background: var(--amber-light); color: var(--amber); }
-  .area-memoria { background: var(--purple-light); color: var(--purple); }
-  .area-atencion { background: var(--coral-light); color: var(--coral); }
-  .area-lectoescritura { background: var(--green-light); color: var(--green); }
- 
+  .area-fonologica { background: #D4F0EC; color: #1A7A6E; }
+  .area-discriminacion { background: #FEF0EA; color: #E07A50; }
+  .area-memoria { background: #E0F2F5; color: #2A7D8C; }
+  .area-atencion { background: #E0F5F2; color: #2A9D8F; }
+  .area-lectoescritura { background: #E0F5EC; color: #3D8C6E; }
+
   /* thumb colors por área */
-  .thumb-fonologica { background: #9FE1CB; }
-  .thumb-discriminacion { background: #FAC775; }
-  .thumb-memoria { background: #AFA9EC; }
-  .thumb-atencion { background: #F0997B; }
-  .thumb-lectoescritura { background: #C0DD97; }
- 
+  .thumb-fonologica { background: #7DCFC4; }
+  .thumb-discriminacion { background: #F4A67A; }
+  .thumb-memoria { background: #7AB8C4; }
+  .thumb-atencion { background: #6DC4B8; }
+  .thumb-lectoescritura { background: #8CCFB8; }
+
   /* ── CÓMO AÑADIR SECCIÓN ── */
- 
+
   /* ── MODAL ── */
   .modal-overlay {
     display: none; position: fixed; inset: 0;
@@ -230,12 +235,12 @@
   }
   @keyframes slideUp { from { transform: translateY(20px); opacity:0; } to { transform: translateY(0); opacity:1; } }
   .modal-header { padding: 1.5rem 1.5rem 1rem; display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
-  .modal-header h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; }
+  .modal-header h2 { font-family: 'Fraunces', serif; font-size: 1.4rem; }
   .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--ink3); flex-shrink: 0; padding: 0; }
   .modal-close:hover { color: var(--ink); }
   .modal-iframe { width: 100%; height: 480px; border: none; border-top: 1px solid var(--border); }
   .modal-meta { padding: 1rem 1.5rem; font-size: 13px; color: var(--ink2); display: flex; gap: 1rem; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
- 
+
   /* ── FOOTER ── */
   footer {
     text-align: center; padding: 2rem;
@@ -243,11 +248,11 @@
     border-top: 1px solid var(--border);
   }
   footer a { color: var(--coral); text-decoration: none; }
- 
+
   /* ── EMPTY STATE ── */
   .empty { text-align: center; padding: 4rem 2rem; color: var(--ink3); }
   .empty p { font-size: 1rem; margin-top: 0.5rem; }
- 
+
   /* ── RESPONSIVE ── */
   @media (max-width: 600px) {
     nav ul { display: none; }
@@ -259,7 +264,7 @@
 </style>
 </head>
 <body>
- 
+
 <!-- NAV -->
 <nav>
   <a href="#" class="logo">
@@ -270,26 +275,27 @@
     </div>
   </a>
   <ul>
-<li><a href="#actividades" class="active">Actividades</a></li>
-<li><a href="sobre-mi.html">Sobre mí</a></li>
+    <li><a href="#actividades" class="active">Actividades</a></li>
+    <li><a href="sobre-mi.html">Sobre mí</a></li>
   </ul>
 </nav>
- 
+
 <!-- HERO -->
+<div class="hero-wrapper">
 <div class="hero">
-  <div class="hero-badge">Repositorio de Actividades Interactivas</div>
- <h1>Recursos para <em>comunicar</em><br>y aprender</h1>
+  <h1>Recursos para <em>comunicar</em><br>y aprender</h1>
   <p>Actividades interactivas de conciencia fonológica, discriminación auditiva, memoria, atención y lectoescritura. Creadas con cariño para trabajar la comunicación.</p>
   <a href="#actividades" class="btn-primary">Explorar actividades</a>
 </div>
- 
+</div>
+
 <!-- STATS -->
 <div class="stats">
   <div class="stat"><strong id="stat-total">0</strong><span>actividades</span></div>
   <div class="stat"><strong>5</strong><span>áreas</span></div>
-  <div class="stat"><strong>∞</strong><span>cariño</span></div>
+  <div class="stat"><strong>∞</strong><span>con cariño</span></div>
 </div>
- 
+
 <!-- ACTIVIDADES -->
 <div class="section" id="actividades">
   <div class="section-header">
@@ -299,7 +305,7 @@
       <input type="text" id="search" placeholder="Buscar actividad...">
     </div>
   </div>
- 
+
   <div class="filters" id="filters">
     <button class="filter-btn active" data-area="todas">Todas</button>
     <button class="filter-btn" data-area="fonologica">Conciencia fonológica</button>
@@ -308,21 +314,20 @@
     <button class="filter-btn" data-area="atencion">Atención</button>
     <button class="filter-btn" data-area="lectoescritura">Lectoescritura</button>
   </div>
- 
+
   <div class="grid" id="grid"></div>
   <div class="empty" id="empty" style="display:none">
     <p style="font-size:2rem">🔍</p>
     <p>No se encontraron actividades con ese filtro.</p>
   </div>
 </div>
- 
+
+
 <!-- FOOTER -->
 <footer>
-  Hecho con 🤲 por <a href="sobre-mi.html">Inma Merino Rus</a> · Maestra de Audición y Lenguaje &amp; Logopeda
-  <br><br>
-  <a href="sobre-mi.html" style="color:var(--coral);font-weight:600;">Conoce a la autora →</a>
+  Hecho con 🤲 por <a href="#">Inma Merino Rus</a> · Maestra de Audición y Lenguaje &amp; Logopeda
 </footer>
- 
+
 <!-- MODAL -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
@@ -334,7 +339,7 @@
     <iframe class="modal-iframe" id="modal-iframe" src="" title="Actividad interactiva"></iframe>
   </div>
 </div>
- 
+
 <script>
 // ============================================================
 //  AQUI ANYADES TUS ACTIVIDADES
@@ -345,7 +350,6 @@
 //
 //  URL: pon la ruta relativa a tu actividad, por ejemplo:
 //    "actividades/nombre-de-tu-actividad.html"
-// ============================================================
 // ============================================================
 //  AQUI VAN TUS ACTIVIDADES
 //  Cuando quieras anadir una, copia este bloque y pegalo:
@@ -361,17 +365,8 @@
 //
 //  AREAS: fonologica / discriminacion / memoria / atencion / lectoescritura
 // ============================================================
-var actividades = [
-  {
-    titulo: "Detective Animal - Inferencias",
-    descripcion: "Escucha las pistas y adivina de que animal se trata. Trabaja las inferencias y el vocabulario animal.",
-    area: "atencion",
-    nivel: "Infantil / Primaria",
-    url: "actividades/inferencias_2.html",
-    imagen: "https://i.postimg.cc/SKknQS0B/inferencias-img.jpg"
-  }
-];
- 
+var actividades = [];
+
 var areaConfig = {
   fonologica:     { label: "Conciencia fonologica",  emoji: "&#127925;", thumb: "thumb-fonologica",     badge: "area-fonologica" },
   discriminacion: { label: "Discriminacion auditiva", emoji: "&#128066;", thumb: "thumb-discriminacion", badge: "area-discriminacion" },
@@ -379,10 +374,10 @@ var areaConfig = {
   atencion:       { label: "Atencion",               emoji: "&#127919;", thumb: "thumb-atencion",       badge: "area-atencion" },
   lectoescritura: { label: "Lectoescritura",         emoji: "&#9999;",   thumb: "thumb-lectoescritura", badge: "area-lectoescritura" }
 };
- 
+
 var filtroActual = "todas";
 var busqueda = "";
- 
+
 function renderGrid() {
   var grid = document.getElementById("grid");
   var empty = document.getElementById("empty");
@@ -391,9 +386,9 @@ function renderGrid() {
     var matchBusqueda = a.titulo.toLowerCase().indexOf(busqueda) !== -1 || a.descripcion.toLowerCase().indexOf(busqueda) !== -1;
     return matchArea && matchBusqueda;
   });
- 
+
   document.getElementById("stat-total").textContent = actividades.length;
- 
+
   if (filtradas.length === 0) {
     grid.innerHTML = "";
     empty.style.display = "block";
@@ -409,7 +404,7 @@ function renderGrid() {
     return;
   }
   empty.style.display = "none";
- 
+
   grid.innerHTML = filtradas.map(function(a) {
     var cfg = areaConfig[a.area];
     var idx = actividades.indexOf(a);
@@ -432,7 +427,7 @@ function renderGrid() {
       + '</div>';
   }).join("");
 }
- 
+
 document.getElementById("filters").addEventListener("click", function(e) {
   if (!e.target.matches(".filter-btn")) return;
   document.querySelectorAll(".filter-btn").forEach(function(b) { b.classList.remove("active"); });
@@ -440,12 +435,12 @@ document.getElementById("filters").addEventListener("click", function(e) {
   filtroActual = e.target.dataset.area;
   renderGrid();
 });
- 
+
 document.getElementById("search").addEventListener("input", function(e) {
   busqueda = e.target.value.toLowerCase().trim();
   renderGrid();
 });
- 
+
 function abrirModal(idx) {
   var a = actividades[idx];
   var cfg = areaConfig[a.area];
@@ -458,25 +453,25 @@ function abrirModal(idx) {
   document.getElementById("modal").classList.add("open");
   document.body.style.overflow = "hidden";
 }
- 
+
 document.getElementById("modal-close").addEventListener("click", cerrarModal);
 document.getElementById("modal").addEventListener("click", function(e) {
   if (e.target === document.getElementById("modal")) cerrarModal();
 });
- 
+
 function cerrarModal() {
   document.getElementById("modal").classList.remove("open");
   document.getElementById("modal-iframe").src = "";
   document.body.style.overflow = "";
 }
- 
+
 document.querySelectorAll('a[href^="#"]').forEach(function(a) {
   a.addEventListener("click", function(e) {
     var target = document.querySelector(a.getAttribute("href"));
     if (target) { e.preventDefault(); target.scrollIntoView({ behavior: "smooth" }); }
   });
 });
- 
+
 renderGrid();
 </script>
 </body>

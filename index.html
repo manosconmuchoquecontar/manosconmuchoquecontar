@@ -29,16 +29,16 @@
     --radius: 20px;
     --radius-sm: 12px;
   }
-
+ 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
   body {
     font-family: 'Nunito', sans-serif;
     background: var(--bg);
     color: var(--ink);
     min-height: 100vh;
   }
-
+ 
   /* ── NAV ── */
   nav {
     position: sticky; top: 0; z-index: 100;
@@ -64,7 +64,7 @@
   nav ul a { text-decoration: none; color: var(--ink2); font-size: 14px; font-weight: 500; transition: color .2s; }
   nav ul a:hover { color: var(--coral); }
   nav ul a.active { color: var(--coral); }
-
+ 
   /* ── HERO ── */
   .hero-wrapper {
     background: linear-gradient(160deg, #D4F0EC 0%, #E8F4F2 60%, #F0FAF8 100%);
@@ -100,7 +100,7 @@
     transition: background .2s, transform .15s;
   }
   .btn-primary:hover { background: #B84A22; transform: translateY(-1px); }
-
+ 
   /* ── STATS ── */
   .stats {
     display: flex; justify-content: center; gap: 3rem;
@@ -111,7 +111,7 @@
   .stat { text-align: center; }
   .stat strong { display: block; font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 700; color: var(--ink); }
   .stat span { font-size: 13px; color: var(--ink3); }
-
+ 
   /* ── AREAS / FILTROS ── */
   .section { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
   .section-header {
@@ -122,7 +122,7 @@
     font-family: 'Fraunces', serif;
     font-size: 1.8rem; font-weight: 700;
   }
-
+ 
   .filters {
     display: flex; gap: 0.5rem; flex-wrap: wrap;
     margin-bottom: 2.5rem;
@@ -138,7 +138,7 @@
   .filter-btn.active {
     background: var(--coral); color: white; border-color: var(--coral);
   }
-
+ 
   /* ── SEARCH ── */
   .search-bar {
     display: flex; align-items: center;
@@ -153,14 +153,14 @@
     padding: 10px 0; width: 100%;
   }
   .search-bar input::placeholder { color: var(--ink3); }
-
+ 
   /* ── GRID ── */
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
   }
-
+ 
   .card {
     background: var(--card-bg);
     border: 1px solid var(--border);
@@ -171,7 +171,7 @@
     display: flex; flex-direction: column;
   }
   .card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(28,28,26,0.10); }
-
+ 
   .card-thumb {
     width: 100%; height: 190px; overflow: hidden;
     background: var(--bg2);
@@ -187,11 +187,11 @@
     font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
     padding: 4px 12px; border-radius: 100px;
   }
-
+ 
   .card-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
   .card-body h3 { font-size: 1rem; font-weight: 600; line-height: 1.4; margin-bottom: 0.5rem; }
   .card-body p { font-size: 13px; color: var(--ink2); line-height: 1.6; flex: 1; }
-
+ 
   .card-footer {
     padding: 1rem 1.25rem;
     border-top: 1px solid var(--border);
@@ -203,23 +203,23 @@
     padding: 3px 10px; border-radius: 100px;
     background: var(--bg2); color: var(--ink2);
   }
-
+ 
   /* ── COLORES POR ÁREA ── */
   .area-fonologica { background: #D4F0EC; color: #1A7A6E; }
-  .area-discriminacion { background: #FEF0EA; color: #E07A50; }
-  .area-memoria { background: #E0F2F5; color: #2A7D8C; }
-  .area-atencion { background: #E0F5F2; color: #2A9D8F; }
-  .area-lectoescritura { background: #E0F5EC; color: #3D8C6E; }
-
+  .area-discriminacion { background: #FEE8D6; color: #C4581A; }
+  .area-memoria { background: #E8E0F5; color: #6040A0; }
+  .area-atencion { background: #FDE8EE; color: #B03060; }
+  .area-lectoescritura { background: #EEF5D8; color: #4A7A20; }
+ 
   /* thumb colors por área */
   .thumb-fonologica { background: #7DCFC4; }
   .thumb-discriminacion { background: #F4A67A; }
-  .thumb-memoria { background: #7AB8C4; }
-  .thumb-atencion { background: #6DC4B8; }
-  .thumb-lectoescritura { background: #8CCFB8; }
-
+  .thumb-memoria { background: #B09AE0; }
+  .thumb-atencion { background: #F0A0B8; }
+  .thumb-lectoescritura { background: #B8D870; }
+ 
   /* ── CÓMO AÑADIR SECCIÓN ── */
-
+ 
   /* ── MODAL ── */
   .modal-overlay {
     display: none; position: fixed; inset: 0;
@@ -240,7 +240,7 @@
   .modal-close:hover { color: var(--ink); }
   .modal-iframe { width: 100%; height: 480px; border: none; border-top: 1px solid var(--border); }
   .modal-meta { padding: 1rem 1.5rem; font-size: 13px; color: var(--ink2); display: flex; gap: 1rem; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
-
+ 
   /* ── FOOTER ── */
   footer {
     text-align: center; padding: 2rem;
@@ -248,11 +248,11 @@
     border-top: 1px solid var(--border);
   }
   footer a { color: var(--coral); text-decoration: none; }
-
+ 
   /* ── EMPTY STATE ── */
   .empty { text-align: center; padding: 4rem 2rem; color: var(--ink3); }
   .empty p { font-size: 1rem; margin-top: 0.5rem; }
-
+ 
   /* ── RESPONSIVE ── */
   @media (max-width: 600px) {
     nav ul { display: none; }
@@ -264,7 +264,7 @@
 </style>
 </head>
 <body>
-
+ 
 <!-- NAV -->
 <nav>
   <a href="#" class="logo">
@@ -279,7 +279,7 @@
     <li><a href="sobre-mi.html">Sobre mí</a></li>
   </ul>
 </nav>
-
+ 
 <!-- HERO -->
 <div class="hero-wrapper">
 <div class="hero">
@@ -288,14 +288,14 @@
   <a href="#actividades" class="btn-primary">Explorar actividades</a>
 </div>
 </div>
-
+ 
 <!-- STATS -->
 <div class="stats">
   <div class="stat"><strong id="stat-total">0</strong><span>actividades</span></div>
   <div class="stat"><strong>5</strong><span>áreas</span></div>
   <div class="stat"><strong>∞</strong><span>con cariño</span></div>
 </div>
-
+ 
 <!-- ACTIVIDADES -->
 <div class="section" id="actividades">
   <div class="section-header">
@@ -305,7 +305,7 @@
       <input type="text" id="search" placeholder="Buscar actividad...">
     </div>
   </div>
-
+ 
   <div class="filters" id="filters">
     <button class="filter-btn active" data-area="todas">Todas</button>
     <button class="filter-btn" data-area="fonologica">Conciencia fonológica</button>
@@ -314,20 +314,20 @@
     <button class="filter-btn" data-area="atencion">Atención</button>
     <button class="filter-btn" data-area="lectoescritura">Lectoescritura</button>
   </div>
-
+ 
   <div class="grid" id="grid"></div>
   <div class="empty" id="empty" style="display:none">
     <p style="font-size:2rem">🔍</p>
     <p>No se encontraron actividades con ese filtro.</p>
   </div>
 </div>
-
-
+ 
+ 
 <!-- FOOTER -->
 <footer>
   Hecho con 🤲 por <a href="#">Inma Merino Rus</a> · Maestra de Audición y Lenguaje &amp; Logopeda
 </footer>
-
+ 
 <!-- MODAL -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
@@ -339,7 +339,7 @@
     <iframe class="modal-iframe" id="modal-iframe" src="" title="Actividad interactiva"></iframe>
   </div>
 </div>
-
+ 
 <script>
 // ============================================================
 //  AQUI ANYADES TUS ACTIVIDADES
@@ -376,7 +376,7 @@ var actividades = [
   }
 ];
 
-
+ 
 var areaConfig = {
   fonologica:     { label: "Conciencia fonologica",  emoji: "&#127925;", thumb: "thumb-fonologica",     badge: "area-fonologica" },
   discriminacion: { label: "Discriminacion auditiva", emoji: "&#128066;", thumb: "thumb-discriminacion", badge: "area-discriminacion" },
@@ -384,10 +384,10 @@ var areaConfig = {
   atencion:       { label: "Atencion",               emoji: "&#127919;", thumb: "thumb-atencion",       badge: "area-atencion" },
   lectoescritura: { label: "Lectoescritura",         emoji: "&#9999;",   thumb: "thumb-lectoescritura", badge: "area-lectoescritura" }
 };
-
+ 
 var filtroActual = "todas";
 var busqueda = "";
-
+ 
 function renderGrid() {
   var grid = document.getElementById("grid");
   var empty = document.getElementById("empty");
@@ -396,9 +396,9 @@ function renderGrid() {
     var matchBusqueda = a.titulo.toLowerCase().indexOf(busqueda) !== -1 || a.descripcion.toLowerCase().indexOf(busqueda) !== -1;
     return matchArea && matchBusqueda;
   });
-
+ 
   document.getElementById("stat-total").textContent = actividades.length;
-
+ 
   if (filtradas.length === 0) {
     grid.innerHTML = "";
     empty.style.display = "block";
@@ -414,7 +414,7 @@ function renderGrid() {
     return;
   }
   empty.style.display = "none";
-
+ 
   grid.innerHTML = filtradas.map(function(a) {
     var cfg = areaConfig[a.area];
     var idx = actividades.indexOf(a);
@@ -437,7 +437,7 @@ function renderGrid() {
       + '</div>';
   }).join("");
 }
-
+ 
 document.getElementById("filters").addEventListener("click", function(e) {
   if (!e.target.matches(".filter-btn")) return;
   document.querySelectorAll(".filter-btn").forEach(function(b) { b.classList.remove("active"); });
@@ -445,12 +445,12 @@ document.getElementById("filters").addEventListener("click", function(e) {
   filtroActual = e.target.dataset.area;
   renderGrid();
 });
-
+ 
 document.getElementById("search").addEventListener("input", function(e) {
   busqueda = e.target.value.toLowerCase().trim();
   renderGrid();
 });
-
+ 
 function abrirModal(idx) {
   var a = actividades[idx];
   var cfg = areaConfig[a.area];
@@ -463,25 +463,25 @@ function abrirModal(idx) {
   document.getElementById("modal").classList.add("open");
   document.body.style.overflow = "hidden";
 }
-
+ 
 document.getElementById("modal-close").addEventListener("click", cerrarModal);
 document.getElementById("modal").addEventListener("click", function(e) {
   if (e.target === document.getElementById("modal")) cerrarModal();
 });
-
+ 
 function cerrarModal() {
   document.getElementById("modal").classList.remove("open");
   document.getElementById("modal-iframe").src = "";
   document.body.style.overflow = "";
 }
-
+ 
 document.querySelectorAll('a[href^="#"]').forEach(function(a) {
   a.addEventListener("click", function(e) {
     var target = document.querySelector(a.getAttribute("href"));
     if (target) { e.preventDefault(); target.scrollIntoView({ behavior: "smooth" }); }
   });
 });
-
+ 
 renderGrid();
 </script>
 </body>

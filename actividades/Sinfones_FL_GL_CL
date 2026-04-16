@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sinfones /FL/ /CL/ /GL/ - Massallera</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Short+Stack&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Definición de fuentes */
+        @font-face {
+            font-family: 'Massallera';
+            src: local('Massallera'), local('Escolar'), local('Edelfontmed');
+        }
+
+        :root {
+            --primary: #4A90E2;
+            --secondary: #FF9800;
+            --success: #4CAF50;
+            --error: #F44336;
+            --bg: #E3F2FD;
+            /* Prioridad absoluta a Massallera */
+            --font-escolar: 'Massallera', 'Short Stack', cursive;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: var(--font-escolar);
+            background-color: var(--bg);
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; user-select: none;
+        }
+
+        /* ANTESALA */
+        #welcome-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, #4A90E2, #1A237E);
+            z-index: 5000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; text-align: center;
+        }
+
+        .card-welcome {
+            background: white; padding: 40px; border-radius: 40px;
+            color: #333; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            max-width: 500px; width: 80%;
+        }
+
+        /* JUEGO */
+        #main-game { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: center; }
+
+        #game-box {
+            background: white; padding: 30px; border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 650px; width: 85%; text-align: center;
+        }
+
+        .btn-main {
+            background: var(--success); color: white; border: none;
+            padding: 20px 40px; font-size: 1.8rem; border-radius: 20px;
+            cursor: pointer; font-family: var(--font-escolar);
+            margin-top: 10px; width: 100%;
+        }
+
+        .word-display { 
+            font-family: var(--font-escolar);
+            font-size: clamp(3.5rem, 12vw, 6rem); 
+            color: var(--primary); 
+            margin: 20px 0; 
+            min-height: 100px; 
+        }
+
+        .options-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; }
+
+        .option-card {
+            font-family: var(--font-escolar);
+            background: #f5f5f5; border: 4px solid var(--primary);
+            border-radius: 20px; padding: 20px; font-size: 3rem;
+            cursor: pointer; transition: 0.2s;
+        }
+
+        .option-card:active { background: var(--primary); color: white; }
+
+        /* CONTROL PARENTAL */
+        #parental-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 9999;
+            color: white; justify-content: center; align-items: center; flex-direction: column;
+        }
+
+        input { font-size: 2rem; width: 120px; text-align: center; border-radius: 10px; margin: 10px; }
+    </style>
+</head>
+<body>
+
+    <div id="welcome-screen">
+        <div class="card-welcome">
+            <h1 style="font-family: var(--font-escolar);">🏝️ Isla de Sinfones</h1>
+            <p>Trabajaremos /FL/, /CL/ y /GL/</p>
+            <button class="btn-main" onclick="initApp()">¡EMPEZAR!</button>
+        </div>
+    </div>
+
+    <div id="main-game">
+        <div style="position: absolute; top: 20px; width: 90%; display: flex; justify-content: space-between;">
+            <button onclick="askPermission()" style="background:var(--secondary); border:none; padding:10px; border-radius:10px; color:white; font-family: var(--font-escolar);">🔒 SALIR</button>
+            <button onclick="downloadReport()" style="background:#9c27b0; border:none; padding:10px; border-radius:10px; color:white; font-family: var(--font-escolar);">📊 INFORME</button>
+        </div>
+
+        <div id="game-box">
+            <div style="font-size: 1.2rem; color: #666;">Aciertos: <span id="hits">0</span> / <span id="attempts">0</span></div>
+            <div class="word-display" id="word-feedback">¿Listos?</div>
+            <button id="btn-listen" class="btn-main" onclick="nextQuestion()">🔊 ESCUCHAR</button>
+            
+            <div class="options-grid">
+                <div class="option-card" onclick="checkAnswer('CL')">cl</div>
+                <div class="option-card" onclick="checkAnswer('FL')">fl</div>
+                <div class="option-card" onclick="checkAnswer('GL')">gl</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="parental-modal">
+        <h2 style="font-family: var(--font-escolar);">CONTROL PARENTAL</h2>
+        <p id="math-exp" style="font-size: 2.5rem; color: #ffeb3b;"></p>
+        <input type="number" id="math-answer">
+        <br>
+        <button class="btn-main" style="width:200px;" onclick="verifyParental()">OK</button>
+        <button onclick="closeParental()" style="background:none; border:none; color:white; margin-top:20px; cursor:pointer;">Cancelar</button>
+    </div>
+
+    <script>
+        const words = [
+            { w: "Clavo", s: "CL" }, { w: "Flan", s: "FL" }, { w: "Globo", s: "GL" },
+            { w: "Chicle", s: "CL" }, { w: "Flauta", s: "FL" }, { w: "Iglú", s: "GL" },
+            { w: "Clavel", s: "CL" }, { w: "Flecha", s: "FL" }, { w: "Regla", s: "GL" },
+            { w: "Ancla", s: "CL" }, { w: "Flor", s: "FL" }, { w: "Gladiador", s: "GL" },
+            { w: "Bicicleta", s: "CL" }, { w: "Flotador", s: "FL" }, { w: "Siglo", s: "GL" },
+            { w: "Cliente", s: "CL" }, { w: "Flequillo", s: "FL" }, { w: "Jungla", s: "GL" },
+            { w: "Clima", s: "CL" }, { w: "Pantufla", s: "FL" }, { w: "Glotón", s: "GL" },
+            { w: "Clarinete", s: "CL" }, { w: "Coliflor", s: "FL" }, { w: "Arreglo", s: "GL" },
+            { w: "Teclado", s: "CL" }, { w: "Flaco", s: "FL" }, { w: "Glaseado", s: "GL" },
+            { w: "Chancla", s: "CL" }, { w: "Inflar", s: "FL" }, { w: "Jeroglífico", s: "GL" }
+        ].sort(() => Math.random() - 0.5);
+
+        let currentWord = null, hits = 0, attempts = 0, index = 0, log = [];
+        let expectedAnswer = 0;
+
+        function initApp() {
+            const doc = document.documentElement;
+            if (doc.requestFullscreen) doc.requestFullscreen();
+            else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen();
+            
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('main-game').style.display = 'flex';
+            
+            speak("¡Hola! Pulsa el botón verde para empezar.");
+        }
+
+        function speak(text) {
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'es-ES';
+            utter.rate = 0.6; 
+            window.speechSynthesis.speak(utter);
+        }
+
+        function nextQuestion() {
+            if (index >= words.length) {
+                Swal.fire('¡Muy bien!', 'Has terminado los ejercicios.', 'success');
+                return;
+            }
+            currentWord = words[index];
+            speak("¿Qué sonido escuchas en..." + currentWord.w);
+            document.getElementById('word-feedback').innerText = "???";
+            document.getElementById('word-feedback').style.color = "#4A90E2";
+        }
+
+        function checkAnswer(selected) {
+            if (!currentWord || document.getElementById('word-feedback').innerText !== "???") return;
+            
+            attempts++;
+            const isCorrect = (selected === currentWord.s);
+            const feedback = document.getElementById('word-feedback');
+            
+            if (isCorrect) {
+                hits++;
+                feedback.innerText = currentWord.w;
+                feedback.style.color = "#4CAF50";
+                speak("¡Genial!");
+            } else {
+                feedback.innerText = currentWord.s;
+                feedback.style.color = "#F44336";
+                speak("Era con " + currentWord.s);
+            }
+
+            log.push({ palabra: currentWord.w, resultado: isCorrect ? "Acierto" : "Fallo" });
+            document.getElementById('hits').innerText = hits;
+            document.getElementById('attempts').innerText = attempts;
+            index++;
+            
+            setTimeout(nextQuestion, 3000);
+        }
+
+        function askPermission() {
+            const n1 = Math.floor(Math.random() * 8) + 2;
+            const n2 = Math.floor(Math.random() * 8) + 2;
+            expectedAnswer = n1 + n2;
+            document.getElementById('math-exp').innerText = `${n1} + ${n2} = ?`;
+            document.getElementById('math-answer').value = "";
+            document.getElementById('parental-modal').style.display = 'flex';
+        }
+
+        function verifyParental() {
+            if (parseInt(document.getElementById('math-answer').value) === expectedAnswer) {
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                location.reload();
+            } else {
+                closeParental();
+            }
+        }
+
+        function closeParental() { document.getElementById('parental-modal').style.display = 'none'; }
+
+        function downloadReport() {
+            let txt = "INFORME SINFONES\n\n";
+            log.forEach((r, i) => txt += `${i+1}. ${r.palabra}: ${r.resultado}\n`);
+            const blob = new Blob([txt], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'informe.txt';
+            a.click();
+        }
+    </script>
+</body>
+</html>

@@ -210,14 +210,16 @@
   .area-memoria { background: #E8E0F5; color: #6040A0; }
   .area-atencion { background: #FDE8EE; color: #B03060; }
   .area-lectoescritura { background: #EEF5D8; color: #4A7A20; }
- 
+  .area-vocabulario { background: #FDE8D8; color: #C45E1A; }
+  
+
   /* thumb colors por área */
   .thumb-fonologica { background: #7DCFC4; }
   .thumb-discriminacion { background: #F4A67A; }
   .thumb-memoria { background: #B09AE0; }
   .thumb-atencion { background: #F0A0B8; }
   .thumb-lectoescritura { background: #B8D870; }
- 
+  .thumb-vocabulario { background: #F5B98A; }
   /* ── CÓMO AÑADIR SECCIÓN ── */
  
   /* ── MODAL ── */
@@ -312,7 +314,8 @@
     <button class="filter-btn" data-area="discriminacion">Discriminación auditiva</button>
     <button class="filter-btn" data-area="memoria">Memoria</button>
     <button class="filter-btn" data-area="atencion">Atención</button>
-    <button class="filter-btn" data-area="lectoescritura">Lectoescritura</button>
+   <button class="filter-btn" data-area="lectoescritura">Lectoescritura</button>
+<button class="filter-btn" data-area="vocabulario">Vocabulario y conceptos</button>
   </div>
  
   <div class="grid" id="grid"></div>
@@ -326,6 +329,8 @@
 <footer>
   Hecho con 🤲 por <a href="sobre-mi.html">Inma Merino Rus</a> · Maestra de Audición y Lenguaje &amp; Logopeda
   <br><br>
+  <a href="sobre-mi.html" style="color:var(--coral);font-weight:600;">Conoce a la autora →</a>
+  &nbsp;·&nbsp;
   <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" style="color:var(--coral);">© 2025 · Licencia CC BY-NC-SA 4.0</a>
 </footer>
  
@@ -400,6 +405,7 @@ var areaConfig = {
   memoria:        { label: "Memoria",                emoji: "&#129504;", thumb: "thumb-memoria",        badge: "area-memoria" },
   atencion:       { label: "Atencion",               emoji: "&#127919;", thumb: "thumb-atencion",       badge: "area-atencion" },
   lectoescritura: { label: "Lectoescritura",         emoji: "&#9999;",   thumb: "thumb-lectoescritura", badge: "area-lectoescritura" }
+  vocabulario:    { label: "Vocabulario y conceptos", emoji: "&#128218;", thumb: "thumb-vocabulario", badge: "area-vocabulario" }
 };
  
 var filtroActual = "todas";

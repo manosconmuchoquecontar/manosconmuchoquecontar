@@ -29,16 +29,16 @@
     --radius: 16px;
     --radius-sm: 10px;
   }
-
+ 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--bg);
     color: var(--ink);
     min-height: 100vh;
   }
-
+ 
   /* ── NAV ── */
   nav {
     position: sticky; top: 0; z-index: 100;
@@ -64,7 +64,7 @@
   nav ul a { text-decoration: none; color: var(--ink2); font-size: 14px; font-weight: 500; transition: color .2s; }
   nav ul a:hover { color: var(--coral); }
   nav ul a.active { color: var(--coral); }
-
+ 
   /* ── HERO ── */
   .hero {
     padding: 6rem 2rem 4rem;
@@ -95,7 +95,7 @@
     transition: background .2s, transform .15s;
   }
   .btn-primary:hover { background: #B84A22; transform: translateY(-1px); }
-
+ 
   /* ── STATS ── */
   .stats {
     display: flex; justify-content: center; gap: 3rem;
@@ -106,7 +106,7 @@
   .stat { text-align: center; }
   .stat strong { display: block; font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--ink); }
   .stat span { font-size: 13px; color: var(--ink3); }
-
+ 
   /* ── AREAS / FILTROS ── */
   .section { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
   .section-header {
@@ -117,7 +117,7 @@
     font-family: 'Playfair Display', serif;
     font-size: 1.8rem; font-weight: 700;
   }
-
+ 
   .filters {
     display: flex; gap: 0.5rem; flex-wrap: wrap;
     margin-bottom: 2.5rem;
@@ -133,7 +133,7 @@
   .filter-btn.active {
     background: var(--coral); color: white; border-color: var(--coral);
   }
-
+ 
   /* ── SEARCH ── */
   .search-bar {
     display: flex; align-items: center;
@@ -148,14 +148,14 @@
     padding: 10px 0; width: 100%;
   }
   .search-bar input::placeholder { color: var(--ink3); }
-
+ 
   /* ── GRID ── */
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
   }
-
+ 
   .card {
     background: var(--card-bg);
     border: 1px solid var(--border);
@@ -166,7 +166,7 @@
     display: flex; flex-direction: column;
   }
   .card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(28,28,26,0.10); }
-
+ 
   .card-thumb {
     width: 100%; height: 190px; overflow: hidden;
     background: var(--bg2);
@@ -182,11 +182,11 @@
     font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
     padding: 4px 12px; border-radius: 100px;
   }
-
+ 
   .card-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
   .card-body h3 { font-size: 1rem; font-weight: 600; line-height: 1.4; margin-bottom: 0.5rem; }
   .card-body p { font-size: 13px; color: var(--ink2); line-height: 1.6; flex: 1; }
-
+ 
   .card-footer {
     padding: 1rem 1.25rem;
     border-top: 1px solid var(--border);
@@ -198,21 +198,21 @@
     padding: 3px 10px; border-radius: 100px;
     background: var(--bg2); color: var(--ink2);
   }
-
+ 
   /* ── COLORES POR ÁREA ── */
   .area-fonologica { background: var(--teal-light); color: var(--teal); }
   .area-discriminacion { background: var(--amber-light); color: var(--amber); }
   .area-memoria { background: var(--purple-light); color: var(--purple); }
   .area-atencion { background: var(--coral-light); color: var(--coral); }
   .area-lectoescritura { background: var(--green-light); color: var(--green); }
-
+ 
   /* thumb colors por área */
   .thumb-fonologica { background: #9FE1CB; }
   .thumb-discriminacion { background: #FAC775; }
   .thumb-memoria { background: #AFA9EC; }
   .thumb-atencion { background: #F0997B; }
   .thumb-lectoescritura { background: #C0DD97; }
-
+ 
   /* ── CÓMO AÑADIR SECCIÓN ── */
   .how-to {
     background: var(--ink);
@@ -243,7 +243,7 @@
     background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;
     color: var(--coral-mid);
   }
-
+ 
   /* ── MODAL ── */
   .modal-overlay {
     display: none; position: fixed; inset: 0;
@@ -264,7 +264,7 @@
   .modal-close:hover { color: var(--ink); }
   .modal-iframe { width: 100%; height: 480px; border: none; border-top: 1px solid var(--border); }
   .modal-meta { padding: 1rem 1.5rem; font-size: 13px; color: var(--ink2); display: flex; gap: 1rem; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
-
+ 
   /* ── FOOTER ── */
   footer {
     text-align: center; padding: 2rem;
@@ -272,11 +272,11 @@
     border-top: 1px solid var(--border);
   }
   footer a { color: var(--coral); text-decoration: none; }
-
+ 
   /* ── EMPTY STATE ── */
   .empty { text-align: center; padding: 4rem 2rem; color: var(--ink3); }
   .empty p { font-size: 1rem; margin-top: 0.5rem; }
-
+ 
   /* ── RESPONSIVE ── */
   @media (max-width: 600px) {
     nav ul { display: none; }
@@ -288,7 +288,7 @@
 </style>
 </head>
 <body>
-
+ 
 <!-- NAV -->
 <nav>
   <a href="#" class="logo">
@@ -303,7 +303,7 @@
     <li><a href="#como-anadir">Cómo añadir</a></li>
   </ul>
 </nav>
-
+ 
 <!-- HERO -->
 <div class="hero">
   <div class="hero-badge">Repositorio de Actividades Interactivas</div>
@@ -311,14 +311,14 @@
   <p>Actividades interactivas de conciencia fonológica, discriminación auditiva, memoria, atención y lectoescritura. Creadas con cariño para el aula de AL.</p>
   <a href="#actividades" class="btn-primary">Explorar actividades</a>
 </div>
-
+ 
 <!-- STATS -->
 <div class="stats">
   <div class="stat"><strong id="stat-total">0</strong><span>actividades</span></div>
   <div class="stat"><strong>5</strong><span>áreas</span></div>
   <div class="stat"><strong>∞</strong><span>con cariño</span></div>
 </div>
-
+ 
 <!-- ACTIVIDADES -->
 <div class="section" id="actividades">
   <div class="section-header">
@@ -328,7 +328,7 @@
       <input type="text" id="search" placeholder="Buscar actividad...">
     </div>
   </div>
-
+ 
   <div class="filters" id="filters">
     <button class="filter-btn active" data-area="todas">Todas</button>
     <button class="filter-btn" data-area="fonologica">Conciencia fonológica</button>
@@ -337,14 +337,14 @@
     <button class="filter-btn" data-area="atencion">Atención</button>
     <button class="filter-btn" data-area="lectoescritura">Lectoescritura</button>
   </div>
-
+ 
   <div class="grid" id="grid"></div>
   <div class="empty" id="empty" style="display:none">
     <p style="font-size:2rem">🔍</p>
     <p>No se encontraron actividades con ese filtro.</p>
   </div>
 </div>
-
+ 
 <!-- CÓMO AÑADIR -->
 <div class="how-to" id="como-anadir">
   <div class="how-to-inner">
@@ -374,12 +374,12 @@
     </div>
   </div>
 </div>
-
+ 
 <!-- FOOTER -->
 <footer>
   Hecho con 🤲 por <a href="#">Inma Merino Rus</a> · Maestra de Audición y Lenguaje &amp; Logopeda
 </footer>
-
+ 
 <!-- MODAL -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
@@ -391,211 +391,140 @@
     <iframe class="modal-iframe" id="modal-iframe" src="" title="Actividad interactiva"></iframe>
   </div>
 </div>
-
+ 
 <script>
-// ═══════════════════════════════════════════════════════════════
-//  AQUÍ AÑADES TUS ACTIVIDADES
-//  Copia un bloque { } y pega los datos de tu actividad
-// ═══════════════════════════════════════════════════════════════
-const actividades = [
-  {
-    titulo: "Rimas: ¿Qué palabra rima?",
-    descripcion: "El alumnado identifica qué palabra rima con la imagen presentada. Trabaja la conciencia fonológica a nivel de rima.",
-    area: "fonologica",
-    nivel: "Infantil / 1º Primaria",
-    url: "https://nogalespt.com",  // ← sustituye por la URL de tu actividad
-    imagen: ""
-  },
-  {
-    titulo: "Sílabas iniciales: Encuentra la intrusa",
-    descripcion: "Discriminación de la sílaba inicial. El alumno debe encontrar la imagen que no empieza igual que las demás.",
-    area: "fonologica",
-    nivel: "1º - 2º Primaria",
-    url: "https://nogalespt.com",
-    imagen: ""
-  },
-  {
-    titulo: "Fonema /r/: Discriminación auditiva",
-    descripcion: "Actividad de discriminación del fonema vibrante. Pulsa cuando escuches la /r/ entre otros sonidos.",
-    area: "discriminacion",
-    nivel: "2º - 3º Primaria",
-    url: "https://nogalespt.com",
-    imagen: ""
-  },
-  {
-    titulo: "Sonidos del entorno: ¿De dónde viene?",
-    descripcion: "El alumno escucha sonidos cotidianos y los relaciona con su imagen correspondiente. Trabaja la discriminación auditiva no verbal.",
-    area: "discriminacion",
-    nivel: "Infantil",
-    url: "https://nogalespt.com",
-    imagen: ""
-  },
-  {
-    titulo: "Memoria visual: ¿Qué ha cambiado?",
-    descripcion: "Se muestran dos escenas casi iguales y el alumno debe encontrar las diferencias apoyándose en la memoria visual.",
-    area: "memoria",
-    nivel: "Todos los niveles",
-    url: "https://nogalespt.com",
-    imagen: ""
-  },
-  {
-    titulo: "Memoria auditiva: Secuencia de palabras",
-    descripcion: "Escucha y repite secuencias de palabras cada vez más largas. Entrena la memoria auditiva a corto plazo.",
-    area: "memoria",
-    nivel: "1º - 4º Primaria",
-    url: "https://nogalespt.com",
-    imagen: ""
-  },
-  {
-    titulo: "Atención sostenida: Tacha la figura",
-    descripcion: "Actividad de cancelación: el alumno tacha solo la figura objetivo entre distractores. Trabaja la atención selectiva y sostenida.",
-    area: "atencion",
-    nivel: "Infantil / Primaria",
-    url: "https://nogalespt.com",
-    imagen: ""
-  },
-  {
-    titulo: "Lectura global: Palabras de alta frecuencia",
-    descripcion: "Método global de lectura con las palabras más frecuentes. Relaciona imagen con palabra escrita.",
-    area: "lectoescritura",
-    nivel: "Infantil / 1º Primaria",
-    url: "https://nogalespt.com",
-    imagen: ""
-  },
-  {
-    titulo: "Sinfones FL/GL/CL: Discriminación",
-    descripcion: "Actividad de conciencia fonológica y discriminación auditiva para trabajar los grupos consonánticos más frecuentes.",
-    area: "fonologica",
-    nivel: "2º - 3º Primaria",
-    url: "https://nogalespt.com",
-    imagen: ""
-  },
-  {
-    titulo: "Construye la frase: Sintaxis básica",
-    descripcion: "El alumnado ordena las palabras para construir frases correctas. Trabaja la conciencia sintáctica y la lectoescritura.",
-    area: "lectoescritura",
-    nivel: "1º - 3º Primaria",
-    url: "https://nogalespt.com",
-    imagen: ""
-  },
-  {
-    titulo: "Pares mínimos: /p/ - /b/",
-    descripcion: "Discriminación de pares mínimos que se distinguen únicamente por el rasgo de sonoridad. Ideal para dislalias.",
-    area: "discriminacion",
-    nivel: "2º - 4º Primaria",
-    url: "https://nogalespt.com",
-    imagen: ""
-  },
-  {
-    titulo: "Atención dividida: Dos cosas a la vez",
-    descripcion: "El alumno debe atender a dos estímulos simultáneos. Actividad progresiva para trabajar la atención dividida.",
-    area: "atencion",
-    nivel: "3º - 6º Primaria",
-    url: "https://nogalespt.com",
-    imagen: ""
-  },
-];
-
-// Iconos y colores por área
-const areaConfig = {
-  fonologica:    { label: "Conciencia fonológica", emoji: "🎵", thumb: "thumb-fonologica", badge: "area-fonologica" },
-  discriminacion:{ label: "Discriminación auditiva", emoji: "👂", thumb: "thumb-discriminacion", badge: "area-discriminacion" },
-  memoria:       { label: "Memoria", emoji: "🧠", thumb: "thumb-memoria", badge: "area-memoria" },
-  atencion:      { label: "Atención", emoji: "🎯", thumb: "thumb-atencion", badge: "area-atencion" },
-  lectoescritura:{ label: "Lectoescritura", emoji: "✏️", thumb: "thumb-lectoescritura", badge: "area-lectoescritura" },
+// ============================================================
+//  AQUI ANYADES TUS ACTIVIDADES
+//  Copia un bloque completo { ... } y cambia los datos
+//  
+//  AREAS DISPONIBLES (escribe exactamente asi, sin tildes):
+//    fonologica | discriminacion | memoria | atencion | lectoescritura
+//
+//  URL: pon la ruta relativa a tu actividad, por ejemplo:
+//    "actividades/nombre-de-tu-actividad.html"
+// ============================================================
+// ============================================================
+//  AQUI VAN TUS ACTIVIDADES
+//  Cuando quieras anadir una, copia este bloque y pegalo:
+//
+//  {
+//    titulo: "Nombre de tu actividad",
+//    descripcion: "Descripcion breve de que trabaja.",
+//    area: "fonologica",
+//    nivel: "Infantil / 1 Primaria",
+//    url: "actividades/nombre-del-archivo.html",
+//    imagen: ""
+//  },
+//
+//  AREAS: fonologica / discriminacion / memoria / atencion / lectoescritura
+// ============================================================
+var actividades = [];
+ 
+var areaConfig = {
+  fonologica:     { label: "Conciencia fonologica",  emoji: "&#127925;", thumb: "thumb-fonologica",     badge: "area-fonologica" },
+  discriminacion: { label: "Discriminacion auditiva", emoji: "&#128066;", thumb: "thumb-discriminacion", badge: "area-discriminacion" },
+  memoria:        { label: "Memoria",                emoji: "&#129504;", thumb: "thumb-memoria",        badge: "area-memoria" },
+  atencion:       { label: "Atencion",               emoji: "&#127919;", thumb: "thumb-atencion",       badge: "area-atencion" },
+  lectoescritura: { label: "Lectoescritura",         emoji: "&#9999;",   thumb: "thumb-lectoescritura", badge: "area-lectoescritura" }
 };
-
-let filtroActual = "todas";
-let busqueda = "";
-
+ 
+var filtroActual = "todas";
+var busqueda = "";
+ 
 function renderGrid() {
-  const grid = document.getElementById("grid");
-  const empty = document.getElementById("empty");
-  const filtradas = actividades.filter(a => {
-    const matchArea = filtroActual === "todas" || a.area === filtroActual;
-    const matchBusqueda = a.titulo.toLowerCase().includes(busqueda) || a.descripcion.toLowerCase().includes(busqueda);
+  var grid = document.getElementById("grid");
+  var empty = document.getElementById("empty");
+  var filtradas = actividades.filter(function(a) {
+    var matchArea = filtroActual === "todas" || a.area === filtroActual;
+    var matchBusqueda = a.titulo.toLowerCase().indexOf(busqueda) !== -1 || a.descripcion.toLowerCase().indexOf(busqueda) !== -1;
     return matchArea && matchBusqueda;
   });
-
+ 
   document.getElementById("stat-total").textContent = actividades.length;
-
+ 
   if (filtradas.length === 0) {
     grid.innerHTML = "";
     empty.style.display = "block";
+    var tituloEl = document.getElementById("empty-title");
+    var msgEl = document.getElementById("empty-msg");
+    if (actividades.length === 0) {
+      if (tituloEl) tituloEl.textContent = "Todavia no hay actividades";
+      if (msgEl) msgEl.innerHTML = "Abre el archivo index.html y añade tus actividades en el array actividades[]";
+    } else {
+      if (tituloEl) tituloEl.textContent = "Sin resultados";
+      if (msgEl) msgEl.textContent = "No se encontraron actividades con ese filtro o busqueda.";
+    }
     return;
   }
   empty.style.display = "none";
-
-  grid.innerHTML = filtradas.map((a, i) => {
-    const cfg = areaConfig[a.area];
-    const imgHtml = a.imagen
-      ? `<img src="${a.imagen}" alt="${a.titulo}">`
-      : `<div class="placeholder">${cfg.emoji}</div>`;
-    return `
-      <div class="card" onclick="abrirModal(${actividades.indexOf(a)})">
-        <div class="card-thumb ${cfg.thumb}">
-          ${imgHtml}
-          <span class="area-badge ${cfg.badge}">${cfg.label}</span>
-        </div>
-        <div class="card-body">
-          <h3>${a.titulo}</h3>
-          <p>${a.descripcion}</p>
-        </div>
-        <div class="card-footer">
-          <span class="card-author">Inma Merino Rus</span>
-          <span class="card-level">${a.nivel}</span>
-        </div>
-      </div>`;
+ 
+  grid.innerHTML = filtradas.map(function(a) {
+    var cfg = areaConfig[a.area];
+    var idx = actividades.indexOf(a);
+    var imgHtml = a.imagen
+      ? '<img src="' + a.imagen + '" alt="' + a.titulo + '">'
+      : '<div class="placeholder">' + cfg.emoji + '</div>';
+    return '<div class="card" onclick="abrirModal(' + idx + ')">'
+      + '<div class="card-thumb ' + cfg.thumb + '">'
+      + imgHtml
+      + '<span class="area-badge ' + cfg.badge + '">' + cfg.label + '</span>'
+      + '</div>'
+      + '<div class="card-body">'
+      + '<h3>' + a.titulo + '</h3>'
+      + '<p>' + a.descripcion + '</p>'
+      + '</div>'
+      + '<div class="card-footer">'
+      + '<span class="card-author">Inma Merino Rus</span>'
+      + '<span class="card-level">' + a.nivel + '</span>'
+      + '</div>'
+      + '</div>';
   }).join("");
 }
-
-// Filtros
-document.getElementById("filters").addEventListener("click", e => {
+ 
+document.getElementById("filters").addEventListener("click", function(e) {
   if (!e.target.matches(".filter-btn")) return;
-  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".filter-btn").forEach(function(b) { b.classList.remove("active"); });
   e.target.classList.add("active");
   filtroActual = e.target.dataset.area;
   renderGrid();
 });
-
-// Búsqueda
-document.getElementById("search").addEventListener("input", e => {
+ 
+document.getElementById("search").addEventListener("input", function(e) {
   busqueda = e.target.value.toLowerCase().trim();
   renderGrid();
 });
-
-// Modal
+ 
 function abrirModal(idx) {
-  const a = actividades[idx];
-  const cfg = areaConfig[a.area];
+  var a = actividades[idx];
+  var cfg = areaConfig[a.area];
   document.getElementById("modal-title").textContent = a.titulo;
-  document.getElementById("modal-meta").innerHTML = `
-    <span class="area-badge ${cfg.badge}" style="position:static;border-radius:100px;">${cfg.label}</span>
-    <span>📚 Nivel: ${a.nivel}</span>
-    <span>👩‍🏫 Inma Merino Rus</span>`;
+  document.getElementById("modal-meta").innerHTML =
+    '<span class="area-badge ' + cfg.badge + '" style="position:static;border-radius:100px;">' + cfg.label + '</span>'
+    + '<span>Nivel: ' + a.nivel + '</span>'
+    + '<span>Inma Merino Rus</span>';
   document.getElementById("modal-iframe").src = a.url;
   document.getElementById("modal").classList.add("open");
   document.body.style.overflow = "hidden";
 }
-
+ 
 document.getElementById("modal-close").addEventListener("click", cerrarModal);
-document.getElementById("modal").addEventListener("click", e => {
+document.getElementById("modal").addEventListener("click", function(e) {
   if (e.target === document.getElementById("modal")) cerrarModal();
 });
+ 
 function cerrarModal() {
   document.getElementById("modal").classList.remove("open");
   document.getElementById("modal-iframe").src = "";
   document.body.style.overflow = "";
 }
-
-// Smooth scroll
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener("click", e => {
-    const target = document.querySelector(a.getAttribute("href"));
+ 
+document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+  a.addEventListener("click", function(e) {
+    var target = document.querySelector(a.getAttribute("href"));
     if (target) { e.preventDefault(); target.scrollIntoView({ behavior: "smooth" }); }
   });
 });
-
+ 
 renderGrid();
 </script>
 </body>

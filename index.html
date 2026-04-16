@@ -214,35 +214,6 @@
   .thumb-lectoescritura { background: #C0DD97; }
  
   /* ── CÓMO AÑADIR SECCIÓN ── */
-  .how-to {
-    background: var(--ink);
-    color: white;
-    padding: 4rem 2rem;
-  }
-  .how-to-inner { max-width: 900px; margin: 0 auto; }
-  .how-to h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 2rem; margin-bottom: 0.5rem;
-  }
-  .how-to p { color: rgba(255,255,255,0.6); margin-bottom: 2.5rem; }
-  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
-  .step {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.10);
-    border-radius: var(--radius-sm); padding: 1.5rem;
-  }
-  .step-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.5rem; font-weight: 900;
-    color: var(--coral); line-height: 1; margin-bottom: 0.75rem;
-  }
-  .step h4 { font-size: 15px; font-weight: 600; margin-bottom: 0.4rem; }
-  .step p { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6; }
-  .step code {
-    font-family: 'Courier New', monospace; font-size: 11px;
-    background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;
-    color: var(--coral-mid);
-  }
  
   /* ── MODAL ── */
   .modal-overlay {
@@ -300,7 +271,6 @@
   </a>
   <ul>
     <li><a href="#actividades" class="active">Actividades</a></li>
-    <li><a href="#como-anadir">Cómo añadir</a></li>
   </ul>
 </nav>
  
@@ -342,36 +312,6 @@
   <div class="empty" id="empty" style="display:none">
     <p style="font-size:2rem">🔍</p>
     <p>No se encontraron actividades con ese filtro.</p>
-  </div>
-</div>
- 
-<!-- CÓMO AÑADIR -->
-<div class="how-to" id="como-anadir">
-  <div class="how-to-inner">
-    <h2>Cómo añadir una actividad</h2>
-    <p>Es muy sencillo — solo edita el array <code style="color:var(--coral-mid);background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px;">actividades</code> en el archivo HTML.</p>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">01</div>
-        <h4>Abre el HTML</h4>
-        <p>Edita el archivo <code>index.html</code> con cualquier editor de texto (el Bloc de Notas también sirve).</p>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <h4>Copia un bloque</h4>
-        <p>Copia uno de los objetos del array y cambia el título, descripción, área y URL de tu actividad.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <h4>Pega la URL</h4>
-        <p>Pega la URL de tu actividad HTML (de NogalesPT u otra web) en el campo <code>url</code>.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">04</div>
-        <h4>Sube a GitHub</h4>
-        <p>Arrastra el archivo a tu repositorio de GitHub Pages y se publica automáticamente.</p>
-      </div>
-    </div>
   </div>
 </div>
  

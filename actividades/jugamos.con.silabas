@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund:wght@100..400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Playwrite DE Grund', cursive;
+    background: #1a3a2e;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  #app {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .bg-deco { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .estrella { position: absolute; opacity: 0.12; animation: flotar 6s ease-in-out infinite; }
+  @keyframes flotar { 0%,100%{transform:translateY(0) rotate(0deg);} 50%{transform:translateY(-18px) rotate(10deg);} }
+  .pantalla {
+    position: relative; z-index: 10; text-align: center;
+    padding: 32px 26px;
+    background: linear-gradient(160deg, #2d6a4f, #1a3a2e);
+    border: 3px solid #74c69d; border-radius: 28px;
+    max-width: 500px; width: 93vw;
+    box-shadow: 0 0 60px rgba(116,198,157,0.18);
+  }
+  .oculto { display: none !important; }
+  .mascota { font-size: 64px; display: block; margin: 8px 0; animation: bounce 2s ease-in-out infinite; }
+  @keyframes bounce { 0%,100%{transform:scale(1) rotate(-3deg);} 50%{transform:scale(1.08) rotate(3deg);} }
+  .tit { font-size: clamp(22px,4.5vw,34px); color: #d8f3dc; line-height: 1.3; margin-bottom: 6px; text-transform: uppercase; }
+  .subtit { font-size: clamp(10px,1.9vw,13px); color: #95d5b2; margin-bottom: 20px; line-height: 1.8; text-transform: uppercase; }
+  .instr-box {
+    background: rgba(255,255,255,0.07); border: 1.5px solid rgba(116,198,157,0.35);
+    border-radius: 16px; padding: 12px 16px; margin: 14px 0 22px; text-align: left;
+  }
+  .instr-box p { color: #b7e4c7; font-size: clamp(9px,1.7vw,12px); line-height: 2.1; text-transform: uppercase; }
+  .btn-verde {
+    background: #52b788; color: #fff; border: none; border-radius: 50px;
+    padding: 13px 40px; font-family: 'Playwrite DE Grund', cursive;
+    font-size: clamp(13px,2.6vw,19px); cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(82,183,136,0.4); text-transform: uppercase; letter-spacing: 1px;
+  }
+  .btn-verde:hover { background: #74c69d; transform: scale(1.04); }
+  .btn-verde:active { transform: scale(0.97); }
+  .btn-amarillo {
+    background: #ffd166; color: #1a3a2e; border: none; border-radius: 50px;
+    padding: 13px 40px; font-family: 'Playwrite DE Grund', cursive;
+    font-size: clamp(13px,2.6vw,19px); cursor: pointer; transition: all 0.2s; text-transform: uppercase;
+  }
+  .btn-amarillo:hover { background: #ffe08a; transform: scale(1.04); }
+  .hud { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .badge { border-radius: 20px; padding: 5px 13px; font-size: 11px; text-transform: uppercase; }
+  .badge-verde { background: #52b788; color: #fff; }
+  .badge-gris { background: rgba(255,255,255,0.1); color: #d8f3dc; border: 1px solid rgba(116,198,157,0.3); }
+  .barra-wrap { background: rgba(255,255,255,0.1); border-radius: 20px; height: 9px; margin-bottom: 16px; overflow: hidden; }
+  .barra-fill { height: 100%; background: linear-gradient(90deg,#52b788,#95d5b2); border-radius: 20px; transition: width 0.5s ease; }
+  .corazones { display: flex; gap: 5px; }
+  .corazon { font-size: 19px; }
+  .corazon.perdido { opacity: 0.2; filter: grayscale(1); }
+  .pregunta-bloque { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 6px; }
+  .pregunta-tipo { font-size: clamp(11px,2vw,14px); color: #95d5b2; text-transform: uppercase; letter-spacing: 1px; }
+  .btn-audio {
+    background: rgba(116,198,157,0.2); border: 1.5px solid #74c69d;
+    border-radius: 50%; width: 36px; height: 36px; min-width: 36px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s; padding: 0; font-size: 17px;
+  }
+  .btn-audio:hover { background: rgba(116,198,157,0.35); transform: scale(1.1); }
+  .btn-audio.hablando { background: rgba(255,209,102,0.25); border-color: #ffd166; animation: pulso-audio 0.6s ease-in-out infinite alternate; }
+  @keyframes pulso-audio { 0%{transform:scale(1);} 100%{transform:scale(1.15);} }
+  .emoji-pista { font-size: 52px; display: block; text-align: center; margin: 4px 0 8px; animation: pulso 2s ease-in-out infinite; }
+  @keyframes pulso { 0%,100%{transform:scale(1);} 50%{transform:scale(1.06);} }
+  .palabra-display { font-size: clamp(26px,5.5vw,44px); color: #d8f3dc; text-align: center; margin: 8px 0 5px; letter-spacing: 3px; text-transform: uppercase; }
+  .silabas-sep { text-align: center; color: #95d5b2; font-size: clamp(12px,2.2vw,16px); margin-bottom: 14px; letter-spacing: 5px; text-transform: uppercase; }
+  .opciones-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .opcion-btn {
+    background: rgba(255,255,255,0.08); border: 2px solid rgba(116,198,157,0.35);
+    border-radius: 16px; padding: 14px 8px; font-family: 'Playwrite DE Grund', cursive;
+    font-size: clamp(18px,3.8vw,28px); color: #d8f3dc; cursor: pointer;
+    transition: all 0.2s; text-align: center; text-transform: uppercase;
+  }
+  .opcion-btn:hover:not(:disabled) { background: rgba(82,183,136,0.2); border-color: #74c69d; transform: translateY(-2px); }
+  .opcion-btn:disabled { cursor: default; }
+  .opcion-btn.correcta { background: rgba(82,183,136,0.35); border-color: #52b788; animation: aplauso 0.4s ease; }
+  .opcion-btn.incorrecta { background: rgba(220,53,69,0.25); border-color: #dc3545; }
+  @keyframes aplauso { 0%{transform:scale(1);} 50%{transform:scale(1.08);} 100%{transform:scale(1);} }
+  .feedback { text-align: center; font-size: clamp(12px,2.2vw,16px); min-height: 24px; margin-bottom: 8px; text-transform: uppercase; }
+  .feedback.bien { color: #74c69d; }
+  .feedback.mal { color: #f4a261; }
+  .estrella-rating { font-size: 32px; letter-spacing: 4px; margin: 10px 0; }
+
+  /* BOTONES FIJOS ESQUINA */
+  #btn-informe {
+    position: fixed; top: 14px; right: 64px; z-index: 100;
+    background: rgba(255,209,102,0.25); border: 1.5px solid #ffd166;
+    border-radius: 50%; width: 42px; height: 42px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 18px; transition: all 0.2s;
+  }
+  #btn-informe:hover { background: rgba(255,209,102,0.45); transform: scale(1.1); }
+
+  #btn-fullscreen {
+    position: fixed; top: 14px; right: 14px; z-index: 100;
+    background: rgba(82,183,136,0.25); border: 1.5px solid #74c69d;
+    border-radius: 50%; width: 42px; height: 42px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 18px; transition: all 0.2s;
+  }
+  #btn-fullscreen:hover { background: rgba(82,183,136,0.45); transform: scale(1.1); }
+
+  /* MODAL PIN */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+    z-index: 200; display: flex; align-items: center; justify-content: center;
+  }
+  .modal-box {
+    background: linear-gradient(160deg,#2d6a4f,#1a3a2e);
+    border: 3px solid #74c69d; border-radius: 24px;
+    padding: 32px 28px; text-align: center; max-width: 340px; width: 90vw;
+  }
+  .modal-titulo { color: #d8f3dc; font-size: clamp(14px,3vw,20px); text-transform: uppercase; margin-bottom: 10px; }
+  .modal-suma { color: #ffd166; font-size: clamp(22px,5vw,32px); margin: 12px 0; }
+  .modal-input {
+    background: rgba(255,255,255,0.1); border: 2px solid #74c69d;
+    border-radius: 12px; padding: 10px 16px; color: #d8f3dc;
+    font-family: 'Playwrite DE Grund', cursive; font-size: clamp(18px,4vw,26px);
+    text-align: center; width: 100%; margin-bottom: 14px; outline: none;
+  }
+  .modal-input:focus { border-color: #ffd166; }
+  .modal-error { color: #f4a261; font-size: 12px; min-height: 18px; margin-bottom: 10px; text-transform: uppercase; }
+  .modal-btns { display: flex; gap: 10px; justify-content: center; }
+  .btn-modal-ok {
+    background: #52b788; color: #fff; border: none; border-radius: 50px;
+    padding: 10px 28px; font-family: 'Playwrite DE Grund', cursive;
+    font-size: clamp(12px,2.5vw,16px); cursor: pointer; text-transform: uppercase; transition: all 0.2s;
+  }
+  .btn-modal-ok:hover { background: #74c69d; }
+  .btn-modal-cancel {
+    background: rgba(255,255,255,0.1); color: #95d5b2; border: 1.5px solid rgba(116,198,157,0.4);
+    border-radius: 50px; padding: 10px 28px; font-family: 'Playwrite DE Grund', cursive;
+    font-size: clamp(12px,2.5vw,16px); cursor: pointer; text-transform: uppercase; transition: all 0.2s;
+  }
+  .btn-modal-cancel:hover { background: rgba(255,255,255,0.18); }
+
+  .btns-final { display: flex; flex-direction: column; gap: 12px; align-items: center; margin-top: 10px; }
+
+  .confeti-pieza {
+    position: fixed; width: 10px; height: 10px; border-radius: 2px;
+    pointer-events: none; z-index: 999;
+    animation: confeti-caer 2s linear forwards;
+  }
+  @keyframes confeti-caer {
+    0%{transform:translateY(-20px) rotate(0deg);opacity:1;}
+    100%{transform:translateY(110vh) rotate(720deg);opacity:0;}
+  }
+</style>
+</head>
+<body>
+<div class="bg-deco" id="bg-deco"></div>
+
+<!-- BOTONES FIJOS -->
+<button id="btn-informe" onclick="descargarInforme()" title="DESCARGAR INFORME">📄</button>
+<button id="btn-fullscreen" title="PANTALLA COMPLETA">⛶</button>
+
+<!-- MODAL PIN PARENTAL -->
+<div class="modal-overlay oculto" id="modal-pin">
+  <div class="modal-box">
+    <p class="modal-titulo">🔒 CONTROL PARENTAL</p>
+    <p style="color:#95d5b2;font-size:12px;text-transform:uppercase;margin-bottom:8px;">RESUELVE LA SUMA PARA SALIR</p>
+    <div class="modal-suma" id="modal-pregunta"></div>
+    <input class="modal-input" type="number" id="modal-respuesta" placeholder="?"
+      onkeydown="if(event.key==='Enter') comprobarPin()">
+    <div class="modal-error" id="modal-error"></div>
+    <div class="modal-btns">
+      <button class="btn-modal-cancel" onclick="cerrarModal()">CANCELAR</button>
+      <button class="btn-modal-ok" onclick="comprobarPin()">✓ OK</button>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+
+  <!-- ANTESALA -->
+  <div id="p-inicio" class="pantalla">
+    <span class="mascota">🦋</span>
+    <h1 class="tit">¡JUGAMOS CON<br>LAS SÍLABAS!</h1>
+    <p class="subtit">DESCUBRE LA SÍLABA INICIAL Y FINAL<br>DE LAS PALABRAS</p>
+    <div class="instr-box">
+      <p>🟢 OBSERVA LA IMAGEN Y LA PALABRA</p>
+      <p>🔊 ESCUCHA LA PREGUNTA EN VOZ ALTA</p>
+      <p>🔤 ELIGE LA SÍLABA INICIAL O FINAL</p>
+      <p>⭐ GANA PUNTOS POR CADA ACIERTO</p>
+      <p>🏆 ¡COMPLETA LOS 20 NIVELES!</p>
+    </div>
+    <button class="btn-verde" onclick="iniciar()">¡JUGAR!</button>
+  </div>
+
+  <!-- JUEGO -->
+  <div id="p-juego" class="pantalla oculto">
+    <div class="hud">
+      <span class="badge badge-verde" id="badge-nivel">NIVEL 1</span>
+      <div class="corazones" id="corazones"></div>
+      <span class="badge badge-gris" id="badge-pts">⭐ 0</span>
+    </div>
+    <div class="barra-wrap"><div class="barra-fill" id="barra" style="width:0%"></div></div>
+    <div class="pregunta-bloque">
+      <p class="pregunta-tipo" id="pregunta-tipo"></p>
+      <button class="btn-audio" id="btn-repetir" onclick="repetirAudio()" title="ESCUCHAR OTRA VEZ">🔊</button>
+    </div>
+    <span class="emoji-pista" id="emoji-pista"></span>
+    <div class="palabra-display" id="palabra-display"></div>
+    <div class="silabas-sep" id="silabas-sep"></div>
+    <div class="opciones-grid" id="opciones-grid"></div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <!-- FIN DE NIVEL -->
+  <div id="p-fin-nivel" class="pantalla oculto">
+    <div class="estrella-rating" id="estrellas"></div>
+    <p class="tit" id="tit-fin-nivel"></p>
+    <p class="subtit" id="sub-fin-nivel"></p>
+    <button class="btn-verde" id="btn-sig" onclick="siguiente()"></button>
+  </div>
+
+  <!-- PANTALLA FINAL -->
+  <div id="p-final" class="pantalla oculto">
+    <span class="mascota" style="font-size:76px;animation:none;">🏆</span>
+    <h2 class="tit" style="color:#ffd166;">¡LO LOGRASTE!</h2>
+    <p class="subtit" id="txt-final"></p>
+    <div class="btns-final">
+      <button class="btn-verde" onclick="reiniciar()">¡JUGAR DE NUEVO!</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const NIVELES = [
+  { tipo:'inicial', emoji:'🐱', palabra:'GATO',      silabas:['GA','TO'],            correcta:'GA',   ops:['GA','PE','BO','LU'] },
+  { tipo:'final',   emoji:'🌳', palabra:'ÁRBOL',     silabas:['ÁR','BOL'],           correcta:'BOL',  ops:['ÁR','BOL','TU','ME'] },
+  { tipo:'inicial', emoji:'🍎', palabra:'MANZANA',   silabas:['MAN','ZA','NA'],      correcta:'MAN',  ops:['MAN','ZA','NA','PO'] },
+  { tipo:'final',   emoji:'🐸', palabra:'RANA',      silabas:['RA','NA'],            correcta:'NA',   ops:['RA','NA','LO','PE'] },
+  { tipo:'inicial', emoji:'🌻', palabra:'GIRASOL',   silabas:['GI','RA','SOL'],      correcta:'GI',   ops:['GI','SOL','RA','TU'] },
+  { tipo:'final',   emoji:'🦁', palabra:'LEÓN',      silabas:['LE','ÓN'],            correcta:'ÓN',   ops:['ÓN','LE','CA','RU'] },
+  { tipo:'inicial', emoji:'🐘', palabra:'ELEFANTE',  silabas:['E','LE','FAN','TE'],  correcta:'E',    ops:['E','LE','FAN','TE'] },
+  { tipo:'final',   emoji:'🦋', palabra:'MARIPOSA',  silabas:['MA','RI','PO','SA'],  correcta:'SA',   ops:['SA','MA','RI','PO'] },
+  { tipo:'inicial', emoji:'🍌', palabra:'BANANA',    silabas:['BA','NA','NA'],       correcta:'BA',   ops:['BA','NA','LO','MI'] },
+  { tipo:'final',   emoji:'🐬', palabra:'DELFÍN',    silabas:['DEL','FÍN'],          correcta:'FÍN',  ops:['FÍN','DEL','PAZ','TUR'] },
+  { tipo:'inicial', emoji:'🚂', palabra:'TREN',      silabas:['TREN'],               correcta:'TREN', ops:['TREN','SOL','PEZ','MAR'] },
+  { tipo:'final',   emoji:'🌙', palabra:'LUNA',      silabas:['LU','NA'],            correcta:'NA',   ops:['LU','NA','BO','PE'] },
+  { tipo:'inicial', emoji:'🦊', palabra:'ZORRO',     silabas:['ZO','RRO'],           correcta:'ZO',   ops:['ZO','RRO','MI','CA'] },
+  { tipo:'final',   emoji:'🍓', palabra:'FRESA',     silabas:['FRE','SA'],           correcta:'SA',   ops:['FRE','SA','TU','BO'] },
+  { tipo:'inicial', emoji:'🐧', palabra:'PINGÜINO',  silabas:['PIN','GÜI','NO'],     correcta:'PIN',  ops:['PIN','GÜI','NO','MO'] },
+  { tipo:'final',   emoji:'🦄', palabra:'UNICORNIO', silabas:['U','NI','COR','NIO'], correcta:'NIO',  ops:['NIO','U','NI','COR'] },
+  { tipo:'inicial', emoji:'⭐', palabra:'ESTRELLA',  silabas:['ES','TRE','LLA'],     correcta:'ES',   ops:['ES','TRE','LLA','MO'] },
+  { tipo:'final',   emoji:'🐙', palabra:'PULPO',     silabas:['PUL','PO'],           correcta:'PO',   ops:['PUL','PO','TA','MI'] },
+  { tipo:'inicial', emoji:'🌺', palabra:'FLOR',      silabas:['FLOR'],               correcta:'FLOR', ops:['FLOR','SOL','MAR','PEZ'] },
+  { tipo:'final',   emoji:'🐢', palabra:'TORTUGA',   silabas:['TOR','TU','GA'],      correcta:'GA',   ops:['TOR','TU','GA','LO'] },
+];
+
+let idx=0, puntos=0, vidas=3, acerto=false, respondido=false;
+let textoActual='';
+let registros=[];
+let pinA=0, pinB=0, pinR=0;
+let fechaInicio='';
+
+function mezclar(a){ return [...a].sort(()=>Math.random()-0.5); }
+
+function show(id){
+  ['p-inicio','p-juego','p-fin-nivel','p-final'].forEach(p=>{
+    document.getElementById(p).classList.toggle('oculto', p!==id);
+  });
+}
+
+function hablar(texto, alFinalizar){
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const btn=document.getElementById('btn-repetir');
+  if(btn) btn.classList.add('hablando');
+  const u=new SpeechSynthesisUtterance(texto);
+  u.lang='es-ES'; u.rate=0.65; u.pitch=1.1;
+  const voces=window.speechSynthesis.getVoices();
+  const voz=voces.find(v=>v.lang.startsWith('es')&&v.localService)||voces.find(v=>v.lang.startsWith('es'));
+  if(voz) u.voice=voz;
+  u.onend=()=>{ if(btn) btn.classList.remove('hablando'); if(alFinalizar) alFinalizar(); };
+  u.onerror=()=>{ if(btn) btn.classList.remove('hablando'); };
+  window.speechSynthesis.speak(u);
+}
+
+function repetirAudio(){ if(textoActual) hablar(textoActual); }
+
+/* ====== PANTALLA COMPLETA + PIN ====== */
+function pedirPin(){
+  pinA=Math.floor(Math.random()*10)+5;
+  pinB=Math.floor(Math.random()*10)+5;
+  pinR=pinA+pinB;
+  document.getElementById('modal-pregunta').textContent=pinA+' + '+pinB+' = ?';
+  document.getElementById('modal-respuesta').value='';
+  document.getElementById('modal-error').textContent='';
+  document.getElementById('modal-pin').classList.remove('oculto');
+  setTimeout(()=>document.getElementById('modal-respuesta').focus(),100);
+}
+
+function comprobarPin(){
+  const val=parseInt(document.getElementById('modal-respuesta').value);
+  if(val===pinR){
+    cerrarModal();
+    salirPantallaCompleta();
+  } else {
+    document.getElementById('modal-error').textContent='RESPUESTA INCORRECTA. INTÉNTALO DE NUEVO.';
+    document.getElementById('modal-respuesta').value='';
+    document.getElementById('modal-respuesta').focus();
+  }
+}
+
+function cerrarModal(){
+  document.getElementById('modal-pin').classList.add('oculto');
+}
+
+function entrarPantallaCompleta(){
+  const el=document.documentElement;
+  if(el.requestFullscreen) el.requestFullscreen();
+  else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  else if(el.mozRequestFullScreen) el.mozRequestFullScreen();
+  document.getElementById('btn-fullscreen').title='SALIR (REQUIERE PIN)';
+  document.getElementById('btn-fullscreen').onclick=pedirPin;
+}
+
+function salirPantallaCompleta(){
+  if(document.fullscreenElement||document.webkitFullscreenElement){
+    if(document.exitFullscreen) document.exitFullscreen();
+    else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+  }
+  document.getElementById('btn-fullscreen').onclick=entrarPantallaCompleta;
+  document.getElementById('btn-fullscreen').title='PANTALLA COMPLETA';
+}
+
+document.addEventListener('fullscreenchange',()=>{
+  if(!document.fullscreenElement){
+    document.getElementById('btn-fullscreen').onclick=entrarPantallaCompleta;
+  }
+});
+
+/* ====== JUEGO ====== */
+function decorar(){
+  const bd=document.getElementById('bg-deco'); bd.innerHTML='';
+  const items=['✦','✧','⬥','◈','❋','✿','⊹'];
+  for(let i=0;i<16;i++){
+    const s=document.createElement('span'); s.className='estrella';
+    s.textContent=items[Math.floor(Math.random()*items.length)];
+    s.style.left=Math.random()*98+'vw'; s.style.top=Math.random()*98+'vh';
+    s.style.animationDelay=(Math.random()*4)+'s';
+    s.style.animationDuration=(4+Math.random()*5)+'s';
+    s.style.fontSize=(14+Math.random()*18)+'px';
+    s.style.color='#74c69d';
+    bd.appendChild(s);
+  }
+}
+
+function iniciar(){
+  idx=0; puntos=0; vidas=3; registros=[];
+  fechaInicio=new Date().toLocaleString('es-ES');
+  show('p-juego'); cargarNivel();
+}
+function reiniciar(){ iniciar(); }
+
+function cargarNivel(){
+  respondido=false; acerto=false;
+  const n=NIVELES[idx];
+  document.getElementById('badge-nivel').textContent='NIVEL '+(idx+1);
+  document.getElementById('badge-pts').textContent='⭐ '+puntos;
+  document.getElementById('barra').style.width=(idx/20*100)+'%';
+  const tipotxt=n.tipo==='inicial'?'¿CUÁL ES LA SÍLABA INICIAL?':'¿CUÁL ES LA SÍLABA FINAL?';
+  document.getElementById('pregunta-tipo').textContent=tipotxt;
+  document.getElementById('emoji-pista').textContent=n.emoji;
+  document.getElementById('palabra-display').textContent=n.palabra;
+  document.getElementById('silabas-sep').textContent=n.silabas.join(' · ');
+  document.getElementById('feedback').textContent='';
+  document.getElementById('feedback').className='feedback';
+  textoActual=n.tipo==='inicial'
+    ?'¿Cuál es la sílaba inicial de '+n.palabra+'?'
+    :'¿Cuál es la sílaba final de '+n.palabra+'?';
+  renderCorazones();
+  renderOpciones(n);
+  setTimeout(()=>hablar(textoActual),400);
+}
+
+function renderCorazones(){
+  const c=document.getElementById('corazones'); c.innerHTML='';
+  for(let i=0;i<3;i++){
+    const s=document.createElement('span');
+    s.className='corazon'+(i>=vidas?' perdido':'');
+    s.textContent='❤️'; c.appendChild(s);
+  }
+}
+
+function renderOpciones(n){
+  const g=document.getElementById('opciones-grid'); g.innerHTML='';
+  mezclar(n.ops).forEach(op=>{
+    const b=document.createElement('button');
+    b.className='opcion-btn'; b.textContent=op;
+    b.onclick=()=>verificar(op,n,b);
+    g.appendChild(b);
+  });
+}
+
+function verificar(elegida,n,btn){
+  if(respondido) return;
+  respondido=true;
+  window.speechSynthesis&&window.speechSynthesis.cancel();
+  const fb=document.getElementById('feedback');
+  const correcto=elegida===n.correcta;
+  registros.push({ nivel:idx+1, emoji:n.emoji, palabra:n.palabra, tipo:n.tipo, correcta:n.correcta, elegida, ok:correcto });
+  if(correcto){
+    btn.classList.add('correcta');
+    puntos+=10; acerto=true;
+    fb.textContent='¡MUY BIEN! 🌟'; fb.className='feedback bien';
+    hablar('¡Muy bien!');
+    confeti();
+  } else {
+    btn.classList.add('incorrecta');
+    vidas--; fb.className='feedback mal';
+    fb.textContent='ES: '+n.correcta+' 🔁';
+    document.querySelectorAll('.opcion-btn').forEach(b=>{ if(b.textContent===n.correcta) b.classList.add('correcta'); });
+    renderCorazones();
+    hablar('La sílaba '+(n.tipo==='inicial'?'inicial':'final')+' de '+n.palabra+' es '+n.correcta);
+  }
+  document.getElementById('badge-pts').textContent='⭐ '+puntos;
+  setTimeout(()=>mostrarFinNivel(),1800);
+}
+
+function mostrarFinNivel(){
+  show('p-fin-nivel');
+  document.getElementById('estrellas').textContent=acerto?'⭐⭐⭐':'⭐';
+  const msg=acerto?['¡EXCELENTE!','¡GENIAL!','¡FANTÁSTICO!','¡LO LOGRASTE!'][idx%4]:'¡SIGUE INTENTANDO!';
+  document.getElementById('tit-fin-nivel').textContent=msg;
+  document.getElementById('sub-fin-nivel').textContent='PUNTOS: ⭐ '+puntos;
+  if(vidas<=0){ vidas=3; }
+  document.getElementById('btn-sig').textContent=idx<19?'SIGUIENTE NIVEL →':'¡VER RESULTADO!';
+  hablar(msg.replace(/[¡!]/g,''));
+}
+
+function siguiente(){
+  idx++;
+  if(idx>=20){ mostrarFinal(); return; }
+  show('p-juego'); cargarNivel();
+}
+
+function mostrarFinal(){
+  show('p-final');
+  const pct=Math.round(puntos/200*100);
+  document.getElementById('txt-final').textContent='PUNTOS: ⭐ '+puntos+' DE 200 ('+pct+'%)';
+  hablar('¡Felicidades! Has completado el juego con '+puntos+' puntos.');
+  for(let i=0;i<80;i++) setTimeout(()=>confeti(),i*50);
+}
+
+/* ====== INFORME (siempre disponible) ====== */
+function descargarInforme(){
+  const fecha=new Date().toLocaleString('es-ES');
+  const aciertos=registros.filter(r=>r.ok).length;
+  const fallos=registros.filter(r=>!r.ok).length;
+  const total=registros.length;
+  const pct=total>0?Math.round(aciertos/total*100):0;
+
+  let filas='';
+  if(total===0){
+    filas='<tr><td colspan="6" style="padding:20px;text-align:center;color:#95d5b2;text-transform:uppercase;">NO HAY DATOS AÚN</td></tr>';
+  } else {
+    registros.forEach(r=>{
+      const icono=r.ok?'✔':'✘';
+      const color=r.ok?'#2d6a4f':'#7a1f1f';
+      const colorT=r.ok?'#d8f3dc':'#fdd';
+      filas+=`<tr style="background:${color}">
+        <td style="padding:8px 12px;color:${colorT};text-align:center">${r.nivel}</td>
+        <td style="padding:8px 12px;color:${colorT}">${r.emoji} ${r.palabra}</td>
+        <td style="padding:8px 12px;color:${colorT};text-align:center">${r.tipo==='inicial'?'INICIAL':'FINAL'}</td>
+        <td style="padding:8px 12px;color:${colorT};text-align:center">${r.correcta}</td>
+        <td style="padding:8px 12px;color:${colorT};text-align:center">${r.elegida}</td>
+        <td style="padding:8px 12px;color:${colorT};text-align:center;font-size:18px">${icono}</td>
+      </tr>`;
+    });
+  }
+
+  const html=`<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund:wght@100..400&display=swap" rel="stylesheet">
+<style>
+  body{font-family:'Playwrite DE Grund',cursive;background:#1a3a2e;color:#d8f3dc;padding:32px;margin:0;}
+  h1{font-size:28px;text-transform:uppercase;color:#ffd166;margin-bottom:4px;}
+  .meta{color:#95d5b2;font-size:13px;text-transform:uppercase;margin-bottom:28px;line-height:2;}
+  .resumen{display:flex;gap:16px;margin-bottom:28px;flex-wrap:wrap;}
+  .card{background:#2d6a4f;border:2px solid #74c69d;border-radius:16px;padding:16px 24px;text-align:center;min-width:120px;}
+  .card-num{font-size:36px;color:#ffd166;}
+  .card-lbl{font-size:11px;color:#95d5b2;text-transform:uppercase;margin-top:4px;}
+  table{width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;}
+  th{background:#52b788;color:#fff;padding:10px 12px;text-transform:uppercase;font-size:12px;}
+  tr:nth-child(even){filter:brightness(1.08);}
+  @media print{body{background:#fff;color:#1a3a2e;} .card{background:#eee;} th{background:#52b788;}}
+</style></head><body>
+<h1>📋 INFORME DE ACTIVIDAD</h1>
+<div class="meta">
+  JUEGO: SÍLABAS INICIALES Y FINALES<br>
+  INICIO: ${fechaInicio||'NO INICIADO'}<br>
+  DESCARGADO: ${fecha}<br>
+  NIVELES COMPLETADOS: ${total} DE 20
+</div>
+<div class="resumen">
+  <div class="card"><div class="card-num">${puntos}</div><div class="card-lbl">PUNTOS</div></div>
+  <div class="card"><div class="card-num">${aciertos}</div><div class="card-lbl">ACIERTOS</div></div>
+  <div class="card"><div class="card-num">${fallos}</div><div class="card-lbl">FALLOS</div></div>
+  <div class="card"><div class="card-num">${pct}%</div><div class="card-lbl">PORCENTAJE</div></div>
+</div>
+<table>
+  <thead><tr>
+    <th>NIVEL</th><th>PALABRA</th><th>TIPO</th><th>CORRECTA</th><th>ELEGIDA</th><th>RESULTADO</th>
+  </tr></thead>
+  <tbody>${filas}</tbody>
+</table>
+</body></html>`;
+
+  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='informe-silabas-'+new Date().toISOString().slice(0,10)+'.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function confeti(){
+  const cols=['#52b788','#ffd166','#74c69d','#f4a261','#95d5b2'];
+  for(let i=0;i<6;i++){
+    const p=document.createElement('div'); p.className='confeti-pieza';
+    p.style.left=(10+Math.random()*80)+'vw'; p.style.top='-10px';
+    p.style.background=cols[Math.floor(Math.random()*cols.length)];
+    p.style.animationDuration=(1+Math.random()*1.5)+'s';
+    p.style.animationDelay=(Math.random()*0.4)+'s';
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),2500);
+  }
+}
+
+window.addEventListener('load',()=>{ if(window.speechSynthesis) window.speechSynthesis.getVoices(); });
+document.getElementById('btn-fullscreen').onclick=entrarPantallaCompleta;
+decorar();
+</script>
+</body>
+</html>

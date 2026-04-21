@@ -1531,6 +1531,11 @@ function startGame() {
   sellos = 0;
   registro = [];
   inGame = true;
+  // Barajar casos aleatoriamente en cada partida
+  for (let i = casos.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [casos[i], casos[j]] = [casos[j], casos[i]];
+  }
   updateSellos();
   renderCaso();
 }

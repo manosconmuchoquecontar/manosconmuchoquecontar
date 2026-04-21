@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>El Tren de los Sonidos - Intervención Pro</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+
+        :root {
+            --primary: #4CAF50;
+            --secondary: #2196F3;
+            --accent: #FFC107;
+            --danger: #f44336;
+            --bg: #ffffff;
+            --text: #1a1a1a;
+            --font-escolar: 'Varela Round', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+        body {
+            font-family: var(--font-escolar);
+            background-color: #e8f5e9;
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Pantalla de Inicio */
+        #splash-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--secondary);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Contenedor Principal */
+        #game-container {
+            background: white;
+            width: 98vw;
+            height: 96vh;
+            border-radius: 20px;
+            border: 4px solid var(--secondary);
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        header { flex: 0 0 auto; text-align: center; }
+        h1 { font-size: clamp(1.5rem, 4vh, 2.5rem); color: var(--secondary); }
+
+        .stats-grid {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 1.2rem;
+            margin: 5px 0;
+        }
+
+        .progress-container {
+            background: #eee;
+            border-radius: 10px;
+            height: 15px;
+            width: 50%;
+            margin: 5px auto;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            background: var(--accent);
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s;
+        }
+
+        #grid-items {
+            flex: 1 1 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 10px;
+            padding: 10px;
+            min-height: 0;
+        }
+
+        .item-card {
+            background: #fff;
+            border: 3px solid #ddd;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .item-emoji { font-size: clamp(2rem, 7vh, 4rem); }
+        .item-label { font-size: clamp(1rem, 3vh, 1.8rem); font-weight: bold; }
+
+        .item-card:active { transform: scale(0.95); background: #f0f0f0; }
+        .flash-success { background-color: #c8e6c9 !important; border-color: #4caf50 !important; }
+        .flash-error { background-color: #ffcdd2 !important; border-color: #f44336 !important; }
+
+        /* Controles */
+        .side-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 0 #bbb;
+        }
+
+        #btn-report { background: #9c27b0; color: white; box-shadow: 0 4px 0 #7b1fa2; }
+        #btn-fullscreen { background: #607d8b; color: white; box-shadow: 0 4px 0 #455a64; }
+
+        footer {
+            flex: 0 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .main-btn {
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: var(--font-escolar);
+        }
+
+        #btn-start { background: var(--primary); box-shadow: 0 5px 0 #2e7d32; }
+        #btn-repeat { background: var(--accent); color: #333; box-shadow: 0 5px 0 #f57f17; }
+        
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div id="splash-screen">
+        <h1 style="color: white; font-size: 3rem;">🚂 El Tren de los Sonidos</h1>
+        <p style="font-size: 1.5rem; margin: 20px;">Entrenamiento de Memoria Auditiva</p>
+        <button class="main-btn" id="btn-begin" style="background: var(--accent); color: #333;" onclick="startApp()">¡EMPEZAR!</button>
+    </div>
+
+    <div id="game-container">
+        <div class="side-controls">
+            <button id="btn-fullscreen" class="btn-circle" title="Pantalla Completa" onclick="toggleFS()">⛶</button>
+            <button id="btn-report" class="btn-circle" title="Descargar Informe" onclick="generateReport()">📋</button>
+        </div>
+
+        <header>
+            <h1>El Tren de los Sonidos</h1>
+            <div class="stats-grid">
+                <div>Nivel: <span id="level-display">1</span></div>
+                <div>Aciertos: <span id="stars-display">0</span>/10</div>
+            </div>
+            <div class="progress-container">
+                <div id="progress-bar"></div>
+            </div>
+        </header>
+
+        <p id="status-text" style="text-align: center; font-size: 1.4rem; padding: 10px; background: #fff9c4; border-radius: 10px; margin: 5px 10px;">
+            Pulsa el botón verde para escuchar la serie.
+        </p>
+
+        <div id="grid-items"></div>
+
+        <footer>
+            <button id="btn-start" class="main-btn" onclick="initChallenge()">🔊 Nueva Serie</button>
+            <button id="btn-repeat" class="main-btn hidden" onclick="playSequence()">🔄 Repetir</button>
+        </footer>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    const synth = window.speechSynthesis;
+    const items = [
+        { id: 'Perro', emoji: '🐶', nombre: 'Perro' },
+        { id: 'Gato', emoji: '🐱', nombre: 'Gato' },
+        { id: 'Manzana', emoji: '🍎', nombre: 'Manzana' },
+        { id: 'Uva', emoji: '🍇', nombre: 'Uva' },
+        { id: 'Pelota', emoji: '⚽', nombre: 'Pelota' },
+        { id: 'Tambor', emoji: '🥁', nombre: 'Tambor' },
+        { id: 'Pajaro', emoji: '🐦', nombre: 'Pájaro' },
+        { id: 'Pez', emoji: '🐟', nombre: 'Pez' },
+        { id: 'Casa', emoji: '🏠', nombre: 'Casa' }
+    ];
+
+    let currentLevel = 1;
+    let totalSuccesses = 0;
+    let targetSequence = [];
+    let userIndex = 0;
+    let isPlaying = false;
+    let canClick = false;
+    let sessionLog = [];
+
+    function startApp() {
+        document.getElementById('splash-screen').classList.add('hidden');
+        initBoard();
+        speak("¡Bienvenido al tren de los sonidos! Pulsa el botón verde para empezar.");
+    }
+
+    function initBoard() {
+        const grid = document.getElementById('grid-items');
+        grid.innerHTML = '';
+        items.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'item-card';
+            div.innerHTML = `
+                <span class="item-emoji">${item.emoji}</span>
+                <span class="item-label">${item.nombre}</span>
+            `;
+            div.onclick = () => checkChoice(item, div);
+            grid.appendChild(div);
+        });
+    }
+
+    async function initChallenge() {
+        if (isPlaying) return;
+        const seqLength = currentLevel + 1; // Nivel 1 = 2 items, Nivel 2 = 3...
+        targetSequence = [];
+        for(let i=0; i < seqLength; i++) {
+            targetSequence.push(items[Math.floor(Math.random() * items.length)]);
+        }
+        await playSequence();
+    }
+
+    async function playSequence() {
+        if (isPlaying) return;
+        isPlaying = true;
+        canClick = false;
+        userIndex = 0;
+        document.getElementById('btn-start').disabled = true;
+        document.getElementById('btn-repeat').classList.add('hidden');
+        resetStyles();
+        updateStatus("👂 Escucha con atención...");
+        
+        for (const item of targetSequence) {
+            await speak(item.nombre);
+            await new Promise(r => setTimeout(r, 600));
+        }
+        
+        updateStatus("👉 ¡Tu turno! Toca en orden");
+        isPlaying = false;
+        canClick = true;
+        document.getElementById('btn-repeat').classList.remove('hidden');
+    }
+
+    function checkChoice(item, element) {
+        if (!canClick || isPlaying) return;
+        
+        const expected = targetSequence[userIndex];
+        
+        if (item.id === expected.id) {
+            element.classList.add('flash-success');
+            logAction('ACIERTO', item.nombre, expected.nombre);
+            userIndex++;
+            if (userIndex === targetSequence.length) {
+                canClick = false;
+                handleSuccess();
+            }
+        } else {
+            element.classList.add('flash-error');
+            logAction('ERROR', item.nombre, expected.nombre);
+            updateStatus("❌ ¡Casi! Inténtalo de nuevo");
+            canClick = false;
+            setTimeout(() => {
+                element.classList.remove('flash-error');
+                document.getElementById('btn-start').disabled = false;
+            }, 1000);
+        }
+    }
+
+    function handleSuccess() {
+        totalSuccesses++;
+        if (totalSuccesses >= 10) {
+            currentLevel++;
+            totalSuccesses = 0;
+            speak("¡Genial! Has subido al nivel " + currentLevel);
+        }
+        updateUI();
+        updateStatus("🌟 ¡Muy bien!");
+        setTimeout(() => {
+            resetStyles();
+            document.getElementById('btn-start').disabled = false;
+            initChallenge();
+        }, 1200);
+    }
+
+    // --- SISTEMA DE CONTROL PARENTAL Y PANTALLA COMPLETA ---
+
+    function toggleFS() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+            document.getElementById('btn-fullscreen').innerText = '⇲';
+        } else {
+            const n1 = Math.floor(Math.random() * 10) + 1;
+            const n2 = Math.floor(Math.random() * 10) + 1;
+            const res = n1 + n2;
+
+            Swal.fire({
+                title: 'Control Parental',
+                text: `Para salir resuelve: ${n1} + ${n2}`,
+                input: 'number',
+                confirmButtonText: 'Verificar',
+                showCancelButton: true
+            }).then((result) => {
+                if (parseInt(result.value) === res) {
+                    document.exitFullscreen();
+                    document.getElementById('btn-fullscreen').innerText = '⛶';
+                }
+            });
+        }
+    }
+
+    // --- SISTEMA DE INFORMES ---
+
+    function logAction(tipo, seleccionado, esperado) {
+        const entry = {
+            hora: new Date().toLocaleTimeString(),
+            nivel: currentLevel,
+            resultado: tipo,
+            pulsado: seleccionado,
+            objetivo: esperado
+        };
+        sessionLog.push(entry);
+    }
+
+    function generateReport() {
+        let rows = sessionLog.map(l => `
+            <tr>
+                <td>${l.hora}</td>
+                <td>${l.nivel}</td>
+                <td style="color: ${l.resultado === 'ACIERTO' ? 'green' : 'red'}">${l.resultado}</td>
+                <td>${l.pulsado}</td>
+                <td>${l.objetivo}</td>
+            </tr>
+        `).join('');
+
+        const htmlContent = `
+            <html>
+            <head><title>Informe de Sesión</title><style>
+                body { font-family: sans-serif; padding: 20px; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                th { background-color: #2196F3; color: white; }
+            </style></head>
+            <body>
+                <h1>Informe de Intervención - El Tren de los Sonidos</h1>
+                <p>Fecha: ${new Date().toLocaleDateString()}</p>
+                <table>
+                    <thead><tr><th>Hora</th><th>Nivel</th><th>Resultado</th><th>Pulsado</th><th>Esperado</th></tr></thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </body>
+            </html>
+        `;
+
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `informe_sesion_${new Date().getTime()}.html`;
+        a.click();
+    }
+
+    // --- UTILIDADES ---
+
+    function updateUI() {
+        document.getElementById('level-display').innerText = currentLevel;
+        document.getElementById('stars-display').innerText = totalSuccesses;
+        document.getElementById('progress-bar').style.width = (totalSuccesses * 10) + "%";
+    }
+
+    function updateStatus(txt) { document.getElementById('status-text').innerText = txt; }
+
+    function resetStyles() {
+        document.querySelectorAll('.item-card').forEach(el => el.classList.remove('flash-success', 'flash-error'));
+    }
+
+    function speak(text) {
+        return new Promise((resolve) => {
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.lang = 'es-ES';
+            msg.rate = 0.8;
+            msg.onend = resolve;
+            synth.speak(msg);
+        });
+    }
+</script>
+
+</body>
+</html>

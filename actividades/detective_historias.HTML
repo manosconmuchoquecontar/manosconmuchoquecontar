@@ -1,0 +1,1929 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Detective de Relatos</title>
+<link href="https://fonts.googleapis.com/css2?family=Playwrite+HR+Lijeva:wght@100..400&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1208;
+    --paper: #faf6ee;
+    --aged: #e8dfc8;
+    --stamp-red: #8b1a1a;
+    --gold: #b8860b;
+    --who-color: #7c2d2d;
+    --what-color: #1a4a6b;
+    --where-color: #1a5c2a;
+  }
+
+  body {
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    font-family: 'Playwrite HR Lijeva', cursive;
+  }
+
+  #game-wrapper {
+    width: 100%;
+    max-width: 820px;
+  }
+
+  #game {
+    font-family: 'Playwrite HR Lijeva', cursive;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 600px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  }
+
+  /* ===== ANTESALA ===== */
+  #antesala {
+    text-align: center;
+    background: #1a1208;
+    color: #e8dfc8;
+    min-height: 580px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    padding: 3rem 2rem;
+  }
+
+  .classified-stamp {
+    border: 3px solid var(--stamp-red);
+    color: var(--stamp-red);
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    padding: 6px 18px;
+    display: inline-block;
+    transform: rotate(-8deg);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeStamp 0.8s 0.3s forwards;
+  }
+
+  @keyframes fadeStamp {
+    from { opacity: 0; transform: rotate(-8deg) scale(1.4); }
+    to { opacity: 1; transform: rotate(-8deg) scale(1); }
+  }
+
+  .briefcase-icon {
+    font-size: 64px;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: dropIn 0.6s 0.8s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  }
+
+  @keyframes dropIn {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .antesala-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 900;
+    color: #e8dfc8;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    animation: fadeIn 0.6s 1.2s forwards;
+  }
+
+  .antesala-subtitle {
+    font-size: 12px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeIn 0.6s 1.4s forwards;
+  }
+
+  .mission-box {
+    background: rgba(232,223,200,0.06);
+    border: 0.5px solid rgba(232,223,200,0.15);
+    border-radius: 8px;
+    padding: 1.25rem 2rem;
+    max-width: 460px;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #c8bfa8;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeIn 0.6s 1.7s forwards;
+  }
+
+  .mission-box strong { color: #e8dfc8; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hint-blur-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeIn 0.6s 2s forwards;
+  }
+
+  .hint-pill {
+    background: rgba(232,223,200,0.06);
+    border: 0.5px solid rgba(232,223,200,0.15);
+    border-radius: 40px;
+    padding: 6px 18px;
+    font-size: 14px;
+    color: #a09070;
+    letter-spacing: 1px;
+  }
+
+  .level-section {
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeIn 0.6s 1.9s forwards;
+  }
+
+  .level-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #666;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .level-selector {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .level-btn {
+    background: transparent;
+    border: 0.5px solid rgba(232,223,200,0.25);
+    color: #a09070;
+    padding: 7px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Playwrite HR Lijeva', cursive;
+    font-size: 15px;
+    transition: all 0.2s;
+  }
+
+  .level-btn.active, .level-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(184,134,11,0.08);
+  }
+
+  .start-btn {
+    background: var(--stamp-red);
+    color: #e8dfc8;
+    border: none;
+    padding: 14px 44px;
+    border-radius: 4px;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0;
+    animation: fadeIn 0.6s 2.4s forwards;
+  }
+
+  .start-btn:hover { background: #a82020; transform: translateY(-2px); }
+  .start-btn:active { transform: scale(0.98); }
+
+  /* ===== JUEGO ===== */
+  #juego-screen {
+    background: var(--paper);
+    min-height: 580px;
+    display: none;
+  }
+
+  .game-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    border-bottom: 0.5px solid #d4c9a8;
+    background: #1a1208;
+  }
+
+  .case-badge {
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 3px;
+  }
+
+  .rank-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #a09070;
+  }
+
+  .seals-row { display: flex; gap: 6px; }
+
+  .seal {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid #444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: transparent;
+    transition: all 0.4s;
+  }
+
+  .seal.filled {
+    background: var(--stamp-red);
+    border-color: var(--stamp-red);
+    color: #e8dfc8;
+  }
+
+  .story-area {
+    padding: 1.5rem 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .story-panel, .illustration-panel {
+    background: #fff;
+    border: 0.5px solid #d4c9a8;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .panel-header {
+    background: #1a1208;
+    color: var(--gold);
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    padding: 9px 16px;
+  }
+
+  .story-text {
+    padding: 1.25rem;
+    font-size: 17px;
+    line-height: 1.9;
+    color: #2a2010;
+  }
+
+  .highlight-who {
+    background: #fde8e8;
+    border-radius: 3px;
+    padding: 1px 4px;
+    color: var(--who-color);
+    font-weight: 600;
+  }
+
+  .highlight-what {
+    background: #e8f0fd;
+    border-radius: 3px;
+    padding: 1px 4px;
+    color: var(--what-color);
+    font-weight: 600;
+  }
+
+  .highlight-where {
+    background: #e8fde8;
+    border-radius: 3px;
+    padding: 1px 4px;
+    color: var(--where-color);
+    font-weight: 600;
+  }
+
+  .illustration-svg-wrap {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 190px;
+  }
+
+  .clues-section {
+    padding: 0 2rem 1.5rem;
+  }
+
+  .clues-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #88785a;
+    margin-bottom: 1rem;
+  }
+
+  .questions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .question-card {
+    border: 0.5px solid #d4c9a8;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .question-label {
+    padding: 9px 12px;
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #fff;
+  }
+
+  .q-who .question-label { background: var(--who-color); }
+  .q-what .question-label { background: var(--what-color); }
+  .q-where .question-label { background: var(--where-color); }
+
+  .question-body {
+    padding: 12px;
+    background: #fff;
+  }
+
+  .question-text {
+    font-size: 14px;
+    color: #5a4a2a;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+
+  .mc-options { display: flex; flex-direction: column; gap: 6px; }
+
+  .mc-option {
+    background: var(--paper);
+    border: 0.5px solid #d4c9a8;
+    border-radius: 4px;
+    padding: 7px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: #2a2010;
+    text-align: left;
+    font-family: 'Playwrite HR Lijeva', cursive;
+    width: 100%;
+  }
+
+  .mc-option:hover:not(:disabled) { background: #f0ede4; border-color: #b0a080; }
+  .mc-option.correct { background: #e8fde8 !important; border-color: var(--where-color) !important; color: var(--where-color) !important; font-weight: 600; }
+  .mc-option.wrong { background: #fde8e8 !important; border-color: var(--who-color) !important; color: var(--who-color) !important; }
+  .mc-option:disabled { cursor: default; }
+
+  .free-input {
+    width: 100%;
+    border: 0.5px solid #d4c9a8;
+    border-radius: 4px;
+    padding: 7px 10px;
+    font-size: 14px;
+    font-family: 'Playwrite HR Lijeva', cursive;
+    background: var(--paper);
+    color: #2a2010;
+    margin-bottom: 8px;
+    outline: none;
+  }
+
+  .free-input:focus { border-color: #b0a080; }
+
+  .check-btn {
+    background: #1a1208;
+    color: #e8dfc8;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Playwrite HR Lijeva', cursive;
+    font-size: 14px;
+    transition: all 0.15s;
+  }
+
+  .check-btn:hover { background: #3a2e1a; }
+  .check-btn:disabled { opacity: 0.5; cursor: default; }
+
+  .visual-hint {
+    font-size: 13px;
+    color: #88785a;
+    font-style: italic;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .answer-reveal {
+    font-size: 12px;
+    margin-top: 8px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .answer-correct { background: #e8fde8; color: var(--where-color); }
+  .answer-wrong { background: #fde8e8; color: var(--who-color); }
+
+  .case-progress {
+    padding: 0 2rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .progress-bar-wrap {
+    flex: 1;
+    height: 4px;
+    background: #d4c9a8;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--stamp-red);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .progress-text {
+    font-size: 12px;
+    color: #88785a;
+    white-space: nowrap;
+    letter-spacing: 1px;
+  }
+
+  .next-btn {
+    background: #1a1208;
+    color: #e8dfc8;
+    border: none;
+    padding: 9px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Playfair Display', serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    transition: all 0.2s;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .next-btn.visible { opacity: 1; pointer-events: all; }
+  .next-btn:hover { background: #3a2e1a; }
+
+  /* ===== CIERRE ===== */
+  #cierre-screen {
+    background: #1a1208;
+    color: #e8dfc8;
+    min-height: 580px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 12px;
+    padding: 3rem 2rem;
+  }
+
+  .cierre-sello {
+    border: 4px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    padding: 12px 36px;
+    display: inline-block;
+    transform: rotate(-5deg);
+    margin-bottom: 2rem;
+    animation: stampPop 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  @keyframes stampPop {
+    from { transform: rotate(-5deg) scale(2.2); opacity: 0; }
+    to { transform: rotate(-5deg) scale(1); opacity: 1; }
+  }
+
+  .cierre-rank {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    font-weight: 900;
+    color: #e8dfc8;
+    margin-bottom: 0.5rem;
+  }
+
+  .cierre-score {
+    font-size: 54px;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .cierre-detail {
+    font-size: 16px;
+    color: #a09070;
+    margin-bottom: 2.5rem;
+    line-height: 1.8;
+    max-width: 420px;
+  }
+
+  .cierre-btns {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .cierre-btn {
+    padding: 12px 32px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    transition: all 0.2s;
+  }
+
+  .cierre-btn.primary {
+    background: var(--stamp-red);
+    color: #e8dfc8;
+    border: none;
+  }
+
+  .cierre-btn.primary:hover { background: #a82020; transform: translateY(-2px); }
+
+  .cierre-btn.secondary {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+  }
+
+  .cierre-btn.secondary:hover { background: rgba(184,134,11,0.1); transform: translateY(-2px); }
+
+
+  /* ===== FULLSCREEN BTN ANTESALA ===== */
+  .fullscreen-btn-ante {
+    margin-top: 1rem;
+    background: transparent;
+    border: 0.5px solid rgba(232,223,200,0.2);
+    color: #a09070;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Playwrite HR Lijeva', cursive;
+    font-size: 13px;
+    transition: all 0.2s;
+    opacity: 0;
+    animation: fadeIn 0.6s 2.6s forwards;
+  }
+  .fullscreen-btn-ante:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ===== HEADER BTNS ===== */
+  .fs-btn, .exit-btn, .report-btn {
+    background: transparent;
+    border: 0.5px solid rgba(232,223,200,0.2);
+    color: #a09070;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: 'Playwrite HR Lijeva', cursive;
+    transition: all 0.15s;
+    margin-left: 6px;
+  }
+  .fs-btn:hover { color: var(--gold); border-color: var(--gold); }
+  .exit-btn:hover { color: #ff8080; border-color: #ff8080; }
+
+  /* ===== MODAL PARENTAL ===== */
+  #parental-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+  }
+  #parental-modal.active { display: flex; }
+
+  .parental-box {
+    background: #1a1208;
+    border: 0.5px solid rgba(232,223,200,0.2);
+    border-radius: 12px;
+    padding: 2.5rem 2rem;
+    max-width: 360px;
+    width: 90%;
+    text-align: center;
+    color: #e8dfc8;
+  }
+
+  .parental-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+
+  .parental-desc {
+    font-size: 14px;
+    color: #a09070;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+
+  .parental-sum {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: #e8dfc8;
+    margin-bottom: 1.25rem;
+    letter-spacing: 4px;
+  }
+
+  .parental-input {
+    width: 100%;
+    background: rgba(232,223,200,0.06);
+    border: 0.5px solid rgba(232,223,200,0.2);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 18px;
+    font-family: 'Playfair Display', serif;
+    color: #e8dfc8;
+    text-align: center;
+    margin-bottom: 8px;
+    outline: none;
+  }
+  .parental-input:focus { border-color: var(--gold); }
+
+  .parental-error {
+    font-size: 13px;
+    color: #ff8080;
+    min-height: 20px;
+    margin-bottom: 1rem;
+  }
+
+  .parental-btns { display: flex; gap: 10px; justify-content: center; }
+
+  .parental-cancel {
+    background: transparent;
+    border: 0.5px solid rgba(232,223,200,0.2);
+    color: #a09070;
+    padding: 8px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Playwrite HR Lijeva', cursive;
+    font-size: 14px;
+    transition: all 0.15s;
+  }
+  .parental-cancel:hover { border-color: #a09070; }
+
+  .parental-confirm {
+    background: var(--stamp-red);
+    border: none;
+    color: #e8dfc8;
+    padding: 8px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Playwrite HR Lijeva', cursive;
+    font-size: 14px;
+    transition: all 0.15s;
+  }
+  .parental-confirm:hover { background: #a82020; }
+
+  /* ===== DOWNLOAD BTN ===== */
+  .download-btn {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 12px 32px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    transition: all 0.2s;
+  }
+  .download-btn:hover { background: rgba(184,134,11,0.1); transform: translateY(-2px); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .story-area { grid-template-columns: 1fr; }
+    .questions-grid { grid-template-columns: 1fr; }
+    .antesala-title { font-size: 28px; }
+    .hint-blur-row { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<div id="game-wrapper">
+<div id="game">
+
+  <!-- ===== ANTESALA ===== -->
+  <div id="antesala">
+    <div class="classified-stamp">✦ EXPEDIENTE CLASIFICADO ✦</div>
+    <div class="briefcase-icon">🕵️</div>
+    <div class="antesala-title">El Detective<br>de Relatos</div>
+    <div class="antesala-subtitle">AGENCIA DE CASOS LITERARIOS</div>
+    <div class="mission-box">
+      Han llegado informes confusos desde la ciudad. Los testigos no recuerdan los detalles.<br><br>
+      Solo un detective capaz de responder <strong>¿Quién?</strong>, <strong>¿Qué?</strong> y <strong>¿Dónde?</strong> podrá cerrar cada caso.<br><br>
+      ¿Estás listo para ponerte la lupa?
+    </div>
+    <div class="hint-blur-row">
+      <span class="hint-pill">🔴 ¿Quién?</span>
+      <span class="hint-pill">🔵 ¿Qué?</span>
+      <span class="hint-pill">🟢 ¿Dónde?</span>
+    </div>
+    <div class="level-section">
+      <div class="level-label">Nivel de dificultad</div>
+      <div class="level-selector">
+        <button class="level-btn active" onclick="setLevel('principiante', this)">Principiante</button>
+        <button class="level-btn" onclick="setLevel('intermedio', this)">Intermedio</button>
+        <button class="level-btn" onclick="setLevel('experto', this)">Experto</button>
+      </div>
+    </div>
+    <button class="start-btn" onclick="startGame()">▶ ABRIR EXPEDIENTE</button>
+    <button class="fullscreen-btn-ante" onclick="toggleFullscreen()" title="Pantalla completa" id="fs-ante">⛶ Pantalla completa</button>
+  </div>
+
+  <!-- ===== MODAL CONTROL PARENTAL ===== -->
+  <div id="parental-modal">
+    <div class="parental-box">
+      <div class="parental-title">🔒 Control Parental</div>
+      <div class="parental-desc">Para salir del juego, un adulto debe resolver esta operación:</div>
+      <div class="parental-sum" id="parental-sum"></div>
+      <input class="parental-input" id="parental-answer" type="number" placeholder="Escribe el resultado..." />
+      <div class="parental-error" id="parental-error"></div>
+      <div class="parental-btns">
+        <button class="parental-cancel" onclick="closeParental()">Cancelar</button>
+        <button class="parental-confirm" onclick="checkParental()">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== JUEGO ===== -->
+  <div id="juego-screen">
+    <div class="game-header">
+      <span class="case-badge" id="case-badge">CASO 1 / 20</span>
+      <div class="rank-display">
+        <span id="rank-name">Aprendiz</span>
+        <div class="seals-row">
+          <div class="seal" id="seal-0"></div>
+          <div class="seal" id="seal-1"></div>
+          <div class="seal" id="seal-2"></div>
+          <div class="seal" id="seal-3"></div>
+          <div class="seal" id="seal-4"></div>
+        </div>
+        <button class="fs-btn" onclick="toggleFullscreen()" id="fs-btn" title="Pantalla completa">⛶</button>
+        <button class="report-btn" onclick="descargarInforme()" title="Descargar informe">📄 Informe</button>
+        <button class="exit-btn" onclick="openParental()" title="Salir del juego">✕ Salir</button>
+      </div>
+    </div>
+
+    <div class="story-area">
+      <div class="story-panel">
+        <div class="panel-header">📄 INFORME DEL CASO</div>
+        <div class="story-text" id="story-text"></div>
+      </div>
+      <div class="illustration-panel">
+        <div class="panel-header">🔍 EVIDENCIA VISUAL</div>
+        <div class="illustration-svg-wrap" id="illus-wrap"></div>
+      </div>
+    </div>
+
+    <div class="clues-section">
+      <div class="clues-title">⬢ PISTAS BAJO LA LUPA</div>
+      <div class="questions-grid" id="questions-grid"></div>
+    </div>
+
+    <div class="case-progress">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+      <span class="progress-text" id="progress-text">0 / 3 pistas</span>
+      <button class="next-btn" id="next-btn" onclick="nextCase()">SIGUIENTE CASO →</button>
+    </div>
+  </div>
+
+  <!-- ===== CIERRE ===== -->
+  <div id="cierre-screen"></div>
+
+</div>
+</div>
+
+<script>
+const casos = [
+  {
+    titulo: "El roble del bosque azul",
+    historia_full: '<span class="highlight-who">El oso Bruno</span> <span class="highlight-what">encontró un enorme tarro de miel escondido</span> detrás de un roble viejo <span class="highlight-where">en el bosque azul</span>.',
+    historia_clean: 'Esta mañana, el oso Bruno encontró un enorme tarro de miel escondido detrás de un roble viejo en el bosque azul.',
+    preguntas: [
+      { tipo: 'who', pregunta: '¿Quién encontró el tarro?', respuesta: 'El oso Bruno', opciones: ['El lobo gris', 'El oso Bruno', 'La niña Lena'] },
+      { tipo: 'what', pregunta: '¿Qué encontró?', respuesta: 'Un tarro de miel', opciones: ['Una flor roja', 'Un mapa viejo', 'Un tarro de miel'] },
+      { tipo: 'where', pregunta: '¿Dónde estaba escondido?', respuesta: 'En el bosque azul', opciones: ['En la cueva fría', 'En el bosque azul', 'En el río largo'] }
+    ],
+    ilustracion: `<svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="180" rx="8" fill="#e8f5e0"/>
+      <ellipse cx="110" cy="155" rx="90" ry="14" fill="#5a8a3a" opacity="0.3"/>
+      <rect x="88" y="60" width="22" height="80" fill="#8B5E3C" rx="4"/>
+      <ellipse cx="99" cy="60" rx="30" ry="28" fill="#3a7a1a"/>
+      <ellipse cx="72" cy="75" rx="18" ry="16" fill="#4a8a22"/>
+      <ellipse cx="128" cy="72" rx="20" ry="18" fill="#3a7a1a"/>
+      <ellipse cx="52" cy="55" rx="16" ry="20" fill="#2a6a10" opacity="0.7"/>
+      <ellipse cx="155" cy="58" rx="18" ry="22" fill="#2a6a10" opacity="0.7"/>
+      <circle cx="68" cy="120" r="22" fill="#8B5535"/>
+      <ellipse cx="58" cy="113" rx="8" ry="10" fill="#7a4a2a"/>
+      <ellipse cx="78" cy="113" rx="8" ry="10" fill="#7a4a2a"/>
+      <circle cx="68" cy="125" r="10" fill="#9a6040"/>
+      <circle cx="64" cy="122" r="3" fill="#2a1a08"/>
+      <circle cx="72" cy="122" r="3" fill="#2a1a08"/>
+      <ellipse cx="68" cy="127" rx="5" ry="3" fill="#7a4020"/>
+      <circle cx="57" cy="108" r="5" fill="#6a3820"/>
+      <circle cx="79" cy="108" r="5" fill="#6a3820"/>
+      <rect x="148" y="112" width="32" height="34" rx="5" fill="#f5d478"/>
+      <rect x="148" y="112" width="32" height="34" rx="5" fill="none" stroke="#c8a020" stroke-width="1.5"/>
+      <text x="164" y="133" font-size="16" text-anchor="middle" fill="#c8a020">🍯</text>
+      <text x="110" y="18" font-size="9" fill="#5a8a3a" text-anchor="middle" font-family="serif" letter-spacing="1">BOSQUE AZUL</text>
+    </svg>`
+  },
+  {
+    titulo: "El sombrero en la lluvia",
+    historia_full: '<span class="highlight-who">La niña Sofía</span> <span class="highlight-what">perdió su sombrero rojo</span> durante la tormenta <span class="highlight-where">cerca del puente de piedra</span>.',
+    historia_clean: 'Ayer por la tarde, la niña Sofía perdió su sombrero rojo durante la tormenta, cerca del puente de piedra.',
+    preguntas: [
+      { tipo: 'who', pregunta: '¿Quién perdió el sombrero?', respuesta: 'La niña Sofía', opciones: ['El señor Pedro', 'La niña Sofía', 'El perro Coco'] },
+      { tipo: 'what', pregunta: '¿Qué perdió?', respuesta: 'Su sombrero rojo', opciones: ['Su sombrero rojo', 'Su bufanda azul', 'Su paraguas verde'] },
+      { tipo: 'where', pregunta: '¿Dónde ocurrió?', respuesta: 'Cerca del puente de piedra', opciones: ['En el mercado', 'Cerca del puente de piedra', 'En el parque grande'] }
+    ],
+    ilustracion: `<svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="180" rx="8" fill="#d0dff5"/>
+      <line x1="30" y1="0" x2="20" y2="180" stroke="#a0b8e0" stroke-width="1" opacity="0.5"/>
+      <line x1="70" y1="0" x2="60" y2="180" stroke="#a0b8e0" stroke-width="1" opacity="0.5"/>
+      <line x1="110" y1="0" x2="100" y2="180" stroke="#a0b8e0" stroke-width="1" opacity="0.5"/>
+      <line x1="150" y1="0" x2="140" y2="180" stroke="#a0b8e0" stroke-width="1" opacity="0.5"/>
+      <line x1="190" y1="0" x2="180" y2="180" stroke="#a0b8e0" stroke-width="1" opacity="0.5"/>
+      <rect x="0" y="140" width="220" height="40" fill="#8a7a60"/>
+      <rect x="55" y="105" width="12" height="35" fill="#7a6a50"/>
+      <rect x="153" y="105" width="12" height="35" fill="#7a6a50"/>
+      <rect x="48" y="100" width="124" height="12" fill="#9a8a70" rx="3"/>
+      <ellipse cx="61" cy="106" rx="10" ry="10" fill="#888"/>
+      <ellipse cx="159" cy="106" rx="10" ry="10" fill="#888"/>
+      <circle cx="80" cy="115" r="18" fill="#e8c0a0"/>
+      <ellipse cx="73" cy="109" rx="6" ry="8" fill="#d8a888"/>
+      <ellipse cx="87" cy="109" rx="6" ry="8" fill="#d8a888"/>
+      <circle cx="80" cy="120" r="8" fill="#f0d0b0"/>
+      <circle cx="77" cy="118" r="2.5" fill="#3a2a18"/>
+      <circle cx="83" cy="118" r="2.5" fill="#3a2a18"/>
+      <ellipse cx="155" cy="72" rx="22" ry="8" fill="#cc2020"/>
+      <ellipse cx="155" cy="68" rx="14" ry="12" fill="#dd3030"/>
+      <text x="110" y="18" font-size="9" fill="#6a80a8" text-anchor="middle" font-family="serif" letter-spacing="1">PUENTE DE PIEDRA</text>
+    </svg>`
+  },
+  {
+    titulo: "El libro en la biblioteca",
+    historia_full: '<span class="highlight-who">El maestro Tomás</span> <span class="highlight-what">encontró un libro muy antiguo lleno de mapas</span> guardado en un estante secreto <span class="highlight-where">en la biblioteca del castillo</span>.',
+    historia_clean: 'El maestro Tomás encontró un libro muy antiguo lleno de mapas, guardado en un estante secreto en la biblioteca del castillo.',
+    preguntas: [
+      { tipo: 'who', pregunta: '¿Quién encontró el libro?', respuesta: 'El maestro Tomás', opciones: ['La reina Ana', 'El maestro Tomás', 'El guardia Rafa'] },
+      { tipo: 'what', pregunta: '¿Qué encontró?', respuesta: 'Un libro antiguo con mapas', opciones: ['Un cofre del tesoro', 'Una carta secreta', 'Un libro antiguo con mapas'] },
+      { tipo: 'where', pregunta: '¿Dónde lo encontró?', respuesta: 'En la biblioteca del castillo', opciones: ['En la torre del reloj', 'En la biblioteca del castillo', 'En el sótano oscuro'] }
+    ],
+    ilustracion: `<svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="180" rx="8" fill="#f5ede0"/>
+      <rect x="10" y="30" width="14" height="120" fill="#8B5E3C"/>
+      <rect x="28" y="45" width="14" height="105" fill="#9a6a48"/>
+      <rect x="46" y="38" width="14" height="112" fill="#7a4a2a"/>
+      <rect x="64" y="50" width="14" height="100" fill="#a07050"/>
+      <rect x="82" y="42" width="14" height="108" fill="#8B5E3C"/>
+      <rect x="100" y="35" width="14" height="115" fill="#6a3820"/>
+      <rect x="8" y="25" width="110" height="8" fill="#5a3010" rx="2"/>
+      <rect x="8" y="148" width="110" height="8" fill="#5a3010" rx="2"/>
+      <rect x="140" y="90" width="58" height="72" fill="#d4a060" rx="4"/>
+      <rect x="140" y="90" width="58" height="72" fill="none" stroke="#9a6020" stroke-width="1.5" rx="4"/>
+      <rect x="148" y="98" width="42" height="30" fill="#e8d0a0" rx="2"/>
+      <line x1="155" y1="105" x2="183" y2="105" stroke="#9a7040" stroke-width="1"/>
+      <line x1="155" y1="110" x2="183" y2="110" stroke="#9a7040" stroke-width="1"/>
+      <line x1="155" y1="115" x2="175" y2="115" stroke="#9a7040" stroke-width="1"/>
+      <circle cx="175" cy="75" r="16" fill="#e8c090"/>
+      <ellipse cx="168" cy="70" rx="5" ry="7" fill="#d8a878"/>
+      <ellipse cx="182" cy="70" rx="5" ry="7" fill="#d8a878"/>
+      <circle cx="175" cy="79" r="7" fill="#f0d0a8"/>
+      <circle cx="172" cy="77" r="2" fill="#3a2808"/>
+      <circle cx="178" cy="77" r="2" fill="#3a2808"/>
+      <rect x="165" y="55" width="20" height="10" rx="10" fill="#4a3018"/>
+      <text x="110" y="18" font-size="9" fill="#9a7050" text-anchor="middle" font-family="serif" letter-spacing="1">BIBLIOTECA DEL CASTILLO</text>
+    </svg>`
+  },
+  {
+    titulo: "La mariposa del jardín",
+    historia_full: '<span class="highlight-who">La abuela Rosa</span> <span class="highlight-what">plantó semillas de girasol</span> junto a la fuente <span class="highlight-where">en el jardín de la escuela</span>.',
+    historia_clean: 'La abuela Rosa plantó semillas de girasol junto a la fuente en el jardín de la escuela.',
+    preguntas: [
+      { tipo: 'who', pregunta: '¿Quién plantó las semillas?', respuesta: 'La abuela Rosa', opciones: ['La abuela Rosa', 'El niño Lucas', 'La señora Marta'] },
+      { tipo: 'what', pregunta: '¿Qué plantó?', respuesta: 'Semillas de girasol', opciones: ['Semillas de girasol', 'Flores de lavanda', 'Árboles de manzana'] },
+      { tipo: 'where', pregunta: '¿Dónde las plantó?', respuesta: 'En el jardín de la escuela', opciones: ['En el balcón de casa', 'En el jardín de la escuela', 'En el campo de trigo'] }
+    ],
+    ilustracion: `<svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="180" rx="8" fill="#f0f8e8"/>
+      <ellipse cx="110" cy="165" rx="100" ry="16" fill="#7ab84a" opacity="0.3"/>
+      <circle cx="110" cy="75" r="18" fill="#f5c840"/>
+      <circle cx="110" cy="75" r="10" fill="#c8820a"/>
+      <rect x="107" y="93" width="6" height="55" fill="#4a8a1a" rx="3"/>
+      <ellipse cx="85" cy="108" rx="14" ry="9" fill="#5aaa2a" transform="rotate(-30 85 108)"/>
+      <ellipse cx="135" cy="115" rx="14" ry="9" fill="#5aaa2a" transform="rotate(20 135 115)"/>
+      <ellipse cx="92" cy="57" rx="10" ry="18" fill="#f5c840" opacity="0.8"/>
+      <ellipse cx="128" cy="57" rx="10" ry="18" fill="#f5c840" opacity="0.8"/>
+      <ellipse cx="92" cy="93" rx="10" ry="18" fill="#f5c840" opacity="0.8"/>
+      <ellipse cx="128" cy="93" rx="10" ry="18" fill="#f5c840" opacity="0.8"/>
+      <circle cx="50" cy="140" r="14" fill="#aad4f0"/>
+      <circle cx="50" cy="140" r="10" fill="#88b8e0"/>
+      <ellipse cx="50" cy="163" rx="20" ry="5" fill="#6090c0" opacity="0.3"/>
+      <circle cx="165" cy="45" r="8" fill="#f0a0c0"/>
+      <ellipse cx="160" cy="38" rx="7" ry="5" fill="#f0c0d8" transform="rotate(-40 160 38)"/>
+      <ellipse cx="170" cy="38" rx="7" ry="5" fill="#f0c0d8" transform="rotate(40 170 38)"/>
+      <ellipse cx="160" cy="52" rx="6" ry="4" fill="#e890b8" transform="rotate(20 160 52)"/>
+      <ellipse cx="170" cy="52" rx="6" ry="4" fill="#e890b8" transform="rotate(-20 170 52)"/>
+      <text x="110" y="18" font-size="9" fill="#5a9a30" text-anchor="middle" font-family="serif" letter-spacing="1">JARDÍN DE LA ESCUELA</text>
+    </svg>`
+  },
+  {
+    titulo: "El pez de colores",
+    historia_full: '<span class="highlight-who">El niño Pablo</span> <span class="highlight-what">pescó un pez dorado muy grande</span> con su caña nueva <span class="highlight-where">en el lago del parque</span>.',
+    historia_clean: 'El niño Pablo pescó un pez dorado muy grande con su caña nueva en el lago del parque.',
+    preguntas: [
+      { tipo: 'who', pregunta: '¿Quién pescó el pez?', respuesta: 'El niño Pablo', opciones: ['El niño Pablo', 'El abuelo Paco', 'La niña Clara'] },
+      { tipo: 'what', pregunta: '¿Qué pescó?', respuesta: 'Un pez dorado muy grande', opciones: ['Una bota vieja', 'Un pez dorado muy grande', 'Una estrella de mar'] },
+      { tipo: 'where', pregunta: '¿Dónde pescó?', respuesta: 'En el lago del parque', opciones: ['En el lago del parque', 'En el mar azul', 'En el río del bosque'] }
+    ],
+    ilustracion: `<svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="180" rx="8" fill="#d8eef8"/>
+      <ellipse cx="110" cy="130" rx="105" ry="45" fill="#5090d0" opacity="0.4"/>
+      <ellipse cx="110" cy="135" rx="100" ry="40" fill="#4080c0" opacity="0.5"/>
+      <ellipse cx="110" cy="140" rx="95" ry="35" fill="#3070b0" opacity="0.4"/>
+      <ellipse cx="145" cy="130" rx="22" ry="12" fill="#f5c840"/>
+      <path d="M167 130 L182 118 L182 142 Z" fill="#e8a820"/>
+      <circle cx="132" cy="126" r="4" fill="#2a1a08"/>
+      <circle cx="131" cy="125" r="1.5" fill="#fff"/>
+      <path d="M138 135 Q145 140 152 135" stroke="#e8a820" stroke-width="1.5" fill="none"/>
+      <line x1="100" y1="0" x2="135" y2="115" stroke="#8B5E3C" stroke-width="2"/>
+      <circle cx="100" cy="0" r="5" fill="#6a3820"/>
+      <line x1="135" y1="115" x2="145" y2="118" stroke="#c0c0c0" stroke-width="1"/>
+      <circle cx="80" cy="55" r="14" fill="#e8c090"/>
+      <ellipse cx="73" cy="50" rx="5" ry="6" fill="#d8a878"/>
+      <ellipse cx="87" cy="50" rx="5" ry="6" fill="#d8a878"/>
+      <circle cx="80" cy="59" r="6" fill="#f0d0a8"/>
+      <circle cx="78" cy="57" r="2" fill="#2a1a08"/>
+      <circle cx="82" cy="57" r="2" fill="#2a1a08"/>
+      <text x="110" y="18" font-size="9" fill="#3070a0" text-anchor="middle" font-family="serif" letter-spacing="1">LAGO DEL PARQUE</text>
+    </svg>`
+  },
+  {
+    titulo: "La linterna perdida",
+    historia_full: '<span class="highlight-who">El explorador Marcos</span> <span class="highlight-what">olvidó su linterna encendida</span> en la entrada <span class="highlight-where">de la cueva de las estalactitas</span>.',
+    historia_clean: 'El explorador Marcos olvidó su linterna encendida en la entrada de la cueva de las estalactitas.',
+    preguntas: [
+      { tipo: 'who', pregunta: '¿Quién olvidó la linterna?', respuesta: 'El explorador Marcos', opciones: ['La doctora Elena', 'El explorador Marcos', 'El pastor Luis'] },
+      { tipo: 'what', pregunta: '¿Qué olvidó?', respuesta: 'Su linterna encendida', opciones: ['Su mochila roja', 'Su linterna encendida', 'Su mapa enrollado'] },
+      { tipo: 'where', pregunta: '¿Dónde la olvidó?', respuesta: 'En la cueva de las estalactitas', opciones: ['En la cueva de las estalactitas', 'En la cima del monte', 'En el río helado'] }
+    ],
+    ilustracion: `<svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="180" rx="8" fill="#2a2a3a"/>
+      <path d="M0 60 Q55 20 110 55 Q165 20 220 60 L220 180 L0 180 Z" fill="#1a1a28"/>
+      <polygon points="50,30 58,70 42,70" fill="#6a6a8a"/>
+      <polygon points="80,20 88,65 72,65" fill="#7a7a9a"/>
+      <polygon points="110,25 118,68 102,68" fill="#6a6a8a"/>
+      <polygon points="140,18 148,62 132,62" fill="#7a7a9a"/>
+      <polygon points="170,28 178,70 162,70" fill="#6a6a8a"/>
+      <rect x="95" y="130" width="16" height="28" rx="4" fill="#f0c840"/>
+      <ellipse cx="103" cy="128" rx="8" ry="5" fill="#f8d860"/>
+      <ellipse cx="103" cy="125" rx="12" ry="8" fill="#f8f040" opacity="0.3"/>
+      <ellipse cx="103" cy="120" rx="16" ry="12" fill="#f8f040" opacity="0.15"/>
+      <circle cx="55" cy="110" r="14" fill="#d4a070"/>
+      <ellipse cx="49" cy="105" rx="5" ry="6" fill="#c49060"/>
+      <ellipse cx="61" cy="105" rx="5" ry="6" fill="#c49060"/>
+      <circle cx="55" cy="114" r="6" fill="#e8b888"/>
+      <circle cx="53" cy="112" r="2" fill="#1a0a00"/>
+      <circle cx="57" cy="112" r="2" fill="#1a0a00"/>
+      <rect x="43" y="95" width="24" height="8" rx="4" fill="#5a3818"/>
+      <text x="110" y="18" font-size="9" fill="#9090b8" text-anchor="middle" font-family="serif" letter-spacing="1">CUEVA DE LAS ESTALACTITAS</text>
+    </svg>`
+  },
+  {
+    titulo: "La carta del cartero",
+    historia_full: '<span class="highlight-who">El cartero Antonio</span> <span class="highlight-what">entregó un sobre con confeti</span> a primera hora <span class="highlight-where">en la casa de la esquina</span>.',
+    historia_clean: 'El cartero Antonio entregó un sobre con confeti a primera hora en la casa de la esquina.',
+    preguntas: [
+      { tipo: 'who', pregunta: '¿Quién entregó el sobre?', respuesta: 'El cartero Antonio', opciones: ['El cartero Antonio', 'La vecina Carmen', 'El repartidor Blas'] },
+      { tipo: 'what', pregunta: '¿Qué entregó?', respuesta: 'Un sobre con confeti', opciones: ['Un paquete grande', 'Un sobre con confeti', 'Una caja de flores'] },
+      { tipo: 'where', pregunta: '¿Dónde lo entregó?', respuesta: 'En la casa de la esquina', opciones: ['En la casa de la esquina', 'En el ayuntamiento', 'En la panadería'] }
+    ],
+    ilustracion: `<svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="180" rx="8" fill="#fff8e8"/>
+      <rect x="20" y="50" width="80" height="100" fill="#e8d0a0" rx="4"/>
+      <rect x="20" y="50" width="80" height="100" fill="none" stroke="#c8a060" stroke-width="1.5" rx="4"/>
+      <rect x="40" y="80" width="20" height="30" fill="#8B5E3C" rx="2"/>
+      <rect x="50" y="95" width="8" height="15" fill="#c8a060"/>
+      <rect x="47" y="95" width="14" height="8" fill="#c8a060"/>
+      <rect x="22" y="52" width="76" height="35" fill="#f5e8c0" rx="3"/>
+      <polygon points="60,70 22,52 98,52" fill="#e8d4a0"/>
+      <rect x="120" y="70" width="80" height="55" fill="#fff" rx="3"/>
+      <rect x="120" y="70" width="80" height="55" fill="none" stroke="#d0b880" stroke-width="1.5" rx="3"/>
+      <path d="M120 70 L160 98 L200 70" stroke="#d0b880" stroke-width="1.5" fill="none"/>
+      <circle cx="135" cy="110" r="3" fill="#ff6080"/>
+      <circle cx="148" cy="105" r="3" fill="#60c0ff"/>
+      <circle cx="161" cy="112" r="3" fill="#80e060"/>
+      <circle cx="174" cy="107" r="3" fill="#ffa040"/>
+      <circle cx="158" cy="120" r="14" fill="#e8c090"/>
+      <ellipse cx="152" cy="115" rx="5" ry="6" fill="#d8a878"/>
+      <ellipse cx="164" cy="115" rx="5" ry="6" fill="#d8a878"/>
+      <circle cx="158" cy="124" r="6" fill="#f0d0a8"/>
+      <circle cx="156" cy="122" r="2" fill="#2a1a08"/>
+      <circle cx="160" cy="122" r="2" fill="#2a1a08"/>
+      <rect x="148" y="100" width="20" height="8" rx="4" fill="#3a6aa0"/>
+      <text x="110" y="18" font-size="9" fill="#9a7040" text-anchor="middle" font-family="serif" letter-spacing="1">CASA DE LA ESQUINA</text>
+    </svg>`
+  },
+  {
+    titulo: "El castillo de arena",
+    historia_full: '<span class="highlight-who">Los gemelos Nico y Nora</span> <span class="highlight-what">construyeron un castillo de arena enorme</span> junto a las olas <span class="highlight-where">en la playa de las conchas</span>.',
+    historia_clean: 'Los gemelos Nico y Nora construyeron un castillo de arena enorme junto a las olas en la playa de las conchas.',
+    preguntas: [
+      { tipo: 'who', pregunta: '¿Quiénes construyeron el castillo?', respuesta: 'Los gemelos Nico y Nora', opciones: ['Los gemelos Nico y Nora', 'El señor Rafa y su hijo', 'La clase de primero'] },
+      { tipo: 'what', pregunta: '¿Qué construyeron?', respuesta: 'Un castillo de arena enorme', opciones: ['Un barco de papel', 'Un castillo de arena enorme', 'Una cueva bajo el agua'] },
+      { tipo: 'where', pregunta: '¿Dónde lo construyeron?', respuesta: 'En la playa de las conchas', opciones: ['En el patio del colegio', 'En la playa de las conchas', 'En la orilla del río'] }
+    ],
+    ilustracion: `<svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="180" rx="8" fill="#d8f0f8"/>
+      <rect x="0" y="130" width="220" height="50" fill="#f5d880"/>
+      <ellipse cx="110" cy="130" rx="110" ry="8" fill="#e8c860"/>
+      <rect x="80" y="90" width="60" height="45" fill="#e8c860" rx="3"/>
+      <rect x="78" y="75" width="18" height="25" fill="#e8c860" rx="2"/>
+      <rect x="124" y="75" width="18" height="25" fill="#e8c860" rx="2"/>
+      <rect x="100" y="80" width="20" height="20" fill="#e8c860" rx="2"/>
+      <path d="M78 75 L87 62 L96 75 Z" fill="#d4a840"/>
+      <path d="M124 75 L133 62 L142 75 Z" fill="#d4a840"/>
+      <path d="M100 80 L110 66 L120 80 Z" fill="#d4a840"/>
+      <rect x="97" y="110" width="12" height="25" fill="#c89840" rx="2"/>
+      <circle cx="50" cy="160" r="6" fill="#fff" opacity="0.6"/>
+      <circle cx="170" cy="155" r="4" fill="#fff" opacity="0.6"/>
+      <circle cx="140" cy="162" r="3" fill="#ff9090" opacity="0.8"/>
+      <rect x="0" y="118" width="220" height="14" fill="#5090d0" opacity="0.5"/>
+      <rect x="0" y="122" width="220" height="10" fill="#4080c0" opacity="0.4"/>
+      <circle cx="40" cy="80" r="25" fill="#f8d060"/>
+      <text x="110" y="18" font-size="9" fill="#3090b0" text-anchor="middle" font-family="serif" letter-spacing="1">PLAYA DE LAS CONCHAS</text>
+    </svg>`
+  },
+  {
+    titulo: "El volcán de la feria",
+    historia_full: '<span class="highlight-who">La profesora Inés</span> <span class="highlight-what">hizo explotar un volcán de bicarbonato</span> ante todos los niños <span class="highlight-where">en la feria de ciencias</span>.',
+    historia_clean: 'La profesora Inés hizo explotar un volcán de bicarbonato ante todos los niños en la feria de ciencias.',
+    preguntas: [
+      { tipo: 'who', pregunta: '¿Quién hizo explotar el volcán?', respuesta: 'La profesora Inés', opciones: ['El director Julián', 'La profesora Inés', 'El niño Samuel'] },
+      { tipo: 'what', pregunta: '¿Qué hizo explotar?', respuesta: 'Un volcán de bicarbonato', opciones: ['Un volcán de bicarbonato', 'Un globo de colores', 'Una botella de refresco'] },
+      { tipo: 'where', pregunta: '¿Dónde ocurrió?', respuesta: 'En la feria de ciencias', opciones: ['En la feria de ciencias', 'En el laboratorio', 'En el patio del recreo'] }
+    ],
+    ilustracion: `<svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="180" rx="8" fill="#fff5e0"/>
+      <path d="M40 160 L110 60 L180 160 Z" fill="#c87040"/>
+      <path d="M60 160 L110 75 L160 160 Z" fill="#d88050"/>
+      <path d="M85 160 L110 95 L135 160 Z" fill="#e89060"/>
+      <ellipse cx="110" cy="62" rx="18" ry="8" fill="#cc2020"/>
+      <path d="M102 58 Q105 30 108 20 Q110 10 112 20 Q115 30 118 58" fill="#ff4020" opacity="0.8"/>
+      <path d="M100 55 Q95 35 92 22 Q96 32 103 52" fill="#ff6030" opacity="0.7"/>
+      <path d="M120 55 Q125 35 128 22 Q124 32 117 52" fill="#ff6030" opacity="0.7"/>
+      <ellipse cx="110" cy="58" rx="25" ry="10" fill="#ff4020" opacity="0.3"/>
+      <ellipse cx="110" cy="52" rx="20" ry="8" fill="#ffa040" opacity="0.2"/>
+      <rect x="0" y="155" width="220" height="25" fill="#8a6a40"/>
+      <circle cx="40" cy="130" r="10" fill="#e8c090"/>
+      <circle cx="38" cy="127" r="4" fill="#d8a878"/>
+      <circle cx="42" cy="127" r="4" fill="#d8a878"/>
+      <circle cx="40" cy="133" r="4" fill="#f0d0a8"/>
+      <circle cx="39" cy="132" r="1.5" fill="#2a1a08"/>
+      <circle cx="41" cy="132" r="1.5" fill="#2a1a08"/>
+      <text x="110" y="18" font-size="9" fill="#b06030" text-anchor="middle" font-family="serif" letter-spacing="1">FERIA DE CIENCIAS</text>
+    </svg>`
+  },
+  {
+    titulo: "El nido en el tejado",
+    historia_full: '<span class="highlight-who">Una cigüeña blanca</span> <span class="highlight-what">construyó un nido gigante con ramas y musgo</span> durante el invierno <span class="highlight-where">en el tejado de la iglesia</span>.',
+    historia_clean: 'Una cigüeña blanca construyó un nido gigante con ramas y musgo durante el invierno en el tejado de la iglesia.',
+    preguntas: [
+      { tipo: 'who', pregunta: '¿Quién construyó el nido?', respuesta: 'Una cigüeña blanca', opciones: ['Un águila real', 'Una cigüeña blanca', 'Un gorrión pequeño'] },
+      { tipo: 'what', pregunta: '¿Qué construyó?', respuesta: 'Un nido gigante con ramas y musgo', opciones: ['Un nido gigante con ramas y musgo', 'Una madriguera de barro', 'Un panal de abejas'] },
+      { tipo: 'where', pregunta: '¿Dónde lo construyó?', respuesta: 'En el tejado de la iglesia', opciones: ['En el tejado de la iglesia', 'En la copa del pino', 'En el poste de la luz'] }
+    ],
+    ilustracion: `<svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="180" rx="8" fill="#e8f0f8"/>
+      <rect x="50" y="80" width="120" height="90" fill="#d4c0a0"/>
+      <polygon points="50,80 110,30 170,80" fill="#c09070"/>
+      <rect x="85" y="120" width="50" height="50" fill="#b09070"/>
+      <rect x="95" y="60" width="30" height="22" rx="2" fill="#88a8d0" opacity="0.6"/>
+      <ellipse cx="145" cy="52" rx="28" ry="12" fill="#8B5E3C"/>
+      <line x1="117" y1="47" x2="173" y2="47" stroke="#6a3820" stroke-width="2"/>
+      <line x1="120" y1="52" x2="170" y2="52" stroke="#6a3820" stroke-width="1.5"/>
+      <line x1="118" y1="57" x2="172" y2="57" stroke="#6a3820" stroke-width="1.5"/>
+      <ellipse cx="145" cy="48" rx="6" ry="4" fill="#5a8a30" opacity="0.5"/>
+      <ellipse cx="155" cy="51" rx="5" ry="3" fill="#5a8a30" opacity="0.5"/>
+      <rect x="140" y="30" width="6" height="22" fill="#fff" rx="3"/>
+      <ellipse cx="143" cy="28" rx="12" ry="6" fill="#fff"/>
+      <circle cx="150" cy="26" r="3" fill="#ff4040"/>
+      <circle cx="148" cy="26" r="1.5" fill="#1a1a1a"/>
+      <text x="110" y="18" font-size="9" fill="#7090b0" text-anchor="middle" font-family="serif" letter-spacing="1">TEJADO DE LA IGLESIA</text>
+    </svg>`
+  },
+  {
+    titulo: "La receta secreta",
+    historia_full: '<span class="highlight-who">El cocinero don Félix</span> <span class="highlight-what">escondió su receta de tarta de naranja</span> dentro de una lata <span class="highlight-where">en la despensa del restaurante</span>.',
+    historia_clean: 'El cocinero don Félix escondió su receta de tarta de naranja dentro de una lata en la despensa del restaurante.',
+    preguntas: [
+      { tipo: 'who', pregunta: '¿Quién escondió la receta?', respuesta: 'El cocinero don Félix', opciones: ['La pastelera doña Luz', 'El cocinero don Félix', 'El camarero Santi'] },
+      { tipo: 'what', pregunta: '¿Qué escondió?', respuesta: 'Su receta de tarta de naranja', opciones: ['Su receta de tarta de naranja', 'Sus llaves del coche', 'Su sueldo del mes'] },
+      { tipo: 'where', pregunta: '¿Dónde la escondió?', respuesta: 'En la despensa del restaurante', opciones: ['En la despensa del restaurante', 'En el armario del pasillo', 'En la caja fuerte del banco'] }
+    ],
+    ilustracion: `<svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="180" rx="8" fill="#fff8f0"/>
+      <rect x="20" y="50" width="70" height="110" fill="#d4a870" rx="4"/>
+      <rect x="30" y="60" width="50" height="40" fill="#c09050" rx="3"/>
+      <rect x="30" y="110" width="50" height="40" fill="#c09050" rx="3"/>
+      <circle cx="55" cy="83" r="4" fill="#8B5E3C"/>
+      <circle cx="55" cy="132" r="4" fill="#8B5E3C"/>
+      <rect x="105" y="85" width="50" height="65" rx="6" fill="#e08020"/>
+      <rect x="105" y="85" width="50" height="65" rx="6" fill="none" stroke="#c06010" stroke-width="1.5"/>
+      <ellipse cx="130" cy="83" rx="15" ry="5" fill="#c06010"/>
+      <rect x="118" y="100" width="24" height="20" fill="#fff8e8" rx="2"/>
+      <line x1="122" y1="106" x2="138" y2="106" stroke="#c06010" stroke-width="1"/>
+      <line x1="122" y1="110" x2="138" y2="110" stroke="#c06010" stroke-width="1"/>
+      <line x1="122" y1="114" x2="132" y2="114" stroke="#c06010" stroke-width="1"/>
+      <circle cx="155" cy="100" r="14" fill="#e8c090"/>
+      <ellipse cx="149" cy="95" rx="5" ry="6" fill="#d8a878"/>
+      <ellipse cx="161" cy="95" rx="5" ry="6" fill="#d8a878"/>
+      <circle cx="155" cy="104" r="6" fill="#f0d0a8"/>
+      <circle cx="153" cy="102" r="2" fill="#2a1a08"/>
+      <circle cx="157" cy="102" r="2" fill="#2a1a08"/>
+      <ellipse cx="155" cy="82" rx="12" ry="6" fill="#fff" />
+      <rect x="149" y="76" width="12" height="8" rx="6" fill="#fff"/>
+      <text x="110" y="18" font-size="9" fill="#c06010" text-anchor="middle" font-family="serif" letter-spacing="1">DESPENSA DEL RESTAURANTE</text>
+    </svg>`
+  },
+  {
+    titulo: "El cohete de cartón",
+    historia_full: '<span class="highlight-who">La niña Vera</span> <span class="highlight-what">pintó un cohete gigante de cartón con estrellas plateadas</span> toda la tarde <span class="highlight-where">en el taller de manualidades</span>.',
+    historia_clean: 'La niña Vera pintó un cohete gigante de cartón con estrellas plateadas toda la tarde en el taller de manualidades.',
+    preguntas: [
+      { tipo: 'who', pregunta: '¿Quién pintó el cohete?', respuesta: 'La niña Vera', opciones: ['La niña Vera', 'El niño Gael', 'La monitora Paula'] },
+      { tipo: 'what', pregunta: '¿Qué pintó?', respuesta: 'Un cohete gigante de cartón', opciones: ['Un cohete gigante de cartón', 'Un dinosaurio de tela', 'Un barco de madera'] },
+      { tipo: 'where', pregunta: '¿Dónde lo pintó?', respuesta: 'En el taller de manualidades', opciones: ['En el taller de manualidades', 'En el salón de casa', 'En el museo de arte'] }
+    ],
+    ilustracion: `<svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="180" rx="8" fill="#1a1a3a"/>
+      <circle cx="30" cy="25" r="2" fill="#fff" opacity="0.8"/>
+      <circle cx="60" cy="15" r="1.5" fill="#fff" opacity="0.6"/>
+      <circle cx="90" cy="30" r="2" fill="#fff" opacity="0.9"/>
+      <circle cx="155" cy="20" r="1.5" fill="#fff" opacity="0.7"/>
+      <circle cx="190" cy="35" r="2" fill="#fff" opacity="0.8"/>
+      <circle cx="200" cy="10" r="1" fill="#fff" opacity="0.5"/>
+      <circle cx="15" cy="50" r="1.5" fill="#fff" opacity="0.6"/>
+      <rect x="92" y="50" width="36" height="80" fill="#e03030" rx="6"/>
+      <polygon points="92,50 110,15 128,50" fill="#cc2020"/>
+      <polygon points="85,125 92,110 92,130" fill="#e8a030"/>
+      <polygon points="135,125 128,110 128,130" fill="#e8a030"/>
+      <rect x="96" y="65" width="28" height="22" rx="4" fill="#88c8f8" opacity="0.8"/>
+      <text x="110" y="80" font-size="10" text-anchor="middle" fill="#1a1a3a">★</text>
+      <polygon points="110,100 113,108 122,108 115,113 118,122 110,117 102,122 105,113 98,108 107,108" fill="#c8c8c8" transform="scale(0.5) translate(110,100)"/>
+      <polygon points="110,100 113,108 122,108 115,113 118,122 110,117 102,122 105,113 98,108 107,108" fill="#c8c8c8" transform="translate(10,15) scale(0.4)"/>
+      <ellipse cx="110" cy="148" rx="16" ry="8" fill="#ff8020" opacity="0.8"/>
+      <ellipse cx="110" cy="155" rx="10" ry="5" fill="#ffb040" opacity="0.6"/>
+      <circle cx="160" cy="100" r="14" fill="#e8c090"/>
+      <ellipse cx="154" cy="95" rx="5" ry="6" fill="#d8a878"/>
+      <ellipse cx="166" cy="95" rx="5" ry="6" fill="#d8a878"/>
+      <circle cx="160" cy="104" r="6" fill="#f0d0a8"/>
+      <circle cx="158" cy="102" r="2" fill="#2a1a08"/>
+      <circle cx="162" cy="102" r="2" fill="#2a1a08"/>
+      <text x="110" y="175" font-size="9" fill="#8888c0" text-anchor="middle" font-family="serif" letter-spacing="1">TALLER DE MANUALIDADES</text>
+    </svg>`
+  },
+  {
+    titulo: "El perro y la pelota",
+    historia_full: '<span class="highlight-who">El perro Canelo</span> <span class="highlight-what">enterró una pelota azul junto a un banco</span> al amanecer <span class="highlight-where">en el parque de los pinos</span>.',
+    historia_clean: 'El perro Canelo enterró una pelota azul junto a un banco al amanecer en el parque de los pinos.',
+    preguntas: [
+      { tipo: 'who', pregunta: '¿Quién enterró la pelota?', respuesta: 'El perro Canelo', opciones: ['El perro Canelo', 'El gato Misi', 'El niño Diego'] },
+      { tipo: 'what', pregunta: '¿Qué enterró?', respuesta: 'Una pelota azul', opciones: ['Un hueso grande', 'Una pelota azul', 'Un juguete rojo'] },
+      { tipo: 'where', pregunta: '¿Dónde la enterró?', respuesta: 'En el parque de los pinos', opciones: ['En el jardín de casa', 'En el parque de los pinos', 'En la playa cercana'] }
+    ],
+    ilustracion: `<svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="180" rx="8" fill="#e8f5e0"/>
+      <rect x="0" y="140" width="220" height="40" fill="#7a9a50"/>
+      <rect x="30" y="105" width="80" height="10" rx="3" fill="#9a7050"/>
+      <rect x="32" y="90" width="8" height="25" fill="#8B5E3C"/>
+      <rect x="100" y="90" width="8" height="25" fill="#8B5E3C"/>
+      <rect x="60" y="105" width="8" height="10" fill="#9a7050"/>
+      <rect x="30" y="90" width="8" height="35" fill="#8B5E3C" rx="3"/>
+      <rect x="100" y="90" width="8" height="35" fill="#8B5E3C" rx="3"/>
+      <ellipse cx="90" cy="148" rx="14" ry="6" fill="#6a8a40" opacity="0.5"/>
+      <ellipse cx="90" cy="150" rx="8" ry="4" fill="#5a3010" opacity="0.4"/>
+      <rect x="60" y="110" width="14" height="8" rx="2" fill="#8B5E3C"/>
+      <circle cx="148" cy="120" r="25" fill="#c88040"/>
+      <ellipse cx="138" cy="115" rx="10" ry="8" fill="#b07030"/>
+      <ellipse cx="158" cy="112" rx="8" ry="10" fill="#b07030"/>
+      <circle cx="148" cy="125" r="12" fill="#d89050"/>
+      <circle cx="144" cy="122" r="3.5" fill="#1a0a00"/>
+      <circle cx="152" cy="122" r="3.5" fill="#1a0a00"/>
+      <ellipse cx="148" cy="128" rx="5" ry="3" fill="#c07040"/>
+      <circle cx="137" cy="107" r="5" fill="#a06030"/>
+      <circle cx="159" cy="107" r="5" fill="#a06030"/>
+      <circle cx="178" cy="115" r="9" fill="#4080d0"/>
+      <line x1="178" y1="106" x2="178" y2="112" stroke="#2060b0" stroke-width="1.5"/>
+      <line x1="174" y1="110" x2="182" y2="110" stroke="#2060b0" stroke-width="1.5"/>
+      <text x="110" y="18" font-size="9" fill="#5a8a30" text-anchor="middle" font-family="serif" letter-spacing="1">PARQUE DE LOS PINOS</text>
+    </svg>`
+  },
+  {
+    titulo: "La bufanda de lana",
+    historia_full: '<span class="highlight-who">La señora Pilar</span> <span class="highlight-what">tejió una bufanda de rayas amarillas y moradas</span> con mucho cariño <span class="highlight-where">en su sillón junto a la chimenea</span>.',
+    historia_clean: 'La señora Pilar tejió una bufanda de rayas amarillas y moradas con mucho cariño en su sillón junto a la chimenea.',
+    preguntas: [
+      { tipo: 'who', pregunta: '¿Quién tejió la bufanda?', respuesta: 'La señora Pilar', opciones: ['La señora Pilar', 'La abuela Concha', 'La maestra Alba'] },
+      { tipo: 'what', pregunta: '¿Qué tejió?', respuesta: 'Una bufanda de rayas amarillas y moradas', opciones: ['Un jersey azul de cuello', 'Una bufanda de rayas amarillas y moradas', 'Un gorro de pompón rojo'] },
+      { tipo: 'where', pregunta: '¿Dónde tejió?', respuesta: 'En su sillón junto a la chimenea', opciones: ['En su sillón junto a la chimenea', 'En el banco del jardín', 'En la tienda de telas'] }
+    ],
+    ilustracion: `<svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="180" rx="8" fill="#fff0e8"/>
+      <rect x="130" y="60" width="60" height="100" rx="8" fill="#c07840"/>
+      <rect x="118" y="75" width="20" height="80" rx="8" fill="#d08848"/>
+      <rect x="162" y="75" width="20" height="80" rx="8" fill="#d08848"/>
+      <rect x="130" y="55" width="60" height="20" rx="5" fill="#b06830"/>
+      <rect x="155" y="40" width="14" height="40" rx="4" fill="#e09858"/>
+      <rect x="148" y="105" width="24" height="8" rx="2" fill="#f0a848"/>
+      <rect x="148" y="117" width="24" height="8" rx="2" fill="#f0a848"/>
+      <rect x="25" y="90" width="80" height="12" rx="3" fill="#f0c820"/>
+      <rect x="25" y="102" width="80" height="12" rx="3" fill="#9040c0"/>
+      <rect x="25" y="114" width="80" height="12" rx="3" fill="#f0c820"/>
+      <rect x="25" y="126" width="80" height="12" rx="3" fill="#9040c0"/>
+      <rect x="25" y="138" width="80" height="12" rx="3" fill="#f0c820"/>
+      <circle cx="20" cy="96" r="8" fill="#c8a0e0"/>
+      <circle cx="20" cy="130" r="8" fill="#c8a0e0"/>
+      <circle cx="105" cy="85" r="8" fill="#f0e060"/>
+      <circle cx="105" cy="145" r="8" fill="#f0e060"/>
+      <rect x="0" y="145" width="220" height="35" fill="#8B5E3C" opacity="0.2"/>
+      <rect x="165" y="140" width="50" height="40" rx="4" fill="#c89060" opacity="0.4"/>
+      <text x="110" y="18" font-size="9" fill="#b06030" text-anchor="middle" font-family="serif" letter-spacing="1">SILLÓN JUNTO A LA CHIMENEA</text>
+    </svg>`
+  },
+  {
+    titulo: "La rana saltarina",
+    historia_full: '<span class="highlight-who">Una ranita verde</span> <span class="highlight-what">saltó sobre los nenúfares de un lado a otro</span> toda la mañana <span class="highlight-where">en el estanque del parque</span>.',
+    historia_clean: 'Una ranita verde saltó sobre los nenúfares de un lado a otro toda la mañana en el estanque del parque.',
+    preguntas: [
+      { tipo: 'who', pregunta: '¿Quién saltó sobre los nenúfares?', respuesta: 'Una ranita verde', opciones: ['Una ranita verde', 'Un sapo marrón', 'Una tortuga pequeña'] },
+      { tipo: 'what', pregunta: '¿Qué hizo?', respuesta: 'Saltó sobre los nenúfares', opciones: ['Saltó sobre los nenúfares', 'Nadó bajo el agua', 'Comió moscas en la orilla'] },
+      { tipo: 'where', pregunta: '¿Dónde ocurrió?', respuesta: 'En el estanque del parque', opciones: ['En el río caudaloso', 'En el estanque del parque', 'En el charco del patio'] }
+    ],
+    ilustracion: `<svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="180" rx="8" fill="#d0e8f8"/>
+      <ellipse cx="110" cy="130" rx="100" ry="45" fill="#3090a0" opacity="0.6"/>
+      <ellipse cx="110" cy="135" rx="95" ry="38" fill="#2080a0" opacity="0.5"/>
+      <ellipse cx="55" cy="130" rx="22" ry="8" fill="#5aaa3a"/>
+      <ellipse cx="55" cy="128" rx="20" ry="7" fill="#6aba4a"/>
+      <ellipse cx="130" cy="120" rx="18" ry="7" fill="#5aaa3a"/>
+      <ellipse cx="130" cy="118" rx="16" ry="6" fill="#6aba4a"/>
+      <ellipse cx="175" cy="135" rx="20" ry="7" fill="#5aaa3a"/>
+      <ellipse cx="175" cy="133" rx="18" ry="6" fill="#6aba4a"/>
+      <circle cx="130" cy="110" r="12" fill="#4aaa2a"/>
+      <ellipse cx="126" cy="106" rx="4" ry="5" fill="#3a9a1a"/>
+      <ellipse cx="134" cy="106" rx="4" ry="5" fill="#3a9a1a"/>
+      <circle cx="130" cy="113" r="5" fill="#5aba3a"/>
+      <circle cx="128" cy="111" r="2" fill="#f0f0a0"/>
+      <circle cx="132" cy="111" r="2" fill="#f0f0a0"/>
+      <circle cx="128" cy="111" r="1" fill="#1a1a1a"/>
+      <circle cx="132" cy="111" r="1" fill="#1a1a1a"/>
+      <path d="M120 110 L112 105" stroke="#4aaa2a" stroke-width="2" stroke-linecap="round"/>
+      <path d="M140 110 L148 105" stroke="#4aaa2a" stroke-width="2" stroke-linecap="round"/>
+      <path d="M123 118 L116 126" stroke="#4aaa2a" stroke-width="2" stroke-linecap="round"/>
+      <path d="M137 118 L144 126" stroke="#4aaa2a" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="40" cy="60" r="20" fill="#f5d060"/>
+      <text x="110" y="18" font-size="9" fill="#2080a0" text-anchor="middle" font-family="serif" letter-spacing="1">ESTANQUE DEL PARQUE</text>
+    </svg>`
+  },
+  {
+    titulo: "El mapa del tesoro",
+    historia_full: '<span class="highlight-who">El pirata Barba Roja</span> <span class="highlight-what">enterró un cofre lleno de monedas de oro</span> bajo una palmera <span class="highlight-where">en la isla de la Calavera</span>.',
+    historia_clean: 'El pirata Barba Roja enterró un cofre lleno de monedas de oro bajo una palmera en la isla de la Calavera.',
+    preguntas: [
+      { tipo: 'who', pregunta: '¿Quién enterró el cofre?', respuesta: 'El pirata Barba Roja', opciones: ['El capitán Azul', 'El pirata Barba Roja', 'La marinera Luz'] },
+      { tipo: 'what', pregunta: '¿Qué enterró?', respuesta: 'Un cofre lleno de monedas de oro', opciones: ['Un cofre lleno de monedas de oro', 'Una espada oxidada', 'Un mapa enrollado'] },
+      { tipo: 'where', pregunta: '¿Dónde lo enterró?', respuesta: 'En la isla de la Calavera', opciones: ['En la isla de la Calavera', 'En el fondo del mar', 'En el puerto de la ciudad'] }
+    ],
+    ilustracion: `<svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="180" rx="8" fill="#d0e8f0"/>
+      <ellipse cx="110" cy="160" rx="95" ry="22" fill="#f5d870"/>
+      <ellipse cx="110" cy="155" rx="88" ry="18" fill="#e8c860"/>
+      <rect x="88" y="80" width="10" height="70" fill="#8B5E3C" rx="3"/>
+      <ellipse cx="93" cy="60" rx="28" ry="28" fill="#5aaa2a"/>
+      <ellipse cx="75" cy="75" rx="16" ry="14" fill="#4a9a1a"/>
+      <ellipse cx="112" cy="68" rx="18" ry="16" fill="#4a9a1a"/>
+      <rect x="70" y="130" width="40" height="28" rx="4" fill="#8B5E3C"/>
+      <rect x="70" y="130" width="40" height="28" rx="4" fill="none" stroke="#6a3820" stroke-width="1.5"/>
+      <rect x="70" y="130" width="40" height="10" fill="#a06830" rx="4"/>
+      <rect x="85" y="138" width="10" height="12" fill="#f5c840" rx="2"/>
+      <circle cx="90" cy="144" r="3" fill="#c8a020"/>
+      <text x="150" y="100" font-size="22" text-anchor="middle" fill="#e84040" opacity="0.4">☠</text>
+      <text x="110" y="18" font-size="9" fill="#2080a0" text-anchor="middle" font-family="serif" letter-spacing="1">ISLA DE LA CALAVERA</text>
+    </svg>`
+  },
+  {
+    titulo: "El globo escapado",
+    historia_full: '<span class="highlight-who">El payaso Tito</span> <span class="highlight-what">soltó accidentalmente un ramo de globos de colores</span> al saludar al público <span class="highlight-where">en el circo de la plaza mayor</span>.',
+    historia_clean: 'El payaso Tito soltó accidentalmente un ramo de globos de colores al saludar al público en el circo de la plaza mayor.',
+    preguntas: [
+      { tipo: 'who', pregunta: '¿Quién soltó los globos?', respuesta: 'El payaso Tito', opciones: ['El mago Aldo', 'El payaso Tito', 'La trapecista Eva'] },
+      { tipo: 'what', pregunta: '¿Qué soltó?', respuesta: 'Un ramo de globos de colores', opciones: ['Un ramo de globos de colores', 'Una paloma blanca', 'Un sombrero de copa'] },
+      { tipo: 'where', pregunta: '¿Dónde ocurrió?', respuesta: 'En el circo de la plaza mayor', opciones: ['En el circo de la plaza mayor', 'En el teatro municipal', 'En el parque de atracciones'] }
+    ],
+    ilustracion: `<svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="180" rx="8" fill="#fff0f8"/>
+      <polygon points="0,0 220,0 220,80 0,80" fill="#f0f0f0"/>
+      <line x1="0" y1="0" x2="220" y2="80" stroke="#e03030" stroke-width="18" opacity="0.15"/>
+      <line x1="55" y1="0" x2="220" y2="60" stroke="#e03030" stroke-width="18" opacity="0.15"/>
+      <line x1="110" y1="0" x2="220" y2="40" stroke="#e03030" stroke-width="18" opacity="0.15"/>
+      <circle cx="95" cy="48" r="12" fill="#ff6060"/>
+      <circle cx="115" cy="35" r="11" fill="#60a0ff"/>
+      <circle cx="132" cy="50" r="10" fill="#60d060"/>
+      <circle cx="78" cy="35" r="10" fill="#ffa030"/>
+      <circle cx="110" cy="58" r="9" fill="#c060ff"/>
+      <line x1="95" y1="60" x2="100" y2="100" stroke="#888" stroke-width="1"/>
+      <line x1="115" y1="46" x2="100" y2="100" stroke="#888" stroke-width="1"/>
+      <line x1="132" y1="60" x2="100" y2="100" stroke="#888" stroke-width="1"/>
+      <line x1="78" y1="45" x2="100" y2="100" stroke="#888" stroke-width="1"/>
+      <line x1="110" y1="67" x2="100" y2="100" stroke="#888" stroke-width="1"/>
+      <circle cx="100" cy="120" r="18" fill="#f0c090"/>
+      <ellipse cx="92" cy="114" rx="6" ry="8" fill="#e0a878"/>
+      <ellipse cx="108" cy="114" rx="6" ry="8" fill="#e0a878"/>
+      <circle cx="100" cy="125" r="8" fill="#f8d8b0"/>
+      <circle cx="97" cy="123" r="2.5" fill="#1a0a00"/>
+      <circle cx="103" cy="123" r="2.5" fill="#1a0a00"/>
+      <ellipse cx="100" cy="128" rx="4" ry="2.5" fill="#ff8080"/>
+      <rect x="85" y="100" width="30" height="10" rx="5" fill="#ff3030"/>
+      <circle cx="85" cy="105" r="6" fill="#ff8040"/>
+      <circle cx="115" cy="105" r="6" fill="#ff8040"/>
+      <text x="110" y="172" font-size="9" fill="#c040a0" text-anchor="middle" font-family="serif" letter-spacing="1">CIRCO DE LA PLAZA MAYOR</text>
+    </svg>`
+  },
+  {
+    titulo: "La nieve en el tejado",
+    historia_full: '<span class="highlight-who">El señor Gregorio</span> <span class="highlight-what">quitó la nieve del tejado con una pala larga</span> muy temprano <span class="highlight-where">en su cabaña de la montaña</span>.',
+    historia_clean: 'El señor Gregorio quitó la nieve del tejado con una pala larga muy temprano en su cabaña de la montaña.',
+    preguntas: [
+      { tipo: 'who', pregunta: '¿Quién quitó la nieve?', respuesta: 'El señor Gregorio', opciones: ['El señor Gregorio', 'La señora Blanca', 'El guardabosques Otto'] },
+      { tipo: 'what', pregunta: '¿Qué hizo con la pala?', respuesta: 'Quitó la nieve del tejado', opciones: ['Quitó la nieve del tejado', 'Cavó un hoyo en el jardín', 'Plantó árboles en la ladera'] },
+      { tipo: 'where', pregunta: '¿Dónde ocurrió?', respuesta: 'En su cabaña de la montaña', opciones: ['En su cabaña de la montaña', 'En el pueblo del valle', 'En la estación de esquí'] }
+    ],
+    ilustracion: `<svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="180" rx="8" fill="#e8f0f8"/>
+      <rect x="0" y="130" width="220" height="50" fill="#f0f8ff"/>
+      <circle cx="170" cy="35" r="22" fill="#fffce0"/>
+      <rect x="45" y="90" width="120" height="70" fill="#d4b890"/>
+      <polygon points="35,90 110,35 185,90" fill="#c09070"/>
+      <ellipse cx="110" cy="35" rx="80" ry="12" fill="#f0f8ff"/>
+      <ellipse cx="35" cy="90" rx="15" ry="8" fill="#f0f8ff"/>
+      <ellipse cx="185" cy="90" rx="15" ry="8" fill="#f0f8ff"/>
+      <rect x="90" y="120" width="40" height="40" fill="#a07850"/>
+      <rect x="70" y="110" width="20" height="30" rx="2" fill="#88a8c0" opacity="0.5"/>
+      <rect x="130" y="110" width="20" height="30" rx="2" fill="#88a8c0" opacity="0.5"/>
+      <circle cx="55" cy="80" r="14" fill="#e8c090"/>
+      <ellipse cx="49" cy="75" rx="5" ry="6" fill="#d8a878"/>
+      <ellipse cx="61" cy="75" rx="5" ry="6" fill="#d8a878"/>
+      <circle cx="55" cy="84" r="6" fill="#f0d0a8"/>
+      <circle cx="53" cy="82" r="2" fill="#2a1a08"/>
+      <circle cx="57" cy="82" r="2" fill="#2a1a08"/>
+      <rect x="30" y="65" width="4" height="40" fill="#8B5E3C" rx="2" transform="rotate(-20 30 65)"/>
+      <ellipse cx="22" cy="63" rx="12" ry="6" fill="#e0e8f0" transform="rotate(-20 22 63)"/>
+      <text x="110" y="18" font-size="9" fill="#7090b0" text-anchor="middle" font-family="serif" letter-spacing="1">CABAÑA DE LA MONTAÑA</text>
+    </svg>`
+  },
+  {
+    titulo: "La luciérnaga especial",
+    historia_full: '<span class="highlight-who">La niña Alma</span> <span class="highlight-what">atrapó una luciérnaga en un frasco de cristal</span> al anochecer <span class="highlight-where">en el prado detrás de la granja</span>.',
+    historia_clean: 'La niña Alma atrapó una luciérnaga en un frasco de cristal al anochecer en el prado detrás de la granja.',
+    preguntas: [
+      { tipo: 'who', pregunta: '¿Quién atrapó la luciérnaga?', respuesta: 'La niña Alma', opciones: ['La niña Alma', 'El niño Biel', 'La señorita Laura'] },
+      { tipo: 'what', pregunta: '¿Qué atrapó?', respuesta: 'Una luciérnaga en un frasco', opciones: ['Una mariposa azul', 'Una luciérnaga en un frasco', 'Un saltamontes verde'] },
+      { tipo: 'where', pregunta: '¿Dónde la atrapó?', respuesta: 'En el prado detrás de la granja', opciones: ['En el prado detrás de la granja', 'En el bosque oscuro', 'En la orilla del lago'] }
+    ],
+    ilustracion: `<svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="180" rx="8" fill="#1a2a1a"/>
+      <circle cx="20" cy="20" r="2" fill="#fff" opacity="0.7"/>
+      <circle cx="55" cy="12" r="1.5" fill="#fff" opacity="0.5"/>
+      <circle cx="100" cy="18" r="2" fill="#fff" opacity="0.8"/>
+      <circle cx="160" cy="8" r="1.5" fill="#fff" opacity="0.6"/>
+      <circle cx="195" cy="22" r="2" fill="#fff" opacity="0.7"/>
+      <circle cx="140" cy="30" r="1" fill="#fff" opacity="0.5"/>
+      <rect x="0" y="130" width="220" height="50" fill="#2a4a1a"/>
+      <ellipse cx="110" cy="130" rx="110" ry="15" fill="#3a6a2a"/>
+      <rect x="150" y="60" width="35" height="70" fill="#6a4a2a" rx="3"/>
+      <rect x="145" y="55" width="45" height="12" rx="2" fill="#8B5E3C"/>
+      <rect x="165" y="40" width="8" height="25" fill="#5a3a1a" rx="2"/>
+      <circle cx="110" cy="100" r="22" fill="#e8f8e0" opacity="0.12"/>
+      <ellipse cx="110" cy="88" rx="14" ry="20" fill="#d0d8c0" opacity="0.8"/>
+      <ellipse cx="110" cy="106" rx="10" ry="5" fill="#a0a890" opacity="0.5"/>
+      <circle cx="110" cy="95" r="6" fill="#d8ff80" opacity="0.9"/>
+      <circle cx="110" cy="95" r="10" fill="#c8f060" opacity="0.3"/>
+      <circle cx="110" cy="95" r="16" fill="#a8d040" opacity="0.15"/>
+      <circle cx="55" cy="105" r="14" fill="#e8c090"/>
+      <ellipse cx="49" cy="100" rx="5" ry="6" fill="#d8a878"/>
+      <ellipse cx="61" cy="100" rx="5" ry="6" fill="#d8a878"/>
+      <circle cx="55" cy="109" r="6" fill="#f0d0a8"/>
+      <circle cx="53" cy="107" r="2" fill="#2a1a08"/>
+      <circle cx="57" cy="107" r="2" fill="#2a1a08"/>
+      <text x="110" y="175" font-size="9" fill="#6aaa4a" text-anchor="middle" font-family="serif" letter-spacing="1">PRADO DETRÁS DE LA GRANJA</text>
+    </svg>`
+  },
+  {
+    titulo: "El tren de madera",
+    historia_full: '<span class="highlight-who">El abuelo Ernesto</span> <span class="highlight-what">reparó un tren de madera antiguo con pintura roja</span> con mucha paciencia <span class="highlight-where">en el sótano de su casa</span>.',
+    historia_clean: 'El abuelo Ernesto reparó un tren de madera antiguo con pintura roja con mucha paciencia en el sótano de su casa.',
+    preguntas: [
+      { tipo: 'who', pregunta: '¿Quién reparó el tren?', respuesta: 'El abuelo Ernesto', opciones: ['El abuelo Ernesto', 'El niño Mateo', 'El técnico Juan'] },
+      { tipo: 'what', pregunta: '¿Qué reparó?', respuesta: 'Un tren de madera antiguo', opciones: ['Un tren de madera antiguo', 'Un coche de juguete', 'Una bicicleta rota'] },
+      { tipo: 'where', pregunta: '¿Dónde lo reparó?', respuesta: 'En el sótano de su casa', opciones: ['En el sótano de su casa', 'En el garaje del vecino', 'En el taller del pueblo'] }
+    ],
+    ilustracion: `<svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="180" rx="8" fill="#2a2018"/>
+      <rect x="0" y="130" width="220" height="50" fill="#1a1208"/>
+      <rect x="20" y="80" width="60" height="40" rx="4" fill="#cc2a2a"/>
+      <rect x="80" y="90" width="50" height="30" rx="3" fill="#cc2a2a"/>
+      <rect x="130" y="90" width="40" height="30" rx="3" fill="#cc2a2a"/>
+      <rect x="30" y="72" width="35" height="15" rx="3" fill="#dd3a3a"/>
+      <rect x="35" y="68" width="12" height="10" rx="3" fill="#aaa"/>
+      <circle cx="42" cy="123" r="10" fill="#444"/>
+      <circle cx="42" cy="123" r="6" fill="#666"/>
+      <circle cx="75" cy="123" r="10" fill="#444"/>
+      <circle cx="75" cy="123" r="6" fill="#666"/>
+      <circle cx="102" cy="123" r="9" fill="#444"/>
+      <circle cx="102" cy="123" r="5" fill="#666"/>
+      <circle cx="125" cy="123" r="9" fill="#444"/>
+      <circle cx="125" cy="123" r="5" fill="#666"/>
+      <circle cx="152" cy="123" r="9" fill="#444"/>
+      <circle cx="152" cy="123" r="5" fill="#666"/>
+      <circle cx="172" cy="123" r="9" fill="#444"/>
+      <circle cx="172" cy="123" r="5" fill="#666"/>
+      <rect x="0" y="131" width="220" height="5" fill="#8B5E3C"/>
+      <rect x="20" y="136" width="10" height="10" fill="#8B5E3C"/>
+      <rect x="50" y="136" width="10" height="10" fill="#8B5E3C"/>
+      <rect x="80" y="136" width="10" height="10" fill="#8B5E3C"/>
+      <rect x="110" y="136" width="10" height="10" fill="#8B5E3C"/>
+      <rect x="140" y="136" width="10" height="10" fill="#8B5E3C"/>
+      <rect x="170" y="136" width="10" height="10" fill="#8B5E3C"/>
+      <circle cx="175" cy="75" r="14" fill="#e8c090"/>
+      <ellipse cx="169" cy="70" rx="5" ry="6" fill="#d8a878"/>
+      <ellipse cx="181" cy="70" rx="5" ry="6" fill="#d8a878"/>
+      <circle cx="175" cy="79" r="6" fill="#f0d0a8"/>
+      <circle cx="173" cy="77" r="2" fill="#2a1a08"/>
+      <circle cx="177" cy="77" r="2" fill="#2a1a08"/>
+      <text x="110" y="18" font-size="9" fill="#c89060" text-anchor="middle" font-family="serif" letter-spacing="1">SÓTANO DE SU CASA</text>
+    </svg>`
+  }
+];
+
+/* ===== ESTADO ===== */
+let nivel = 'principiante';
+let casoActual = 0;
+let sellos = 0;
+let respuestasCorrectas = 0;
+let preguntasRespondidas = 0;
+const totalPorCaso = 3;
+const rangos = ['Aprendiz', 'Detective Novato', 'Investigador', 'Inspector Jefe', 'Comisario de Historias'];
+
+/* ===== NIVEL ===== */
+function setLevel(lvl, btn) {
+  nivel = lvl;
+  document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+/* ===== INICIAR ===== */
+function startGame() {
+  document.getElementById('antesala').style.display = 'none';
+  document.getElementById('juego-screen').style.display = 'block';
+  casoActual = 0;
+  sellos = 0;
+  registro = [];
+  inGame = true;
+  updateSellos();
+  renderCaso();
+}
+
+/* ===== RENDERIZAR CASO ===== */
+function renderCaso() {
+  const c = casos[casoActual];
+  respuestasCorrectas = 0;
+  preguntasRespondidas = 0;
+  respuestasCasoActual = [];
+
+  document.getElementById('case-badge').textContent = `CASO ${casoActual + 1} / ${casos.length}`;
+  document.getElementById('illus-wrap').innerHTML = c.ilustracion;
+
+  let historiaHtml = '';
+  if (nivel === 'experto') {
+    historiaHtml = c.historia_clean;
+  } else {
+    historiaHtml = c.historia_full;
+  }
+  document.getElementById('story-text').innerHTML = historiaHtml;
+
+  const grid = document.getElementById('questions-grid');
+  grid.innerHTML = '';
+
+  const icons = { who: '🔴 ¿QUIÉN?', what: '🔵 ¿QUÉ?', where: '🟢 ¿DÓNDE?' };
+
+  c.preguntas.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = `question-card q-${p.tipo}`;
+    card.id = `qcard-${i}`;
+
+    let bodyHtml = `<div class="question-text">${p.pregunta}</div>`;
+
+    if (nivel === 'principiante') {
+      bodyHtml += `<div class="mc-options">`;
+      p.opciones.forEach((op, j) => {
+        bodyHtml += `<button class="mc-option" id="opt-${i}-${j}" onclick="checkMC(${i},${j})">${op}</button>`;
+      });
+      bodyHtml += `</div>`;
+    } else if (nivel === 'intermedio') {
+      bodyHtml += `
+        <input class="free-input" id="ans-${i}" placeholder="Escribe tu respuesta..." />
+        <button class="check-btn" id="checkbtn-${i}" onclick="checkFree(${i})">Verificar</button>
+        <div id="fb-${i}"></div>`;
+    } else {
+      bodyHtml += `
+        <div class="visual-hint">Observa la imagen y responde sin leer el texto.</div>
+        <input class="free-input" id="ans-${i}" placeholder="Tu respuesta..." />
+        <button class="check-btn" id="checkbtn-${i}" onclick="checkFree(${i})">Verificar</button>
+        <div id="fb-${i}"></div>`;
+    }
+
+    card.innerHTML = `
+      <div class="question-label">${icons[p.tipo]}</div>
+      <div class="question-body">${bodyHtml}</div>
+    `;
+    grid.appendChild(card);
+  });
+
+  updateProgress();
+  document.getElementById('next-btn').classList.remove('visible');
+}
+
+/* ===== OPCIÓN MÚLTIPLE ===== */
+function checkMC(qi, opIdx) {
+  const c = casos[casoActual];
+  const p = c.preguntas[qi];
+  const card = document.getElementById(`qcard-${qi}`);
+  if (card.dataset.done) return;
+  card.dataset.done = '1';
+
+  const correct = p.opciones[opIdx] === p.respuesta;
+  if (correct) respuestasCorrectas++;
+
+  p.opciones.forEach((op, j) => {
+    const btn = document.getElementById(`opt-${qi}-${j}`);
+    if (!btn) return;
+    btn.disabled = true;
+    if (op === p.respuesta) btn.classList.add('correct');
+    else if (j === opIdx && !correct) btn.classList.add('wrong');
+  });
+
+  const c2 = casos[casoActual];
+  const p2 = c2.preguntas[qi];
+  respuestasCasoActual.push({ tipo: p2.tipo, pregunta: p2.pregunta, dada: p2.opciones[opIdx], correcta: p2.respuesta, correcto: correct });
+  preguntasRespondidas++;
+  updateProgress();
+  checkAllDone();
+}
+
+/* ===== RESPUESTA LIBRE ===== */
+function checkFree(qi) {
+  const c = casos[casoActual];
+  const p = c.preguntas[qi];
+  const card = document.getElementById(`qcard-${qi}`);
+  if (card.dataset.done) return;
+
+  const input = document.getElementById(`ans-${qi}`);
+  const val = input.value.trim().toLowerCase();
+  if (!val) return;
+
+  const expected = p.respuesta.toLowerCase();
+  const words = expected.split(' ').filter(w => w.length > 3);
+  const correct = val.length >= 2 && words.some(w => val.includes(w));
+
+  card.dataset.done = '1';
+  if (correct) respuestasCorrectas++;
+  const pfree = casos[casoActual].preguntas[qi];
+  respuestasCasoActual.push({ tipo: pfree.tipo, pregunta: pfree.pregunta, dada: val, correcta: pfree.respuesta, correcto: correct });
+  input.disabled = true;
+  const btn = document.getElementById(`checkbtn-${qi}`);
+  if (btn) btn.disabled = true;
+
+  const fb = document.getElementById(`fb-${qi}`);
+  fb.innerHTML = `<div class="answer-reveal ${correct ? 'answer-correct' : 'answer-wrong'}">
+    ${correct ? '✓ ¡Correcto!' : '✗ Respuesta: ' + p.respuesta}
+  </div>`;
+
+  preguntasRespondidas++;
+  updateProgress();
+  checkAllDone();
+}
+
+/* ===== VERIFICAR SI TERMINÓ ===== */
+function checkAllDone() {
+  if (preguntasRespondidas >= totalPorCaso) {
+    const wasCorrect = respuestasCorrectas === totalPorCaso;
+    if (wasCorrect) {
+      sellos++;
+      updateSellos();
+    }
+    registro.push({ caso: casoActual + 1, titulo: casos[casoActual].titulo, correctas: respuestasCorrectas, total: totalPorCaso, respuestas: [...respuestasCasoActual] });
+    document.getElementById('next-btn').classList.add('visible');
+    const btnText = casoActual + 1 >= casos.length ? 'VER RESULTADOS →' : 'SIGUIENTE CASO →';
+    document.getElementById('next-btn').textContent = btnText;
+  }
+}
+
+/* ===== PROGRESO ===== */
+function updateProgress() {
+  const pct = (preguntasRespondidas / totalPorCaso) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `${preguntasRespondidas} / ${totalPorCaso} pistas`;
+}
+
+/* ===== SELLOS Y RANGO ===== */
+function updateSellos() {
+  for (let i = 0; i < 5; i++) {
+    const s = document.getElementById(`seal-${i}`);
+    if (!s) continue;
+    if (i < Math.floor(sellos / 4)) {
+      s.classList.add('filled');
+      s.textContent = '★';
+    } else {
+      s.classList.remove('filled');
+      s.textContent = '';
+    }
+  }
+  const rango = sellos >= 20 ? rangos[4] : sellos >= 15 ? rangos[3] : sellos >= 10 ? rangos[2] : sellos >= 5 ? rangos[1] : rangos[0];
+  document.getElementById('rank-name').textContent = rango;
+}
+
+/* ===== SIGUIENTE CASO ===== */
+function nextCase() {
+  casoActual++;
+  if (casoActual >= casos.length) {
+    showCierre();
+  } else {
+    renderCaso();
+  }
+}
+
+/* ===== PANTALLA FINAL ===== */
+function showCierre() {
+  document.getElementById('juego-screen').style.display = 'none';
+  inGame = false;
+  const cierre = document.getElementById('cierre-screen');
+  cierre.style.display = 'flex';
+
+  const rango = sellos >= 20 ? rangos[4] : sellos >= 15 ? rangos[3] : sellos >= 10 ? rangos[2] : sellos >= 5 ? rangos[1] : rangos[0];
+
+  let mensaje = '';
+  if (sellos >= casos.length) {
+    mensaje = '¡Rendimiento perfecto! Eres un auténtico Comisario de Historias. Ningún caso se te resiste.';
+  } else if (sellos >= 15) {
+    mensaje = '¡Muy bien! Has cerrado la mayoría de los casos. Sigue practicando para alcanzar el rango máximo.';
+  } else if (sellos >= 8) {
+    mensaje = 'Buen intento. Cada caso es una nueva oportunidad. ¡Vuelve a intentarlo para subir de rango!';
+  } else {
+    mensaje = 'Los casos siguen abiertos. ¡No te rindas! Vuelve a intentarlo y usa bien las pistas visuales.';
+  }
+
+  cierre.innerHTML = `
+    <div class="cierre-sello">CASO CERRADO</div>
+    <div class="cierre-rank">${rango}</div>
+    <div class="cierre-score">${sellos} / ${casos.length} sellos</div>
+    <div class="cierre-detail">${mensaje}</div>
+    <div class="cierre-btns">
+      <button class="cierre-btn primary" onclick="resetGame()">▶ NUEVO EXPEDIENTE</button>
+      <button class="download-btn" onclick="descargarInforme()">📄 Descargar informe</button>
+    </div>
+  `;
+}
+
+/* ===== REINICIAR ===== */
+function resetGame() {
+  document.getElementById('cierre-screen').style.display = 'none';
+  document.getElementById('cierre-screen').innerHTML = '';
+  document.getElementById('antesala').style.display = 'flex';
+  sellos = 0;
+  casoActual = 0;
+  registro = [];
+  inGame = false;
+  updateSellos();
+}
+
+/* ===== REGISTRO DE RESULTADOS ===== */
+let registro = []; // { caso, titulo, correctas, total, respuestas: [{pregunta, tipo, respuesta, correcto}] }
+let respuestasCasoActual = [];
+
+/* ===== PANTALLA COMPLETA ===== */
+let inGame = false; // true cuando el juego está activo y debe bloquearse la salida
+
+function enterFullscreen() {
+  document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+}
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    enterFullscreen();
+  } else {
+    // Solo desde la antesala se puede salir libremente
+    if (!inGame) {
+      document.exitFullscreen();
+    } else {
+      openParental();
+    }
+  }
+}
+
+// Interceptar fullscreenchange: si el juego está activo y alguien sale (Esc, botón nav), volver a entrar
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement && inGame) {
+    // Salida no autorizada — mostrar parental y volver a entrar en pantalla completa
+    enterFullscreen();
+    openParental();
+  }
+  const fsBtn = document.getElementById('fs-btn');
+  const fsAnte = document.getElementById('fs-ante');
+  if (document.fullscreenElement) {
+    fsBtn && (fsBtn.textContent = '⊠');
+    fsAnte && (fsAnte.textContent = '⛶ Salir pantalla completa');
+  } else {
+    fsBtn && (fsBtn.textContent = '⛶');
+    fsAnte && (fsAnte.textContent = '⛶ Pantalla completa');
+  }
+});
+
+// Bloquear tecla Escape cuando el juego está activo
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && inGame) {
+    e.preventDefault();
+    openParental();
+  }
+}, true);
+
+/* ===== CONTROL PARENTAL ===== */
+let parentalAnswer = 0;
+let parentalAction = 'exit'; // 'exit' o 'reset'
+
+function openParental(action = 'exit') {
+  parentalAction = action;
+  const a = Math.floor(Math.random() * 30) + 10;
+  const b = Math.floor(Math.random() * 20) + 5;
+  parentalAnswer = a + b;
+  document.getElementById('parental-sum').textContent = a + ' + ' + b + ' = ?';
+  document.getElementById('parental-answer').value = '';
+  document.getElementById('parental-error').textContent = '';
+  document.getElementById('parental-modal').classList.add('active');
+  setTimeout(() => document.getElementById('parental-answer').focus(), 100);
+}
+
+function closeParental() {
+  document.getElementById('parental-modal').classList.remove('active');
+}
+
+function checkParental() {
+  const val = parseInt(document.getElementById('parental-answer').value);
+  if (val === parentalAnswer) {
+    closeParental();
+    inGame = false;
+    if (document.fullscreenElement) document.exitFullscreen();
+    resetGame();
+  } else {
+    document.getElementById('parental-error').textContent = '❌ Respuesta incorrecta. Inténtalo de nuevo.';
+    document.getElementById('parental-answer').value = '';
+    document.getElementById('parental-answer').focus();
+  }
+}
+document.getElementById('parental-answer').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkParental();
+});
+
+/* ===== DESCARGA INFORME ===== */
+function descargarInforme() {
+  const fecha = new Date().toLocaleDateString('es-ES', { day:'2-digit', month:'long', year:'numeric' });
+  const hora = new Date().toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' });
+  const rango = sellos >= 20 ? rangos[4] : sellos >= 15 ? rangos[3] : sellos >= 10 ? rangos[2] : sellos >= 5 ? rangos[1] : rangos[0];
+  const totalPreg = registro.reduce((s, r) => s + r.total, 0);
+  const totalCorr = registro.reduce((s, r) => s + r.correctas, 0);
+  const pct = totalPreg > 0 ? Math.round((totalCorr / totalPreg) * 100) : 0;
+
+  let html = `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Informe — El Detective de Relatos</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Crimson+Pro:wght@400;600&display=swap');
+  body { font-family: 'Crimson Pro', Georgia, serif; background: #faf6ee; color: #1a1208; margin: 0; padding: 2rem; }
+  .header { background: #1a1208; color: #e8dfc8; padding: 2rem; border-radius: 8px; text-align: center; margin-bottom: 2rem; }
+  .header h1 { font-family: 'Playfair Display', serif; font-size: 28px; margin: 0 0 0.25rem; }
+  .header p { color: #a09070; font-size: 13px; letter-spacing: 2px; margin: 0; }
+  .resumen { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 2rem; }
+  .stat { background: #fff; border: 0.5px solid #d4c9a8; border-radius: 8px; padding: 1rem; text-align: center; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; color: #8b1a1a; }
+  .stat-label { font-size: 12px; color: #88785a; letter-spacing: 1px; text-transform: uppercase; }
+  .caso { background: #fff; border: 0.5px solid #d4c9a8; border-radius: 8px; padding: 1.25rem; margin-bottom: 1rem; }
+  .caso-titulo { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; }
+  .caso-badge { font-size: 11px; padding: 3px 10px; border-radius: 12px; }
+  .badge-ok { background: #e8fde8; color: #1a5c2a; }
+  .badge-fail { background: #fde8e8; color: #7c2d2d; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { background: #1a1208; color: #e8dfc8; padding: 6px 10px; text-align: left; font-family: 'Playfair Display', serif; font-size: 11px; letter-spacing: 2px; }
+  td { padding: 7px 10px; border-bottom: 0.5px solid #e8e0d0; }
+  .who { color: #7c2d2d; font-weight: 600; }
+  .what { color: #1a4a6b; font-weight: 600; }
+  .where { color: #1a5c2a; font-weight: 600; }
+  .tick { color: #1a5c2a; font-weight: 700; }
+  .cross { color: #7c2d2d; font-weight: 700; }
+  .footer { text-align: center; font-size: 12px; color: #a09070; margin-top: 2rem; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🕵️ El Detective de Relatos</h1>
+  <p>INFORME DE RESULTADOS · ${fecha} · ${hora}</p>
+</div>
+<div class="resumen">
+  <div class="stat"><div class="stat-num">${registro.length}</div><div class="stat-label">Casos jugados</div></div>
+  <div class="stat"><div class="stat-num">${sellos}</div><div class="stat-label">Sellos obtenidos</div></div>
+  <div class="stat"><div class="stat-num">${totalCorr}/${totalPreg}</div><div class="stat-label">Respuestas correctas</div></div>
+  <div class="stat"><div class="stat-num">${pct}%</div><div class="stat-label">Precisión total</div></div>
+</div>
+<p style="font-size:15px; margin-bottom:1.5rem;">Rango alcanzado: <strong>${rango}</strong> · Nivel jugado: <strong>${nivel.charAt(0).toUpperCase()+nivel.slice(1)}</strong></p>
+`;
+
+  registro.forEach((r, idx) => {
+    const ok = r.correctas === r.total;
+    html += `<div class="caso">
+      <div class="caso-titulo">
+        <span>Caso ${idx+1}: ${r.titulo}</span>
+        <span class="caso-badge ${ok ? 'badge-ok' : 'badge-fail'}">${ok ? '✓ Cerrado' : '✗ Pendiente'}</span>
+      </div>
+      <table>
+        <tr><th>Tipo</th><th>Pregunta</th><th>Respuesta dada</th><th>Correcta</th><th></th></tr>`;
+    r.respuestas.forEach(p => {
+      const tipoLabel = p.tipo === 'who' ? '<span class="who">¿Quién?</span>' : p.tipo === 'what' ? '<span class="what">¿Qué?</span>' : '<span class="where">¿Dónde?</span>';
+      html += `<tr>
+        <td>${tipoLabel}</td>
+        <td>${p.pregunta}</td>
+        <td>${p.dada || '—'}</td>
+        <td>${p.correcta}</td>
+        <td>${p.correcto ? '<span class="tick">✓</span>' : '<span class="cross">✗</span>'}</td>
+      </tr>`;
+    });
+    html += `</table></div>`;
+  });
+
+  html += `<div class="footer">Generado por El Detective de Relatos · Juego educativo de comprensión lectora</div>
+</body></html>`;
+
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'informe_detective_relatos.html';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+</script>
+
+</body>
+</html>

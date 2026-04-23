@@ -168,8 +168,15 @@
 </head>
 <body>
 
-    <div id="exit-fs-container">
-        <button class="exit-btn" id="exit-btn">SALIR PARENTAL (3s)</button>
+    <!-- CONTROL PARENTAL -->
+    <div id="parental-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:9999;color:white;justify-content:center;align-items:center;flex-direction:column;">
+        <h2 style="font-family:var(--font-main);font-weight:300;letter-spacing:4px;margin-bottom:10px;">CONTROL PARENTAL</h2>
+        <p>Resuelve la suma para salir:</p>
+        <p id="math-exp" style="font-size:2.5rem;color:#fdcb6e;margin:15px 0;"></p>
+        <input type="number" id="math-answer" style="font-size:2rem;width:120px;text-align:center;border-radius:10px;margin:10px;padding:5px;">
+        <br>
+        <button onclick="verifyParental()" style="background:#6c5ce7;color:white;border:none;padding:15px 40px;border-radius:100px;font-size:1rem;cursor:pointer;margin-top:10px;font-family:var(--font-main);letter-spacing:2px;text-transform:uppercase;">VERIFICAR</button>
+        <button onclick="closeParental()" style="background:none;border:none;color:#aaa;margin-top:15px;cursor:pointer;font-size:0.8rem;text-transform:uppercase;letter-spacing:2px;">CANCELAR</button>
     </div>
 
     <!-- PANTALLA DE NOMBRE -->
@@ -206,7 +213,8 @@
 
     <div class="admin-controls">
         <button class="admin-btn" onclick="downloadReport()">DESCARGAR REPORTE</button>
-        <button id="fs-btn" class="admin-btn">MODO PANTALLA COMPLETA</button>
+        <button class="admin-btn" onclick="askPermission()">🔒 SALIR</button>
+        <button id="fs-btn" class="admin-btn">PANTALLA COMPLETA</button>
     </div>
 
     <script>
@@ -356,26 +364,38 @@
             }).catch(function(e) { console.log('Error al enviar informe:', e); });
         }
 
-        var holdTimer;
-        var fsBtn = document.getElementById('fs-btn');
-        var exitBtn = document.getElementById('exit-btn');
-        var exitContainer = document.getElementById('exit-fs-container');
+        var expectedAnswer = 0;
 
-        document.addEventListener('fullscreenchange', function() {
-            exitContainer.style.display = document.fullscreenElement ? 'block' : 'none';
+        document.getElementById('fs-btn').addEventListener('click', function() {
+            document.documentElement.requestFullscreen();
         });
 
-        var startHold = function(e) {
-            e.preventDefault();
-            holdTimer = setTimeout(function() { if (document.fullscreenElement) document.exitFullscreen(); }, 3000);
-        };
-        var stopHold = function() { clearTimeout(holdTimer); };
+        function askPermission() {
+            var n1 = Math.floor(Math.random() * 8) + 2;
+            var n2 = Math.floor(Math.random() * 8) + 2;
+            expectedAnswer = n1 + n2;
+            document.getElementById('math-exp').innerText = n1 + ' + ' + n2 + ' = ?';
+            document.getElementById('math-answer').value = '';
+            document.getElementById('parental-modal').style.display = 'flex';
+        }
 
-        fsBtn.addEventListener('click', function() { document.documentElement.requestFullscreen(); });
-        exitBtn.addEventListener('touchstart', startHold);
-        exitBtn.addEventListener('touchend', stopHold);
-        exitBtn.addEventListener('mousedown', startHold);
-        exitBtn.addEventListener('mouseup', stopHold);
+        function verifyParental() {
+            if (parseInt(document.getElementById('math-answer').value) === expectedAnswer) {
+                // Enviar reporte al salir
+                var aciertos = logs.filter(function(l) { return l.ok; }).length;
+                var errores = logs.filter(function(l) { return !l.ok; }).length;
+                var falladas = [...new Set(palabrasFalladas)].join(", ");
+                enviarAGoogleSheet(aciertos, errores, falladas ? falladas + " (sesion incompleta)" : "Sesion incompleta");
+                if (document.exitFullscreen) document.exitFullscreen();
+                location.reload();
+            } else {
+                closeParental();
+            }
+        }
+
+        function closeParental() {
+            document.getElementById('parental-modal').style.display = 'none';
+        }
 
         function downloadReport() {
             var t = "REPORTE DETECTIVE - SESION\n=================================\n\n";

@@ -733,9 +733,113 @@
     .antesala-title { font-size: 28px; }
     .hint-blur-row { flex-wrap: wrap; }
   }
+
+  /* ===== MODO FUENTE ===== */
+  .font-mayus,
+  .font-mayus input,
+  .font-mayus button,
+  .font-mayus .story-text,
+  .font-mayus .mc-option,
+  .font-mayus .question-text,
+  .font-mayus .check-btn,
+  .font-mayus .free-input,
+  .font-mayus .visual-hint,
+  .font-mayus .answer-reveal,
+  .font-mayus .mission-box,
+  .font-mayus .hint-pill,
+  .font-mayus .level-btn,
+  .font-mayus .tipo-btn,
+  .font-mayus .start-btn,
+  .font-mayus .fullscreen-btn-ante,
+  .font-mayus .clues-title,
+  .font-mayus .progress-text,
+  .font-mayus .next-btn,
+  .font-mayus .fs-btn,
+  .font-mayus .exit-btn,
+  .font-mayus .report-btn,
+  .font-mayus .rank-display,
+  .font-mayus .cierre-detail,
+  .font-mayus .cierre-btn,
+  .font-mayus .download-btn,
+  .font-mayus .parental-desc,
+  .font-mayus .parental-cancel,
+  .font-mayus .parental-confirm,
+  .font-mayus .parental-input {
+    font-family: 'Playwrite DE Grund', cursive !important;
+    text-transform: uppercase !important;
+  }
+
+  .tipo-section {
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeIn 0.6s 1.7s forwards;
+  }
+  .tipo-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #666;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .tipo-selector {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+  .tipo-btn {
+    background: transparent;
+    border: 0.5px solid rgba(232,223,200,0.25);
+    color: #a09070;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    line-height: 1.4;
+  }
+  .tipo-btn .preview-text {
+    display: block;
+    font-size: 17px;
+    margin-bottom: 3px;
+  }
+  .tipo-btn .preview-label {
+    display: block;
+    font-size: 11px;
+    color: #555;
+    letter-spacing: 1px;
+  }
+  .tipo-btn.active, .tipo-btn:hover {
+    border-color: var(--gold);
+    background: rgba(184,134,11,0.08);
+  }
+  .tipo-btn.active .preview-label { color: #a09070; }
+
 </style>
 </head>
 <body>
+
+
+<!-- PANTALLA DE NOMBRE -->
+<div id="nombre-screen" style="position:fixed;inset:0;background:linear-gradient(135deg,#e3f2fd,#bbdefb);display:flex;align-items:center;justify-content:center;z-index:99999;">
+  <div style="background:white;padding:40px;border-radius:40px;max-width:440px;width:90%;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.1);font-family:'Helvetica Neue',Arial,sans-serif;">
+    <div style="font-size:3.5rem;margin-bottom:15px;">👦👧</div>
+    <h2 style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:1.3rem;font-weight:600;margin:0 0 10px;color:#2196F3;text-transform:none;letter-spacing:normal;">¿Quién va a jugar?</h2>
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:0.9rem;color:#636e72;margin-bottom:20px;line-height:1.6;text-transform:none;">Si quieres, escribe el nombre del niño o niña para que Inma pueda ver cómo ha ido la sesión.</p>
+    <input id="nombre-input" type="text" placeholder="Nombre del niño/a..." maxlength="50"
+      style="width:100%;padding:13px 18px;border-radius:100px;border:2px solid #e0e0e0;font-size:1rem;font-family:'Helvetica Neue',Arial,sans-serif;text-align:center;outline:none;box-sizing:border-box;margin-bottom:15px;text-transform:none;">
+    <button onclick="guardarNombreYContinuar()"
+      style="width:100%;padding:14px;background:#2196F3;color:white;border:none;border-radius:100px;font-size:0.95rem;font-family:'Helvetica Neue',Arial,sans-serif;cursor:pointer;margin-bottom:10px;text-transform:none;letter-spacing:normal;">
+      Enviar informe a Inma ✓
+    </button>
+    <button onclick="continuarSinNombre()"
+      style="background:none;border:none;color:#aaa;font-size:0.82rem;font-family:'Helvetica Neue',Arial,sans-serif;cursor:pointer;text-decoration:underline;text-transform:none;letter-spacing:normal;">
+      Continuar sin enviar informe
+    </button>
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:0.75rem;color:#b2bec3;margin-top:18px;border-top:1px solid #f0f0f0;padding-top:12px;line-height:1.5;text-transform:none;">
+      🔒 Si escribes el nombre, al terminar Inma recibirá un informe con los resultados.<br>Es voluntario y los datos solo los verá ella para el seguimiento terapéutico.
+    </p>
+  </div>
+</div>
 
 <div id="game-wrapper">
 <div id="game">
@@ -762,6 +866,17 @@
         <button class="level-btn active" onclick="setLevel('principiante', this)">Principiante</button>
         <button class="level-btn" onclick="setLevel('intermedio', this)">Intermedio</button>
         <button class="level-btn" onclick="setLevel('experto', this)">Experto</button>
+      </div>
+    </div>
+    <div class="tipo-section">
+      <div class="tipo-label">Tipo de letra</div>
+      <div class="tipo-selector">
+        <button class="tipo-btn active" id="tipo-minus" onclick="setTipo('minus', this)">
+          <span class="preview-text" style="font-family:'Playwrite HR Lijeva',cursive;">minúscula</span>
+        </button>
+        <button class="tipo-btn" id="tipo-mayus" onclick="setTipo('mayus', this)">
+          <span class="preview-text" style="font-family:'Playwrite DE Grund',cursive;">Mayúscula</span>
+        </button>
       </div>
     </div>
     <button class="start-btn" onclick="startGame()">▶ ABRIR EXPEDIENTE</button>
@@ -834,6 +949,65 @@
 </div>
 
 <script>
+var GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbw4AKlcc8-09jA0uBl7EYDW_lorkazvEOwhZTthN6FD_BIhM1Q6o4HJdNSeUvqba2an/exec";
+var NOMBRE_ALUMNO = "";
+var ENVIAR_INFORME = false;
+
+function guardarNombreYContinuar() {
+    var nombre = document.getElementById('nombre-input').value.trim();
+    if (nombre === "") { document.getElementById('nombre-input').style.borderColor = "#ff7675"; return; }
+    NOMBRE_ALUMNO = nombre;
+    ENVIAR_INFORME = true;
+    document.getElementById('nombre-screen').style.display = 'none';
+}
+
+function continuarSinNombre() {
+    NOMBRE_ALUMNO = "Anonimo";
+    ENVIAR_INFORME = false;
+    document.getElementById('nombre-screen').style.display = 'none';
+}
+
+function enviarAGoogleSheet(aciertos, errores, falladas) {
+    if (!ENVIAR_INFORME) return;
+    fetch(GOOGLE_SHEET_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+            Nombre: NOMBRE_ALUMNO,
+            Actividad: "Detective de Historias",
+            Aciertos: aciertos,
+            Errores: errores,
+            PalabrasFalladas: falladas || "Ninguna"
+        }),
+        headers: { 'Content-Type': 'application/json' }
+    }).catch(function(e) { console.log('Error:', e); });
+}
+
+function calcularYEnviarReporte(sufijo) {
+    var totalCorr = registro.reduce(function(s, r) { return s + r.correctas; }, 0);
+    var totalPreg = registro.reduce(function(s, r) { return s + r.total; }, 0);
+    var errores = totalPreg - totalCorr;
+    var falladas = registro.filter(function(r) { return r.correctas < r.total; }).map(function(r) { return r.titulo; }).join(", ");
+    enviarAGoogleSheet(totalCorr, errores, falladas ? falladas + sufijo : "Ninguna");
+}
+
+let tipoLetra = 'minus';
+
+function setTipo(tipo, btn) {
+    tipoLetra = tipo;
+    document.querySelectorAll('.tipo-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyFont();
+}
+
+function applyFont() {
+    const game = document.getElementById('game');
+    if (tipoLetra === 'mayus') {
+        game.classList.add('font-mayus');
+    } else {
+        game.classList.remove('font-mayus');
+    }
+}
+
 const casos = [
   {
     titulo: "El roble del bosque azul",
@@ -1531,11 +1705,6 @@ function startGame() {
   sellos = 0;
   registro = [];
   inGame = true;
-  // Barajar casos aleatoriamente en cada partida
-  for (let i = casos.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [casos[i], casos[j]] = [casos[j], casos[i]];
-  }
   updateSellos();
   renderCaso();
 }
@@ -1713,6 +1882,7 @@ function nextCase() {
 function showCierre() {
   document.getElementById('juego-screen').style.display = 'none';
   inGame = false;
+  calcularYEnviarReporte("");
   const cierre = document.getElementById('cierre-screen');
   cierre.style.display = 'flex';
 
@@ -1828,6 +1998,7 @@ function checkParental() {
   if (val === parentalAnswer) {
     closeParental();
     inGame = false;
+    calcularYEnviarReporte(" (sesion incompleta)");
     if (document.fullscreenElement) document.exitFullscreen();
     resetGame();
   } else {
@@ -1878,6 +2049,87 @@ function descargarInforme() {
   .tick { color: #1a5c2a; font-weight: 700; }
   .cross { color: #7c2d2d; font-weight: 700; }
   .footer { text-align: center; font-size: 12px; color: #a09070; margin-top: 2rem; letter-spacing: 1px; }
+
+  /* ===== MODO FUENTE ===== */
+  .font-mayus,
+  .font-mayus input,
+  .font-mayus button,
+  .font-mayus .story-text,
+  .font-mayus .mc-option,
+  .font-mayus .question-text,
+  .font-mayus .check-btn,
+  .font-mayus .free-input,
+  .font-mayus .visual-hint,
+  .font-mayus .answer-reveal,
+  .font-mayus .mission-box,
+  .font-mayus .hint-pill,
+  .font-mayus .level-btn,
+  .font-mayus .tipo-btn,
+  .font-mayus .start-btn,
+  .font-mayus .fullscreen-btn-ante,
+  .font-mayus .clues-title,
+  .font-mayus .progress-text,
+  .font-mayus .next-btn,
+  .font-mayus .fs-btn,
+  .font-mayus .exit-btn,
+  .font-mayus .report-btn,
+  .font-mayus .rank-display,
+  .font-mayus .cierre-detail,
+  .font-mayus .cierre-btn,
+  .font-mayus .download-btn,
+  .font-mayus .parental-desc,
+  .font-mayus .parental-cancel,
+  .font-mayus .parental-confirm,
+  .font-mayus .parental-input {
+    font-family: 'Playwrite DE Grund', cursive !important;
+    text-transform: uppercase !important;
+  }
+
+  .tipo-section {
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeIn 0.6s 1.7s forwards;
+  }
+  .tipo-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #666;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .tipo-selector {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+  .tipo-btn {
+    background: transparent;
+    border: 0.5px solid rgba(232,223,200,0.25);
+    color: #a09070;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    line-height: 1.4;
+  }
+  .tipo-btn .preview-text {
+    display: block;
+    font-size: 17px;
+    margin-bottom: 3px;
+  }
+  .tipo-btn .preview-label {
+    display: block;
+    font-size: 11px;
+    color: #555;
+    letter-spacing: 1px;
+  }
+  .tipo-btn.active, .tipo-btn:hover {
+    border-color: var(--gold);
+    background: rgba(184,134,11,0.08);
+  }
+  .tipo-btn.active .preview-label { color: #a09070; }
+
 </style>
 </head>
 <body>

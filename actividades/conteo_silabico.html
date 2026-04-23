@@ -3,252 +3,303 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EdTech - Conciencia Silábica Pro</title>
+    <title>Conteo Silábico Pro - EdTech</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Short+Stack&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund:wght@100..400&family=Playwrite+HR+Lijeva:wght@100..400&display=swap" rel="stylesheet">
     <style>
-        /* Tipografía Massallera con respaldo escolar */
-        @font-face {
-            font-family: 'Massallera';
-            src: local('Massallera'), local('Escolar'), local('Edelfontmed');
-        }
-
         :root {
-            --primary: #4CAF50;
-            --secondary: #FF9800;
-            --error: #f44336;
-            --bg: #E8F5E9;
-            --text: #1B5E20;
-            --font-escolar: 'Massallera', 'Short Stack', cursive;
+            --primary: #4CAF50; --primary-light: #C8E6C9;
+            --bg-pastel: #E8F5E9; --text-color: #1B5E20;
+            --font-mayus: 'Playwrite DE Grund', cursive;
+            --font-minus: 'Playwrite HR Lijeva', cursive;
         }
-
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            font-family: var(--font-escolar);
-            background-color: var(--bg);
-            color: var(--text);
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden; user-select: none;
+            overflow: hidden; background-color: var(--bg-pastel);
+            color: var(--text-color); user-select: none; font-family: var(--font-minus);
         }
-
-        /* --- ANTESALA --- */
-        #welcome-screen {
+        .floating-letter {
+            position: absolute; font-weight: bold; opacity: 0.3;
+            z-index: 0; animation: float 12s linear infinite; pointer-events: none;
+        }
+        @keyframes float {
+            0% { transform: translateY(110vh) rotate(0deg); }
+            100% { transform: translateY(-10vh) rotate(360deg); }
+        }
+        .screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, #4CAF50, #1B5E20);
-            z-index: 5000; display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; color: white; text-align: center;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; z-index: 10; padding: 20px;
         }
-
-        .card-welcome {
-            background: white; padding: 40px; border-radius: 40px;
-            color: #333; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            max-width: 500px; width: 85%;
+        .card {
+            background: rgba(255,255,255,0.95); padding: 30px; border-radius: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05); text-align: center;
+            max-width: 600px; width: 100%; border: 8px solid white; position: relative;
         }
-
-        /* --- ÁREA DE JUEGO --- */
-        #main-game { display: none; flex-direction: column; align-items: center; width: 100%; height: 100%; }
-
-        #ui-layer {
-            width: 100%; padding: 15px; display: flex; 
-            justify-content: space-between; box-sizing: border-box; z-index: 10;
+        .btn {
+            padding: 18px 30px; border-radius: 25px; border: none;
+            cursor: pointer; font-size: 1.4rem; transition: 0.3s;
+            margin: 10px; font-family: inherit; box-shadow: 0 5px 0 rgba(0,0,0,0.1);
         }
-
-        .btn-control {
-            padding: 10px 20px; border-radius: 12px; border: none;
-            cursor: pointer; font-weight: bold; font-family: var(--font-escolar);
-            box-shadow: 0 4px #ccc;
-        }
-
-        #game-area {
-            flex: 1; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; width: 90%; max-width: 600px;
-        }
-
-        .word-display {
-            background: white; padding: 30px; border-radius: 40px;
-            box-shadow: 0 15px 0 rgba(0,0,0,0.05); margin-bottom: 30px;
-            text-align: center; width: 100%;
-        }
-
-        h1 { font-size: clamp(3.5rem, 12vw, 5.5rem); margin: 10px 0; color: var(--primary); text-transform: uppercase; }
-
-        .options-container { display: flex; gap: 15px; width: 100%; justify-content: center; }
-
+        .btn-green { background: var(--primary); color: white; }
+        .btn-green:hover { transform: scale(1.02); }
+        .word-display { font-size: 4.5rem; margin: 20px 0; min-height: 100px; }
+        .options-grid { display: flex; gap: 15px; justify-content: center; margin-top: 20px; }
         .option-btn {
-            width: 100px; height: 100px; font-size: 3rem;
+            width: 90px; height: 90px; font-size: 2.5rem;
             border: 4px solid var(--primary); background: white;
-            border-radius: 25px; cursor: pointer; transition: 0.2s;
-            color: var(--primary); font-family: var(--font-escolar);
-            box-shadow: 0 8px 0 var(--primary);
+            border-radius: 20px; cursor: pointer; font-family: inherit;
+            color: var(--primary); transition: 0.2s;
         }
-
-        .option-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--primary); }
-        .correct { background: var(--primary) !important; color: white !important; }
-        .wrong { background: var(--error) !important; color: white !important; border-color: #b71c1c !important; }
-
-        /* --- CONTROL PARENTAL --- */
+        .option-btn:active { transform: translateY(5px); }
+        #game-ui {
+            position: absolute; top: 15px; width: 92%;
+            display: flex; justify-content: space-between; z-index: 20;
+        }
+        .icon-btn {
+            background: white; border: none; border-radius: 50%;
+            width: 55px; height: 55px; font-size: 28px; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
         #parental-modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 9999;
-            color: white; justify-content: center; align-items: center; flex-direction: column;
+            background: rgba(0,0,0,0.9); z-index: 10000;
+            color: white; flex-direction: column; align-items: center; justify-content: center;
         }
-        #parental-modal input { font-size: 2rem; width: 120px; text-align: center; border-radius: 10px; margin: 20px; }
+        .f-mayus { font-family: var(--font-mayus); text-transform: uppercase; }
+        .f-minus { font-family: var(--font-minus); text-transform: lowercase; }
     </style>
 </head>
 <body>
 
-    <div id="welcome-screen">
-        <div class="card-welcome">
-            <h1 style="font-size: 2.5rem;">🎒 Conteo Silábico</h1>
-            <p>Aprenderemos a separar las palabras en trocitos.</p>
-            <button class="btn-control" style="background: var(--primary); color: white; font-size: 1.5rem; padding: 20px;" onclick="initApp()">¡VAMOS ALLÁ!</button>
+    <!-- PANTALLA DE NOMBRE -->
+    <div id="nombre-screen" style="position:fixed;inset:0;background:linear-gradient(135deg,#e3f2fd,#bbdefb);display:flex;align-items:center;justify-content:center;z-index:9999;">
+      <div style="background:white;padding:40px;border-radius:40px;max-width:440px;width:90%;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.1);font-family:'Helvetica Neue',Arial,sans-serif;">
+        <div style="font-size:3.5rem;margin-bottom:15px;">👦👧</div>
+        <h2 style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:1.3rem;font-weight:600;margin:0 0 10px;color:#2196F3;text-transform:none;letter-spacing:normal;">¿Quién va a jugar?</h2>
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:0.9rem;color:#636e72;margin-bottom:20px;line-height:1.6;text-transform:none;">Si quieres, escribe el nombre del niño o niña para que Inma pueda ver cómo ha ido la sesión.</p>
+        <input id="nombre-input" type="text" placeholder="Nombre del niño/a..." maxlength="50"
+          style="width:100%;padding:13px 18px;border-radius:100px;border:2px solid #e0e0e0;font-size:1rem;font-family:'Helvetica Neue',Arial,sans-serif;text-align:center;outline:none;box-sizing:border-box;margin-bottom:15px;text-transform:none;">
+        <button onclick="guardarNombreYContinuar()"
+          style="width:100%;padding:14px;background:#2196F3;color:white;border:none;border-radius:100px;font-size:0.95rem;font-family:'Helvetica Neue',Arial,sans-serif;cursor:pointer;margin-bottom:10px;text-transform:none;letter-spacing:normal;">
+          Enviar informe a Inma ✓
+        </button>
+        <button onclick="continuarSinNombre()"
+          style="background:none;border:none;color:#aaa;font-size:0.82rem;font-family:'Helvetica Neue',Arial,sans-serif;cursor:pointer;text-decoration:underline;text-transform:none;letter-spacing:normal;">
+          Continuar sin enviar informe
+        </button>
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:0.75rem;color:#b2bec3;margin-top:18px;border-top:1px solid #f0f0f0;padding-top:12px;line-height:1.5;text-transform:none;">
+          🔒 Si escribes el nombre, al terminar Inma recibirá un informe con los resultados.<br>Es voluntario y los datos solo los verá ella para el seguimiento terapéutico.
+        </p>
+      </div>
+    </div>
+
+    <div id="bg-letters"></div>
+
+    <div id="start-screen" class="screen">
+        <div class="card">
+            <h1 class="f-mayus" style="color: var(--primary); font-size: 2.5rem;">🎒 Conteo Silábico</h1>
+            <p>Selecciona cómo quieres leer:</p>
+            <button class="btn btn-green f-mayus" style="width: 80%;" onclick="startGame('MAYUS')">MAYÚSCULAS</button>
+            <button class="btn btn-green f-minus" style="width: 80%;" onclick="startGame('MINUS')">minúsculas</button>
+            <br>
+            <button class="btn" style="background:#81C784; font-size: 1rem;" onclick="toggleFS()">📺 Pantalla Completa</button>
         </div>
     </div>
 
-    <div id="main-game">
-        <div id="ui-layer">
-            <button class="btn-control" onclick="askPermission()" style="background: var(--secondary); color: white;">🔒 SALIR</button>
-            <button class="btn-control" onclick="downloadReport()" style="background: #9c27b0; color: white;">📊 INFORME</button>
+    <div id="game-screen" class="screen" style="display:none;">
+        <div id="game-ui">
+            <button class="icon-btn" onclick="openParental('HOME')">🏠</button>
+            <button class="btn" style="background:#9C27B0; color:white; margin:0; padding:10px 20px;" onclick="downloadReport()">📊 Informe</button>
         </div>
-
-        <div id="game-area">
-            <div class="word-display">
-                <p style="font-size: 1.5rem; margin: 0; color: #666;">¿Cuántas sílabas tiene?</p>
-                <h1 id="target-word">---</h1>
-            </div>
-            <div class="options-container" id="options"></div>
+        <div class="card">
+            <p id="instruction" style="font-size: 1.2rem; color: #555;">¿Cuántas sílabas tiene?</p>
+            <div id="word-display" class="word-display">---</div>
+            <button class="btn btn-green" onclick="speakCurrent()">🔊 Escuchar</button>
+            <div class="options-grid" id="options"></div>
+            <div style="margin-top: 20px; font-size: 1rem;">Estrellas: <span id="hits">0</span> ⭐</div>
         </div>
     </div>
 
+    <!-- CONTROL PARENTAL -->
     <div id="parental-modal">
-        <h2>CONTROL PARENTAL</h2>
-        <p>Resuelve la suma para salir:</p>
-        <div id="math-exp" style="font-size: 3rem; color: #ffeb3b; margin: 10px;"></div>
-        <input type="number" id="math-answer">
-        <div>
-            <button class="btn-control" style="background: var(--primary); color: white;" onclick="verifyParental()">VERIFICAR</button>
-            <button class="btn-control" onclick="closeParental()">CANCELAR</button>
+        <div style="background:white; color:#333; padding:40px; border-radius:30px; text-align:center;">
+            <h3>Control Parental</h3>
+            <p id="math-q" style="font-size: 2rem; margin: 20px 0;"></p>
+            <input type="number" id="math-a" style="font-size: 2rem; width: 120px; text-align: center; margin-bottom: 20px;">
+            <br>
+            <button class="btn btn-green" onclick="checkParental()">Validar</button>
+            <button class="btn" onclick="closeParental()">Cerrar</button>
         </div>
     </div>
 
     <script>
-        let words = [
-            { w: "PAN", s: 1 }, { w: "SOL", s: 1 }, { w: "FLOR", s: 1 }, { w: "PEZ", s: 1 },
-            { w: "CASA", s: 2 }, { w: "LÁPIZ", s: 2 }, { w: "PERRO", s: 2 }, { w: "LUNA", s: 2 },
-            { w: "TOMATE", s: 3 }, { w: "ESTRELLA", s: 3 }, { w: "CABALLO", s: 3 }, { w: "PÁJARO", s: 3 },
-            { w: "TELÉFONO", s: 4 }, { w: "MARIPOSA", s: 4 }, { w: "ELEFANTE", s: 4 },
-            { w: "HIPOPÓTAMO", s: 5 }, { w: "CALCULADORA", s: 5 }
-        ];
+        // ── CONFIGURACION REPORTES ──
+        var GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbw4AKlcc8-09jA0uBl7EYDW_lorkazvEOwhZTthN6FD_BIhM1Q6o4HJdNSeUvqba2an/exec";
+        var NOMBRE_ALUMNO = "";
+        var ENVIAR_INFORME = false;
 
-        let currentWordIndex = 0, stats = [], extraAttempts = 0, expectedMath = 0;
-        const synth = window.speechSynthesis;
-
-        function initApp() {
-            const doc = document.documentElement;
-            if (doc.requestFullscreen) doc.requestFullscreen();
-            else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen();
-
-            document.getElementById('welcome-screen').style.display = 'none';
-            document.getElementById('main-game').style.display = 'flex';
-            
-            shuffle(words);
-            initLevel();
+        function guardarNombreYContinuar() {
+            var nombre = document.getElementById('nombre-input').value.trim();
+            if (nombre === "") { document.getElementById('nombre-input').style.borderColor = "#ff7675"; return; }
+            NOMBRE_ALUMNO = nombre;
+            ENVIAR_INFORME = true;
+            document.getElementById('nombre-screen').style.display = 'none';
         }
 
-        function speak(text) {
-            synth.cancel();
-            const u = new SpeechSynthesisUtterance(text);
-            u.lang = 'es-ES';
-            u.rate = 0.7; // Velocidad pausada
-            synth.speak(u);
+        function continuarSinNombre() {
+            NOMBRE_ALUMNO = "Anonimo";
+            ENVIAR_INFORME = false;
+            document.getElementById('nombre-screen').style.display = 'none';
         }
 
-        function initLevel() {
-            const data = words[currentWordIndex];
-            document.getElementById('target-word').innerText = data.w;
-            extraAttempts = 0;
-            
-            const optionsDiv = document.getElementById('options');
-            optionsDiv.innerHTML = '';
+        function enviarAGoogleSheet(aciertos, errores, falladas) {
+            if (!ENVIAR_INFORME) return;
+            fetch(GOOGLE_SHEET_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    Nombre: NOMBRE_ALUMNO,
+                    Actividad: "Conteo Silabico",
+                    Aciertos: aciertos,
+                    Errores: errores,
+                    PalabrasFalladas: falladas || "Ninguna"
+                }),
+                headers: { 'Content-Type': 'application/json' }
+            }).catch(function(e) { console.log('Error:', e); });
+        }
 
-            let choices = new Set([data.s]);
-            while(choices.size < 3) {
-                choices.add(Math.max(1, data.s + (Math.floor(Math.random() * 3) - 1)));
+        // ── JUEGO ──
+        var wordsData = [
+            { w: "Pan", s: 1 }, { w: "Sol", s: 1 }, { w: "Flor", s: 1 },
+            { w: "Casa", s: 2 }, { w: "Lapiz", s: 2 }, { w: "Perro", s: 2 },
+            { w: "Tomate", s: 3 }, { w: "Estrella", s: 3 }, { w: "Caballo", s: 3 },
+            { w: "Mariposa", s: 4 }, { w: "Telefono", s: 4 }, { w: "Elefante", s: 4 }
+        ].sort(function() { return Math.random() - 0.5; });
+
+        var currentIdx = 0, hits = 0, attempts = 0, log = [], mode = 'MINUS';
+        var mathRes = 0, pAction = '';
+
+        function initBg() {
+            var colors = ['#FF5722','#E91E63','#9C27B0','#2196F3','#FFEB3B','#4CAF50'];
+            var container = document.getElementById('bg-letters');
+            for (var i = 0; i < 25; i++) {
+                var s = document.createElement('span');
+                s.className = 'floating-letter';
+                s.innerText = "aeiou"[Math.floor(Math.random()*5)];
+                s.style.left = Math.random()*100 + "vw";
+                s.style.color = colors[Math.floor(Math.random()*colors.length)];
+                s.style.fontSize = (20 + Math.random()*30) + "px";
+                s.style.animationDelay = Math.random()*12 + "s";
+                container.appendChild(s);
             }
-            
-            Array.from(choices).sort((a,b) => a-b).forEach(val => {
-                let btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerText = val;
-                btn.onclick = () => checkAnswer(val, btn);
-                optionsDiv.appendChild(btn);
+        }
+
+        function toggleFS() { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); }
+
+        function startGame(m) {
+            mode = m;
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'flex';
+            document.getElementById('word-display').className = 'word-display ' + (mode === 'MAYUS' ? 'f-mayus' : 'f-minus');
+            loadWord();
+        }
+
+        function loadWord() {
+            if (currentIdx >= wordsData.length) {
+                var errores = attempts - hits;
+                var falladas = log.filter(function(l) { return l.res === 'Fallo'; }).map(function(l) { return l.w; }).join(", ");
+                enviarAGoogleSheet(hits, errores, falladas || "Ninguna");
+                Swal.fire('Fin del juego!', 'Has completado todas las palabras', 'success').then(downloadReport);
+                return;
+            }
+            var item = wordsData[currentIdx];
+            document.getElementById('word-display').innerText = item.w;
+            document.getElementById('word-display').style.color = 'var(--text-color)';
+            var optContainer = document.getElementById('options');
+            optContainer.innerHTML = '';
+            [1,2,3,4].forEach(function(n) {
+                var b = document.createElement('button');
+                b.className = 'option-btn ' + (mode === 'MAYUS' ? 'f-mayus' : 'f-minus');
+                b.innerText = n;
+                b.onclick = function() { checkAnswer(n, b); };
+                optContainer.appendChild(b);
             });
-
-            speak(`¿Cuántas sílabas tiene ${data.w}?`);
+            speakCurrent();
         }
 
-        function checkAnswer(selected, btn) {
-            const correct = words[currentWordIndex].s;
-            if (selected === correct) {
-                btn.classList.add('correct');
-                speak("¡Muy bien!");
-                stats.push({ word: words[currentWordIndex].w, success: extraAttempts === 0 });
-                
-                setTimeout(() => {
-                    currentWordIndex++;
-                    if (currentWordIndex < words.length) initLevel();
-                    else Swal.fire('¡Felicidades!', 'Has terminado el ejercicio.', 'success');
-                }, 1500);
+        function speakCurrent() {
+            var msg = new SpeechSynthesisUtterance("Cuantas silabas tiene la palabra " + wordsData[currentIdx].w);
+            msg.lang = 'es-ES'; msg.rate = 0.8;
+            window.speechSynthesis.speak(msg);
+        }
+
+        function checkAnswer(n, btn) {
+            var correct = wordsData[currentIdx].s;
+            attempts++;
+            if (n === correct) {
+                hits++;
+                document.getElementById('hits').innerText = hits;
+                btn.style.background = 'var(--primary)';
+                btn.style.color = 'white';
+                log.push({ w: wordsData[currentIdx].w, res: 'Acierto' });
+                currentIdx++;
+                setTimeout(loadWord, 1200);
             } else {
-                btn.classList.add('wrong');
-                extraAttempts++;
-                speak("Vuelve a contar.");
+                btn.style.background = '#FF5252';
+                btn.style.color = 'white';
+                log.push({ w: wordsData[currentIdx].w, res: 'Fallo' });
+                var msg = new SpeechSynthesisUtterance("Vuelve a contar");
+                msg.lang = 'es-ES';
+                window.speechSynthesis.speak(msg);
             }
         }
 
-        // --- CONTROL PARENTAL MATEMÁTICO ---
-        function askPermission() {
-            const n1 = Math.floor(Math.random() * 9) + 2;
-            const n2 = Math.floor(Math.random() * 9) + 2;
-            expectedMath = n1 + n2;
-            document.getElementById('math-exp').innerText = `${n1} + ${n2} = ?`;
-            document.getElementById('math-answer').value = "";
+        function openParental(act) {
+            pAction = act;
+            var n1 = Math.floor(Math.random()*8)+1;
+            var n2 = Math.floor(Math.random()*8)+1;
+            mathRes = n1 + n2;
+            document.getElementById('math-q').innerText = n1 + " + " + n2 + " = ?";
+            document.getElementById('math-a').value = "";
             document.getElementById('parental-modal').style.display = 'flex';
         }
 
-        function verifyParental() {
-            if (parseInt(document.getElementById('math-answer').value) === expectedMath) {
-                if (document.exitFullscreen) document.exitFullscreen();
-                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-                location.reload();
+        function checkParental() {
+            if (parseInt(document.getElementById('math-a').value) === mathRes) {
+                var errores = attempts - hits;
+                var falladas = log.filter(function(l) { return l.res === 'Fallo'; }).map(function(l) { return l.w; }).join(", ");
+                enviarAGoogleSheet(hits, errores, falladas ? falladas + " (sesion incompleta)" : "Sesion incompleta");
+                if (pAction === 'HOME') location.reload();
+                closeParental();
             } else {
-                Swal.fire('Atención', 'Resultado incorrecto', 'error');
+                Swal.fire('Error', 'Suma incorrecta', 'error');
                 closeParental();
             }
         }
 
         function closeParental() { document.getElementById('parental-modal').style.display = 'none'; }
 
-        // --- INFORME DESCARGABLE ---
         function downloadReport() {
-            let txt = "INFORME DE CONCIENCIA SILÁBICA\n\n";
-            stats.forEach((s, i) => {
-                txt += `${i+1}. ${s.word}: ${s.success ? 'Acierto Directo' : 'Necesitó ayuda'}\n`;
-            });
-            const blob = new Blob([txt], { type: 'text/plain' });
-            const a = document.createElement('a');
+            var html = '<html><head><meta charset="UTF-8"><style>'
+                + 'body{font-family:sans-serif;background:#E8F5E9;padding:40px;}'
+                + '.box{background:white;padding:20px;border-radius:20px;box-shadow:0 4px 10px rgba(0,0,0,0.1);}'
+                + 'h1{color:#2E7D32;}table{width:100%;border-collapse:collapse;margin-top:20px;}'
+                + 'th,td{border:1px solid #ddd;padding:12px;text-align:left;}'
+                + 'th{background:#4CAF50;color:white;}</style></head><body><div class="box">'
+                + '<h1>Informe de Conciencia Silabica</h1>'
+                + '<p>Aciertos totales: ' + hits + ' de ' + attempts + '</p>'
+                + '<table><tr><th>Palabra</th><th>Resultado</th></tr>'
+                + log.map(function(l) { return '<tr><td>' + l.w + '</td><td>' + l.res + '</td></tr>'; }).join('')
+                + '</table></div></body></html>';
+            var blob = new Blob([html], {type:'text/html'});
+            var a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = 'informe_silabas.txt';
+            a.download = 'informe_silabas.html';
             a.click();
         }
 
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
+        window.onload = initBg;
     </script>
 </body>
 </html>

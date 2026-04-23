@@ -3,19 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>  Hecho con 🤲 por <a href="sobre-mi.html">Inma Merino Rus</a> · Maestra de Audición y Lenguaje &amp; Logopeda
-<meta name="description" content="<h1>Recursos para <em>comunicar</em><br>y aprender</h1>
-  <p>Actividades interactivas de conciencia fonológica, discriminación auditiva, memoria, atención  vocabulario, conceptos básicos y lectoescritura. Creadas con cariño para trabajar la comunicación.</p>
-.">
-<meta name="keywords" content="Inma Merino, Manos con mucho que contar, logopedia, audición y lenguaje, conciencia fonológica, juegos educativos, aprender a leer, repositorio educativo">
-<meta name="author" content="Inma Merino Rus">
-
-<meta property="og:title" content="Manos con Mucho que Contar - Inma Merino Rus">
-<meta property="og:description" content="Explora actividades interactivas de logopedia y audición y lenguaje creadas por Inma Merino.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://manosconmuchoquecontar.github.io/">
-
+<title>Manos con Mucho que Contar · Inma Merino Rus</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -87,6 +75,12 @@
     padding: 6rem 2rem 5rem;
     max-width: 900px; margin: 0 auto; text-align: center;
   }
+  .hero-badge {
+    display: inline-block; margin-bottom: 1.5rem;
+    background: var(--coral-light); color: var(--coral);
+    font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 6px 16px; border-radius: 100px;
+  }
   .hero h1 {
     font-family: 'Fraunces', serif;
     font-size: clamp(2.8rem, 6vw, 5rem);
@@ -105,7 +99,7 @@
     border-radius: 100px; text-decoration: none;
     transition: background .2s, transform .15s;
   }
-  .btn-primary:hover { background: #1A7A6E; transform: translateY(-1px); }
+  .btn-primary:hover { background: #B84A22; transform: translateY(-1px); }
  
   /* ── STATS ── */
   .stats {
@@ -152,11 +146,13 @@
     border-radius: 100px; padding: 0 1rem;
     max-width: 360px; gap: 8px;
   }
+  .search-bar svg { flex-shrink: 0; color: var(--ink3); }
   .search-bar input {
     border: none; outline: none; background: transparent;
     font-family: 'Nunito', sans-serif; font-size: 14px; color: var(--ink);
     padding: 10px 0; width: 100%;
   }
+  .search-bar input::placeholder { color: var(--ink3); }
  
   /* ── GRID ── */
   .grid {
@@ -183,6 +179,9 @@
     position: relative;
   }
   .card-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .card-thumb .placeholder {
+    font-size: 3rem; opacity: 0.3;
+  }
   .card-thumb .area-badge {
     position: absolute; top: 12px; left: 12px;
     font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
@@ -212,8 +211,18 @@
   .area-atencion { background: #FDE8EE; color: #B03060; }
   .area-lectoescritura { background: #EEF5D8; color: #4A7A20; }
   .area-vocabulario { background: #FDE8D8; color: #C45E1A; }
+  
+
+  /* thumb colors por área */
+  .thumb-fonologica { background: #7DCFC4; }
+  .thumb-discriminacion { background: #F4A67A; }
+  .thumb-memoria { background: #B09AE0; }
+  .thumb-atencion { background: #F0A0B8; }
+  .thumb-lectoescritura { background: #B8D870; }
+  .thumb-vocabulario { background: #F5B98A; }
+  /* ── CÓMO AÑADIR SECCIÓN ── */
  
-  /* MODAL */
+  /* ── MODAL ── */
   .modal-overlay {
     display: none; position: fixed; inset: 0;
     background: rgba(28,28,26,0.6); z-index: 200;
@@ -224,28 +233,47 @@
     background: white; border-radius: var(--radius);
     max-width: 800px; width: 100%;
     max-height: 85vh; overflow-y: auto;
+    animation: slideUp .25s ease;
   }
+  @keyframes slideUp { from { transform: translateY(20px); opacity:0; } to { transform: translateY(0); opacity:1; } }
   .modal-header { padding: 1.5rem 1.5rem 1rem; display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
-  .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--ink3); }
+  .modal-header h2 { font-family: 'Fraunces', serif; font-size: 1.4rem; }
+  .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--ink3); flex-shrink: 0; padding: 0; }
+  .modal-close:hover { color: var(--ink); }
   .modal-iframe { width: 100%; height: 480px; border: none; border-top: 1px solid var(--border); }
-  .modal-meta { padding: 1rem 1.5rem; font-size: 13px; color: var(--ink2); display: flex; gap: 1rem; flex-wrap: wrap; }
+  .modal-meta { padding: 1rem 1.5rem; font-size: 13px; color: var(--ink2); display: flex; gap: 1rem; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
  
+  /* ── FOOTER ── */
   footer {
     text-align: center; padding: 2rem;
     font-size: 13px; color: var(--ink3);
     border-top: 1px solid var(--border);
   }
   footer a { color: var(--coral); text-decoration: none; }
+ 
+  /* ── EMPTY STATE ── */
+  .empty { text-align: center; padding: 4rem 2rem; color: var(--ink3); }
+  .empty p { font-size: 1rem; margin-top: 0.5rem; }
+ 
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    nav ul { display: none; }
+    .stats { gap: 1.5rem; }
+    .hero h1 { font-size: 2.4rem; }
+    .section-header { flex-direction: column; }
+    .search-bar { max-width: 100%; }
+  }
 </style>
 </head>
 <body>
  
+<!-- NAV -->
 <nav>
   <a href="#" class="logo">
     <div class="logo-icon">🤲</div>
     <div class="logo-text">
       Manos con Mucho que Contar
-      <span>by Inma Merino Rus · Logopedia</span>
+      <span>by Inma Merino Rus · AL &amp; Logopedia</span>
     </div>
   </a>
   <ul>
@@ -254,26 +282,29 @@
   </ul>
 </nav>
  
-<header class="hero-wrapper">
+<!-- HERO -->
+<div class="hero-wrapper">
 <div class="hero">
-  <h1>Recursos de <em>Logopedia</em><br>y Audición y Lenguaje</h1>
-  <p>Repositorio educativo de Inma Merino Rus con actividades interactivas de conciencia fonológica, discriminación auditiva y juegos para aprender a leer.</p>
+  <h1>Recursos para <em>comunicar</em><br>y aprender</h1>
+  <p>Actividades interactivas de conciencia fonológica, discriminación auditiva, memoria, atención  vocabulario, conceptos básicos y lectoescritura. Creadas con cariño para trabajar la comunicación.</p>
   <a href="#actividades" class="btn-primary">Explorar actividades</a>
 </div>
-</header>
+</div>
  
+<!-- STATS -->
 <div class="stats">
   <div class="stat"><strong id="stat-total">0</strong><span>actividades</span></div>
-  <div class="stat"><strong>6</strong><span>áreas de AL</span></div>
+  <div class="stat"><strong>6</strong><span>áreas</span></div>
   <div class="stat"><strong>∞</strong><span>con cariño</span></div>
 </div>
  
-<main class="section" id="actividades">
+<!-- ACTIVIDADES -->
+<div class="section" id="actividades">
   <div class="section-header">
-    <h2>Juegos y Recursos Educativos</h2>
+    <h2>Explorar actividades</h2>
     <div class="search-bar">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input type="text" id="search" placeholder="Buscar logopedia, lectura...">
+      <input type="text" id="search" placeholder="Buscar actividad...">
     </div>
   </div>
  
@@ -283,26 +314,27 @@
     <button class="filter-btn" data-area="discriminacion">Discriminación auditiva</button>
     <button class="filter-btn" data-area="memoria">Memoria</button>
     <button class="filter-btn" data-area="atencion">Atención</button>
-    <button class="filter-btn" data-area="lectoescritura">Lectoescritura</button>
-    <button class="filter-btn" data-area="vocabulario">Vocabulario y conceptos</button>
+   <button class="filter-btn" data-area="lectoescritura">Lectoescritura</button>
+<button class="filter-btn" data-area="vocabulario">Vocabulario y conceptos</button>
   </div>
  
   <div class="grid" id="grid"></div>
   <div class="empty" id="empty" style="display:none">
     <p style="font-size:2rem">🔍</p>
-    <p>No se encontraron actividades.</p>
+    <p>No se encontraron actividades con ese filtro.</p>
   </div>
-</main>
+</div>
+ 
  
 <footer>
-  <p><strong>Manos con Mucho que Contar</strong> - Un proyecto de <strong>Inma Merino Rus</strong></p>
-  <p>Maestra de Audición y Lenguaje &amp; Logopeda</p>
-  <br>
-  <a href="sobre-mi.html">Conoce más sobre Inma Merino Rus →</a>
+  Hecho con 🤲 por <a href="sobre-mi.html">Inma Merino Rus</a> · Maestra de Audición y Lenguaje &amp; Logopeda
   <br><br>
-  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank">© 2025 · Licencia CC BY-NC-SA 4.0</a>
+  <a href="sobre-mi.html" style="color:var(--coral);font-weight:600;">Conoce a la autora →</a>
+  &nbsp;·&nbsp;
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" style="color:var(--coral);">© 2025 · Licencia CC BY-NC-SA 4.0</a>
 </footer>
  
+<!-- MODAL -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
     <div class="modal-header">
@@ -315,109 +347,134 @@
 </div>
  
 <script>
+// ============================================================
+//  AQUI ANYADES TUS ACTIVIDADES
+//  Copia un bloque completo { ... } y cambia los datos
+//  
+//  AREAS DISPONIBLES (escribe exactamente asi, sin tildes):
+//    fonologica | discriminacion | memoria | atencion | lectoescritura
+//
+//  URL: pon la ruta relativa a tu actividad, por ejemplo:
+//    "actividades/nombre-de-tu-actividad.html"
+// ============================================================
+//  AQUI VAN TUS ACTIVIDADES
+//  Cuando quieras anadir una, copia este bloque y pegalo:
+//
+//  {
+//    titulo: "Nombre de tu actividad",
+//    descripcion: "Descripcion breve de que trabaja.",
+//    area: "fonologica",
+//    nivel: "Infantil / 1 Primaria",
+//    url: "actividades/nombre-del-archivo.html",
+//    imagen: ""
+//  },
+//
+//  AREAS: fonologica / discriminacion / memoria / atencion / lectoescritura
+// ============================================================
 var actividades = [
   {
     titulo: "Detective Animal - Inferencias",
-    descripcion: "Juego de logopedia para adivinar animales a través de pistas. Trabaja vocabulario y comprensión.",
+    descripcion: "Escucha las pistas y adivina de que animal se trata. Trabaja las inferencias y el vocabulario animal.",
     area: "atencion",
     nivel: "Infantil / Primaria",
     url: "actividades/inferencias_2.html",
     imagen: "https://i.postimg.cc/SKknQS0B/inferencias-img.jpg"
   },
+ {
+  titulo: "Isla de Sinfones FL CL GL",
+  descripcion: "Escucha la palabra y decide si contiene FL, CL o GL. Con sintesis de voz e informe de resultados.",
+  area: "discriminacion",
+  nivel: "2 - 4 Primaria",
+  url: "actividades/sinfones_fl_cl_gl.html",
+  imagen:"https://i.postimg.cc/0ND689xd/sinfones.jpg"
+}, 
   {
-    titulo: "Isla de Sinfones FL CL GL",
-    descripcion: "Discriminación auditiva de sinfones. Ideal para mejorar la articulación y lectura.",
-    area: "discriminacion",
-    nivel: "2 - 4 Primaria",
-    url: "actividades/sinfones_fl_cl_gl.html",
-    imagen:"https://i.postimg.cc/0ND689xd/sinfones.jpg"
-  }, 
-  {
-    titulo: "Conteo Silábico",
-    descripcion: "Actividad de conciencia fonológica para contar sílabas. Base para aprender a leer.",
+    titulo: "Conteo Silabico",
+    descripcion: "Escucha la palabra y decide cuantas silabas tiene. Con sintesis de voz e informe de resultados.",
     area: "fonologica",
     nivel: "Infantil / 1 Primaria",
     url: "actividades/conteo_silabico.html",
     imagen: "https://i.postimg.cc/4x8vNcJ9/conciencia-fon.jpg"
   },
   {
-    titulo: "Los Animales - Intervención TEA",
-    descripcion: "Vocabulario con pictogramas ARASAAC para trabajar la comunicación en alumnos con TEA.",
+    titulo: "Los Animales - Intervencion TEA",
+    descripcion: "Responde preguntas sobre animales usando pictogramas ARASAAC. Color, alimentacion, habitat y mas.",
     area: "vocabulario",
     nivel: "Infantil / Primaria",
     url: "actividades/animales_tea.html",
     imagen: "https://i.postimg.cc/7LVRQ3fb/JUEGO-ANIMALES.png"
   },
   {
-    titulo: "Detective de Historias",
-    descripcion: "Comprensión lectora y memoria auditiva. Juegos educativos para primaria.",
-    area: "lectoescritura",
-    nivel: "Infantil / Primaria",
-    url: "actividades/detective_historias.html",
-    imagen: "https://i.postimg.cc/hPM2pQxR/detective.jpg"
-  },
+  titulo: "Detective de Historias",
+  descripcion: "Escucha la historia y responde preguntas de comprension. Trabaja la memoria auditiva y la comprension oral.",
+  area: "lectoescritura",
+  nivel: "Infantil / Primaria",
+  url: "actividades/detective_historias.html",
+  imagen: "https://i.postimg.cc/hPM2pQxR/detective.jpg"
+},
   {
-    titulo: "Jugamos con las sílabas",
-    descripcion: "Conciencia silábica inicial y final para el desarrollo del lenguaje oral.",
-    area: "fonologica",
-    nivel: "Infantil / Primaria",
-    url: "actividades/jugamos_con_silabas.html",
-    imagen: "https://i.postimg.cc/76sNwYGs/silabas.jpg"
-  },
+  titulo: "Jugamos con las sílabas",
+  descripcion: "Escucha la palabra y dí la sílaba y nicial o final. Trabaja la conciencia silábica.",
+  area: "fonologica",
+  nivel: "Infantil / Primaria",
+  url: "actividades/jugamos_con_silabas.html",
+  imagen: "https://i.postimg.cc/76sNwYGs/silabas.jpg"
+    },
+   {
+  titulo: "Tren de los sonidos",
+  descripcion: "Escucha la secuencia de palabras y pulsa los iconos en el mismo orden.",
+  area: "memoria",
+  nivel: "Infantil / Primaria",
+  url: "actividades/trendesonidos.html",
+  imagen: "https://i.postimg.cc/BQVKWMBW/tren-de-sonidos.png"
+    },
+    {
+  titulo: "¿Cómo me llamo?",
+  descripcion: "Escucha la palabra y pincha sobre las sílabas que la forman.",
+  area: "fonologica",
+  nivel: "Infantil / Primaria",
+  url: "actividades/forma_palabras.html",
+  imagen: "https://i.postimg.cc/FsLK4r72/palabras.jpg"
+    },
+{
+  titulo: "Pares mínimos (b–d, s–z, p–t, r–l, t–d, m–n) ",
+  descripcion: "Escucha la palabra y elige cuál es la que ha dicho.",
+  area: "discriminacion",
+  nivel: "Infantil / Primaria",
+  url: "actividades/pares_minimos.html",
+  imagen: "https://i.postimg.cc/C1PMPwRf/pares-minimos.jpg"
+    },
   {
-    titulo: "Tren de los sonidos",
-    descripcion: "Memoria auditiva secuencial. Actividad clave en audición y lenguaje.",
-    area: "memoria",
-    nivel: "Infantil / Primaria",
-    url: "actividades/trendesonidos.html",
-    imagen: "https://i.postimg.cc/BQVKWMBW/tren-de-sonidos.png"
-  },
-  {
-    titulo: "¿Cómo me llamo?",
-    descripcion: "Formación de palabras a través de sílabas. Juego para aprender a leer.",
-    area: "fonologica",
-    nivel: "Infantil / Primaria",
-    url: "actividades/forma_palabras.html",
-    imagen: "https://i.postimg.cc/FsLK4r72/palabras.jpg"
-  },
-  {
-    titulo: "Pares mínimos (b–d, s–z, p–t, r–l, t–d, m–n)",
-    descripcion: "Discriminación auditiva de sonidos similares para logopedia.",
-    area: "discriminacion",
-    nivel: "Infantil / Primaria",
-    url: "actividades/pares_minimos.html",
-    imagen: "https://i.postimg.cc/C1PMPwRf/pares-minimos.jpg"
-  },
-  {
-    titulo: "Cambios Fonológicos",
-    descripcion: "Encuentra la letra que cambia. Trabajo avanzado de conciencia fonológica.",
-    area: "fonologica",
-    nivel: "Infantil / Primaria",
-    url: "actividades/cambios_fonologicos.html",
-    imagen: "https://i.postimg.cc/yYshN5X6/pseudo.jpg"
-  },
-  {
-    titulo: "Letra inicial vs letra final",
-    descripcion: "Identificación de letras en palabras. Refuerzo de lectoescritura.",
-    area: "fonologica",
-    nivel: "Infantil / Primaria",
-    url: "actividades/ letra_inicial.html",
-    imagen: "https://i.postimg.cc/FHWyYjjY/letra-inicial.jpg"
-  }
+  titulo: "Cambios Fonológicos ",
+  descripcion: "Encuentra la letra que cambia en palabras y pseudopalabras.",
+  area: "fonologica",
+  nivel: "Infantil / Primaria",
+  url: "actividades/cambios_fonologicos.html",
+  imagen: "https://i.postimg.cc/yYshN5X6/pseudo.jpg"
+    },
+   {
+  titulo: "Letra inicial vs letra final",
+  descripcion: "Escucha el audio y encuentra la letra final o inicial de cada palabra, selecciona si quieres trabajar en mayúscula o minúscula",
+  area: "fonologica",
+  nivel: "Infantil / Primaria",
+  url: "actividades/ letra_inicial.html",
+  imagen: "https://i.postimg.cc/FHWyYjjY/letra-inicial.jpg"
+    }
 ];
 
+ 
 var areaConfig = {
-  fonologica: { label: "Conciencia fonológica", emoji: "🎵", thumb: "thumb-fonologica", badge: "area-fonologica" },
-  discriminacion: { label: "Discriminación auditiva", emoji: "👂", thumb: "thumb-discriminacion", badge: "area-discriminacion" },
-  memoria: { label: "Memoria", emoji: "🧠", thumb: "thumb-memoria", badge: "area-memoria" },
-  atencion: { label: "Atención", emoji: "🎯", thumb: "thumb-atencion", badge: "area-atencion" },
-  lectoescritura: { label: "Lectoescritura", emoji: "✏️", thumb: "thumb-lectoescritura", badge: "area-lectoescritura" },
-  vocabulario: { label: "Vocabulario y conceptos", emoji: "📚", thumb: "thumb-vocabulario", badge: "area-vocabulario" }
+  fonologica:     { label: "Conciencia fonologica",  emoji: "&#127925;", thumb: "thumb-fonologica",     badge: "area-fonologica" },
+  discriminacion: { label: "Discriminacion auditiva", emoji: "&#128066;", thumb: "thumb-discriminacion", badge: "area-discriminacion" },
+  memoria:        { label: "Memoria",                emoji: "&#129504;", thumb: "thumb-memoria",        badge: "area-memoria" },
+  atencion:       { label: "Atencion",               emoji: "&#127919;", thumb: "thumb-atencion",       badge: "area-atencion" },
+  lectoescritura: { label: "Lectoescritura",         emoji: "&#9999;",   thumb: "thumb-lectoescritura", badge: "area-lectoescritura" },
+  vocabulario:    { label: "Vocabulario y conceptos", emoji: "&#128218;", thumb: "thumb-vocabulario", badge: "area-vocabulario" }
 };
-
+ 
 var filtroActual = "todas";
 var busqueda = "";
-
+ 
 function renderGrid() {
   var grid = document.getElementById("grid");
   var empty = document.getElementById("empty");
@@ -426,21 +483,32 @@ function renderGrid() {
     var matchBusqueda = a.titulo.toLowerCase().indexOf(busqueda) !== -1 || a.descripcion.toLowerCase().indexOf(busqueda) !== -1;
     return matchArea && matchBusqueda;
   });
-
+ 
   document.getElementById("stat-total").textContent = actividades.length;
-
+ 
   if (filtradas.length === 0) {
     grid.innerHTML = "";
     empty.style.display = "block";
+    var tituloEl = document.getElementById("empty-title");
+    var msgEl = document.getElementById("empty-msg");
+    if (actividades.length === 0) {
+      if (tituloEl) tituloEl.textContent = "Todavia no hay actividades";
+      if (msgEl) msgEl.innerHTML = "Abre el archivo index.html y añade tus actividades en el array actividades[]";
+    } else {
+      if (tituloEl) tituloEl.textContent = "Sin resultados";
+      if (msgEl) msgEl.textContent = "No se encontraron actividades con ese filtro o busqueda.";
+    }
     return;
   }
   empty.style.display = "none";
-
+ 
   grid.innerHTML = filtradas.map(function(a) {
     var cfg = areaConfig[a.area];
     var idx = actividades.indexOf(a);
-    var imgHtml = a.imagen ? '<img src="' + a.imagen + '" alt="' + a.titulo + '">' : '<div class="placeholder">' + cfg.emoji + '</div>';
-    return '<article class="card" onclick="abrirModal(' + idx + ')">'
+    var imgHtml = a.imagen
+      ? '<img src="' + a.imagen + '" alt="' + a.titulo + '">'
+      : '<div class="placeholder">' + cfg.emoji + '</div>';
+    return '<div class="card" onclick="abrirModal(' + idx + ')">'
       + '<div class="card-thumb ' + cfg.thumb + '">'
       + imgHtml
       + '<span class="area-badge ' + cfg.badge + '">' + cfg.label + '</span>'
@@ -453,10 +521,10 @@ function renderGrid() {
       + '<span class="card-author">Inma Merino Rus</span>'
       + '<span class="card-level">' + a.nivel + '</span>'
       + '</div>'
-      + '</article>';
+      + '</div>';
   }).join("");
 }
-
+ 
 document.getElementById("filters").addEventListener("click", function(e) {
   if (!e.target.matches(".filter-btn")) return;
   document.querySelectorAll(".filter-btn").forEach(function(b) { b.classList.remove("active"); });
@@ -464,29 +532,43 @@ document.getElementById("filters").addEventListener("click", function(e) {
   filtroActual = e.target.dataset.area;
   renderGrid();
 });
-
+ 
 document.getElementById("search").addEventListener("input", function(e) {
   busqueda = e.target.value.toLowerCase().trim();
   renderGrid();
 });
-
+ 
 function abrirModal(idx) {
   var a = actividades[idx];
   var cfg = areaConfig[a.area];
   document.getElementById("modal-title").textContent = a.titulo;
-  document.getElementById("modal-meta").innerHTML = '<span class="area-badge ' + cfg.badge + '">' + cfg.label + '</span>' + '<span>Nivel: ' + a.nivel + '</span>';
+  document.getElementById("modal-meta").innerHTML =
+    '<span class="area-badge ' + cfg.badge + '" style="position:static;border-radius:100px;">' + cfg.label + '</span>'
+    + '<span>Nivel: ' + a.nivel + '</span>'
+    + '<span>Inma Merino Rus</span>';
   document.getElementById("modal-iframe").src = a.url;
   document.getElementById("modal").classList.add("open");
   document.body.style.overflow = "hidden";
 }
-
+ 
 document.getElementById("modal-close").addEventListener("click", cerrarModal);
+document.getElementById("modal").addEventListener("click", function(e) {
+  if (e.target === document.getElementById("modal")) cerrarModal();
+});
+ 
 function cerrarModal() {
   document.getElementById("modal").classList.remove("open");
   document.getElementById("modal-iframe").src = "";
   document.body.style.overflow = "";
 }
-
+ 
+document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+  a.addEventListener("click", function(e) {
+    var target = document.querySelector(a.getAttribute("href"));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: "smooth" }); }
+  });
+});
+ 
 renderGrid();
 </script>
 </body>

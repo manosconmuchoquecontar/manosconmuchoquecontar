@@ -3,236 +3,332 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sinfones /FL/ /CL/ /GL/ - Massallera</title>
+    <title>Isla de Sinfones - EdTech Pro</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Short+Stack&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund:wght@100..400&family=Playwrite+HR+Lijeva:wght@100..400&display=swap" rel="stylesheet">
     <style>
-        /* Definición de fuentes */
-        @font-face {
-            font-family: 'Massallera';
-            src: local('Massallera'), local('Escolar'), local('Edelfontmed');
-        }
-
         :root {
-            --primary: #4A90E2;
-            --secondary: #FF9800;
-            --success: #4CAF50;
-            --error: #F44336;
-            --bg: #E3F2FD;
-            /* Prioridad absoluta a Massallera */
-            --font-escolar: 'Massallera', 'Short Stack', cursive;
+            --pastel-blue-dark: #A2C2E1;
+            --pastel-blue-light: #D4E6F1;
+            --pastel-bg: #EBF5FB;
+            --accent-color: #5DADE2;
+            --text-color: #2E4053;
+            --font-mayus: 'Playwrite DE Grund', cursive;
+            --font-minus: 'Playwrite HR Lijeva', cursive;
         }
-
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            font-family: var(--font-escolar);
-            background-color: var(--bg);
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden; user-select: none;
+            overflow: hidden; background-color: var(--pastel-bg);
+            font-family: var(--font-minus); color: var(--text-color); user-select: none;
         }
-
-        /* ANTESALA */
-        #welcome-screen {
+        .floating-letter {
+            position: absolute; font-weight: bold; opacity: 0.2; z-index: 0;
+            animation: float 10s linear infinite; pointer-events: none;
+        }
+        @keyframes float {
+            0% { transform: translateY(110vh) rotate(0deg); }
+            100% { transform: translateY(-10vh) rotate(360deg); }
+        }
+        .screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, #4A90E2, #1A237E);
-            z-index: 5000;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: white; text-align: center;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; z-index: 10; padding: 20px;
+            background: radial-gradient(circle, var(--pastel-blue-light), var(--pastel-bg));
         }
-
-        .card-welcome {
-            background: white; padding: 40px; border-radius: 40px;
-            color: #333; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            max-width: 500px; width: 80%;
+        .card {
+            background: rgba(255,255,255,0.9); padding: 30px; border-radius: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05); text-align: center;
+            max-width: 600px; width: 100%; border: 8px solid white;
         }
-
-        /* JUEGO */
-        #main-game { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: center; }
-
-        #game-box {
-            background: white; padding: 30px; border-radius: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            max-width: 650px; width: 85%; text-align: center;
+        .btn {
+            padding: 15px 30px; border-radius: 25px; border: none;
+            cursor: pointer; font-size: 1.5rem; transition: all 0.3s;
+            margin: 10px; font-family: inherit; box-shadow: 0 4px 0 rgba(0,0,0,0.1);
         }
-
-        .btn-main {
-            background: var(--success); color: white; border: none;
-            padding: 20px 40px; font-size: 1.8rem; border-radius: 20px;
-            cursor: pointer; font-family: var(--font-escolar);
-            margin-top: 10px; width: 100%;
+        .btn-blue { background: var(--pastel-blue-dark); color: white; }
+        .btn-blue:hover { transform: scale(1.05); background: var(--accent-color); }
+        .btn-mode { width: 100%; font-size: 1.8rem; margin: 10px 0; }
+        #game-ui {
+            position: absolute; top: 10px; width: 95%;
+            display: flex; justify-content: space-between; z-index: 20;
         }
-
-        .word-display { 
-            font-family: var(--font-escolar);
-            font-size: clamp(3.5rem, 12vw, 6rem); 
-            color: var(--primary); 
-            margin: 20px 0; 
-            min-height: 100px; 
+        .icon-btn {
+            background: white; border: none; border-radius: 50%;
+            width: 60px; height: 60px; font-size: 30px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-
-        .options-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; }
-
-        .option-card {
-            font-family: var(--font-escolar);
-            background: #f5f5f5; border: 4px solid var(--primary);
-            border-radius: 20px; padding: 20px; font-size: 3rem;
+        .word-box {
+            font-size: 5rem; margin: 30px 0; min-height: 120px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .options-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; width: 100%; }
+        .option {
+            background: white; border: 4px solid var(--pastel-blue-dark);
+            border-radius: 20px; padding: 20px; font-size: 2.5rem;
             cursor: pointer; transition: 0.2s;
         }
-
-        .option-card:active { background: var(--primary); color: white; }
-
-        /* CONTROL PARENTAL */
-        #parental-modal {
+        .option:active { background: var(--pastel-blue-light); }
+        #parental-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 9999;
-            color: white; justify-content: center; align-items: center; flex-direction: column;
+            background: rgba(0,0,0,0.8); z-index: 1000;
+            color: white; flex-direction: column; align-items: center; justify-content: center;
         }
-
-        input { font-size: 2rem; width: 120px; text-align: center; border-radius: 10px; margin: 10px; }
+        .parental-card { background: white; color: #333; padding: 30px; border-radius: 20px; text-align: center; }
+        .font-mayus { font-family: var(--font-mayus); text-transform: uppercase; }
+        .font-minus { font-family: var(--font-minus); text-transform: lowercase; }
     </style>
 </head>
 <body>
 
-    <div id="welcome-screen">
-        <div class="card-welcome">
-            <h1 style="font-family: var(--font-escolar);">🏝️ Isla de Sinfones</h1>
-            <p>Trabajaremos /FL/, /CL/ y /GL/</p>
-            <button class="btn-main" onclick="initApp()">¡EMPEZAR!</button>
+    <!-- PANTALLA DE NOMBRE -->
+    <div id="nombre-screen" style="position:fixed;inset:0;background:linear-gradient(135deg,#e3f2fd,#bbdefb);display:flex;align-items:center;justify-content:center;z-index:9999;">
+      <div style="background:white;padding:40px;border-radius:40px;max-width:440px;width:90%;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.1);font-family:'Helvetica Neue',Arial,sans-serif;">
+        <div style="font-size:3.5rem;margin-bottom:15px;">👦👧</div>
+        <h2 style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:1.3rem;font-weight:600;margin:0 0 10px;color:#2196F3;text-transform:none;letter-spacing:normal;">¿Quién va a jugar?</h2>
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:0.9rem;color:#636e72;margin-bottom:20px;line-height:1.6;text-transform:none;">Si quieres, escribe el nombre del niño o niña para que Inma pueda ver cómo ha ido la sesión.</p>
+        <input id="nombre-input" type="text" placeholder="Nombre del niño/a..." maxlength="50"
+          style="width:100%;padding:13px 18px;border-radius:100px;border:2px solid #e0e0e0;font-size:1rem;font-family:'Helvetica Neue',Arial,sans-serif;text-align:center;outline:none;box-sizing:border-box;margin-bottom:15px;text-transform:none;">
+        <button onclick="guardarNombreYContinuar()"
+          style="width:100%;padding:14px;background:#2196F3;color:white;border:none;border-radius:100px;font-size:0.95rem;font-family:'Helvetica Neue',Arial,sans-serif;cursor:pointer;margin-bottom:10px;text-transform:none;letter-spacing:normal;">
+          Enviar informe a Inma ✓
+        </button>
+        <button onclick="continuarSinNombre()"
+          style="background:none;border:none;color:#aaa;font-size:0.82rem;font-family:'Helvetica Neue',Arial,sans-serif;cursor:pointer;text-decoration:underline;text-transform:none;letter-spacing:normal;">
+          Continuar sin enviar informe
+        </button>
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:0.75rem;color:#b2bec3;margin-top:18px;border-top:1px solid #f0f0f0;padding-top:12px;line-height:1.5;text-transform:none;">
+          🔒 Si escribes el nombre, al terminar Inma recibirá un informe con los resultados.<br>Es voluntario y los datos solo los verá ella para el seguimiento terapéutico.
+        </p>
+      </div>
+    </div>
+
+    <div id="bg-letters"></div>
+
+    <div id="start-screen" class="screen">
+        <div class="card">
+            <h1 id="title-display">🏝️ Isla de Sinfones</h1>
+            <p>Selecciona el modo de lectura:</p>
+            <button class="btn btn-blue btn-mode font-mayus" onclick="startGame('MAYUS')">MAYÚSCULAS</button>
+            <button class="btn btn-blue btn-mode font-minus" onclick="startGame('MINUS')">minúsculas</button>
+            <p style="font-size: 0.8rem; margin-top: 20px;">Utiliza el botón de pantalla completa para empezar</p>
+            <button class="btn" style="background:#82E0AA" onclick="toggleFullScreen()">📺 Pantalla Completa</button>
         </div>
     </div>
 
-    <div id="main-game">
-        <div style="position: absolute; top: 20px; width: 90%; display: flex; justify-content: space-between;">
-            <button onclick="askPermission()" style="background:var(--secondary); border:none; padding:10px; border-radius:10px; color:white; font-family: var(--font-escolar);">🔒 SALIR</button>
-            <button onclick="downloadReport()" style="background:#9c27b0; border:none; padding:10px; border-radius:10px; color:white; font-family: var(--font-escolar);">📊 INFORME</button>
+    <div id="game-screen" class="screen" style="display:none;">
+        <div id="game-ui">
+            <button class="icon-btn" onclick="openParental('HOME')">🏠</button>
+            <button class="btn" style="background:#BB8FCE; color:white; margin:0;" onclick="downloadReport()">📊 Informe</button>
         </div>
-
-        <div id="game-box">
-            <div style="font-size: 1.2rem; color: #666;">Aciertos: <span id="hits">0</span> / <span id="attempts">0</span></div>
-            <div class="word-display" id="word-feedback">¿Listos?</div>
-            <button id="btn-listen" class="btn-main" onclick="nextQuestion()">🔊 ESCUCHAR</button>
-            
-            <div class="options-grid">
-                <div class="option-card" onclick="checkAnswer('CL')">cl</div>
-                <div class="option-card" onclick="checkAnswer('FL')">fl</div>
-                <div class="option-card" onclick="checkAnswer('GL')">gl</div>
+        <div class="card">
+            <div id="score-bar" style="margin-bottom: 10px; font-size: 1.2rem;">
+                🌟 Aciertos: <span id="hits">0</span> | Intentos: <span id="attempts">0</span>
+            </div>
+            <div id="word-display" class="word-box">???</div>
+            <button class="btn btn-blue" onclick="playCurrentWord()">🔊 Escuchar</button>
+            <div class="options-grid" id="options-container">
+                <div class="option" onclick="checkAnswer('CL')">cl</div>
+                <div class="option" onclick="checkAnswer('FL')">fl</div>
+                <div class="option" onclick="checkAnswer('GL')">gl</div>
             </div>
         </div>
     </div>
 
-    <div id="parental-modal">
-        <h2 style="font-family: var(--font-escolar);">CONTROL PARENTAL</h2>
-        <p id="math-exp" style="font-size: 2.5rem; color: #ffeb3b;"></p>
-        <input type="number" id="math-answer">
-        <br>
-        <button class="btn-main" style="width:200px;" onclick="verifyParental()">OK</button>
-        <button onclick="closeParental()" style="background:none; border:none; color:white; margin-top:20px; cursor:pointer;">Cancelar</button>
+    <!-- CONTROL PARENTAL -->
+    <div id="parental-overlay">
+        <div class="parental-card">
+            <h3>Control Parental</h3>
+            <p id="math-question" style="font-size: 1.5rem; font-weight: bold;"></p>
+            <input type="number" id="math-answer" style="font-size: 2rem; width: 100px; text-align: center;">
+            <br><br>
+            <button class="btn btn-blue" onclick="verifyParental()">Verificar</button>
+            <button class="btn" onclick="closeParental()">Cancelar</button>
+        </div>
     </div>
 
     <script>
-        const words = [
+        // ── CONFIGURACION REPORTES ──
+        var GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbw4AKlcc8-09jA0uBl7EYDW_lorkazvEOwhZTthN6FD_BIhM1Q6o4HJdNSeUvqba2an/exec";
+        var NOMBRE_ALUMNO = "";
+        var ENVIAR_INFORME = false;
+
+        function guardarNombreYContinuar() {
+            var nombre = document.getElementById('nombre-input').value.trim();
+            if (nombre === "") { document.getElementById('nombre-input').style.borderColor = "#ff7675"; return; }
+            NOMBRE_ALUMNO = nombre;
+            ENVIAR_INFORME = true;
+            document.getElementById('nombre-screen').style.display = 'none';
+        }
+
+        function continuarSinNombre() {
+            NOMBRE_ALUMNO = "Anonimo";
+            ENVIAR_INFORME = false;
+            document.getElementById('nombre-screen').style.display = 'none';
+        }
+
+        function enviarAGoogleSheet(aciertos, errores, falladas) {
+            if (!ENVIAR_INFORME) return;
+            fetch(GOOGLE_SHEET_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    Nombre: NOMBRE_ALUMNO,
+                    Actividad: "Isla de Sinfones FL CL GL",
+                    Aciertos: aciertos,
+                    Errores: errores,
+                    PalabrasFalladas: falladas || "Ninguna"
+                }),
+                headers: { 'Content-Type': 'application/json' }
+            }).catch(function(e) { console.log('Error:', e); });
+        }
+
+        // ── JUEGO ──
+        var words = [
             { w: "Clavo", s: "CL" }, { w: "Flan", s: "FL" }, { w: "Globo", s: "GL" },
-            { w: "Chicle", s: "CL" }, { w: "Flauta", s: "FL" }, { w: "Iglú", s: "GL" },
+            { w: "Chicle", s: "CL" }, { w: "Flauta", s: "FL" }, { w: "Iglu", s: "GL" },
             { w: "Clavel", s: "CL" }, { w: "Flecha", s: "FL" }, { w: "Regla", s: "GL" },
             { w: "Ancla", s: "CL" }, { w: "Flor", s: "FL" }, { w: "Gladiador", s: "GL" },
-            { w: "Bicicleta", s: "CL" }, { w: "Flotador", s: "FL" }, { w: "Siglo", s: "GL" },
-            { w: "Cliente", s: "CL" }, { w: "Flequillo", s: "FL" }, { w: "Jungla", s: "GL" },
-            { w: "Clima", s: "CL" }, { w: "Pantufla", s: "FL" }, { w: "Glotón", s: "GL" },
-            { w: "Clarinete", s: "CL" }, { w: "Coliflor", s: "FL" }, { w: "Arreglo", s: "GL" },
-            { w: "Teclado", s: "CL" }, { w: "Flaco", s: "FL" }, { w: "Glaseado", s: "GL" },
-            { w: "Chancla", s: "CL" }, { w: "Inflar", s: "FL" }, { w: "Jeroglífico", s: "GL" }
-        ].sort(() => Math.random() - 0.5);
+            { w: "Bicicleta", s: "CL" }, { w: "Flotador", s: "FL" }, { w: "Siglo", s: "GL" }
+        ].sort(function() { return Math.random() - 0.5; });
 
-        let currentWord = null, hits = 0, attempts = 0, index = 0, log = [];
-        let expectedAnswer = 0;
+        var currentMode = 'MINUS', currentIndex = 0, hits = 0, attempts = 0, log = [];
+        var parentalAction = '', expectedResult = 0;
 
-        function initApp() {
-            const doc = document.documentElement;
-            if (doc.requestFullscreen) doc.requestFullscreen();
-            else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen();
-            
-            document.getElementById('welcome-screen').style.display = 'none';
-            document.getElementById('main-game').style.display = 'flex';
-            
-            speak("¡Hola! Pulsa el botón verde para empezar.");
+        function createFloatingLetters() {
+            var container = document.getElementById('bg-letters');
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            var colors = ["#AED6F1","#F9E79F","#D7BDE2","#A9DFBF","#F5B7B1"];
+            for (var i = 0; i < 20; i++) {
+                var span = document.createElement('span');
+                span.className = 'floating-letter';
+                span.innerText = chars[Math.floor(Math.random()*chars.length)];
+                span.style.left = Math.random() * 100 + 'vw';
+                span.style.color = colors[Math.floor(Math.random()*colors.length)];
+                span.style.fontSize = (Math.random()*40+20) + 'px';
+                span.style.animationDelay = (Math.random()*10) + 's';
+                container.appendChild(span);
+            }
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+        }
+
+        function startGame(mode) {
+            currentMode = mode;
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'flex';
+            var display = document.getElementById('word-display');
+            var options = document.querySelectorAll('.option');
+            if (mode === 'MAYUS') {
+                display.className = 'word-box font-mayus';
+                options.forEach(function(o) { o.className = 'option font-mayus'; });
+            } else {
+                display.className = 'word-box font-minus';
+                options.forEach(function(o) { o.className = 'option font-minus'; });
+            }
+            loadQuestion();
+            speak("Bienvenidos a la Isla de los Sinfones! Escucha con atencion.");
         }
 
         function speak(text) {
             window.speechSynthesis.cancel();
-            const utter = new SpeechSynthesisUtterance(text);
-            utter.lang = 'es-ES';
-            utter.rate = 0.6; 
-            window.speechSynthesis.speak(utter);
+            var msg = new SpeechSynthesisUtterance(text);
+            msg.lang = 'es-ES'; msg.rate = 0.8;
+            window.speechSynthesis.speak(msg);
         }
 
-        function nextQuestion() {
-            if (index >= words.length) {
-                Swal.fire('¡Muy bien!', 'Has terminado los ejercicios.', 'success');
+        function loadQuestion() {
+            if (currentIndex >= words.length) {
+                var errores = attempts - hits;
+                var falladas = log.filter(function(l) { return l.resultado === "Fallo"; }).map(function(l) { return l.palabra; }).join(", ");
+                enviarAGoogleSheet(hits, errores, falladas || "Ninguna");
+                Swal.fire({ title: 'Felicidades!', text: 'Has explorado toda la isla.', icon: 'success', confirmButtonText: 'Ver Informe' }).then(downloadReport);
                 return;
             }
-            currentWord = words[index];
-            speak("¿Qué sonido escuchas en..." + currentWord.w);
-            document.getElementById('word-feedback').innerText = "???";
-            document.getElementById('word-feedback').style.color = "#4A90E2";
+            document.getElementById('word-display').innerText = "???";
+            document.getElementById('word-display').style.color = "var(--text-color)";
+        }
+
+        function playCurrentWord() {
+            var wordObj = words[currentIndex];
+            speak("Que sonido tiene la palabra... " + wordObj.w);
         }
 
         function checkAnswer(selected) {
-            if (!currentWord || document.getElementById('word-feedback').innerText !== "???") return;
-            
+            if (document.getElementById('word-display').innerText !== "???") return;
+            var correct = words[currentIndex].s;
+            var word = words[currentIndex].w;
             attempts++;
-            const isCorrect = (selected === currentWord.s);
-            const feedback = document.getElementById('word-feedback');
-            
+            var isCorrect = (selected === correct);
+            var display = document.getElementById('word-display');
             if (isCorrect) {
                 hits++;
-                feedback.innerText = currentWord.w;
-                feedback.style.color = "#4CAF50";
-                speak("¡Genial!");
+                display.innerText = word;
+                display.style.color = "#27AE60";
+                speak("Excelente!");
+                log.push({ palabra: word, resultado: "Acierto", modo: currentMode });
             } else {
-                feedback.innerText = currentWord.s;
-                feedback.style.color = "#F44336";
-                speak("Era con " + currentWord.s);
+                display.innerText = correct;
+                display.style.color = "#E74C3C";
+                speak("Vaya, esta palabra usa " + correct);
+                log.push({ palabra: word, resultado: "Fallo", modo: currentMode });
             }
-
-            log.push({ palabra: currentWord.w, resultado: isCorrect ? "Acierto" : "Fallo" });
             document.getElementById('hits').innerText = hits;
             document.getElementById('attempts').innerText = attempts;
-            index++;
-            
-            setTimeout(nextQuestion, 3000);
+            currentIndex++;
+            setTimeout(loadQuestion, 2500);
         }
 
-        function askPermission() {
-            const n1 = Math.floor(Math.random() * 8) + 2;
-            const n2 = Math.floor(Math.random() * 8) + 2;
-            expectedAnswer = n1 + n2;
-            document.getElementById('math-exp').innerText = `${n1} + ${n2} = ?`;
+        function openParental(action) {
+            parentalAction = action;
+            var n1 = Math.floor(Math.random()*9)+1;
+            var n2 = Math.floor(Math.random()*9)+1;
+            expectedResult = n1 + n2;
+            document.getElementById('math-question').innerText = "Cuanto es " + n1 + " + " + n2 + "?";
             document.getElementById('math-answer').value = "";
-            document.getElementById('parental-modal').style.display = 'flex';
+            document.getElementById('parental-overlay').style.display = 'flex';
         }
 
         function verifyParental() {
-            if (parseInt(document.getElementById('math-answer').value) === expectedAnswer) {
-                if (document.exitFullscreen) document.exitFullscreen();
-                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-                location.reload();
+            var ans = parseInt(document.getElementById('math-answer').value);
+            if (ans === expectedResult) {
+                // Enviar reporte al salir
+                var errores = attempts - hits;
+                var falladas = log.filter(function(l) { return l.resultado === "Fallo"; }).map(function(l) { return l.palabra; }).join(", ");
+                enviarAGoogleSheet(hits, errores, falladas ? falladas + " (sesion incompleta)" : "Sesion incompleta");
+                if (parentalAction === 'HOME') { location.reload(); }
+                closeParental();
             } else {
+                Swal.fire('Error', 'Resultado incorrecto', 'error');
                 closeParental();
             }
         }
 
-        function closeParental() { document.getElementById('parental-modal').style.display = 'none'; }
+        function closeParental() { document.getElementById('parental-overlay').style.display = 'none'; }
 
         function downloadReport() {
-            let txt = "INFORME SINFONES\n\n";
-            log.forEach((r, i) => txt += `${i+1}. ${r.palabra}: ${r.resultado}\n`);
-            const blob = new Blob([txt], { type: 'text/plain' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'informe.txt';
-            a.click();
+            var reportHTML = '<html><head><title>Informe Isla de Sinfones</title>'
+                + '<style>body{font-family:sans-serif;padding:20px;background:#f0f0f0;}'
+                + '.card{background:white;padding:20px;border-radius:10px;} h1{color:#5DADE2;}'
+                + 'table{width:100%;border-collapse:collapse;margin-top:20px;}'
+                + 'th,td{border:1px solid #ddd;padding:12px;text-align:left;}'
+                + 'th{background:#5DADE2;color:white;}'
+                + '.acierto{color:green;font-weight:bold;}.fallo{color:red;font-weight:bold;}</style></head><body>'
+                + '<div class="card"><h1>Informe: Isla de Sinfones</h1>'
+                + '<p>Fecha: ' + new Date().toLocaleDateString() + '</p>'
+                + '<p>Total Aciertos: ' + hits + ' / ' + attempts + '</p><hr>'
+                + '<table><tr><th>Palabra</th><th>Resultado</th><th>Modo</th></tr>'
+                + log.map(function(r) { return '<tr><td>' + r.palabra + '</td><td class="' + r.resultado.toLowerCase() + '">' + r.resultado + '</td><td>' + r.modo + '</td></tr>'; }).join('')
+                + '</table></div></body></html>';
+            var blob = new Blob([reportHTML], {type:'text/html'});
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url; a.download = 'informe_sinfones_' + new Date().getTime() + '.html'; a.click();
         }
+
+        window.onload = createFloatingLetters;
     </script>
 </body>
 </html>

@@ -270,6 +270,32 @@
   </div>
 </div>
 
+<div class="section" id="contacto" style="background: var(--bg2); border-radius: var(--radius); margin-bottom: 4rem; padding: 3rem 1rem;">
+  <div style="max-width: 600px; margin: 0 auto;">
+    <h2 style="font-family: 'Fraunces', serif; text-align: center; margin-bottom: 1rem; color: var(--ink);">¿Hablamos?</h2>
+    <p style="text-align: center; color: var(--ink2); margin-bottom: 2.5rem; font-size: 1.1rem;">Si tienes alguna duda, sugerencia o simplemente quieres saludar, rellena este formulario y te responderé a tu correo lo antes posible.</p>
+    
+    <form action="https://formspree.io/f/xeevvjjq" method="POST" style="display: flex; flex-direction: column; gap: 1.2rem;">
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--ink); font-size: 14px;">Tu nombre completo</label>
+        <input type="text" name="name" placeholder="Ej: María García" required style="width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); font-family: 'Nunito', sans-serif; font-size: 15px;">
+      </div>
+      
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--ink); font-size: 14px;">Tu correo electrónico</label>
+        <input type="email" name="_replyto" placeholder="nombre@email.com" required style="width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); font-family: 'Nunito', sans-serif; font-size: 15px;">
+      </div>
+      
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--ink); font-size: 14px;">¿En qué puedo ayudarte?</label>
+        <textarea name="message" placeholder="Escribe aquí tu mensaje..." required style="width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); font-family: 'Nunito', sans-serif; font-size: 15px; min-height: 150px; resize: vertical;"></textarea>
+      </div>
+      
+      <button type="submit" class="btn-primary" style="border: none; cursor: pointer; width: 100%; font-size: 16px; padding: 16px;">Enviar mensaje con mucho que contar</button>
+    </form>
+  </div>
+</div>
+
 <footer>
   <div style="position: relative; padding: 2rem 0;">
     Hecho con 🤲 por <a href="sobre-mi.html">Inma Merino Rus</a> · Maestra de Audición y Lenguaje &amp; Logopeda
@@ -278,10 +304,10 @@
     &nbsp;·&nbsp;
     <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" style="color:var(--coral);">© 2025 · Licencia CC BY-NC-SA 4.0</a>
 
-   <div style="position: absolute; right: 0; bottom: 10px; background: #2A9D8F; border-radius: 8px; padding: 4px 10px; display: flex; align-items: center; gap: 8px; height: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-  <span style="color: white; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Visitas</span>
-  <img src="https://hitscounter.dev/api/hit?url=https%3A%2F%2Fmanosconmuchoquecontar.github.io%2F&color=%23ffffff&style=flat-square&label=" alt="Contador" style="filter: brightness(100%) contrast(100%); height: 20px;">
-</div>
+    <div style="position: absolute; right: 0; bottom: 10px; background: #2A9D8F; border-radius: 50px; padding: 5px 15px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(42, 157, 143, 0.2);">
+       <span style="color: white; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 800; text-transform: uppercase;">Visitas</span>
+       <img src="https://hitscounter.dev/api/hit?url=https%3A%2F%2Fmanosconmuchoquecontar.github.io%2F&color=%23ffffff&style=flat-square&label=" alt="Contador" style="height: 18px;">
+    </div>
   </div>
 </footer>
 

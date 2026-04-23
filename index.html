@@ -13,230 +13,85 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #F5FAFA;
-    --bg2: #E8F4F2;
-    --ink: #1A3A38;
-    --ink2: #4A706D;
-    --ink3: #8AADAA;
-    --coral: #2A9D8F;
-    --coral-light: #E0F5F2;
-    --coral-mid: #52BEB2;
-    --teal: #1A7A6E;
-    --teal-light: #D4F0EC;
-    --teal-mid: #3AA99A;
-    --amber: #E07A50;
-    --amber-light: #FEF0EA;
-    --purple: #2A7D8C;
-    --purple-light: #E0F2F5;
-    --green: #3D8C6E;
-    --green-light: #E0F5EC;
-    --card-bg: #FFFFFF;
-    --border: rgba(26,58,56,0.10);
-    --radius: 20px;
-    --radius-sm: 12px;
+    --bg: #F5FAFA; --bg2: #E8F4F2; --ink: #1A3A38; --ink2: #4A706D; --ink3: #8AADAA;
+    --coral: #2A9D8F; --coral-light: #E0F5F2; --coral-mid: #52BEB2; --teal: #1A7A6E;
+    --teal-light: #D4F0EC; --teal-mid: #3AA99A; --amber: #E07A50; --amber-light: #FEF0EA;
+    --purple: #2A7D8C; --purple-light: #E0F2F5; --green: #3D8C6E; --green-light: #E0F5EC;
+    --card-bg: #FFFFFF; --border: rgba(26,58,56,0.10); --radius: 20px; --radius-sm: 12px;
   }
- 
   * { box-sizing: border-box; margin: 0; padding: 0; }
- 
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: var(--bg);
-    color: var(--ink);
-    min-height: 100vh;
-  }
- 
-  /* ── NAV ── */
-  nav {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(245,250,250,0.96);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 2rem;
-    display: flex; align-items: center; justify-content: space-between;
-    height: 64px;
-  }
-  .logo {
-    display: flex; align-items: center; gap: 10px;
-    text-decoration: none; color: var(--ink);
-  }
-  .logo-icon {
-    width: 36px; height: 36px; border-radius: 10px;
-    background: var(--coral); display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-  }
+  body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(245,250,250,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+  .logo-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--coral); display: flex; align-items: center; justify-content: center; font-size: 18px; }
   .logo-text { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 700; line-height: 1.2; }
   .logo-text span { display: block; font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 400; color: var(--ink3); letter-spacing: 0.08em; text-transform: uppercase; }
   nav ul { list-style: none; display: flex; gap: 2rem; }
   nav ul a { text-decoration: none; color: var(--ink2); font-size: 14px; font-weight: 500; transition: color .2s; }
-  nav ul a:hover { color: var(--coral); }
-  nav ul a.active { color: var(--coral); }
- 
-  /* ── HERO ── */
-  .hero-wrapper {
-    background: linear-gradient(160deg, #D4F0EC 0%, #E8F4F2 60%, #F0FAF8 100%);
-    border-bottom: 1px solid var(--border);
-    padding: 1px 0;
-  }
-  .hero {
-    padding: 6rem 2rem 5rem;
-    max-width: 900px; margin: 0 auto; text-align: center;
-  }
-  .hero h1 {
-    font-family: 'Fraunces', serif;
-    font-size: clamp(2.8rem, 6vw, 5rem);
-    font-weight: 900; line-height: 1.1;
-    color: var(--ink); margin-bottom: 1.5rem;
-  }
+  nav ul a:hover, nav ul a.active { color: var(--coral); }
+  .hero-wrapper { background: linear-gradient(160deg, #D4F0EC 0%, #E8F4F2 60%, #F0FAF8 100%); border-bottom: 1px solid var(--border); padding: 1px 0; }
+  .hero { padding: 6rem 2rem 5rem; max-width: 900px; margin: 0 auto; text-align: center; }
+  .hero h1 { font-family: 'Fraunces', serif; font-size: clamp(2.8rem, 6vw, 5rem); font-weight: 900; line-height: 1.1; color: var(--ink); margin-bottom: 1.5rem; }
   .hero h1 em { font-style: italic; color: var(--coral); }
-  .hero p {
-    font-size: 1.15rem; color: var(--ink2); line-height: 1.7;
-    max-width: 520px; margin: 0 auto 2.5rem;
-  }
-  .btn-primary {
-    display: inline-block; padding: 14px 32px;
-    background: var(--coral); color: white;
-    font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 600;
-    border-radius: 100px; text-decoration: none;
-    transition: background .2s, transform .15s;
-  }
+  .hero p { font-size: 1.15rem; color: var(--ink2); line-height: 1.7; max-width: 520px; margin: 0 auto 2.5rem; }
+  .btn-primary { display: inline-block; padding: 14px 32px; background: var(--coral); color: white; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 600; border-radius: 100px; text-decoration: none; transition: background .2s, transform .15s; }
   .btn-primary:hover { background: #1A7A6E; transform: translateY(-1px); }
- 
-  /* ── STATS ── */
-  .stats {
-    display: flex; justify-content: center; gap: 3rem;
-    padding: 2rem; border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    background: linear-gradient(135deg, #D4F0EC 0%, #E0F2F5 100%); margin: 0;
-  }
+  .stats { display: flex; justify-content: center; gap: 3rem; padding: 2rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: linear-gradient(135deg, #D4F0EC 0%, #E0F2F5 100%); margin: 0; }
   .stat { text-align: center; }
   .stat strong { display: block; font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 700; color: var(--ink); }
   .stat span { font-size: 13px; color: var(--ink3); }
- 
-  /* ── AREAS / FILTROS ── */
   .section { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
-  .section-header {
-    display: flex; align-items: baseline; justify-content: space-between;
-    margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;
-  }
-  .section-header h2 {
-    font-family: 'Fraunces', serif;
-    font-size: 1.8rem; font-weight: 700;
-  }
- 
-  .filters {
-    display: flex; gap: 0.5rem; flex-wrap: wrap;
-    margin-bottom: 2.5rem;
-  }
-  .filter-btn {
-    padding: 8px 18px; border-radius: 100px;
-    border: 1.5px solid var(--border);
-    background: white; color: var(--ink2);
-    font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 500;
-    cursor: pointer; transition: all .2s;
-  }
+  .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+  .section-header h2 { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 700; }
+  .filters { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+  .filter-btn { padding: 8px 18px; border-radius: 100px; border: 1.5px solid var(--border); background: white; color: var(--ink2); font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all .2s; }
   .filter-btn:hover { border-color: var(--coral); color: var(--coral); }
-  .filter-btn.active {
-    background: var(--coral); color: white; border-color: var(--coral);
-  }
- 
-  /* ── SEARCH ── */
-  .search-bar {
-    display: flex; align-items: center;
-    background: white; border: 1.5px solid var(--border);
-    border-radius: 100px; padding: 0 1rem;
-    max-width: 360px; gap: 8px;
-  }
-  .search-bar input {
-    border: none; outline: none; background: transparent;
-    font-family: 'Nunito', sans-serif; font-size: 14px; color: var(--ink);
-    padding: 10px 0; width: 100%;
-  }
- 
-  /* ── GRID ── */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-  }
- 
-  .card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    transition: transform .2s, box-shadow .2s;
-    cursor: pointer;
-    display: flex; flex-direction: column;
-  }
+  .filter-btn.active { background: var(--coral); color: white; border-color: var(--coral); }
+  .search-bar { display: flex; align-items: center; background: white; border: 1.5px solid var(--border); border-radius: 100px; padding: 0 1rem; max-width: 360px; gap: 8px; }
+  .search-bar input { border: none; outline: none; background: transparent; font-family: 'Nunito', sans-serif; font-size: 14px; color: var(--ink); padding: 10px 0; width: 100%; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+  .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: transform .2s, box-shadow .2s; cursor: pointer; display: flex; flex-direction: column; }
   .card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(28,28,26,0.10); }
- 
-  .card-thumb {
-    width: 100%; height: 190px; overflow: hidden;
-    background: var(--bg2);
-    display: flex; align-items: center; justify-content: center;
-    position: relative;
-  }
+  .card-thumb { width: 100%; height: 190px; overflow: hidden; background: var(--bg2); display: flex; align-items: center; justify-content: center; position: relative; }
   .card-thumb img { width: 100%; height: 100%; object-fit: cover; }
-  .card-thumb .area-badge {
-    position: absolute; top: 12px; left: 12px;
-    font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
-    padding: 4px 12px; border-radius: 100px;
-  }
- 
+  .card-thumb .area-badge { position: absolute; top: 12px; left: 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 12px; border-radius: 100px; }
   .card-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
   .card-body h3 { font-size: 1rem; font-weight: 600; line-height: 1.4; margin-bottom: 0.5rem; }
   .card-body p { font-size: 13px; color: var(--ink2); line-height: 1.6; flex: 1; }
- 
-  .card-footer {
-    padding: 1rem 1.25rem;
-    border-top: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-  }
+  .card-footer { padding: 1rem 1.25rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
   .card-author { font-size: 12px; color: var(--ink3); }
-  .card-level {
-    font-size: 11px; font-weight: 600;
-    padding: 3px 10px; border-radius: 100px;
-    background: var(--bg2); color: var(--ink2);
-  }
- 
-  /* ── COLORES POR ÁREA ── */
+  .card-level { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px; background: var(--bg2); color: var(--ink2); }
   .area-fonologica { background: #D4F0EC; color: #1A7A6E; }
   .area-discriminacion { background: #FEE8D6; color: #C4581A; }
   .area-memoria { background: #E8E0F5; color: #6040A0; }
   .area-atencion { background: #FDE8EE; color: #B03060; }
   .area-lectoescritura { background: #EEF5D8; color: #4A7A20; }
   .area-vocabulario { background: #FDE8D8; color: #C45E1A; }
-
-  footer {
-    text-align: center; padding: 2rem;
-    font-size: 13px; color: var(--ink3);
-    border-top: 1px solid var(--border);
-  }
+  footer { text-align: center; padding: 2rem; font-size: 13px; color: var(--ink3); border-top: 1px solid var(--border); }
   footer a { color: var(--coral); text-decoration: none; }
+  .empty { text-align: center; padding: 4rem 2rem; color: var(--ink3); }
 </style>
 </head>
 <body>
- 
+
 <nav>
   <a href="#" class="logo">
     <div class="logo-icon">🤲</div>
-    <div class="logo-text">
-      Manos con Mucho que Contar
-      <span>by Inma Merino Rus · AL &amp; Logopedia</span>
-    </div>
+    <div class="logo-text">Manos con Mucho que Contar<span>by Inma Merino Rus · AL &amp; Logopedia</span></div>
   </a>
   <ul>
-  <li><a href="#actividades" class="active">Actividades</a></li>
-  <li><a href="contacto.html">Contacto</a></li> <li><a href="sobre-mi.html">Sobre mí</a></li>
-</ul>
+    <li><a href="#actividades" class="active">Actividades</a></li>
+    <li><a href="contacto.html">Contacto</a></li>
+    <li><a href="sobre-mi.html">Sobre mí</a></li>
+  </ul>
 </nav>
- 
+
 <div class="hero-wrapper">
-<div class="hero">
-  <h1>Recursos para <em>comunicar</em><br>y aprender</h1>
-  <p>Actividades interactivas de conciencia fonológica, discriminación auditiva, memoria, atención vocabulario, conceptos básicos y lectoescritura. Creadas con cariño para trabajar la comunicación.</p>
-  <a href="#actividades" class="btn-primary">Explorar actividades</a>
-</div>
+  <div class="hero">
+    <h1>Recursos para <em>comunicar</em><br>y aprender</h1>
+    <p>Actividades interactivas de conciencia fonológica, discriminación auditiva, memoria, atención vocabulario, conceptos básicos y lectoescritura. Creadas con cariño para trabajar la comunicación.</p>
+    <a href="#actividades" class="btn-primary">Explorar actividades</a>
+  </div>
 </div>
 
 <div class="stats">
@@ -268,21 +123,6 @@
     <p>No se encontraron actividades con ese filtro.</p>
   </div>
 </div>
-      
-      <div>
-        <label style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--ink); font-size: 14px;">Tu correo electrónico</label>
-        <input type="email" name="_replyto" placeholder="nombre@email.com" required style="width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); font-family: 'Nunito', sans-serif; font-size: 15px;">
-      </div>
-      
-      <div>
-        <label style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--ink); font-size: 14px;">¿En qué puedo ayudarte?</label>
-        <textarea name="message" placeholder="Escribe aquí tu mensaje..." required style="width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); font-family: 'Nunito', sans-serif; font-size: 15px; min-height: 150px; resize: vertical;"></textarea>
-      </div>
-      
-      <button type="submit" class="btn-primary" style="border: none; cursor: pointer; width: 100%; font-size: 16px; padding: 16px;">Enviar mensaje con mucho que contar</button>
-    </form>
-  </div>
-</div>
 
 <footer>
   <div style="position: relative; padding: 2rem 0;">
@@ -300,96 +140,18 @@
 </footer>
 
 <script>
-// (Aquí va todo tu bloque de script de actividades, que no ha cambiado)
 var actividades = [
-  {
-    titulo: "Detective Animal - Inferencias",
-    descripcion: "Escucha las pistas y adivina de que animal se trata.",
-    area: "atencion",
-    nivel: "Infantil / Primaria",
-    url: "actividades/inferencias_2.html",
-    imagen: "https://i.postimg.cc/SKknQS0B/inferencias-img.jpg"
-  },
-  {
-    titulo: "Isla de Sinfones FL CL GL",
-    descripcion: "Escucha la palabra y decide si contiene FL, CL o GL.",
-    area: "discriminacion",
-    nivel: "2 - 4 Primaria",
-    url: "actividades/sinfones_fl_cl_gl.html",
-    imagen:"https://i.postimg.cc/0ND689xd/sinfones.jpg"
-  },
-  {
-    titulo: "Conteo Silábico",
-    descripcion: "Escucha la palabra y decide cuantas silabas tiene.",
-    area: "fonologica",
-    nivel: "Infantil / 1 Primaria",
-    url: "actividades/conteo_silabico.html",
-    imagen: "https://i.postimg.cc/4x8vNcJ9/conciencia-fon.jpg"
-  },
-  {
-    titulo: "Los Animales - Intervención TEA",
-    descripcion: "Responde preguntas sobre animales usando pictogramas ARASAAC.",
-    area: "vocabulario",
-    nivel: "Infantil / Primaria",
-    url: "actividades/animales_tea.html",
-    imagen: "https://i.postimg.cc/7LVRQ3fb/JUEGO-ANIMALES.png"
-  },
-  {
-    titulo: "Detective de Historias",
-    descripcion: "Escucha la historia y responde preguntas de comprension.",
-    area: "lectoescritura",
-    nivel: "Infantil / Primaria",
-    url: "actividades/detective_historias.html",
-    imagen: "https://i.postimg.cc/hPM2pQxR/detective.jpg"
-  },
-  {
-    titulo: "Jugamos con las sílabas",
-    descripcion: "Escucha la palabra y dí la sílaba inicial o final.",
-    area: "fonologica",
-    nivel: "Infantil / Primaria",
-    url: "actividades/jugamos_con_silabas.html",
-    imagen: "https://i.postimg.cc/76sNwYGs/silabas.jpg"
-  },
-  {
-    titulo: "Tren de los sonidos",
-    descripcion: "Escucha la secuencia de palabras y pulsa los iconos en el mismo orden.",
-    area: "memoria",
-    nivel: "Infantil / Primaria",
-    url: "actividades/trendesonidos.html",
-    imagen: "https://i.postimg.cc/BQVKWMBW/tren-de-sonidos.png"
-  },
-  {
-    titulo: "¿Cómo me llamo?",
-    descripcion: "Escucha la palabra y pincha sobre las sílabas que la forman.",
-    area: "fonologica",
-    nivel: "Infantil / Primaria",
-    url: "actividades/forma_palabras.html",
-    imagen: "https://i.postimg.cc/FsLK4r72/palabras.jpg"
-  },
-  {
-    titulo: "Pares mínimos (b–d, s–z, p–t, r–l, t–d, m–n)",
-    descripcion: "Escucha la palabra y elige cuál es la que ha dicho.",
-    area: "discriminacion",
-    nivel: "Infantil / Primaria",
-    url: "actividades/pares_minimos.html",
-    imagen: "https://i.postimg.cc/C1PMPwRf/pares-minimos.jpg"
-  },
-  {
-    titulo: "Cambios Fonológicos",
-    descripcion: "Encuentra la letra que cambia en palabras y pseudopalabras.",
-    area: "fonologica",
-    nivel: "Infantil / Primaria",
-    url: "actividades/cambios_fonologicos.html",
-    imagen: "https://i.postimg.cc/yYshN5X6/pseudo.jpg"
-  },
-  {
-    titulo: "Letra inicial vs letra final",
-    descripcion: "Escucha el audio y encuentra la letra final o inicial.",
-    area: "fonologica",
-    nivel: "Infantil / Primaria",
-    url: "actividades/letra_inicial.html",
-    imagen: "https://i.postimg.cc/FHWyYjjY/letra-inicial.jpg"
-  }
+  { titulo: "Detective Animal - Inferencias", descripcion: "Escucha las pistas y adivina de que animal se trata.", area: "atencion", nivel: "Infantil / Primaria", url: "actividades/inferencias_2.html", imagen: "https://i.postimg.cc/SKknQS0B/inferencias-img.jpg" },
+  { titulo: "Isla de Sinfones FL CL GL", descripcion: "Escucha la palabra y decide si contiene FL, CL o GL.", area: "discriminacion", nivel: "2 - 4 Primaria", url: "actividades/sinfones_fl_cl_gl.html", imagen:"https://i.postimg.cc/0ND689xd/sinfones.jpg" },
+  { titulo: "Conteo Silábico", descripcion: "Escucha la palabra y decide cuantas silabas tiene.", area: "fonologica", nivel: "Infantil / 1 Primaria", url: "actividades/conteo_silabico.html", imagen: "https://i.postimg.cc/4x8vNcJ9/conciencia-fon.jpg" },
+  { titulo: "Los Animales - Intervención TEA", descripcion: "Responde preguntas sobre animales usando pictogramas ARASAAC.", area: "vocabulario", nivel: "Infantil / Primaria", url: "actividades/animales_tea.html", imagen: "https://i.postimg.cc/7LVRQ3fb/JUEGO-ANIMALES.png" },
+  { titulo: "Detective de Historias", descripcion: "Escucha la historia y responde preguntas de comprension.", area: "lectoescritura", nivel: "Infantil / Primaria", url: "actividades/detective_historias.html", imagen: "https://i.postimg.cc/hPM2pQxR/detective.jpg" },
+  { titulo: "Jugamos con las sílabas", descripcion: "Escucha la palabra y dí la sílaba inicial o final.", area: "fonologica", nivel: "Infantil / Primaria", url: "actividades/jugamos_con_silabas.html", imagen: "https://i.postimg.cc/76sNwYGs/silabas.jpg" },
+  { titulo: "Tren de los sonidos", descripcion: "Escucha la secuencia de palabras y pulsa los iconos en el mismo orden.", area: "memoria", nivel: "Infantil / Primaria", url: "actividades/trendesonidos.html", imagen: "https://i.postimg.cc/BQVKWMBW/tren-de-sonidos.png" },
+  { titulo: "¿Cómo me llamo?", descripcion: "Escucha la palabra y pincha sobre las sílabas que la forman.", area: "fonologica", nivel: "Infantil / Primaria", url: "actividades/forma_palabras.html", imagen: "https://i.postimg.cc/FsLK4r72/palabras.jpg" },
+  { titulo: "Pares mínimos (b–d, s–z, p–t, r–l, t–d, m–n)", descripcion: "Escucha la palabra y elige cuál es la que ha dicho.", area: "discriminacion", nivel: "Infantil / Primaria", url: "actividades/pares_minimos.html", imagen: "https://i.postimg.cc/C1PMPwRf/pares-minimos.jpg" },
+  { titulo: "Cambios Fonológicos", descripcion: "Encuentra la letra que cambia en palabras y pseudopalabras.", area: "fonologica", nivel: "Infantil / Primaria", url: "actividades/cambios_fonologicos.html", imagen: "https://i.postimg.cc/yYshN5X6/pseudo.jpg" },
+  { titulo: "Letra inicial vs letra final", descripcion: "Escucha el audio y encuentra la letra final o inicial.", area: "fonologica", nivel: "Infantil / Primaria", url: "actividades/letra_inicial.html", imagen: "https://i.postimg.cc/FHWyYjjY/letra-inicial.jpg" }
 ];
 
 var areaConfig = {
@@ -413,30 +175,13 @@ function renderGrid() {
     return matchArea && matchBusqueda;
   });
   document.getElementById("stat-total").textContent = actividades.length;
-  if (filtradas.length === 0) {
-    grid.innerHTML = "";
-    empty.style.display = "block";
-    return;
-  }
+  if (filtradas.length === 0) { grid.innerHTML = ""; empty.style.display = "block"; return; }
   empty.style.display = "none";
   grid.innerHTML = filtradas.map(function(a) {
     var cfg = areaConfig[a.area];
     var idx = actividades.indexOf(a);
     var imgHtml = a.imagen ? '<img src="' + a.imagen + '" alt="' + a.titulo + '">' : '<div class="placeholder">' + cfg.emoji + '</div>';
-    return '<div class="card" onclick="abrirModal(' + idx + ')">'
-      + '<div class="card-thumb ' + cfg.thumb + '">'
-      + imgHtml
-      + '<span class="area-badge ' + cfg.badge + '">' + cfg.label + '</span>'
-      + '</div>'
-      + '<div class="card-body">'
-      + '<h3>' + a.titulo + '</h3>'
-      + '<p>' + a.descripcion + '</p>'
-      + '</div>'
-      + '<div class="card-footer">'
-      + '<span class="card-author">Inma Merino Rus</span>'
-      + '<span class="card-level">' + a.nivel + '</span>'
-      + '</div>'
-      + '</div>';
+    return '<div class="card" onclick="abrirModal(' + idx + ')"><div class="card-thumb ' + cfg.thumb + '">' + imgHtml + '<span class="area-badge ' + cfg.badge + '">' + cfg.label + '</span></div><div class="card-body"><h3>' + a.titulo + '</h3><p>' + a.descripcion + '</p></div><div class="card-footer"><span class="card-author">Inma Merino Rus</span><span class="card-level">' + a.nivel + '</span></div></div>';
   }).join("");
 }
 
@@ -454,9 +199,7 @@ document.getElementById("search").addEventListener("input", function(e) {
 });
 
 function abrirModal(idx) {
-  var a = actividades[idx];
-  var cfg = areaConfig[a.area];
-  // Aquí faltaba el modal en el código simplificado pero lo mantengo igual que el original
+  // Aquí puedes añadir la lógica del modal si la necesitas
 }
 renderGrid();
 </script>

@@ -29,194 +29,134 @@
             color: var(--text-primary);
         }
 
-        /* ANTESALA ATRACTIVA */
-        #intro-screen {
+        /* PANTALLA DE NOMBRE */
+        #nombre-screen {
             text-align: center;
             background: var(--card-bg);
-            padding: 60px;
+            padding: 50px 40px;
             border-radius: 50px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            max-width: 500px;
+            max-width: 480px;
             width: 90%;
-            border: 1px solid rgba(255,255,255,0.3);
+        }
+        #nombre-screen .icono { font-size: 4rem; margin-bottom: 15px; display: block; }
+        #nombre-screen h2 {
+            font-weight: 300; letter-spacing: 4px; font-size: 1.4rem;
+            margin: 0 0 8px 0; text-transform: uppercase; color: var(--accent-color);
+        }
+        #nombre-screen p {
+            font-size: 0.85rem; color: #636e72; margin-bottom: 25px;
+            line-height: 1.6; font-weight: 300;
+        }
+        #nombre-input {
+            width: 100%; padding: 15px 20px; border-radius: 100px;
+            border: 2px solid #e0e0e0; font-size: 1.1rem;
+            font-family: var(--font-main); text-align: center;
+            outline: none; box-sizing: border-box; margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        #nombre-input:focus { border-color: var(--accent-color); }
+        .btn-con-nombre {
+            width: 100%; padding: 16px; background: var(--accent-color);
+            color: white; border: none; border-radius: 100px;
+            font-size: 1rem; font-family: var(--font-main);
+            font-weight: 400; letter-spacing: 3px; text-transform: uppercase;
+            cursor: pointer; margin-bottom: 12px; transition: 0.3s;
+        }
+        .btn-con-nombre:hover { opacity: 0.9; transform: translateY(-2px); }
+        .btn-sin-nombre {
+            background: none; border: none; color: #a0a0a0;
+            font-size: 0.8rem; font-family: var(--font-main);
+            cursor: pointer; letter-spacing: 2px; text-transform: uppercase;
+            text-decoration: underline; padding: 5px;
+        }
+        .privacidad-nota {
+            font-size: 0.72rem; color: #b2bec3; margin-top: 20px;
+            line-height: 1.5; border-top: 1px solid #f0f0f0; padding-top: 15px;
         }
 
+        /* ANTESALA */
+        #intro-screen {
+            text-align: center; background: var(--card-bg);
+            padding: 60px; border-radius: 50px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px; width: 90%;
+            border: 1px solid rgba(255,255,255,0.3);
+            display: none;
+        }
         .intro-icon {
-            font-size: 5rem;
-            margin-bottom: 20px;
-            display: block;
+            font-size: 5rem; margin-bottom: 20px; display: block;
             animation: float 3s ease-in-out infinite;
         }
-
         #intro-screen h1 {
-            font-weight: 300;
-            letter-spacing: 8px;
-            font-size: 2.2rem;
-            margin: 0 0 10px 0;
-            text-transform: uppercase;
+            font-weight: 300; letter-spacing: 8px; font-size: 2.2rem;
+            margin: 0 0 10px 0; text-transform: uppercase;
         }
-
         #intro-screen p {
-            font-weight: 300;
-            letter-spacing: 2px;
-            color: #636e72;
-            margin-bottom: 40px;
-            text-transform: uppercase;
-            font-size: 0.9rem;
+            font-weight: 300; letter-spacing: 2px; color: #636e72;
+            margin-bottom: 40px; text-transform: uppercase; font-size: 0.9rem;
         }
 
-        /* CONTENEDOR DE JUEGO */
+        /* JUEGO */
         #game-container {
-            width: 95%;
-            max-width: 900px;
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: 40px;
+            width: 95%; max-width: 900px; background: var(--card-bg);
+            padding: 40px; border-radius: 40px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            text-align: center;
-            display: none;
-            backdrop-filter: blur(10px);
+            text-align: center; display: none; backdrop-filter: blur(10px);
         }
-
         .progress-text {
-            font-weight: 300;
-            color: #a4b0be;
-            letter-spacing: 4px;
-            font-size: 0.8rem;
-            margin-bottom: 30px;
-            text-transform: uppercase;
+            font-weight: 300; color: #a4b0be; letter-spacing: 4px;
+            font-size: 0.8rem; margin-bottom: 30px; text-transform: uppercase;
         }
-
-        .instruction { 
-            font-size: 1.8rem; 
-            min-height: 60px; 
-            margin: 10px 0; 
-            text-transform: uppercase;
-            font-weight: 300;
-            letter-spacing: 2px;
+        .instruction {
+            font-size: 1.8rem; min-height: 60px; margin: 10px 0;
+            text-transform: uppercase; font-weight: 300; letter-spacing: 2px;
             color: var(--text-primary);
         }
-
         .repeat-btn {
-            background: white;
-            color: var(--accent-color);
-            border: 1px solid var(--accent-color);
-            padding: 15px 40px;
-            border-radius: 100px;
-            font-size: 1rem;
-            cursor: pointer;
-            margin-bottom: 35px;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            font-family: var(--font-main);
-            font-weight: 400;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: all 0.3s;
+            background: white; color: var(--accent-color);
+            border: 1px solid var(--accent-color); padding: 15px 40px;
+            border-radius: 100px; font-size: 1rem; cursor: pointer;
+            margin-bottom: 35px; display: inline-flex; align-items: center;
+            gap: 12px; font-family: var(--font-main); font-weight: 400;
+            text-transform: uppercase; letter-spacing: 2px; transition: all 0.3s;
         }
-
-        .repeat-btn:hover {
-            background: var(--accent-color);
-            color: white;
-        }
-
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
+        .repeat-btn:hover { background: var(--accent-color); color: white; }
+        .options-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
         .option-btn {
-            background: white;
-            border: 1px solid #f1f2f6;
-            border-radius: 30px;
-            padding: 30px;
-            font-size: 1.5rem;
-            font-weight: 300;
-            cursor: pointer;
-            text-transform: uppercase;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            letter-spacing: 2px;
+            background: white; border: 1px solid #f1f2f6; border-radius: 30px;
+            padding: 30px; font-size: 1.5rem; font-weight: 300; cursor: pointer;
+            text-transform: uppercase; display: flex; flex-direction: column;
+            align-items: center; gap: 15px; letter-spacing: 2px;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             color: var(--text-primary);
         }
-
         .option-btn:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.05);
             border-color: var(--accent-color);
         }
-
-        .option-btn span { 
-            font-size: 4rem; 
-            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1));
-        }
-
+        .option-btn span { font-size: 4rem; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1)); }
         .btn-start {
-            font-size: 1.4rem;
-            padding: 20px 60px;
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            border-radius: 100px;
-            font-weight: 300;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
+            font-size: 1.4rem; padding: 20px 60px; background: var(--accent-color);
+            color: white; border: none; border-radius: 100px; font-weight: 300;
+            text-transform: uppercase; letter-spacing: 5px; cursor: pointer;
+            transition: 0.3s; box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
         }
+        .btn-start:hover { transform: scale(1.05); box-shadow: 0 15px 25px rgba(108, 92, 231, 0.4); }
 
-        .btn-start:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 25px rgba(108, 92, 231, 0.4);
-        }
-
-        /* PANTALLA COMPLETA Y SALIDA */
-        #exit-fs-container {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            display: none;
-            z-index: 9999;
-        }
-
+        #exit-fs-container { position: fixed; top: 20px; left: 20px; display: none; z-index: 9999; }
         .exit-btn {
-            background: rgba(255,255,255,0.8);
-            color: #ff7675;
-            border: 1px solid #ff7675;
-            padding: 12px 25px;
-            border-radius: 100px;
-            font-weight: 300;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            backdrop-filter: blur(5px);
+            background: rgba(255,255,255,0.8); color: #ff7675;
+            border: 1px solid #ff7675; padding: 12px 25px; border-radius: 100px;
+            font-weight: 300; font-size: 0.7rem; text-transform: uppercase;
+            letter-spacing: 2px; backdrop-filter: blur(5px);
         }
-
-        .admin-controls {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: flex;
-            gap: 15px;
-        }
-
+        .admin-controls { position: fixed; bottom: 20px; right: 20px; display: flex; gap: 15px; }
         .admin-btn {
-            background: white;
-            border: 1px solid #dfe6e9;
-            color: #b2bec3;
-            padding: 10px 20px;
-            border-radius: 100px;
-            font-weight: 300;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            cursor: pointer;
-            letter-spacing: 1px;
+            background: white; border: 1px solid #dfe6e9; color: #b2bec3;
+            padding: 10px 20px; border-radius: 100px; font-weight: 300;
+            font-size: 0.7rem; text-transform: uppercase; cursor: pointer; letter-spacing: 1px;
         }
 
         @keyframes float {
@@ -232,6 +172,22 @@
         <button class="exit-btn" id="exit-btn">SALIR PARENTAL (3s)</button>
     </div>
 
+    <!-- PANTALLA DE NOMBRE -->
+    <div id="nombre-screen">
+        <span class="icono">👦</span>
+        <h2>¿Quién va a jugar?</h2>
+        <p>Si quieres, escribe el nombre del niño o niña para que Inma pueda ver cómo ha ido la sesión.</p>
+        <input type="text" id="nombre-input" placeholder="Nombre del niño/a..." maxlength="50">
+        <button class="btn-con-nombre" onclick="guardarNombreYContinuar()">Enviar informe a Inma ✓</button>
+        <br>
+        <button class="btn-sin-nombre" onclick="continuarSinNombre()">Continuar sin enviar informe</button>
+        <p class="privacidad-nota">
+            🔒 Si escribes el nombre, al terminar la actividad Inma recibirá un informe con los resultados.<br>
+            Es completamente voluntario. Los datos solo los verá Inma Merino Rus y se usarán únicamente para el seguimiento terapéutico.
+        </p>
+    </div>
+
+    <!-- ANTESALA -->
     <div id="intro-screen">
         <span class="intro-icon">🕵️‍♀️</span>
         <h1>DETECTIVE</h1>
@@ -242,11 +198,9 @@
     <div id="game-container">
         <div id="progress" class="progress-text"></div>
         <div class="instruction" id="riddle-display">ADIVINA EL ANIMAL</div>
-        
         <button class="repeat-btn" onclick="repeatRiddle()">
             <span>🔊</span> ESCUCHAR PISTA
         </button>
-
         <div class="options-grid" id="options-container"></div>
     </div>
 
@@ -256,130 +210,180 @@
     </div>
 
     <script>
-        const gameData = [
+        // ── CONFIGURACION ──
+        var GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbw4AKlcc8-09jA0uBl7EYDW_lorkazvEOwhZTthN6FD_BIhM1Q6o4HJdNSeUvqba2an/exec";
+        var NOMBRE_ALUMNO = "";
+        var ENVIAR_INFORME = false;
+
+        function guardarNombreYContinuar() {
+            var nombre = document.getElementById('nombre-input').value.trim();
+            if (nombre === "") {
+                document.getElementById('nombre-input').style.borderColor = "#ff7675";
+                document.getElementById('nombre-input').placeholder = "Por favor escribe un nombre...";
+                return;
+            }
+            NOMBRE_ALUMNO = nombre;
+            ENVIAR_INFORME = true;
+            mostrarIntro();
+        }
+
+        function continuarSinNombre() {
+            NOMBRE_ALUMNO = "Anonimo";
+            ENVIAR_INFORME = false;
+            mostrarIntro();
+        }
+
+        function mostrarIntro() {
+            document.getElementById('nombre-screen').style.display = 'none';
+            document.getElementById('intro-screen').style.display = 'block';
+        }
+
+        // ── JUEGO ──
+        var gameData = [
             { p: "DIGO MUUU. DOY LECHE. VIVO EN LA GRANJA.", c: "VACA", e: "🐄", o: [{t:"VACA", e:"🐄"}, {t:"GATO", e:"🐈"}, {t:"PERRO", e:"🐕"}, {t:"POLLO", e:"🐥"}] },
-            { p: "TENGO BIGOTES. DIGO MIAU. CAZO RATONES.", c: "GATO", e: "🐈", o: [{t:"GATO", e:"🐈"}, {t:"LEÓN", e:"🦁"}, {t:"CONEJO", e:"🐇"}, {t:"PEZ", e:"🐟"}] },
+            { p: "TENGO BIGOTES. DIGO MIAU. CAZO RATONES.", c: "GATO", e: "🐈", o: [{t:"GATO", e:"🐈"}, {t:"LEON", e:"🦁"}, {t:"CONEJO", e:"🐇"}, {t:"PEZ", e:"🐟"}] },
             { p: "LADRO MUY FUERTE. SOY EL MEJOR AMIGO DEL HOMBRE.", c: "PERRO", e: "🐕", o: [{t:"PERRO", e:"🐕"}, {t:"LOBO", e:"🐺"}, {t:"VACA", e:"🐄"}, {t:"PATO", e:"🦆"}] },
-            { p: "SOY VERDE. DIGO CROAC. SALTO EN EL AGUA.", c: "RANA", e: "🐸", o: [{t:"RANA", e:"🐸"}, {t:"PÁJARO", e:"🐦"}, {t:"SERPIENTE", e:"🐍"}, {t:"PEZ", e:"🐟"}] },
-            { p: "TENGO OREJAS LARGAS. COMO ZANAHORIAS.", c: "CONEJO", e: "🐇", o: [{t:"CONEJO", e:"🐇"}, {t:"RATÓN", e:"🐭"}, {t:"OSO", e:"🐻"}, {t:"OVEJA", e:"🐑"}] },
+            { p: "SOY VERDE. DIGO CROAC. SALTO EN EL AGUA.", c: "RANA", e: "🐸", o: [{t:"RANA", e:"🐸"}, {t:"PAJARO", e:"🐦"}, {t:"SERPIENTE", e:"🐍"}, {t:"PEZ", e:"🐟"}] },
+            { p: "TENGO OREJAS LARGAS. COMO ZANAHORIAS.", c: "CONEJO", e: "🐇", o: [{t:"CONEJO", e:"🐇"}, {t:"RATON", e:"🐭"}, {t:"OSO", e:"🐻"}, {t:"OVEJA", e:"🐑"}] },
             { p: "DIGO CUA CUA. NADO EN EL ESTANQUE.", c: "PATO", e: "🦆", o: [{t:"PATO", e:"🦆"}, {t:"POLLO", e:"🐥"}, {t:"CERDO", e:"🐷"}, {t:"CISNE", e:"🦢"}] },
             { p: "DIGO BEEE. TENGO MUCHA LANA BLANCA.", c: "OVEJA", e: "🐑", o: [{t:"OVEJA", e:"🐑"}, {t:"CABRA", e:"🐐"}, {t:"VACA", e:"🐄"}, {t:"PERRO", e:"🐕"}] },
             { p: "TENGO NARIZ DE ENCHUFE. DIGO OINK OINK.", c: "CERDO", e: "🐷", o: [{t:"CERDO", e:"🐷"}, {t:"VACA", e:"🐄"}, {t:"CABALLO", e:"🐎"}, {t:"CONEJO", e:"🐇"}] },
             { p: "TENGO EL CUELLO LARGO. COMO HOJAS ALTAS. TENGO MANCHAS.", c: "JIRAFA", e: "🦒", o: [{t:"JIRAFA", e:"🦒"}, {t:"CEBRA", e:"🦓"}, {t:"ELEFANTE", e:"🐘"}, {t:"LAGARTO", e:"🦎"}] },
-            { p: "SOY GRIS. TENGO OREJAS GIGANTES. TROMPA LARGA.", c: "ELEFANTE", e: "🐘", o: [{t:"ELEFANTE", e:"🐘"}, {t:"HIPOPÓTAMO", e:"🦛"}, {t:"RINOCERONTE", e:"🦏"}, {t:"OSO", e:"🐻"}] },
+            { p: "SOY GRIS. TENGO OREJAS GIGANTES. TROMPA LARGA.", c: "ELEFANTE", e: "🐘", o: [{t:"ELEFANTE", e:"🐘"}, {t:"HIPOPOTAMO", e:"🦛"}, {t:"RINOCERONTE", e:"🦏"}, {t:"OSO", e:"🐻"}] },
             { p: "PAREZCO UN CABALLO. TENGO RAYAS BLANCAS NEGRAS.", c: "CEBRA", e: "🦓", o: [{t:"CEBRA", e:"🦓"}, {t:"TIGRE", e:"🐅"}, {t:"BURRO", e:"🫏"}, {t:"VACA", e:"🐄"}] },
             { p: "TENGO UNA BOLSA EN MI BARRIGA. SALTO MUCHO.", c: "CANGURO", e: "🦘", o: [{t:"CANGURO", e:"🦘"}, {t:"CONEJO", e:"🐇"}, {t:"MONO", e:"🐒"}, {t:"KOALA", e:"🐨"}] },
-            { p: "ME GUSTA COLGARME DE LAS RAMAS. COMO PLÁTANOS.", c: "MONO", e: "🐒", o: [{t:"MONO", e:"🐒"}, {t:"GATO", e:"🐈"}, {t:"ARDILLA", e:"🐿️"}, {t:"PERRO", e:"🐕"}] },
-            { p: "VIVO EN EL FRÍO. SOY BLANCO. MUY PELUDO.", c: "OSO POLAR", e: "🐻‍❄️", o: [{t:"OSO POLAR", e:"🐻‍❄️"}, {t:"PINGÜINO", e:"🐧"}, {t:"FOCA", e:"🦭"}, {t:"ZORRO", e:"🦊"}] },
+            { p: "ME GUSTA COLGARME DE LAS RAMAS. COMO PLATANOS.", c: "MONO", e: "🐒", o: [{t:"MONO", e:"🐒"}, {t:"GATO", e:"🐈"}, {t:"ARDILLA", e:"🐿️"}, {t:"PERRO", e:"🐕"}] },
+            { p: "VIVO EN EL FRIO. SOY BLANCO. MUY PELUDO.", c: "OSO POLAR", e: "🐻‍❄️", o: [{t:"OSO POLAR", e:"🐻‍❄️"}, {t:"PINGUINO", e:"🐧"}, {t:"FOCA", e:"🦭"}, {t:"ZORRO", e:"🦊"}] },
             { p: "NO TENGO PATAS. ME ARRASTRO. TENGO LENGUA LARGA.", c: "SERPIENTE", e: "🐍", o: [{t:"SERPIENTE", e:"🐍"}, {t:"GUSANO", e:"🐛"}, {t:"LAGARTO", e:"🦎"}, {t:"PEZ", e:"🐟"}] },
-            { p: "TENGO UNA CORONA DE PLUMAS. CANTO AL SOL.", c: "GALLO", e: "🐓", o: [{t:"GALLO", e:"🐓"}, {t:"PATO", e:"🦆"}, {t:"BÚHO", e:"🦉"}, {t:"LORO", e:"🦜"}] },
-            { p: "SOY EL REY DE LA SELVA. TENGO MELENA GRANDE.", c: "LEÓN", e: "🦁", o: [{t:"LEÓN", e:"🦁"}, {t:"TIGRE", e:"🐅"}, {t:"GORILA", e:"🦍"}, {t:"LOBO", e:"🐺"}] },
+            { p: "TENGO UNA CORONA DE PLUMAS. CANTO AL SOL.", c: "GALLO", e: "🐓", o: [{t:"GALLO", e:"🐓"}, {t:"PATO", e:"🦆"}, {t:"BUHO", e:"🦉"}, {t:"LORO", e:"🦜"}] },
+            { p: "SOY EL REY DE LA SELVA. TENGO MELENA GRANDE.", c: "LEON", e: "🦁", o: [{t:"LEON", e:"🦁"}, {t:"TIGRE", e:"🐅"}, {t:"GORILA", e:"🦍"}, {t:"LOBO", e:"🐺"}] },
             { p: "LLEVO MI CASA ENCIMA. CAMINO MUY LENTO.", c: "CARACOL", e: "🐌", o: [{t:"CARACOL", e:"🐌"}, {t:"TORTUGA", e:"🐢"}, {t:"CANGREJO", e:"🦀"}, {t:"GUSANO", e:"🐛"}] },
-            { p: "SOY UN AVE QUE NO VUELA. VIVO EN EL HIELO.", c: "PINGÜINO", e: "🐧", o: [{t:"PINGÜINO", e:"🐧"}, {t:"PATO", e:"🦆"}, {t:"PÁJARO", e:"🐦"}, {t:"FOCA", e:"🦭"}] },
-            { p: "VIVO EN EL MAR. SOY INTELIGENTE. SALTO EN LAS OLAS.", c: "DELFÍN", e: "🐬", o: [{t:"DELFÍN", e:"🐬"}, {t:"TIBURÓN", e:"🦈"}, {t:"BALLENA", e:"🐳"}, {t:"PULPO", e:"🐙"}] },
-            { p: "TENGO OCHO PATAS. TEJO REDES.", c: "ARAÑA", e: "🕷️", o: [{t:"ARAÑA", e:"🕷️"}, {t:"HORMIGA", e:"🐜"}, {t:"ABEJA", e:"🐝"}, {t:"CANGREJO", e:"🦀"}] },
-            { p: "CAMBIO EL COLOR DE MI PIEL PARA ESCONDERME.", c: "CAMALEÓN", e: "🦎", o: [{t:"CAMALEÓN", e:"🦎"}, {t:"SERPIENTE", e:"🐍"}, {t:"RANA", e:"🐸"}, {t:"TORTUGA", e:"🐢"}] },
-            { p: "SOY NOCTURNO. GIRO LA CABEZA POR COMPLETO.", c: "BÚHO", e: "🦉", o: [{t:"BÚHO", e:"🦉"}, {t:"MURCIÉLAGO", e:"🦇"}, {t:"ÁGUILA", e:"🦅"}, {t:"GATO", e:"🐈"}] },
-            { p: "ANTES FUI UNA ORUGA. TENGO ALAS LINDAS.", c: "MARIPOSA", e: "🦋", o: [{t:"MARIPOSA", e:"🦋"}, {t:"ABEJA", e:"🐝"}, {t:"LIBÉLULA", e:"🛸"}, {t:"MOSCA", e:"🪰"}] }
+            { p: "SOY UN AVE QUE NO VUELA. VIVO EN EL HIELO.", c: "PINGUINO", e: "🐧", o: [{t:"PINGUINO", e:"🐧"}, {t:"PATO", e:"🦆"}, {t:"PAJARO", e:"🐦"}, {t:"FOCA", e:"🦭"}] },
+            { p: "VIVO EN EL MAR. SOY INTELIGENTE. SALTO EN LAS OLAS.", c: "DELFIN", e: "🐬", o: [{t:"DELFIN", e:"🐬"}, {t:"TIBURON", e:"🦈"}, {t:"BALLENA", e:"🐳"}, {t:"PULPO", e:"🐙"}] },
+            { p: "TENGO OCHO PATAS. TEJO REDES.", c: "ARANA", e: "🕷️", o: [{t:"ARANA", e:"🕷️"}, {t:"HORMIGA", e:"🐜"}, {t:"ABEJA", e:"🐝"}, {t:"CANGREJO", e:"🦀"}] },
+            { p: "CAMBIO EL COLOR DE MI PIEL PARA ESCONDERME.", c: "CAMALEON", e: "🦎", o: [{t:"CAMALEON", e:"🦎"}, {t:"SERPIENTE", e:"🐍"}, {t:"RANA", e:"🐸"}, {t:"TORTUGA", e:"🐢"}] },
+            { p: "SOY NOCTURNO. GIRO LA CABEZA POR COMPLETO.", c: "BUHO", e: "🦉", o: [{t:"BUHO", e:"🦉"}, {t:"MURCIELAGO", e:"🦇"}, {t:"AGUILA", e:"🦅"}, {t:"GATO", e:"🐈"}] },
+            { p: "ANTES FUI UNA ORUGA. TENGO ALAS LINDAS.", c: "MARIPOSA", e: "🦋", o: [{t:"MARIPOSA", e:"🦋"}, {t:"ABEJA", e:"🐝"}, {t:"LIBELULA", e:"🛸"}, {t:"MOSCA", e:"🪰"}] }
         ];
 
-        let index = 0;
-        let logs = [];
-        const synth = window.speechSynthesis;
+        var index = 0;
+        var logs = [];
+        var palabrasFalladas = [];
+        var synth = window.speechSynthesis;
 
         function speak(text) {
             synth.cancel();
-            let tabletFix = text.replace(/ Y /g, ". ");
-            const msg = new SpeechSynthesisUtterance(tabletFix);
+            var tabletFix = text.replace(/ Y /g, ". ");
+            var msg = new SpeechSynthesisUtterance(tabletFix);
             msg.lang = 'es-ES';
             msg.rate = 0.75;
             synth.speak(msg);
         }
 
-        function repeatRiddle() {
-            speak(gameData[index].p);
-        }
+        function repeatRiddle() { speak(gameData[index].p); }
 
         function startGame() {
-            speak(""); 
+            speak("");
             document.getElementById('intro-screen').style.display = 'none';
             document.getElementById('game-container').style.display = 'block';
             loadCase();
         }
 
         function loadCase() {
-            const data = gameData[index];
-            document.getElementById('progress').innerText = `INFORME DETECTIVE: CASO ${index + 1} / 24`;
-            const container = document.getElementById('options-container');
+            var data = gameData[index];
+            document.getElementById('progress').innerText = "INFORME DETECTIVE: CASO " + (index + 1) + " / 24";
+            var container = document.getElementById('options-container');
             container.innerHTML = '';
-            
-            [...data.o].sort(() => Math.random() - 0.5).forEach(opt => {
-                const b = document.createElement('button');
+            data.o.slice().sort(function() { return Math.random() - 0.5; }).forEach(function(opt) {
+                var b = document.createElement('button');
                 b.className = 'option-btn';
-                b.innerHTML = `<span>${opt.e}</span> ${opt.t}`;
-                b.onclick = () => check(opt.t);
+                b.innerHTML = '<span>' + opt.e + '</span> ' + opt.t;
+                b.onclick = function() { check(opt.t); };
                 container.appendChild(b);
             });
-
-            setTimeout(() => speak(data.p), 600);
+            setTimeout(function() { speak(data.p); }, 600);
         }
 
         function check(guess) {
-            const correct = gameData[index].c;
-            const ok = guess === correct;
-            logs.push({ n: index + 1, res: guess, ok: ok });
+            var correct = gameData[index].c;
+            var ok = guess === correct;
+            logs.push({ n: index + 1, res: guess, ok: ok, palabra: correct });
+            if (!ok) { palabrasFalladas.push(correct); }
 
-            if(ok) {
-                Swal.fire({ 
-                    icon: 'success', 
-                    title: 'CORRECTO', 
-                    showConfirmButton: false, 
-                    timer: 1000,
-                    backdrop: `rgba(0,184,148,0.1)`
-                });
+            if (ok) {
+                Swal.fire({ icon: 'success', title: 'CORRECTO', showConfirmButton: false, timer: 1000, backdrop: 'rgba(0,184,148,0.1)' });
                 index++;
-                if(index < gameData.length) setTimeout(loadCase, 1100);
-                else Swal.fire('MISIÓN CUMPLIDA', 'ERES UN AGENTE MAESTRO', 'success');
+                if (index < gameData.length) {
+                    setTimeout(loadCase, 1100);
+                } else {
+                    finalizarJuego();
+                }
             } else {
-                Swal.fire({ 
-                    icon: 'error', 
-                    title: 'INTENTA OTRA VEZ', 
-                    showConfirmButton: false, 
-                    timer: 800,
-                    backdrop: `rgba(214,48,49,0.1)`
-                });
+                Swal.fire({ icon: 'error', title: 'INTENTA OTRA VEZ', showConfirmButton: false, timer: 800, backdrop: 'rgba(214,48,49,0.1)' });
                 repeatRiddle();
             }
         }
 
-        let holdTimer;
-        const fsBtn = document.getElementById('fs-btn');
-        const exitBtn = document.getElementById('exit-btn');
-        const exitContainer = document.getElementById('exit-fs-container');
+        function finalizarJuego() {
+            var aciertos = logs.filter(function(l) { return l.ok; }).length;
+            var errores = logs.filter(function(l) { return !l.ok; }).length;
+            var falladas = [...new Set(palabrasFalladas)].join(", ");
 
-        document.addEventListener('fullscreenchange', () => {
+            if (ENVIAR_INFORME) {
+                enviarAGoogleSheet(aciertos, errores, falladas);
+            }
+
+            Swal.fire('MISION CUMPLIDA', 'ERES UN AGENTE MAESTRO\nAciertos: ' + aciertos + ' | Errores: ' + errores, 'success');
+        }
+
+        function enviarAGoogleSheet(aciertos, errores, falladas) {
+            var ahora = new Date();
+            var fecha = ahora.toLocaleDateString('es-ES');
+            var hora = ahora.toLocaleTimeString('es-ES');
+
+            var datos = JSON.stringify({
+                Nombre: NOMBRE_ALUMNO,
+                Actividad: "Detective Animal - Inferencias",
+                Aciertos: aciertos,
+                Errores: errores,
+                PalabrasFalladas: falladas || "Ninguna"
+            });
+
+            fetch(GOOGLE_SHEET_URL, {
+                method: 'POST',
+                body: datos,
+                headers: { 'Content-Type': 'application/json' }
+            }).catch(function(e) { console.log('Error al enviar informe:', e); });
+        }
+
+        var holdTimer;
+        var fsBtn = document.getElementById('fs-btn');
+        var exitBtn = document.getElementById('exit-btn');
+        var exitContainer = document.getElementById('exit-fs-container');
+
+        document.addEventListener('fullscreenchange', function() {
             exitContainer.style.display = document.fullscreenElement ? 'block' : 'none';
         });
 
-        const startHold = (e) => {
+        var startHold = function(e) {
             e.preventDefault();
-            holdTimer = setTimeout(() => { if (document.fullscreenElement) document.exitFullscreen(); }, 3000);
+            holdTimer = setTimeout(function() { if (document.fullscreenElement) document.exitFullscreen(); }, 3000);
         };
-        const stopHold = () => clearTimeout(holdTimer);
+        var stopHold = function() { clearTimeout(holdTimer); };
 
-        fsBtn.addEventListener('click', () => document.documentElement.requestFullscreen());
+        fsBtn.addEventListener('click', function() { document.documentElement.requestFullscreen(); });
         exitBtn.addEventListener('touchstart', startHold);
         exitBtn.addEventListener('touchend', stopHold);
         exitBtn.addEventListener('mousedown', startHold);
         exitBtn.addEventListener('mouseup', stopHold);
 
         function downloadReport() {
-            let t = "REPORTE DETECTIVE - SESIÓN PREMIUM\n=================================\n\n";
-            logs.forEach(l => t += `CASO ${l.n}: ${l.ok ? 'ACIERTÓ' : 'FALLÓ'} (${l.res})\n`);
-            const b = new Blob([t], {type: 'text/plain'});
-            const a = document.createElement('a');
+            var t = "REPORTE DETECTIVE - SESION\n=================================\n\n";
+            logs.forEach(function(l) { t += "CASO " + l.n + ": " + (l.ok ? "ACERTO" : "FALLO") + " (" + l.res + ")\n"; });
+            var b = new Blob([t], {type: 'text/plain'});
+            var a = document.createElement('a');
             a.href = URL.createObjectURL(b);
-            a.download = `reporte_detective.txt`;
+            a.download = "reporte_detective.txt";
             a.click();
         }
     </script>

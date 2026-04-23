@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,8 +11,6 @@
         #game-container { width: 98vw; height: 96vh; background: white; border-radius: 30px; display: flex; flex-direction: column; align-items: center; padding: 10px; box-sizing: border-box; border: 4px solid #eee; position: relative; }
         .screen { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: space-evenly; }
         .active { display: flex; }
-        #exit-btn { position: absolute; top: 10px; right: 10px; padding: 10px; background: #ddd; border-radius: 50%; width: 45px; height: 45px; border: none; cursor: pointer; opacity: 0.3; z-index: 100; font-weight: bold; }
-        #exit-btn:active { background: var(--error); opacity: 1; color: white; }
         .question-box { display: flex; align-items: center; background: #e3f2fd; padding: 10px 25px; border-radius: 20px; border: 3px solid var(--accent); gap: 15px; max-width: 90%; }
         .picto-question { width: 80px; height: 80px; background: white; border-radius: 12px; padding: 5px; }
         .question-text { font-size: 1.6rem; color: #1565C0; text-transform: uppercase; font-weight: bold; }
@@ -33,16 +30,48 @@
 </head>
 <body>
 
+    <!-- PANTALLA DE NOMBRE -->
+    <div id="nombre-screen" style="position:fixed;inset:0;background:linear-gradient(135deg,#e3f2fd,#bbdefb);display:flex;align-items:center;justify-content:center;z-index:9999;">
+      <div style="background:white;padding:40px;border-radius:40px;max-width:440px;width:90%;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.1);">
+        <div style="font-size:3.5rem;margin-bottom:15px;">👦</div>
+        <h2 style="font-family:'Short Stack',cursive;font-size:1.3rem;margin:0 0 10px;color:#2196F3;">¿QUIÉN VA A JUGAR?</h2>
+        <p style="font-size:0.82rem;color:#636e72;margin-bottom:20px;line-height:1.6;">Si quieres, escribe el nombre del niño o niña para que Inma pueda ver cómo ha ido la sesión.</p>
+        <input id="nombre-input" type="text" placeholder="Nombre del niño/a..." maxlength="50"
+          style="width:100%;padding:13px 18px;border-radius:100px;border:2px solid #e0e0e0;font-size:1rem;font-family:'Short Stack',cursive;text-align:center;outline:none;box-sizing:border-box;margin-bottom:15px;">
+        <button onclick="guardarNombreYContinuar()"
+          style="width:100%;padding:14px;background:#2196F3;color:white;border:none;border-radius:100px;font-size:0.95rem;font-family:'Short Stack',cursive;cursor:pointer;margin-bottom:10px;">
+          Enviar informe a Inma ✓
+        </button>
+        <button onclick="continuarSinNombre()"
+          style="background:none;border:none;color:#aaa;font-size:0.78rem;font-family:'Short Stack',cursive;cursor:pointer;text-decoration:underline;">
+          Continuar sin enviar informe
+        </button>
+        <p style="font-size:0.7rem;color:#b2bec3;margin-top:18px;border-top:1px solid #f0f0f0;padding-top:12px;line-height:1.5;">
+          🔒 Si escribes el nombre, al terminar Inma recibirá un informe con los resultados.<br>Es voluntario y los datos solo los verá ella para el seguimiento terapéutico.
+        </p>
+      </div>
+    </div>
+
+    <!-- CONTROL PARENTAL -->
+    <div id="parental-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:9999;color:white;justify-content:center;align-items:center;flex-direction:column;">
+        <h2 style="font-family:'Short Stack',cursive;margin-bottom:10px;">CONTROL PARENTAL</h2>
+        <p>Resuelve la suma para salir:</p>
+        <p id="math-exp" style="font-size:2.5rem;color:#fdcb6e;margin:15px 0;"></p>
+        <input type="number" id="math-answer" style="font-size:2rem;width:120px;text-align:center;border-radius:10px;margin:10px;padding:5px;">
+        <br>
+        <button onclick="verifyParental()" style="background:#2196F3;color:white;border:none;padding:15px 40px;border-radius:100px;font-size:1rem;cursor:pointer;margin-top:10px;font-family:'Short Stack',cursive;">VERIFICAR</button>
+        <button onclick="closeParental()" style="background:none;border:none;color:#aaa;margin-top:15px;cursor:pointer;font-size:0.8rem;font-family:'Short Stack',cursive;">CANCELAR</button>
+    </div>
+
     <div id="game-container">
-        <button id="exit-btn">X</button>
 
         <div id="screen-start" class="screen active">
             <h1 style="font-size: 3.5rem; color: var(--accent); margin: 0;">LOS ANIMALES</h1>
             <div style="display: flex; flex-direction: column; gap: 10px;">
                 <button class="btn-ui" onclick="toggleFullScreen()">PANTALLA COMPLETA</button>
                 <button class="btn-ui" style="background: var(--success)" onclick="start()">EMPEZAR JUEGO</button>
+                <button class="btn-ui" style="background:#e74c3c;font-size:1.2rem;padding:15px 30px;" onclick="askPermission()">🔒 SALIR</button>
             </div>
-            <p style="color: #888;">Salida: Mantén pulsada la X 3 seg.</p>
         </div>
 
         <div id="screen-game" class="screen">
@@ -54,6 +83,7 @@
             <div class="animal-main" id="a-emoji"></div>
             <div class="animal-label" id="a-name"></div>
             <div class="options-grid" id="options-container"></div>
+            <button class="btn-ui" style="background:#e74c3c;font-size:1rem;padding:10px 25px;margin-top:5px;" onclick="askPermission()">🔒 SALIR</button>
         </div>
 
         <div id="screen-end" class="screen">
@@ -65,36 +95,93 @@
     </div>
 
     <script>
-        const ARASAAC_URL = "https://static.arasaac.org/pictograms/";
-        const STEPS = [
-            { key: 'color', text: '¿DE QUÉ COLOR ES?', picto: '7075' },
-            { key: 'tiene', text: '¿QUÉ TIENE?', picto: '32761' },
-            { key: 'come', text: '¿QUÉ COME?', picto: '28641' },
-            { key: 'mueve', text: '¿CÓMO SE MUEVE?', picto: '25648' },
-            { key: 'vive', text: '¿DÓNDE VIVE?', picto: '11605' }
+        // ── CONFIGURACION REPORTES ──
+        var GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbw4AKlcc8-09jA0uBl7EYDW_lorkazvEOwhZTthN6FD_BIhM1Q6o4HJdNSeUvqba2an/exec";
+        var NOMBRE_ALUMNO = "";
+        var ENVIAR_INFORME = false;
+        var expectedAnswer = 0;
+
+        function guardarNombreYContinuar() {
+            var nombre = document.getElementById('nombre-input').value.trim();
+            if (nombre === "") {
+                document.getElementById('nombre-input').style.borderColor = "#ff7675";
+                return;
+            }
+            NOMBRE_ALUMNO = nombre;
+            ENVIAR_INFORME = true;
+            document.getElementById('nombre-screen').style.display = 'none';
+        }
+
+        function continuarSinNombre() {
+            NOMBRE_ALUMNO = "Anonimo";
+            ENVIAR_INFORME = false;
+            document.getElementById('nombre-screen').style.display = 'none';
+        }
+
+        function enviarAGoogleSheet(aciertos, errores, falladas) {
+            if (!ENVIAR_INFORME) return;
+            fetch(GOOGLE_SHEET_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    Nombre: NOMBRE_ALUMNO,
+                    Actividad: "Los Animales - Intervencion TEA",
+                    Aciertos: aciertos,
+                    Errores: errores,
+                    PalabrasFalladas: falladas || "Ninguna"
+                }),
+                headers: { 'Content-Type': 'application/json' }
+            }).catch(function(e) { console.log('Error:', e); });
+        }
+
+        function askPermission() {
+            var n1 = Math.floor(Math.random() * 8) + 2;
+            var n2 = Math.floor(Math.random() * 8) + 2;
+            expectedAnswer = n1 + n2;
+            document.getElementById('math-exp').innerText = n1 + ' + ' + n2 + ' = ?';
+            document.getElementById('math-answer').value = '';
+            document.getElementById('parental-modal').style.display = 'flex';
+        }
+
+        function verifyParental() {
+            if (parseInt(document.getElementById('math-answer').value) === expectedAnswer) {
+                var ok = log.filter(function(l) { return l.result === "Acierto"; }).length;
+                var err = log.filter(function(l) { return l.result === "Error"; }).length;
+                var animalesFallados = [...new Set(log.filter(function(l) { return l.result === "Error"; }).map(function(l) { return l.animal; }))].join(", ");
+                enviarAGoogleSheet(ok, err, animalesFallados ? animalesFallados + " (sesion incompleta)" : "Sesion incompleta");
+                if (document.exitFullscreen) document.exitFullscreen();
+                location.reload();
+            } else {
+                closeParental();
+            }
+        }
+
+        function closeParental() {
+            document.getElementById('parental-modal').style.display = 'none';
+        }
+
+        // ── JUEGO ──
+        var ARASAAC_URL = "https://static.arasaac.org/pictograms/";
+        var STEPS = [
+            { key: 'color', text: '¿DE QUE COLOR ES?', picto: '7075' },
+            { key: 'tiene', text: '¿QUE TIENE?', picto: '32761' },
+            { key: 'come', text: '¿QUE COME?', picto: '28641' },
+            { key: 'mueve', text: '¿COMO SE MUEVE?', picto: '25648' },
+            { key: 'vive', text: '¿DONDE VIVE?', picto: '11605' }
         ];
 
-        const DATA = [
-            { name: "CANGREJO", emoji: "🦀", color: { ok: ["ROJO", "2808"], fail: [["AZUL", "4869"], ["VERDE", "4887"]] }, tiene: { ok: ["PINZAS", "24292"], fail: [["ALAS", "5368"], ["CUERNOS", "5978"]] }, come: { ok: ["PESCADO", "2520"], fail: [["CHOCOLATE", "25940"], ["PAN", "2494"]] }, mueve: { ok: ["CAMINA", "6044"], fail: [["VUELA", "6246"], ["NADAR", "6568"]] }, vive: { ok: ["MAR", "2925"], fail: [["TIERRA", "7149"], ["ÁRBOL", "39265"]] } },
-            { name: "LEÓN", emoji: "🦁", color: { ok: ["AMARILLO", "2648"], fail: [["ROJO", "2808"], ["ROSA", "2807"]] }, tiene: { ok: ["PELO", "24256"], fail: [["PICO", "5538"], ["TROMPA", "7287"]] }, come: { ok: ["CARNE", "2316"], fail: [["MANZANA", "2462"], ["QUESO", "2541"]] }, mueve: { ok: ["CAMINA", "6044"], fail: [["VUELA", "6246"], ["SALTA", "2804"]] }, vive: { ok: ["SABANA", "5567"], fail: [["MAR", "2925"], ["HIELO", "3135"]] } },
+        var DATA = [
+            { name: "CANGREJO", emoji: "🦀", color: { ok: ["ROJO", "2808"], fail: [["AZUL", "4869"], ["VERDE", "4887"]] }, tiene: { ok: ["PINZAS", "24292"], fail: [["ALAS", "5368"], ["CUERNOS", "5978"]] }, come: { ok: ["PESCADO", "2520"], fail: [["CHOCOLATE", "25940"], ["PAN", "2494"]] }, mueve: { ok: ["CAMINA", "6044"], fail: [["VUELA", "6246"], ["NADAR", "6568"]] }, vive: { ok: ["MAR", "2925"], fail: [["TIERRA", "7149"], ["ARBOL", "39265"]] } },
+            { name: "LEON", emoji: "🦁", color: { ok: ["AMARILLO", "2648"], fail: [["ROJO", "2808"], ["ROSA", "2807"]] }, tiene: { ok: ["PELO", "24256"], fail: [["PICO", "5538"], ["TROMPA", "7287"]] }, come: { ok: ["CARNE", "2316"], fail: [["MANZANA", "2462"], ["QUESO", "2541"]] }, mueve: { ok: ["CAMINA", "6044"], fail: [["VUELA", "6246"], ["SALTA", "2804"]] }, vive: { ok: ["SABANA", "5567"], fail: [["MAR", "2925"], ["HIELO", "3135"]] } },
             { name: "ELEFANTE", emoji: "🐘", color: { ok: ["GRIS", "3340"], fail: [["ROJO", "2808"], ["AMARILLO", "2648"]] }, tiene: { ok: ["TROMPA", "7287"], fail: [["PICO", "5538"], ["PELO", "24256"]] }, come: { ok: ["HIERVA", "3113"], fail: [["CARNE", "2316"], ["QUESO", "2541"]] }, mueve: { ok: ["CAMINA", "6044"], fail: [["VUELA", "6246"], ["SALTA", "2804"]] }, vive: { ok: ["SELVA", "3385"], fail: [["MAR", "2925"], ["HIELO", "3135"]] } },
-            { name: "PÁJARO", emoji: "🐦", color: { ok: ["ROJO", "2808"], fail: [["AZUL", "4869"], ["AMARILLO", "2648"]] }, tiene: { ok: ["PICO", "5538"], fail: [["TROMPA", "7287"], ["PELO", "24256"]] }, come: { ok: ["INSECTOS", "7134"], fail: [["CARNE", "2316"], ["HIERVA", "3113"]] }, mueve: { ok: ["VUELA", "6246"], fail: [["CAMINA", "6044"], ["SALTA", "2804"]] }, vive: { ok: ["ÁRBOL", "39265"], fail: [["MAR", "2925"], ["HIELO", "3135"]] } },
-            { name: "CABALLO", emoji: "🐎", color: { ok: ["MARRÓN", "2923"], fail: [["AZUL", "4869"], ["AMARILLO", "2648"]] }, tiene: { ok: ["PELO", "24256"], fail: [["TROMPA", "7287"], ["PICO", "5538"]] }, come: { ok: ["PAJA", "6163"], fail: [["CARNE", "2316"], ["PESCADO", "2520"]] }, mueve: { ok: ["TROTAR", "2294"], fail: [["CAMINA", "6044"], ["SALTA", "2804"]] }, vive: { ok: ["CAMPO", "2683"], fail: [["MAR", "2925"], ["HIELO", "3135"]] } },
-            { name: "PEZ", emoji: "🐟", color: { ok: ["AZUL", "4869"], fail: [["MARRÓN", "2923"], ["AMARILLO", "2648"]] }, tiene: { ok: ["ESCAMAS", "7085"], fail: [["PELO", "24256"], ["PICO", "5538"]] }, come: { ok: ["ALGAS", "6040"], fail: [["CARNE", "2316"], ["PAJA", "6163"]] }, mueve: { ok: ["NADA", "6568"], fail: [["CAMINA", "6044"], ["SALTA", "2804"]] }, vive: { ok: ["MAR", "2925"], fail: [["CAMPO", "2683"], ["HIELO", "3135"]] } },
-            { name: "MONO", emoji: "🐒", color: { ok: ["MARRÓN", "2923"], fail: [["AZUL", "4869"], ["AMARILLO", "2648"]] }, tiene: { ok: ["PELO", "24256"], fail: [["ESCAMAS", "7085"], ["PICO", "5538"]] }, come: { ok: ["FRUTA", "28339"], fail: [["CARNE", "2316"], ["PAJA", "6163"]] }, mueve: { ok: ["TREPAR", "8237"], fail: [["CAMINA", "6044"], ["NADA", "6568"]] }, vive: { ok: ["SABANA", "5567"], fail: [["MAR", "2925"], ["HIELO", "3135"]] } },
+            { name: "PAJARO", emoji: "🐦", color: { ok: ["ROJO", "2808"], fail: [["AZUL", "4869"], ["AMARILLO", "2648"]] }, tiene: { ok: ["PICO", "5538"], fail: [["TROMPA", "7287"], ["PELO", "24256"]] }, come: { ok: ["INSECTOS", "7134"], fail: [["CARNE", "2316"], ["HIERVA", "3113"]] }, mueve: { ok: ["VUELA", "6246"], fail: [["CAMINA", "6044"], ["SALTA", "2804"]] }, vive: { ok: ["ARBOL", "39265"], fail: [["MAR", "2925"], ["HIELO", "3135"]] } },
+            { name: "CABALLO", emoji: "🐎", color: { ok: ["MARRON", "2923"], fail: [["AZUL", "4869"], ["AMARILLO", "2648"]] }, tiene: { ok: ["PELO", "24256"], fail: [["TROMPA", "7287"], ["PICO", "5538"]] }, come: { ok: ["PAJA", "6163"], fail: [["CARNE", "2316"], ["PESCADO", "2520"]] }, mueve: { ok: ["TROTAR", "2294"], fail: [["CAMINA", "6044"], ["SALTA", "2804"]] }, vive: { ok: ["CAMPO", "2683"], fail: [["MAR", "2925"], ["HIELO", "3135"]] } },
+            { name: "PEZ", emoji: "🐟", color: { ok: ["AZUL", "4869"], fail: [["MARRON", "2923"], ["AMARILLO", "2648"]] }, tiene: { ok: ["ESCAMAS", "7085"], fail: [["PELO", "24256"], ["PICO", "5538"]] }, come: { ok: ["ALGAS", "6040"], fail: [["CARNE", "2316"], ["PAJA", "6163"]] }, mueve: { ok: ["NADA", "6568"], fail: [["CAMINA", "6044"], ["SALTA", "2804"]] }, vive: { ok: ["MAR", "2925"], fail: [["CAMPO", "2683"], ["HIELO", "3135"]] } },
+            { name: "MONO", emoji: "🐒", color: { ok: ["MARRON", "2923"], fail: [["AZUL", "4869"], ["AMARILLO", "2648"]] }, tiene: { ok: ["PELO", "24256"], fail: [["ESCAMAS", "7085"], ["PICO", "5538"]] }, come: { ok: ["FRUTA", "28339"], fail: [["CARNE", "2316"], ["PAJA", "6163"]] }, mueve: { ok: ["TREPAR", "8237"], fail: [["CAMINA", "6044"], ["NADA", "6568"]] }, vive: { ok: ["SABANA", "5567"], fail: [["MAR", "2925"], ["HIELO", "3135"]] } },
             { name: "CERDO", emoji: "🐷", color: { ok: ["ROSA", "2807"], fail: [["AZUL", "4869"], ["AMARILLO", "2648"]] }, tiene: { ok: ["HOCICO", "37591"], fail: [["ESCAMAS", "7085"], ["PICO", "5538"]] }, come: { ok: ["FRUTA", "28339"], fail: [["CARNE", "2316"], ["PAJA", "6163"]] }, mueve: { ok: ["CAMINA", "6044"], fail: [["TREPAR", "8237"], ["NADA", "6568"]] }, vive: { ok: ["GRANJA", "3337"], fail: [["MAR", "2925"], ["HIELO", "3135"]] } }
         ];
 
-        let aIdx = 0, sIdx = 0, canClick = true;
-        let log = [];
-
-        // Salida protegida
-        let exitT;
-        const eb = document.getElementById('exit-btn');
-        const startExit = () => exitT = setTimeout(() => document.fullscreenElement && document.exitFullscreen(), 3000);
-        const stopExit = () => clearTimeout(exitT);
-        eb.addEventListener('mousedown', startExit); eb.addEventListener('mouseup', stopExit);
-        eb.addEventListener('touchstart', startExit); eb.addEventListener('touchend', stopExit);
+        var aIdx = 0, sIdx = 0, canClick = true;
+        var log = [];
 
         function toggleFullScreen() { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); }
 
@@ -106,65 +193,73 @@
 
         function load() {
             canClick = true;
-            const animal = DATA[aIdx];
-            const step = STEPS[sIdx];
-            const config = animal[step.key];
+            var animal = DATA[aIdx];
+            var step = STEPS[sIdx];
+            var config = animal[step.key];
             
-            document.getElementById('q-picto').src = `${ARASAAC_URL}${step.picto}/${step.picto}_500.png`;
+            document.getElementById('q-picto').src = ARASAAC_URL + step.picto + '/' + step.picto + '_500.png';
             document.getElementById('q-text').innerText = step.text;
             document.getElementById('a-emoji').innerText = animal.emoji;
             document.getElementById('a-name').innerText = animal.name;
 
             speak(sIdx === 0 ? animal.name + ". " + step.text : step.text);
 
-            const container = document.getElementById('options-container');
+            var container = document.getElementById('options-container');
             container.innerHTML = '';
             
-            let choices = [
+            var choices = [
                 { text: config.ok[0], id: config.ok[1], correct: true },
                 { text: config.fail[0][0], id: config.fail[0][1], correct: false },
                 { text: config.fail[1][0], id: config.fail[1][1], correct: false }
-            ].sort(() => Math.random() - 0.5);
+            ].sort(function() { return Math.random() - 0.5; });
 
-            choices.forEach(c => {
-                const card = document.createElement('div');
+            choices.forEach(function(c) {
+                var card = document.createElement('div');
                 card.className = 'option-card';
-                card.innerHTML = `<img src="${ARASAAC_URL}${c.id}/${c.id}_500.png"><span style="margin-top:5px; font-weight:bold; font-size:1.1rem;">${c.text}</span>`;
-                card.onclick = () => {
-                    if(!canClick) return;
+                card.innerHTML = '<img src="' + ARASAAC_URL + c.id + '/' + c.id + '_500.png"><span style="margin-top:5px;font-weight:bold;font-size:1.1rem;">' + c.text + '</span>';
+                card.onclick = function() {
+                    if (!canClick) return;
                     log.push({ animal: animal.name, step: step.text, choice: c.text, result: c.correct ? "Acierto" : "Error" });
-                    if(c.correct) {
+                    if (c.correct) {
                         canClick = false; card.classList.add('correct'); speak("muy bien");
-                        setTimeout(() => { sIdx++; if(sIdx >= STEPS.length){ sIdx=0; aIdx++; } if(aIdx >= DATA.length) finish(); else load(); }, 1200);
+                        setTimeout(function() {
+                            sIdx++;
+                            if (sIdx >= STEPS.length) { sIdx = 0; aIdx++; }
+                            if (aIdx >= DATA.length) finish(); else load();
+                        }, 1200);
                     } else {
-                        card.classList.add('incorrect'); speak("inténtalo otra vez");
-                        setTimeout(() => card.classList.remove('incorrect'), 500);
+                        card.classList.add('incorrect'); speak("intentalo otra vez");
+                        setTimeout(function() { card.classList.remove('incorrect'); }, 500);
                     }
                 };
                 container.appendChild(card);
             });
-            document.getElementById('progress-fill').style.width = `${((aIdx * STEPS.length + sIdx) / (DATA.length * STEPS.length)) * 100}%`;
+            document.getElementById('progress-fill').style.width = ((aIdx * STEPS.length + sIdx) / (DATA.length * STEPS.length) * 100) + '%';
         }
 
         function finish() {
             document.getElementById('screen-game').classList.remove('active');
             document.getElementById('screen-end').classList.add('active');
-            const ok = log.filter(l => l.result === "Acierto").length;
-            const err = log.filter(l => l.result === "Error").length;
-            document.getElementById('stats-summary').innerText = `Aciertos: ${ok} | Errores: ${err}`;
-            speak("sesión terminada, lo has hecho genial");
+            var ok = log.filter(function(l) { return l.result === "Acierto"; }).length;
+            var err = log.filter(function(l) { return l.result === "Error"; }).length;
+            var animalesFallados = [...new Set(log.filter(function(l) { return l.result === "Error"; }).map(function(l) { return l.animal; }))].join(", ");
+            document.getElementById('stats-summary').innerText = "Aciertos: " + ok + " | Errores: " + err;
+            speak("sesion terminada, lo has hecho genial");
+            enviarAGoogleSheet(ok, err, animalesFallados || "Ninguna");
         }
 
         function downloadReport() {
-            let t = `INFORME TEA - ${new Date().toLocaleString()}\n` + "=".repeat(30) + "\n";
-            log.forEach(l => t += `[${l.result}] Animal: ${l.animal} | Pregunta: ${l.step} | Marcó: ${l.choice}\n`);
-            const blob = new Blob([t], {type: 'text/plain'});
-            const a = document.createElement('a'); a.download = `informe_tea_${new Date().getTime()}.txt`;
-            a.href = URL.createObjectURL(blob); a.click();
+            var t = "INFORME TEA - " + new Date().toLocaleString() + "\n" + "=".repeat(30) + "\n";
+            log.forEach(function(l) { t += "[" + l.result + "] Animal: " + l.animal + " | Pregunta: " + l.step + " | Marco: " + l.choice + "\n"; });
+            var blob = new Blob([t], {type: 'text/plain'});
+            var a = document.createElement('a');
+            a.download = "informe_tea_" + new Date().getTime() + ".txt";
+            a.href = URL.createObjectURL(blob);
+            a.click();
         }
 
         function speak(t) {
-            const m = new SpeechSynthesisUtterance(t.toLowerCase());
+            var m = new SpeechSynthesisUtterance(t.toLowerCase());
             m.lang = 'es-ES'; m.rate = 0.8;
             window.speechSynthesis.speak(m);
         }

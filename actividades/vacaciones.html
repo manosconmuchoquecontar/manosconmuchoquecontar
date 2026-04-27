@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; img-src * data: blob:; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline';">
+<meta name="referrer" content="no-referrer">
 <title>Aventuras de Verano</title>
 <link href="https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund:wght@100..400&family=Playwrite+HR+Lijeva:wght@100..400&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
@@ -17,12 +19,12 @@
 html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(160deg,#74C0FC 0%,#A5F3FC 40%,#FDE68A 70%,#FB923C 100%);}
 body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
 #app{position:fixed;inset:0;overflow-y:auto;overflow-x:hidden;}
-
+ 
 .screen{display:none;position:relative;min-height:100vh;padding:22px 16px 30px;flex-direction:column;align-items:center;justify-content:center;}
 .screen.active{display:flex;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .screen.active{animation:fadeIn .4s ease;}
-
+ 
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 @keyframes wiggle{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
 @keyframes sunSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
@@ -31,13 +33,13 @@ body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
 @keyframes cfFall{0%{transform:translateY(-40px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
 @keyframes okFlash{0%,100%{background:#EBFBEE;border-color:var(--verde)}50%{background:#C3FAD5}}
 @keyframes koFlash{0%,100%{background:#FFF5F5;border-color:var(--coral)}50%{background:#FFE3E3}}
-
+ 
 .sol-deco{position:fixed;top:-40px;right:-40px;width:160px;height:160px;opacity:.5;animation:sunSpin 22s linear infinite;pointer-events:none;z-index:0;}
-
+ 
 .card{background:rgba(255,255,255,.93);border-radius:32px;padding:28px;box-shadow:0 12px 40px rgba(0,0,0,.13);width:100%;max-width:500px;text-align:center;border:5px solid white;z-index:1;}
 .titulo{font-size:clamp(1.8rem,5vw,3.4rem);color:white;text-shadow:3px 3px 0 var(--coral),6px 6px 0 rgba(0,0,0,.13);text-align:center;margin-bottom:8px;animation:bounce 2.5s ease-in-out infinite;line-height:1.25;z-index:1;}
 .subtitulo{font-size:1.1rem;color:white;text-shadow:1px 1px 3px rgba(0,0,0,.22);text-align:center;margin-bottom:22px;z-index:1;}
-
+ 
 .btn{padding:12px 28px;border-radius:50px;border:none;font-family:'Nunito',sans-serif;font-size:1.1rem;font-weight:900;cursor:pointer;transition:all .2s;box-shadow:0 4px 0 rgba(0,0,0,.12);}
 .btn:hover{transform:translateY(-2px);}
 .btn:active{transform:translateY(1px);box-shadow:none;}
@@ -48,13 +50,13 @@ body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
 .btn-lila{background:linear-gradient(135deg,var(--violeta),#9775FA);color:white;}
 .btn-gris{background:#CED4DA;color:var(--oscuro);}
 .btn-amarillo{background:linear-gradient(135deg,var(--sol),var(--naranja));color:white;}
-
+ 
 .opciones-fila{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:18px;}
 .btn-op{padding:10px 18px;border-radius:50px;border:3px solid transparent;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s;background:var(--arena);color:var(--oscuro);}
 .btn-op.sel{background:var(--sol);border-color:var(--naranja);transform:scale(1.07);}
 .btn-op.may{font-family:var(--font-may);font-size:.76rem;line-height:1.9;}
 .btn-op.min{font-family:var(--font-min);font-size:.76rem;line-height:1.9;}
-
+ 
 .personajes{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin:14px 0;}
 .p-card{background:white;border-radius:20px;padding:18px 14px;text-align:center;cursor:pointer;border:4px solid transparent;transition:all .25s;box-shadow:0 6px 20px rgba(0,0,0,.11);width:168px;}
 .p-card:hover{transform:translateY(-6px);}
@@ -63,10 +65,10 @@ body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
 .p-card h3{font-size:1rem;margin-top:8px;}
 .p-card:hover svg,.p-card.sel-nina svg,.p-card.sel-nino svg{animation:wiggle .65s infinite;}
 .preview-p{margin:12px 0;animation:floatAnim 3.5s ease-in-out infinite;}
-
+ 
 .input-nombre{font-size:1.7rem;text-align:center;padding:12px 18px;border:3px solid var(--mar);border-radius:14px;background:white;color:var(--oscuro);outline:none;width:100%;max-width:320px;transition:border-color .2s;}
 .input-nombre:focus{border-color:var(--naranja);}
-
+ 
 /* GAME HEADER */
 #game-header{position:sticky;top:0;z-index:50;background:white;border-radius:0 0 20px 20px;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;width:100%;box-shadow:0 4px 18px rgba(0,0,0,.1);flex-wrap:wrap;gap:6px;}
 .hdr-left{display:flex;align-items:center;gap:8px;flex:1;min-width:110px;}
@@ -82,7 +84,7 @@ body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
 .h-btn-fs{background:#FFF9DB;color:#CC8800;}
 .h-btn-casa{background:#EFF8FF;color:var(--cielo);}
 .h-btn-dl{background:#EBFBEE;color:var(--verde);}
-
+ 
 /* SITUACION */
 .sit-box{background:white;border-radius:20px;padding:16px 18px;max-width:720px;width:100%;box-shadow:0 6px 24px rgba(0,0,0,.1);margin-bottom:11px;text-align:center;}
 .sit-ilus{margin-bottom:8px;animation:floatAnim 4s ease-in-out infinite;}
@@ -91,7 +93,7 @@ body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
 .btn-voz{background:linear-gradient(135deg,var(--violeta),#9775FA);color:white;border:none;border-radius:50px;padding:7px 16px;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:5px;}
 .btn-voz:hover{transform:scale(1.05);}
 .instruccion{font-size:.95rem;color:white;text-shadow:1px 1px 3px rgba(0,0,0,.28);font-weight:700;margin-bottom:8px;text-align:center;z-index:1;}
-
+ 
 /* GRID */
 .grid-obj{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px;max-width:720px;width:100%;margin-bottom:12px;z-index:1;}
 .obj-card{background:white;border-radius:16px;padding:10px 7px 8px;text-align:center;cursor:pointer;border:3px solid #EEE;transition:all .2s;box-shadow:0 3px 12px rgba(0,0,0,.07);animation:pop .3s ease;display:flex;flex-direction:column;align-items:center;gap:5px;}
@@ -105,9 +107,9 @@ body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
 .obj-fallback{font-size:3rem;line-height:1;}
 .obj-lbl{font-size:.82rem;font-weight:700;color:var(--oscuro);line-height:1.2;word-break:break-word;max-width:115px;text-align:center;}
 .obj-badge{font-size:1rem;line-height:1;min-height:16px;}
-
+ 
 .acciones{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;z-index:1;padding-bottom:22px;}
-
+ 
 /* RESULTADO */
 .res-box{background:white;border-radius:28px;padding:32px;text-align:center;max-width:480px;width:100%;box-shadow:0 14px 48px rgba(0,0,0,.14);}
 .res-trofeo{font-size:4.2rem;animation:bounce 1s infinite;display:block;}
@@ -117,7 +119,7 @@ body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
 .stat{text-align:center;}
 .stat-n{font-size:1.7rem;font-weight:900;}
 .stat-l{font-size:.76rem;color:#888;}
-
+ 
 /* PARENTAL */
 #parental-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9990;align-items:center;justify-content:center;}
 #parental-overlay.vis{display:flex;}
@@ -128,19 +130,19 @@ body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
 .parental-inp{font-size:1.6rem;text-align:center;padding:9px 14px;border:3px solid var(--mar);border-radius:12px;outline:none;width:110px;font-family:'Nunito',sans-serif;}
 .parental-inp:focus{border-color:var(--naranja);}
 .parental-err{color:var(--coral);font-size:.85rem;margin-top:6px;min-height:16px;}
-
+ 
 /* FEEDBACK */
 #feedback-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:200;pointer-events:none;opacity:0;transition:opacity .28s;}
 #feedback-overlay.vis{opacity:1;}
 .fb-burbuja{background:white;border-radius:20px;padding:24px 34px;text-align:center;box-shadow:0 18px 55px rgba(0,0,0,.22);animation:pop .28s ease;max-width:280px;}
 .fb-emoji{font-size:3.4rem;display:block;}
 .fb-txt{font-size:1.28rem;font-weight:900;margin-top:6px;}
-
+ 
 .cf{position:fixed;width:10px;height:10px;border-radius:2px;animation:cfFall 2.2s ease-in forwards;pointer-events:none;z-index:300;}
-
+ 
 .fnt{font-family:var(--font-min);}
 .fnt-may{font-family:var(--font-may);}
-
+ 
 @media(max-width:480px){
   .grid-obj{grid-template-columns:repeat(auto-fill,minmax(94px,1fr));gap:7px;}
   .obj-img-wrap,.obj-img{width:62px;height:62px;}
@@ -153,7 +155,7 @@ body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
 </style>
 </head>
 <body>
-
+ 
 <!-- ═══════════════════════════════════════
      PANTALLA 0 — INFORME (estilo Isla de Sinfones)
 ═══════════════════════════════════════ -->
@@ -177,7 +179,7 @@ body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
     </p>
   </div>
 </div>
-
+ 
 <!-- SOL -->
 <svg class="sol-deco" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
   <circle cx="50" cy="50" r="26" fill="#FFD93D"/>
@@ -188,9 +190,9 @@ body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
     <line x1="82" y1="18" x2="73" y2="27"/><line x1="27" y1="73" x2="18" y2="82"/>
   </g>
 </svg>
-
+ 
 <div id="app">
-
+ 
 <!-- ═══════════════════════════════════════
      P1 — BIENVENIDA
 ═══════════════════════════════════════ -->
@@ -209,7 +211,7 @@ body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
     </div>
   </div>
 </div>
-
+ 
 <!-- ═══════════════════════════════════════
      P2 — PERSONAJE
 ═══════════════════════════════════════ -->
@@ -274,7 +276,7 @@ body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
   </div>
   <button class="btn btn-azul" onclick="irA('p-nombre')">¡Soy yo! 👋</button>
 </div>
-
+ 
 <!-- ═══════════════════════════════════════
      P3 — NOMBRE
 ═══════════════════════════════════════ -->
@@ -286,7 +288,7 @@ body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
     <button class="btn btn-verde" onclick="comenzarJuego()">¡A jugar! 🎮</button>
   </div>
 </div>
-
+ 
 <!-- ═══════════════════════════════════════
      P4 — JUEGO
 ═══════════════════════════════════════ -->
@@ -306,7 +308,7 @@ body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
       <button class="h-btn h-btn-dl"   title="Descargar informe" onclick="descargarInforme()">📥</button>
     </div>
   </div>
-
+ 
   <div style="display:flex;flex-direction:column;align-items:center;width:100%;padding:12px 14px 0;gap:10px;">
     <div class="sit-box">
       <div class="sit-ilus" id="sit-ilus"></div>
@@ -320,7 +322,7 @@ body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
     </div>
   </div>
 </div>
-
+ 
 <!-- ═══════════════════════════════════════
      P5 — RESULTADO
 ═══════════════════════════════════════ -->
@@ -342,9 +344,9 @@ body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
     </div>
   </div>
 </div>
-
+ 
 </div><!-- /app -->
-
+ 
 <!-- PARENTAL -->
 <div id="parental-overlay">
   <div class="parental-card">
@@ -359,7 +361,7 @@ body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
     </div>
   </div>
 </div>
-
+ 
 <!-- FEEDBACK -->
 <div id="feedback-overlay">
   <div class="fb-burbuja">
@@ -367,12 +369,12 @@ body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
     <div class="fb-txt" id="fb-txt">¡Muy bien!</div>
   </div>
 </div>
-
+ 
 <script>
 // ══════ CONFIG ══════
 var SHEET_URL = "https://script.google.com/macros/s/AKfycbw4AKlcc8-09jA0uBl7EYDW_lorkazvEOwhZTthN6FD_BIhM1Q6o4HJdNSeUvqba2an/exec";
 var NOMBRE_ALUMNO = "", ENVIAR_INFORME = false;
-
+ 
 function guardarNombreYContinuar(){
   var n = document.getElementById('nombre-input').value.trim();
   if(!n){ document.getElementById('nombre-input').style.borderColor='#ff7675'; return; }
@@ -389,90 +391,90 @@ function enviarASheet(extra){
   var falladas = G.log.filter(function(l){return l.ko.length>0||l.perdidas.length>0;}).map(function(l){return l.situacion;}).join(', ')||'Ninguna';
   fetch(SHEET_URL,{method:'POST',body:JSON.stringify({Nombre:NOMBRE_ALUMNO,Actividad:'Aventuras de Verano',Aciertos:G.aciertos,Errores:errores,PalabrasFalladas:falladas+(extra||'')}),headers:{'Content-Type':'application/json'}}).catch(function(){});
 }
-
-// ══════ ARASAAC ══════
-function arasaac(id){ return 'https://static.arasaac.org/pictograms/'+id+'/'+id+'_300.png'; }
-
-// ══════ OBJETOS ══════
+ 
+// ══════ OBJETOS (emoji + SVG, sin dependencias externas) ══════
+function mkE(e){ return {e:e}; }
+function mkS(s){ return {s:s}; }
+ 
 var OBJ = {
-  banador:     {label:'bañador',       pic:6034,  emoji:'🩱'},
-  toalla:      {label:'toalla',        pic:6334,  emoji:'🏖️'},
-  crema_solar: {label:'crema solar',   pic:37463, emoji:'🧴'},
-  gafas_sol:   {label:'gafas de sol',  pic:6654,  emoji:'🕶️'},
-  cubo:        {label:'cubo',          pic:2449,  emoji:'🪣'},
-  nevera:      {label:'nevera',        pic:8183,  emoji:'🧊'},
-  bocadillo:   {label:'bocadillo',     pic:2399,  emoji:'🥪'},
-  sandia:      {label:'sandía',        pic:5725,  emoji:'🍉'},
-  fruta:       {label:'fruta',         pic:3703,  emoji:'🍎'},
-  limon:       {label:'limón',         pic:4826,  emoji:'🍋'},
-  jarra:       {label:'jarra',         pic:4699,  emoji:'🫙'},
-  helado:      {label:'helado',        pic:3880,  emoji:'🍦'},
-  mermelada:   {label:'mermelada',     pic:4913,  emoji:'🍓'},
-  olla:        {label:'olla',          pic:5225,  emoji:'🫕'},
-  agua:        {label:'agua',          pic:2270,  emoji:'💧'},
-  palomitas:   {label:'palomitas',     pic:5252,  emoji:'🍿'},
-  leche:       {label:'leche',         pic:4804,  emoji:'🥛'},
-  chubasquero: {label:'chubasquero',   pic:2480,  emoji:'🧥'},
-  paraguas:    {label:'paraguas',      pic:5272,  emoji:'☂️'},
-  botas_agua:  {label:'botas de agua', pic:2422,  emoji:'🥾'},
-  manta:       {label:'manta',         pic:4892,  emoji:'🛏️'},
-  pala:        {label:'pala',          pic:5247,  emoji:'⛏️'},
-  arbol:       {label:'árbol',         pic:2284,  emoji:'🌳'},
-  cubo_agua:   {label:'cubo de agua',  pic:2449,  emoji:'🪣'},
-  guantes_jar: {label:'guantes',       pic:3798,  emoji:'🧤'},
-  piedras:     {label:'piedras',       pic:5313,  emoji:'🪨'},
-  palos:       {label:'palos',         pic:5247,  emoji:'🪵'},
-  hoja_morera: {label:'hoja morera',   pic:2284,  emoji:'🍃'},
-  gallina:     {label:'gallinas',      pic:3710,  emoji:'🐔'},
-  pienso:      {label:'pienso',        pic:5338,  emoji:'🌾'},
-  gusano:      {label:'gusano seda',   pic:3780,  emoji:'🐛'},
-  pelota:      {label:'pelota',        pic:5432,  emoji:'⚽'},
-  cometa:      {label:'cometa',        pic:2494,  emoji:'🪁'},
-  bici:        {label:'bicicleta',     pic:2358,  emoji:'🚲'},
-  casco:       {label:'casco',         pic:2443,  emoji:'⛑️'},
-  globos_agua: {label:'globos agua',   pic:3760,  emoji:'💦'},
-  bolos:       {label:'bolos',         pic:2414,  emoji:'🎳'},
-  zapatos_bolo:{label:'zapatos bolos', pic:6232,  emoji:'👟'},
-  juguete:     {label:'juguete',       pic:4688,  emoji:'🧸'},
-  libro:       {label:'libro',         pic:4814,  emoji:'📚'},
-  lapiz:       {label:'lápiz',         pic:4765,  emoji:'✏️'},
-  cuaderno:    {label:'cuaderno',      pic:2508,  emoji:'📓'},
-  camara:      {label:'cámara',        pic:2440,  emoji:'📷'},
-  cesta:       {label:'cesta',         pic:2462,  emoji:'🧺'},
-  mochila:     {label:'mochila',       pic:2475,  emoji:'🎒'},
-  mapa:        {label:'mapa',          pic:4882,  emoji:'🗺️'},
-  linterna:    {label:'linterna',      pic:4824,  emoji:'🔦'},
-  tienda_camp: {label:'tienda campaña',pic:5792,  emoji:'⛺'},
-  saco_dormir: {label:'saco de dormir',pic:4738,  emoji:'🛌'},
-  telescopio:  {label:'telescopio',    pic:5784,  emoji:'🔭'},
-  entrada:     {label:'entrada cine',  pic:2573,  emoji:'🎟️'},
-  monedas:     {label:'dinero',        pic:4979,  emoji:'💰'},
-  mercado:     {label:'mercadillo',    pic:4909,  emoji:'🏪'},
-  pegamento:   {label:'pegamento',     pic:5282,  emoji:'🧴'},
-  tijeras:     {label:'tijeras',       pic:5793,  emoji:'✂️'},
-  palo_helado:   {label:'palo helado',      pic:3880,  emoji:'🍡'},
-  // ── Nuevos objetos ──
-  bola_bolos:    {label:'bola de bolos',    pic:5429,  emoji:'🎳'},
-  silla_playa:   {label:'silla de playa',   pic:5587,  emoji:'🪑'},
-  semilla:       {label:'semilla',          pic:5544,  emoji:'🌱'},
-  comida:        {label:'comida',           pic:3498,  emoji:'🍱'},
-  mantel:        {label:'mantel',           pic:null,  emoji:'🟦', svg:'<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><ellipse cx="40" cy="52" rx="34" ry="12" fill="#E8D5B0" opacity="0.5"/><rect x="6" y="24" width="68" height="40" rx="4" fill="#F9E4B7"/><rect x="6" y="24" width="68" height="40" rx="4" fill="none" stroke="#D4A017" stroke-width="2"/><line x1="6" y1="34" x2="74" y2="34" stroke="#D4A017" stroke-width="1.5" stroke-dasharray="5,4"/><line x1="6" y1="44" x2="74" y2="44" stroke="#D4A017" stroke-width="1.5" stroke-dasharray="5,4"/><line x1="6" y1="54" x2="74" y2="54" stroke="#D4A017" stroke-width="1.5" stroke-dasharray="5,4"/><line x1="25" y1="24" x2="25" y2="64" stroke="#D4A017" stroke-width="1.5" stroke-dasharray="5,4"/><line x1="44" y1="24" x2="44" y2="64" stroke="#D4A017" stroke-width="1.5" stroke-dasharray="5,4"/><line x1="63" y1="24" x2="63" y2="64" stroke="#D4A017" stroke-width="1.5" stroke-dasharray="5,4"/><path d="M6 24 L0 18 M74 24 L80 18 M6 64 L0 70 M74 64 L80 70" stroke="#D4A017" stroke-width="2" stroke-linecap="round"/></svg>'},
-  luz:           {label:'luz',              pic:4858,  emoji:'💡'},
-  asiento:       {label:'asiento',          pic:5508,  emoji:'🪑'},
-  bolsa:         {label:'bolsa',            pic:2407,  emoji:'🛍️'},
-  bolsas_compra: {label:'bolsas de compra', pic:2407,  emoji:'🛍️'},
-  paso_cebra:    {label:'paso de cebra',    pic:3430,  emoji:'🚶'},
-  telefono:      {label:'llamar por teléfono', pic:5757, emoji:'📞'},
-  caja_zapatos:  {label:'caja de zapatos',  pic:2438,  emoji:'📦'},
-  viento:        {label:'viento',           pic:6189,  emoji:'💨'},
-  correr:        {label:'correr',           pic:2500,  emoji:'🏃'},
-  chaqueta:      {label:'chaqueta',         pic:2472,  emoji:'🧥'},
-  hielo:         {label:'hielo',            pic:3895,  emoji:'🧊'},
-  rio:           {label:'río',              pic:5405,  emoji:'🏞️'},
-  piedras_peq:   {label:'piedras pequeñas', pic:5313,  emoji:'🪨'},
-  azucar:        {label:'azúcar',           pic:754,   emoji:'🍬'},
+  banador:      {label:'bañador',            e:'🩱'},
+  toalla:       {label:'toalla',             s:'<svg viewBox="0 0 80 80"><rect x="8" y="10" width="64" height="58" rx="5" fill="#FF6B6B"/><rect x="8" y="10" width="64" height="10" fill="#FF4444"/><rect x="8" y="58" width="64" height="10" fill="#FF4444"/><rect x="18" y="20" width="6" height="38" fill="#FF4444"/><rect x="30" y="20" width="6" height="38" fill="#FF4444"/><rect x="42" y="20" width="6" height="38" fill="#FF4444"/><rect x="54" y="20" width="6" height="38" fill="#FF4444"/></svg>'},
+  crema_solar:  {label:'crema solar',        s:'<svg viewBox="0 0 80 80"><rect x="24" y="20" width="32" height="44" rx="6" fill="#FFD93D"/><rect x="24" y="20" width="32" height="13" rx="6" fill="#FFC300"/><rect x="29" y="10" width="22" height="12" rx="4" fill="#FF9300"/><rect x="34" y="5" width="12" height="7" rx="3" fill="#FF7700"/><circle cx="40" cy="44" r="10" fill="#FFC300"/><line x1="40" y1="31" x2="40" y2="35" stroke="#FFB300" stroke-width="2" stroke-linecap="round"/><line x1="40" y1="53" x2="40" y2="57" stroke="#FFB300" stroke-width="2" stroke-linecap="round"/><line x1="27" y1="44" x2="31" y2="44" stroke="#FFB300" stroke-width="2" stroke-linecap="round"/><line x1="49" y1="44" x2="53" y2="44" stroke="#FFB300" stroke-width="2" stroke-linecap="round"/></svg>'},
+  gafas_sol:    {label:'gafas de sol',       s:'<svg viewBox="0 0 80 80"><ellipse cx="24" cy="42" rx="16" ry="12" fill="#2C3E50" stroke="#FF6B6B" stroke-width="3"/><ellipse cx="56" cy="42" rx="16" ry="12" fill="#2C3E50" stroke="#FF6B6B" stroke-width="3"/><ellipse cx="24" cy="42" rx="12" ry="9" fill="#4ECDC4" opacity="0.7"/><ellipse cx="56" cy="42" rx="12" ry="9" fill="#4ECDC4" opacity="0.7"/><path d="M40 42 Q36 37 32 42" stroke="#FF6B6B" stroke-width="3" fill="none" stroke-linecap="round"/><line x1="8" y1="42" x2="3" y2="40" stroke="#FF6B6B" stroke-width="3" stroke-linecap="round"/><line x1="72" y1="42" x2="77" y2="40" stroke="#FF6B6B" stroke-width="3" stroke-linecap="round"/></svg>'},
+  cubo:         {label:'cubo',               s:'<svg viewBox="0 0 80 80"><path d="M18 22 L62 22 L68 66 L12 66Z" fill="#FFD93D" stroke="#FFC300" stroke-width="2"/><path d="M22 22 Q40 10 58 22" stroke="#FF922B" stroke-width="3" fill="none" stroke-linecap="round"/><line x1="26" y1="32" x2="22" y2="66" stroke="#FFC300" stroke-width="2"/><line x1="40" y1="32" x2="40" y2="66" stroke="#FFC300" stroke-width="2"/><line x1="54" y1="32" x2="58" y2="66" stroke="#FFC300" stroke-width="2"/></svg>'},
+  nevera:       {label:'nevera',             s:'<svg viewBox="0 0 80 80"><rect x="14" y="8" width="52" height="62" rx="6" fill="#74C0FC"/><rect x="14" y="8" width="52" height="26" rx="6" fill="#4DABF7"/><rect x="14" y="32" width="52" height="3" fill="#339AF0"/><rect x="19" y="16" width="8" height="4" rx="2" fill="white"/><rect x="19" y="42" width="8" height="4" rx="2" fill="white"/></svg>'},
+  bocadillo:    {label:'bocadillo',          s:'<svg viewBox="0 0 80 80"><path d="M10 32 Q40 18 70 32 Q68 46 40 50 Q12 46 10 32Z" fill="#F9C74F"/><path d="M12 40 Q40 48 68 40 Q68 44 40 48 Q12 44 12 40Z" fill="#51CF66"/><path d="M14 38 Q40 44 66 38 Q66 41 40 44 Q14 41 14 38Z" fill="#FF6B6B"/><path d="M10 44 Q40 52 70 44 L68 58 Q40 68 12 58Z" fill="#D4A017"/></svg>'},
+  sandia:       {label:'sandía',             e:'🍉'},
+  fruta:        {label:'fruta',              e:'🍎'},
+  limon:        {label:'limón',              e:'🍋'},
+  jarra:        {label:'jarra',              s:'<svg viewBox="0 0 80 80"><path d="M18 16 L22 66 L58 66 L62 16Z" fill="#A5F3FC" opacity="0.85" stroke="#74C0FC" stroke-width="2"/><rect x="16" y="13" width="48" height="7" rx="3" fill="#4ECDC4"/><path d="M62 26 Q74 30 72 46 Q70 56 62 52" stroke="#74C0FC" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M26 32 Q40 28 54 32 L52 48 Q40 44 28 48Z" fill="#FFD93D" opacity="0.7"/><rect x="37" y="8" width="6" height="46" rx="2" fill="#FF6B6B"/></svg>'},
+  helado:       {label:'helado',             e:'🍦'},
+  mermelada:    {label:'mermelada',          s:'<svg viewBox="0 0 80 80"><rect x="20" y="26" width="40" height="42" rx="6" fill="#FF6B6B" stroke="#CC3333" stroke-width="2"/><ellipse cx="40" cy="26" rx="20" ry="8" fill="#FFD93D" stroke="#FFC300" stroke-width="2"/><rect x="22" y="18" width="36" height="10" rx="4" fill="#F9E4B7"/><circle cx="30" cy="44" r="4" fill="#CC0000"/><circle cx="40" cy="40" r="4" fill="#CC0000"/><circle cx="50" cy="46" r="4" fill="#CC0000"/><circle cx="34" cy="54" r="3" fill="#CC0000"/><circle cx="46" cy="55" r="3" fill="#CC0000"/></svg>'},
+  olla:         {label:'olla',               s:'<svg viewBox="0 0 80 80"><ellipse cx="40" cy="26" rx="28" ry="8" fill="#ADB5BD"/><path d="M12 26 L14 56 Q14 66 40 66 Q66 66 66 56 L68 26Z" fill="#CED4DA"/><rect x="4" y="22" width="14" height="10" rx="4" fill="#868E96"/><rect x="62" y="22" width="14" height="10" rx="4" fill="#868E96"/><ellipse cx="40" cy="26" rx="14" ry="5" fill="#868E96"/></svg>'},
+  agua:         {label:'agua',               s:'<svg viewBox="0 0 80 80"><path d="M40 10 Q56 30 56 46 Q56 64 40 66 Q24 64 24 46 Q24 30 40 10Z" fill="#74C0FC"/><path d="M30 46 Q30 58 40 62" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse cx="50" cy="34" rx="6" ry="9" fill="white" opacity="0.3"/></svg>'},
+  palomitas:    {label:'palomitas',          e:'🍿'},
+  leche:        {label:'leche',              e:'🥛'},
+  chubasquero:  {label:'chubasquero',        s:'<svg viewBox="0 0 80 80"><path d="M20 24 Q14 22 10 27 L7 56 L26 56 L26 72 L54 72 L54 56 L73 56 L70 27 Q66 22 60 24 L50 22 Q46 30 40 30 Q34 30 30 22Z" fill="#4ECDC4"/><path d="M30 22 Q28 34 24 36 L20 24Z" fill="#45B7B0"/><path d="M50 22 Q52 34 56 36 L60 24Z" fill="#45B7B0"/><path d="M30 22 Q40 27 50 22 Q46 15 40 15 Q34 15 30 22Z" fill="#45B7B0"/><circle cx="40" cy="40" r="3" fill="#2C3E50"/><circle cx="40" cy="50" r="3" fill="#2C3E50"/></svg>'},
+  paraguas:     {label:'paraguas',           s:'<svg viewBox="0 0 80 80"><path d="M8 38 Q40 8 72 38Z" fill="#4DABF7"/><path d="M8 38 Q24 22 40 38" fill="#74C0FC"/><path d="M40 38 Q56 22 72 38" fill="#339AF0"/><rect x="38" y="38" width="4" height="28" rx="2" fill="#2C3E50"/><path d="M42 66 Q50 74 42 74" stroke="#2C3E50" stroke-width="3" fill="none" stroke-linecap="round"/></svg>'},
+  botas_agua:   {label:'botas de agua',      s:'<svg viewBox="0 0 80 80"><path d="M10 10 L10 50 Q10 62 26 62 L42 62 L42 56 L26 56 Q20 56 20 50 L20 10Z" fill="#4ECDC4"/><rect x="10" y="54" width="32" height="10" rx="4" fill="#45B7B0"/><rect x="8" y="62" width="36" height="6" rx="3" fill="#2C3E50"/><path d="M44 10 L44 50 Q44 62 60 62 L72 62 L72 56 L60 56 Q54 56 54 50 L54 10Z" fill="#4ECDC4"/><rect x="44" y="54" width="30" height="10" rx="4" fill="#45B7B0"/><rect x="42" y="62" width="34" height="6" rx="3" fill="#2C3E50"/></svg>'},
+  manta:        {label:'manta',              s:'<svg viewBox="0 0 80 80"><rect x="8" y="16" width="64" height="48" rx="5" fill="#B197FC"/><rect x="8" y="16" width="64" height="10" fill="#9775FA"/><rect x="8" y="54" width="64" height="10" fill="#9775FA"/><rect x="18" y="26" width="5" height="28" fill="#9775FA"/><rect x="32" y="26" width="5" height="28" fill="#9775FA"/><rect x="46" y="26" width="5" height="28" fill="#9775FA"/><rect x="60" y="26" width="5" height="28" fill="#9775FA"/></svg>'},
+  pala:         {label:'pala',               s:'<svg viewBox="0 0 80 80"><rect x="36" y="30" width="8" height="40" rx="4" fill="#8B4513"/><path d="M20 12 Q40 5 60 12 L56 30 L24 30Z" fill="#5C8A3C"/><ellipse cx="40" cy="12" rx="20" ry="9" fill="#6DAF49"/></svg>'},
+  arbol:        {label:'árbol',              e:'🌳'},
+  cubo_agua:    {label:'cubo de agua',       s:'<svg viewBox="0 0 80 80"><path d="M18 22 L62 22 L68 66 L12 66Z" fill="#74C0FC" stroke="#4DABF7" stroke-width="2"/><path d="M22 22 Q40 10 58 22" stroke="#4DABF7" stroke-width="3" fill="none" stroke-linecap="round"/><line x1="26" y1="32" x2="22" y2="66" stroke="#4DABF7" stroke-width="2"/><line x1="40" y1="32" x2="40" y2="66" stroke="#4DABF7" stroke-width="2"/><line x1="54" y1="32" x2="58" y2="66" stroke="#4DABF7" stroke-width="2"/></svg>'},
+  guantes_jar:  {label:'guantes',            e:'🧤'},
+  piedras:      {label:'piedras',            e:'🪨'},
+  palos:        {label:'palos',              s:'<svg viewBox="0 0 80 80"><rect x="22" y="6" width="8" height="62" rx="4" fill="#8B4513" transform="rotate(-12 26 37)"/><rect x="36" y="6" width="8" height="62" rx="4" fill="#A0522D"/><rect x="50" y="6" width="8" height="62" rx="4" fill="#8B4513" transform="rotate(12 54 37)"/></svg>'},
+  hoja_morera:  {label:'hoja morera',        s:'<svg viewBox="0 0 80 80"><path d="M40 10 Q64 18 66 38 Q68 58 46 66 Q30 68 22 56 Q10 42 20 24 Q26 12 40 10Z" fill="#51CF66"/><line x1="40" y1="10" x2="40" y2="66" stroke="#40C057" stroke-width="2"/><line x1="22" y1="30" x2="58" y2="46" stroke="#40C057" stroke-width="1.5"/><line x1="20" y1="46" x2="56" y2="34" stroke="#40C057" stroke-width="1.5"/></svg>'},
+  gallina:      {label:'gallinas',           e:'🐔'},
+  pienso:       {label:'pienso',             s:'<svg viewBox="0 0 80 80"><path d="M18 26 L22 66 L58 66 L62 26Z" fill="#D4A017" stroke="#C4900A" stroke-width="2"/><path d="M16 24 L64 24 L62 26 L18 26Z" fill="#C4900A"/><ellipse cx="26" cy="40" rx="5" ry="4" fill="#F9E4B7"/><ellipse cx="40" cy="36" rx="5" ry="4" fill="#FDBCB4"/><ellipse cx="54" cy="41" rx="5" ry="4" fill="#F9E4B7"/><ellipse cx="32" cy="52" rx="5" ry="4" fill="#FDBCB4"/><ellipse cx="48" cy="54" rx="5" ry="4" fill="#F9E4B7"/></svg>'},
+  gusano:       {label:'gusano seda',        e:'🐛'},
+  pelota:       {label:'pelota',             e:'⚽'},
+  cometa:       {label:'cometa',             s:'<svg viewBox="0 0 80 80"><path d="M40 8 L62 36 L40 48 L18 36Z" fill="#74C0FC"/><path d="M40 8 L62 36 L40 30Z" fill="#4DABF7"/><path d="M40 8 L18 36 L40 30Z" fill="#A5D8FF"/><path d="M40 48 Q34 58 26 68" stroke="#FF6B6B" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="5,4"/><path d="M40 48 Q46 60 44 70" stroke="#FFD93D" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="5,4"/><circle cx="26" cy="68" r="5" fill="#FF6B6B"/><circle cx="44" cy="70" r="5" fill="#FFD93D"/></svg>'},
+  bici:         {label:'bicicleta',          e:'🚲'},
+  casco:        {label:'casco',              s:'<svg viewBox="0 0 80 80"><path d="M14 42 Q14 16 40 16 Q66 16 66 42 L66 52 L14 52Z" fill="#FFD93D"/><rect x="10" y="50" width="60" height="9" rx="3" fill="#FFC300"/><rect x="20" y="28" width="14" height="16" rx="3" fill="white" opacity="0.5"/><rect x="40" y="26" width="18" height="18" rx="3" fill="white" opacity="0.3"/></svg>'},
+  globos_agua:  {label:'globos agua',        s:'<svg viewBox="0 0 80 80"><ellipse cx="24" cy="44" rx="16" ry="20" fill="#74C0FC"/><path d="M24 24 Q26 18 24 15" stroke="#4DABF7" stroke-width="2" fill="none" stroke-linecap="round"/><ellipse cx="54" cy="38" rx="14" ry="18" fill="#FF6EB4"/><path d="M54 20 Q56 14 54 11" stroke="#FF3399" stroke-width="2" fill="none" stroke-linecap="round"/><ellipse cx="44" cy="60" rx="11" ry="14" fill="#FFD93D"/><ellipse cx="18" cy="36" rx="4" ry="7" fill="white" opacity="0.3"/></svg>'},
+  bolos:        {label:'bolos',              s:'<svg viewBox="0 0 80 80"><ellipse cx="22" cy="62" rx="12" ry="9" fill="#FF6B6B"/><ellipse cx="40" cy="56" rx="12" ry="9" fill="#FF8787"/><ellipse cx="58" cy="62" rx="12" ry="9" fill="#FF6B6B"/><ellipse cx="40" cy="36" rx="10" ry="14" fill="#F9E4B7" stroke="#DDD" stroke-width="2"/><ellipse cx="36" cy="30" rx="2.5" ry="2" fill="#2C3E50"/><ellipse cx="40" cy="28" rx="2.5" ry="2" fill="#2C3E50"/><ellipse cx="44" cy="30" rx="2.5" ry="2" fill="#2C3E50"/></svg>'},
+  zapatos_bolo: {label:'zapatos bolos',      s:'<svg viewBox="0 0 80 80"><path d="M10 34 Q10 24 22 24 L54 24 Q66 24 66 34 L64 50 Q40 56 16 50Z" fill="#4ECDC4"/><rect x="10" y="46" width="54" height="10" rx="4" fill="#2C3E50"/><rect x="8" y="54" width="58" height="6" rx="3" fill="#1A252F"/><line x1="24" y1="26" x2="24" y2="44" stroke="white" stroke-width="2"/><line x1="36" y1="26" x2="36" y2="44" stroke="white" stroke-width="2"/><line x1="48" y1="26" x2="48" y2="44" stroke="white" stroke-width="2"/></svg>'},
+  juguete:      {label:'juguete',            e:'🧸'},
+  libro:        {label:'libro',              s:'<svg viewBox="0 0 80 80"><rect x="10" y="10" width="60" height="58" rx="5" fill="#4ECDC4"/><rect x="10" y="10" width="10" height="58" rx="4" fill="#45B7B0"/><rect x="24" y="20" width="38" height="4" rx="2" fill="white" opacity="0.7"/><rect x="24" y="30" width="38" height="4" rx="2" fill="white" opacity="0.7"/><rect x="24" y="40" width="30" height="4" rx="2" fill="white" opacity="0.7"/><rect x="24" y="50" width="34" height="4" rx="2" fill="white" opacity="0.7"/></svg>'},
+  lapiz:        {label:'lápiz',              s:'<svg viewBox="0 0 80 80"><rect x="32" y="8" width="16" height="52" rx="4" fill="#FFD93D"/><path d="M32 60 L40 74 L48 60Z" fill="#F9C74F"/><rect x="32" y="8" width="16" height="8" rx="4" fill="#FF6B6B"/><rect x="34" y="16" width="12" height="44" fill="#FFF176"/><line x1="40" y1="16" x2="40" y2="60" stroke="#FFD93D" stroke-width="1.5"/></svg>'},
+  cuaderno:     {label:'cuaderno',           s:'<svg viewBox="0 0 80 80"><rect x="12" y="8" width="56" height="64" rx="5" fill="#FFD93D"/><rect x="12" y="8" width="12" height="64" rx="4" fill="#FFC300"/><rect x="28" y="20" width="32" height="4" rx="2" fill="#FFC300"/><rect x="28" y="30" width="32" height="4" rx="2" fill="#FFC300"/><rect x="28" y="40" width="24" height="4" rx="2" fill="#FFC300"/><rect x="28" y="50" width="28" height="4" rx="2" fill="#FFC300"/><circle cx="18" cy="22" r="4" fill="#FF6B6B"/><circle cx="18" cy="36" r="4" fill="#51CF66"/><circle cx="18" cy="50" r="4" fill="#74C0FC"/></svg>'},
+  camara:       {label:'cámara',             s:'<svg viewBox="0 0 80 80"><rect x="8" y="22" width="64" height="44" rx="7" fill="#2C3E50"/><rect x="28" y="12" width="24" height="12" rx="5" fill="#2C3E50"/><circle cx="40" cy="44" r="17" fill="#4ECDC4"/><circle cx="40" cy="44" r="13" fill="#A5F3FC"/><circle cx="40" cy="44" r="8" fill="#2C3E50"/><circle cx="40" cy="44" r="4" fill="#74C0FC"/><circle cx="44" cy="40" r="3" fill="white" opacity="0.5"/><circle cx="57" cy="30" r="4" fill="#FF6B6B"/></svg>'},
+  cesta:        {label:'cesta',              s:'<svg viewBox="0 0 80 80"><path d="M12 34 L18 66 L62 66 L68 34Z" fill="#D4A017"/><path d="M12 34 L68 34" stroke="#C4900A" stroke-width="4" stroke-linecap="round"/><path d="M20 34 Q40 16 60 34" stroke="#8B4513" stroke-width="3" fill="none" stroke-linecap="round"/><line x1="26" y1="36" x2="22" y2="66" stroke="#C4900A" stroke-width="2"/><line x1="40" y1="36" x2="40" y2="66" stroke="#C4900A" stroke-width="2"/><line x1="54" y1="36" x2="58" y2="66" stroke="#C4900A" stroke-width="2"/></svg>'},
+  mochila:      {label:'mochila',            s:'<svg viewBox="0 0 80 80"><rect x="16" y="18" width="48" height="54" rx="10" fill="#FF922B"/><rect x="24" y="10" width="32" height="12" rx="6" fill="#E8820A"/><rect x="26" y="36" width="28" height="20" rx="5" fill="#E8820A"/><circle cx="40" cy="46" r="4" fill="#FF922B"/><rect x="10" y="24" width="8" height="32" rx="4" fill="#D4720A"/><rect x="62" y="24" width="8" height="32" rx="4" fill="#D4720A"/></svg>'},
+  mapa:         {label:'mapa',               s:'<svg viewBox="0 0 80 80"><path d="M8 14 L28 8 L52 16 L72 8 L72 64 L52 70 L28 62 L8 68Z" fill="#F9E4B7" stroke="#D4A017" stroke-width="2"/><line x1="28" y1="8" x2="28" y2="62" stroke="#D4A017" stroke-width="1.5"/><line x1="52" y1="16" x2="52" y2="70" stroke="#D4A017" stroke-width="1.5"/><path d="M14 28 Q24 22 36 30 Q44 36 56 28 Q64 22 68 28" stroke="#4ECDC4" stroke-width="2" fill="none"/><circle cx="36" cy="30" r="5" fill="#FF6B6B"/><line x1="36" y1="25" x2="36" y2="14" stroke="#FF6B6B" stroke-width="1.5"/></svg>'},
+  linterna:     {label:'linterna',           s:'<svg viewBox="0 0 80 80"><rect x="28" y="24" width="24" height="36" rx="6" fill="#2C3E50"/><ellipse cx="40" cy="23" rx="14" ry="9" fill="#FFD93D"/><path d="M20 62 L16 72 L64 72 L60 62Z" fill="#ADB5BD"/><path d="M10 18 Q24 24 20 34" stroke="#FFD93D" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M70 18 Q56 24 60 34" stroke="#FFD93D" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse cx="40" cy="22" rx="8" ry="5" fill="white" opacity="0.5"/></svg>'},
+  tienda_camp:  {label:'tienda campaña',     s:'<svg viewBox="0 0 80 80"><path d="M6 66 L40 12 L74 66Z" fill="#FF922B"/><path d="M18 66 L40 20 L62 66Z" fill="#FFB347"/><path d="M28 66 L40 34 L52 66Z" fill="#2C3E50"/><line x1="6" y1="66" x2="74" y2="66" stroke="#2C3E50" stroke-width="2"/><line x1="40" y1="12" x2="40" y2="6" stroke="#ADB5BD" stroke-width="2" stroke-linecap="round"/></svg>'},
+  saco_dormir:  {label:'saco de dormir',     s:'<svg viewBox="0 0 80 80"><path d="M20 16 Q20 8 40 8 Q60 8 60 16 L60 58 Q60 70 40 70 Q20 70 20 58Z" fill="#4ECDC4"/><path d="M20 16 Q20 8 40 8 Q60 8 60 16 L60 30 Q40 34 20 30Z" fill="#45B7B0"/><ellipse cx="40" cy="15" rx="16" ry="10" fill="#F9E4B7"/><circle cx="40" cy="14" r="8" fill="#FDBCB4"/></svg>'},
+  telescopio:   {label:'telescopio',         e:'🔭'},
+  entrada:      {label:'entrada cine',       s:'<svg viewBox="0 0 80 80"><rect x="8" y="22" width="64" height="36" rx="6" fill="#FFD93D" stroke="#FFC300" stroke-width="2"/><rect x="8" y="36" width="12" height="8" rx="3" fill="white"/><rect x="60" y="36" width="12" height="8" rx="3" fill="white"/><line x1="24" y1="22" x2="24" y2="58" stroke="#FFC300" stroke-width="2" stroke-dasharray="5,3"/><text x="44" y="36" text-anchor="middle" font-size="9" font-weight="bold" fill="#2C3E50" font-family="Nunito,sans-serif">CINE</text><text x="44" y="48" text-anchor="middle" font-size="10" fill="#FF922B" font-family="sans-serif">★★★</text></svg>'},
+  monedas:      {label:'dinero',             e:'💰'},
+  mercado:      {label:'mercadillo',         e:'🏪'},
+  pegamento:    {label:'pegamento',          s:'<svg viewBox="0 0 80 80"><rect x="24" y="22" width="32" height="44" rx="6" fill="#FF6B6B"/><rect x="24" y="22" width="32" height="13" rx="6" fill="#CC3333"/><rect x="28" y="12" width="24" height="12" rx="5" fill="#ADB5BD"/><rect x="32" y="6" width="16" height="8" rx="3" fill="#868E96"/><rect x="28" y="40" width="24" height="4" rx="2" fill="white" opacity="0.5"/><rect x="28" y="48" width="18" height="4" rx="2" fill="white" opacity="0.4"/></svg>'},
+  tijeras:      {label:'tijeras',            s:'<svg viewBox="0 0 80 80"><circle cx="24" cy="56" r="11" fill="none" stroke="#FF6B6B" stroke-width="4"/><circle cx="42" cy="56" r="11" fill="none" stroke="#FF6B6B" stroke-width="4"/><line x1="32" y1="52" x2="62" y2="14" stroke="#ADB5BD" stroke-width="5" stroke-linecap="round"/><line x1="36" y1="54" x2="66" y2="16" stroke="#CED4DA" stroke-width="4" stroke-linecap="round"/></svg>'},
+  palo_helado:  {label:'palo helado',        s:'<svg viewBox="0 0 80 80"><rect x="34" y="10" width="12" height="58" rx="6" fill="#D4A017"/><rect x="36" y="12" width="5" height="54" rx="3" fill="#C4900A" opacity="0.5"/></svg>'},
+  // ── Nuevos ──
+  bola_bolos:   {label:'bola de bolos',      s:'<svg viewBox="0 0 80 80"><circle cx="40" cy="42" r="30" fill="#2C3E50"/><circle cx="30" cy="32" r="5" fill="#1A252F"/><circle cx="40" cy="28" r="5" fill="#1A252F"/><circle cx="50" cy="32" r="5" fill="#1A252F"/><circle cx="32" cy="33" r="2" fill="#4ECDC4"/><circle cx="40" cy="29" r="2" fill="#4ECDC4"/><circle cx="48" cy="33" r="2" fill="#4ECDC4"/></svg>'},
+  silla_playa:  {label:'silla de playa',     s:'<svg viewBox="0 0 80 80"><rect x="16" y="22" width="48" height="28" rx="5" fill="#FF922B"/><line x1="16" y1="22" x2="8" y2="70" stroke="#8B4513" stroke-width="5" stroke-linecap="round"/><line x1="64" y1="22" x2="72" y2="70" stroke="#8B4513" stroke-width="5" stroke-linecap="round"/><line x1="22" y1="50" x2="16" y2="70" stroke="#8B4513" stroke-width="5" stroke-linecap="round"/><line x1="58" y1="50" x2="64" y2="70" stroke="#8B4513" stroke-width="5" stroke-linecap="round"/><line x1="16" y1="56" x2="64" y2="56" stroke="#8B4513" stroke-width="4" stroke-linecap="round"/><rect x="16" y="18" width="48" height="10" rx="4" fill="#FFB347"/></svg>'},
+  semilla:      {label:'semilla',            e:'🌱'},
+  comida:       {label:'comida',             e:'🍱'},
+  mantel:       {label:'mantel',             s:'<svg viewBox="0 0 80 80"><rect x="6" y="22" width="68" height="44" rx="4" fill="#F9E4B7"/><rect x="6" y="22" width="68" height="44" rx="4" fill="none" stroke="#D4A017" stroke-width="2"/><line x1="6" y1="33" x2="74" y2="33" stroke="#D4A017" stroke-width="1.5" stroke-dasharray="6,5"/><line x1="6" y1="44" x2="74" y2="44" stroke="#D4A017" stroke-width="1.5" stroke-dasharray="6,5"/><line x1="6" y1="55" x2="74" y2="55" stroke="#D4A017" stroke-width="1.5" stroke-dasharray="6,5"/><line x1="24" y1="22" x2="24" y2="66" stroke="#D4A017" stroke-width="1.5" stroke-dasharray="6,5"/><line x1="42" y1="22" x2="42" y2="66" stroke="#D4A017" stroke-width="1.5" stroke-dasharray="6,5"/><line x1="60" y1="22" x2="60" y2="66" stroke="#D4A017" stroke-width="1.5" stroke-dasharray="6,5"/><path d="M6 22 L0 16 M74 22 L80 16 M6 66 L0 72 M74 66 L80 72" stroke="#D4A017" stroke-width="2.5" stroke-linecap="round"/></svg>'},
+  luz:          {label:'luz',                e:'💡'},
+  asiento:      {label:'asiento',            s:'<svg viewBox="0 0 80 80"><rect x="10" y="28" width="60" height="20" rx="6" fill="#FF922B"/><rect x="10" y="22" width="12" height="28" rx="5" fill="#E8820A"/><line x1="14" y1="48" x2="10" y2="72" stroke="#8B4513" stroke-width="5" stroke-linecap="round"/><line x1="66" y1="48" x2="70" y2="72" stroke="#8B4513" stroke-width="5" stroke-linecap="round"/><line x1="20" y1="48" x2="18" y2="72" stroke="#8B4513" stroke-width="5" stroke-linecap="round"/><line x1="60" y1="48" x2="62" y2="72" stroke="#8B4513" stroke-width="5" stroke-linecap="round"/></svg>'},
+  bolsa:        {label:'bolsa',              s:'<svg viewBox="0 0 80 80"><path d="M20 28 L16 66 L64 66 L60 28Z" fill="#4ECDC4"/><path d="M20 28 L60 28" stroke="#45B7B0" stroke-width="2"/><path d="M28 28 Q28 16 40 16 Q52 16 52 28" stroke="#2C3E50" stroke-width="3" fill="none" stroke-linecap="round"/><line x1="26" y1="38" x2="24" y2="66" stroke="#45B7B0" stroke-width="2"/><line x1="40" y1="38" x2="40" y2="66" stroke="#45B7B0" stroke-width="2"/><line x1="54" y1="38" x2="56" y2="66" stroke="#45B7B0" stroke-width="2"/></svg>'},
+  bolsas_compra:{label:'bolsas de compra',   s:'<svg viewBox="0 0 80 80"><path d="M10 28 L8 60 L38 60 L36 28Z" fill="#74C0FC"/><path d="M14 28 Q22 16 32 28" stroke="#2C3E50" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M42 32 L40 62 L72 62 L70 32Z" fill="#FF6EB4"/><path d="M46 32 Q54 18 66 32" stroke="#2C3E50" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>'},
+  paso_cebra:   {label:'paso de cebra',      s:'<svg viewBox="0 0 80 80"><rect x="6" y="52" width="68" height="20" rx="3" fill="#555"/><rect x="6" y="52" width="12" height="20" fill="white"/><rect x="24" y="52" width="12" height="20" fill="white"/><rect x="42" y="52" width="12" height="20" fill="white"/><rect x="60" y="52" width="12" height="20" fill="white"/><path d="M30 48 L30 14 M30 48 L22 56" stroke="#2C3E50" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="30" cy="10" r="7" fill="none" stroke="#2C3E50" stroke-width="3"/><line x1="24" y1="26" x2="36" y2="26" stroke="#2C3E50" stroke-width="3" stroke-linecap="round"/></svg>'},
+  telefono:     {label:'llamar por teléfono',s:'<svg viewBox="0 0 80 80"><path d="M20 12 Q16 22 20 32 Q34 62 52 68 Q62 72 68 64 L60 52 Q54 56 50 52 Q42 44 38 36 Q36 32 40 28 Z" fill="#51CF66"/><path d="M22 14 Q26 16 28 22" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M52 58 Q56 58 60 62" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>'},
+  caja_zapatos: {label:'caja de zapatos',    s:'<svg viewBox="0 0 80 80"><rect x="10" y="30" width="60" height="38" rx="4" fill="#D4A017"/><rect x="10" y="30" width="60" height="12" rx="4" fill="#C4900A"/><rect x="6" y="24" width="68" height="12" rx="4" fill="#FFB347"/><line x1="40" y1="24" x2="40" y2="68" stroke="#C4900A" stroke-width="2"/><line x1="6" y1="30" x2="74" y2="30" stroke="#C4900A" stroke-width="1.5"/></svg>'},
+  viento:       {label:'viento',             s:'<svg viewBox="0 0 80 80"><path d="M8 30 Q30 26 44 30 Q54 34 60 28 Q66 22 62 16 Q58 10 52 14" stroke="#74C0FC" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M8 44 Q32 40 50 44 Q62 48 68 42 Q74 36 68 30" stroke="#A5D8FF" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M8 58 Q26 54 38 58 Q46 62 50 58 Q54 54 50 50" stroke="#74C0FC" stroke-width="4" fill="none" stroke-linecap="round"/></svg>'},
+  correr:       {label:'correr',             e:'🏃'},
+  chaqueta:     {label:'chaqueta',           s:'<svg viewBox="0 0 80 80"><path d="M20 22 Q14 20 10 25 L7 56 L26 56 L26 70 L54 70 L54 56 L73 56 L70 25 Q66 20 60 22 L50 20 Q46 28 40 28 Q34 28 30 20Z" fill="#5C8A3C"/><path d="M30 20 Q28 30 26 32 L20 22Z" fill="#4A7A2E"/><path d="M50 20 Q52 30 54 32 L60 22Z" fill="#4A7A2E"/><path d="M30 20 Q40 25 50 20 Q46 13 40 13 Q34 13 30 20Z" fill="#4A7A2E"/><rect x="36" y="34" width="8" height="30" fill="#4A7A2E" opacity="0.5"/></svg>'},
+  hielo:        {label:'hielo',              s:'<svg viewBox="0 0 80 80"><rect x="18" y="18" width="22" height="22" rx="4" fill="#A5F3FC" stroke="#74C0FC" stroke-width="2" transform="rotate(15 29 29)"/><rect x="40" y="14" width="20" height="20" rx="4" fill="#74C0FC" stroke="#4DABF7" stroke-width="2" transform="rotate(-10 50 24)"/><rect x="22" y="42" width="18" height="18" rx="4" fill="#C5F6FA" stroke="#74C0FC" stroke-width="2" transform="rotate(8 31 51)"/><rect x="44" y="38" width="16" height="16" rx="4" fill="#A5F3FC" stroke="#4DABF7" stroke-width="2" transform="rotate(-15 52 46)"/></svg>'},
+  rio:          {label:'río',                s:'<svg viewBox="0 0 80 80"><rect x="0" y="0" width="80" height="80" fill="#C8E6C9"/><path d="M0 35 Q20 28 40 35 Q60 42 80 35 L80 55 Q60 62 40 55 Q20 48 0 55Z" fill="#74C0FC"/><path d="M0 42 Q20 36 40 42 Q60 48 80 42" stroke="#A5D8FF" stroke-width="2" fill="none"/><ellipse cx="14" cy="26" rx="10" ry="8" fill="#8B6914" opacity="0.5"/><ellipse cx="66" cy="24" rx="8" ry="6" fill="#8B6914" opacity="0.5"/></svg>'},
+  piedras_peq:  {label:'piedras pequeñas',   s:'<svg viewBox="0 0 80 80"><ellipse cx="22" cy="52" rx="14" ry="10" fill="#ADB5BD"/><ellipse cx="44" cy="48" rx="12" ry="9" fill="#868E96"/><ellipse cx="62" cy="54" rx="11" ry="8" fill="#CED4DA"/><ellipse cx="32" cy="62" rx="10" ry="7" fill="#ADB5BD"/><ellipse cx="54" cy="64" rx="9" ry="6" fill="#868E96"/></svg>'},
+  azucar:       {label:'azúcar',             s:'<svg viewBox="0 0 80 80"><rect x="16" y="28" width="48" height="38" rx="5" fill="#F9E4B7" stroke="#D4A017" stroke-width="2"/><rect x="22" y="20" width="36" height="12" rx="4" fill="#FFD93D" stroke="#FFC300" stroke-width="2"/><text x="40" y="33" text-anchor="middle" font-size="9" font-weight="bold" fill="#8B4513" font-family="Nunito,sans-serif">AZÚCAR</text><rect x="28" y="44" width="8" height="8" rx="2" fill="white" opacity="0.7"/><rect x="42" y="40" width="8" height="8" rx="2" fill="white" opacity="0.7"/><rect x="32" y="54" width="8" height="8" rx="2" fill="white" opacity="0.5"/><rect x="48" y="52" width="8" height="8" rx="2" fill="white" opacity="0.6"/></svg>'},
 };
-
+ 
 // ══════ SITUACIONES (31) ══════
 var SITUACIONES = [
   {id:'bolera',        txt:'{n} va hoy a la bolera. ¿Qué necesita llevar?',                       ok:['bolos','zapatos_bolo','bola_bolos'],         no:['banador','chubasquero','manta','lapiz','gusano']},
@@ -508,13 +510,13 @@ var SITUACIONES = [
   {id:'reciclar',      txt:'{n} va a reparar y reciclar un juguete viejo. ¿Qué necesita?',        ok:['juguete','tijeras','pegamento','lapiz'],     no:['bolos','banador','gallina','telescopio','cometa']},
   {id:'playa',         txt:'{n} pasa el día en la playa. ¿Qué necesita?',                        ok:['banador','toalla','crema_solar','gafas_sol','cubo'],no:['chubasquero','botas_agua','mermelada','telescopio','gusano']},
 ];
-
+ 
 // ══════ EMOJIS SITUACIÓN ══════
 var SIT_EMOJI = {bolera:'🎳',helado_casero:'🍨',cine_verano:'🎬',museo:'🏛️',lluvia:'🌧️',acampar:'⛺',puesta_sol:'🌅',globos_agua:'💦',plantar_arbol:'🌱',san_lorenzo:'🌠',picnic:'🧺',excursion:'🥾',leer_cuentos:'📚',cuaderno:'🎨',fotografiar:'📷',recoger_frutos:'🍎',mercadillo:'🛍️',piscina_nat:'🏊',palos_helado:'🍡',ayudar_mayor:'🤝',mermelada:'🍓',gallinas:'🐔',refugio_palos:'🪵',gusanos_seda:'🐛',cometa:'🪁',senderismo:'🏔️',montar_bici:'🚲',paseo_noche:'🔦',limonada:'🍋',piedras_rio:'🪨',reciclar:'♻️',playa:'🏖️'};
-
+ 
 // ══════ ESTADO ══════
 var G = {tipo:'min',personaje:'nina',nombre:'',rondas:[],rondaIdx:0,puntos:0,estrellas:5,aciertos:0,intentos:0,seleccion:new Set(),log:[],parentalAccion:'',parentalEsperado:0};
-
+ 
 // ══════ FUENTE ══════
 function aplicarFuente(el){
   if(!el) return;
@@ -522,28 +524,28 @@ function aplicarFuente(el){
   el.classList.add(G.tipo==='may'?'fnt-may':'fnt');
 }
 function txt(t){ return G.tipo==='may'?t.toUpperCase():t.toLowerCase(); }
-
+ 
 // ══════ NAVEGACIÓN ══════
 function irA(id){
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
   document.getElementById(id).classList.add('active');
   document.getElementById('app').scrollTo(0,0);
 }
-
+ 
 // ══════ BIENVENIDA ══════
 function selTipo(tipo,btn){
   G.tipo=tipo;
   document.querySelectorAll('.btn-op').forEach(function(b){b.classList.remove('sel');});
   btn.classList.add('sel');
 }
-
+ 
 // ══════ PERSONAJE ══════
 function selPersonaje(tipo,card){
   G.personaje=tipo;
   document.querySelectorAll('.p-card').forEach(function(c){c.classList.remove('sel-nina','sel-nino');});
   card.classList.add(tipo==='nina'?'sel-nina':'sel-nino');
 }
-
+ 
 // ══════ NOMBRE ══════
 function actualizarPreview(){
   var val = document.getElementById('input-nombre').value;
@@ -562,7 +564,7 @@ function getSVGPersonaje(tipo){
   if(tipo==='nina') return '<svg width="88" height="120" viewBox="0 0 110 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="55" cy="28" rx="28" ry="30" fill="#8B4513"/><rect x="27" y="38" width="12" height="55" rx="6" fill="#8B4513"/><rect x="71" y="38" width="12" height="55" rx="6" fill="#8B4513"/><ellipse cx="55" cy="35" rx="22" ry="24" fill="#FDBCB4"/><ellipse cx="47" cy="31" rx="4" ry="4.5" fill="white"/><ellipse cx="63" cy="31" rx="4" ry="4.5" fill="white"/><circle cx="47" cy="32" r="2.5" fill="#4A3728"/><circle cx="63" cy="32" r="2.5" fill="#4A3728"/><ellipse cx="42" cy="38" rx="5" ry="3" fill="#FF9BB0" opacity="0.6"/><ellipse cx="68" cy="38" rx="5" ry="3" fill="#FF9BB0" opacity="0.6"/><path d="M 48 44 Q 55 50 62 44" stroke="#C0605A" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M 33 70 Q 25 100 20 130 L 90 130 Q 85 100 77 70 Z" fill="#FF6EB4"/><rect x="48" y="56" width="14" height="15" rx="7" fill="#FDBCB4"/><path d="M 33 75 Q 10 90 15 105" stroke="#FDBCB4" stroke-width="12" stroke-linecap="round" fill="none"/><path d="M 77 75 Q 100 90 95 105" stroke="#FDBCB4" stroke-width="12" stroke-linecap="round" fill="none"/><rect x="36" y="126" width="14" height="22" rx="7" fill="#FDBCB4"/><rect x="60" y="126" width="14" height="22" rx="7" fill="#FDBCB4"/><path d="M 45 8 Q 55 16 65 8 Q 55 0 45 8Z" fill="#FF6EB4"/><circle cx="55" cy="8" r="4" fill="#FF3399"/></svg>';
   return '<svg width="88" height="120" viewBox="0 0 110 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="55" cy="32" rx="24" ry="20" fill="#5C4033"/><rect x="31" y="28" width="48" height="12" rx="6" fill="#5C4033"/><ellipse cx="55" cy="38" rx="22" ry="24" fill="#FDBCB4"/><ellipse cx="33" cy="38" rx="5" ry="7" fill="#FDBCB4"/><ellipse cx="77" cy="38" rx="5" ry="7" fill="#FDBCB4"/><ellipse cx="47" cy="34" rx="4" ry="4.5" fill="white"/><ellipse cx="63" cy="34" rx="4" ry="4.5" fill="white"/><circle cx="47" cy="35" r="2.5" fill="#2C3E50"/><circle cx="63" cy="35" r="2.5" fill="#2C3E50"/><path d="M 49 47 Q 55 53 61 47" stroke="#C0605A" stroke-width="2" fill="none" stroke-linecap="round"/><rect x="30" y="68" width="50" height="45" rx="8" fill="#4ECDC4"/><rect x="48" y="58" width="14" height="14" rx="7" fill="#FDBCB4"/><path d="M 30 75 Q 8 88 12 105" stroke="#FDBCB4" stroke-width="12" stroke-linecap="round" fill="none"/><path d="M 80 75 Q 102 88 98 105" stroke="#FDBCB4" stroke-width="12" stroke-linecap="round" fill="none"/><rect x="30" y="108" width="22" height="22" rx="5" fill="#2C3E50"/><rect x="58" y="108" width="22" height="22" rx="5" fill="#2C3E50"/><rect x="34" y="126" width="14" height="20" rx="7" fill="#FDBCB4"/><rect x="62" y="126" width="14" height="20" rx="7" fill="#FDBCB4"/></svg>';
 }
-
+ 
 // ══════ INICIO JUEGO ══════
 function comenzarJuego(){
   var nombre=document.getElementById('input-nombre').value.trim();
@@ -572,7 +574,7 @@ function comenzarJuego(){
   irA('p-juego');
   setTimeout(cargarRonda,350);
 }
-
+ 
 // ══════ CARGAR RONDA ══════
 function cargarRonda(){
   if(G.rondaIdx>=G.rondas.length){mostrarResultado();return;}
@@ -583,7 +585,7 @@ function cargarRonda(){
   document.getElementById('h-prog').style.width=(G.rondaIdx/G.rondas.length*100)+'%';
   document.getElementById('h-pts').textContent=G.puntos;
   actualizarEstrellas();
-
+ 
   // Texto situación
   var sitTxt=document.getElementById('sit-txt');
   sitTxt.innerHTML='';
@@ -599,26 +601,26 @@ function cargarRonda(){
       sitTxt.appendChild(sp);
     }
   });
-
+ 
   // Emoji situación
   var e=SIT_EMOJI[ronda.id]||'☀️';
   document.getElementById('sit-ilus').innerHTML='<div style="font-size:3.8rem;line-height:1;">'+e+'</div>';
-
+ 
   // Instrucción
   var ins=document.getElementById('instruccion');
   ins.textContent=txt('✋ selecciona todo lo que necesitas y pulsa ¡listo!');
   aplicarFuente(ins);
-
+ 
   // Botón
   document.getElementById('btn-listo').disabled=false;
   document.getElementById('btn-listo').style.opacity='1';
-
+ 
   // Pool objetos
   var okValidos=ronda.ok.filter(function(id){return OBJ[id];});
   var noValidos=ronda.no.filter(function(id){return OBJ[id];});
   var numExtra=Math.min(noValidos.length,Math.max(3,9-okValidos.length));
   var pool=okValidos.concat(noValidos.slice(0,numExtra)).sort(function(){return Math.random()-.5;});
-
+ 
   var grid=document.getElementById('grid-obj');
   grid.innerHTML='';
   pool.forEach(function(id,i){
@@ -627,51 +629,45 @@ function cargarRonda(){
     card.className='obj-card';
     card.dataset.id=id;
     card.style.animationDelay=(i*0.05)+'s';
-
-    // Imagen ARASAAC o SVG propio
+ 
+    // Imagen: SVG propio o emoji
     var imgWrap=document.createElement('div');
     imgWrap.className='obj-img-wrap';
-    if(obj.svg){
-      imgWrap.innerHTML=obj.svg;
-      imgWrap.firstChild.style.cssText='width:76px;height:76px;';
-    } else if(obj.pic){
-      var img=document.createElement('img');
-      img.className='obj-img';
-      img.alt=obj.label;
-      img.src=arasaac(obj.pic);
-      img.onerror=function(){imgWrap.innerHTML='<span class="obj-fallback">'+obj.emoji+'</span>';};
-      imgWrap.appendChild(img);
+    if(obj.s){
+      imgWrap.innerHTML=obj.s;
+      var svgEl=imgWrap.querySelector('svg');
+      if(svgEl){ svgEl.setAttribute('width','76'); svgEl.setAttribute('height','76'); svgEl.setAttribute('xmlns','http://www.w3.org/2000/svg'); }
     } else {
-      imgWrap.innerHTML='<span class="obj-fallback">'+obj.emoji+'</span>';
+      imgWrap.innerHTML='<span class="obj-fallback">'+obj.e+'</span>';
     }
     card.appendChild(imgWrap);
-
+ 
     // Etiqueta con fuente del modo
     var lbl=document.createElement('span');
     lbl.className='obj-lbl';
     lbl.textContent=txt(obj.label);
     aplicarFuente(lbl);
     card.appendChild(lbl);
-
+ 
     // Badge resultado
     var badge=document.createElement('span');
     badge.className='obj-badge';
     card.appendChild(badge);
-
+ 
     card.onclick=function(){toggleObj(card,id);};
     grid.appendChild(card);
   });
-
+ 
   setTimeout(function(){hablar(ronda.txt.replace(/\{n\}/g,G.nombre));},650);
 }
-
+ 
 // ══════ TOGGLE OBJETO ══════
 function toggleObj(card,id){
   if(card.classList.contains('ok')||card.classList.contains('ko')||card.classList.contains('miss')) return;
   if(G.seleccion.has(id)){G.seleccion.delete(id);card.classList.remove('sel');}
   else{G.seleccion.add(id);card.classList.add('sel');}
 }
-
+ 
 // ══════ COMPROBAR ══════
 function comprobar(){
   var ronda=G.rondas[G.rondaIdx];
@@ -697,11 +693,11 @@ function comprobar(){
   if(perfecto) confetti();
   setTimeout(function(){ocultarFeedback();G.rondaIdx++;cargarRonda();},2700);
 }
-
+ 
 function escucharTexto(){
   if(G.rondaIdx<G.rondas.length) hablar(G.rondas[G.rondaIdx].txt.replace(/\{n\}/g,G.nombre));
 }
-
+ 
 // ══════ VOZ ══════
 function hablar(t){
   if(!window.speechSynthesis) return;
@@ -713,13 +709,13 @@ function hablar(t){
   if(voz) u.voice=voz;
   window.speechSynthesis.speak(u);
 }
-
+ 
 // ══════ ESTRELLAS ══════
 function actualizarEstrellas(){
   var h='';for(var i=0;i<5;i++) h+=i<G.estrellas?'⭐':'☆';
   document.getElementById('h-stars').innerHTML=h;
 }
-
+ 
 // ══════ FEEDBACK ══════
 function mostrarFeedback(perfecto,aciertos,fallos){
   var ov=document.getElementById('feedback-overlay');
@@ -739,13 +735,13 @@ function mostrarFeedback(perfecto,aciertos,fallos){
   ov.classList.add('vis');ov.style.pointerEvents='all';
 }
 function ocultarFeedback(){var ov=document.getElementById('feedback-overlay');ov.classList.remove('vis');ov.style.pointerEvents='none';}
-
+ 
 // ══════ CONFETTI ══════
 function confetti(){
   var c=['#FFD93D','#FF6B6B','#4ECDC4','#74C0FC','#51CF66','#FF6EB4','#B197FC'];
   for(var i=0;i<40;i++){(function(d){setTimeout(function(){var p=document.createElement('div');p.className='cf';p.style.cssText='left:'+Math.random()*100+'vw;background:'+c[Math.floor(Math.random()*c.length)]+';animation-duration:'+(1.5+Math.random())+'s;animation-delay:'+Math.random()*.3+'s;transform:rotate('+Math.floor(Math.random()*360)+'deg)';document.body.appendChild(p);setTimeout(function(){p.remove();},3000);},d);})(i*35);}
 }
-
+ 
 // ══════ RESULTADO ══════
 function mostrarResultado(){
   irA('p-resultado');
@@ -766,13 +762,13 @@ function mostrarResultado(){
   var msgs={'🏆':'¡Felicidades '+G.nombre+'! ¡Eres un auténtico experto del vocabulario de verano!','🌟':'¡Muy bien '+G.nombre+'! Lo has hecho genial.','😊':'¡Buen trabajo '+G.nombre+'! Sigue practicando.','💪':'¡Ánimo '+G.nombre+'! La próxima vez lo harás aún mejor.'};
   setTimeout(function(){hablar(msgs[trofeo]);},500);
 }
-
+ 
 function reiniciar(){
   G.rondaIdx=0;G.puntos=0;G.estrellas=5;G.aciertos=0;G.intentos=0;G.log=[];G.seleccion=new Set();
   G.rondas=SITUACIONES.slice().sort(function(){return Math.random()-.5;});
   irA('p-juego');setTimeout(cargarRonda,350);
 }
-
+ 
 // ══════ INFORME DESCARGABLE ══════
 function descargarInforme(){
   var fecha=new Date().toLocaleDateString('es-ES',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
@@ -816,7 +812,7 @@ function descargarInforme(){
   var a=document.createElement('a');
   a.href=url;a.download='informe_verano_'+G.nombre+'_'+Date.now()+'.html';a.click();
 }
-
+ 
 // ══════ PANTALLA COMPLETA ══════
 function toggleFS(){
   if(!document.fullscreenElement){
@@ -836,7 +832,7 @@ document.addEventListener('fullscreenchange',function(){
   }
   if(G.parentalAccion==='exitfs_ok') G.parentalAccion='';
 });
-
+ 
 // ══════ PARENTAL ══════
 function abrirParental(accion){
   G.parentalAccion=accion;
@@ -868,7 +864,7 @@ function verificarParental(){
 }
 function cerrarParental(){document.getElementById('parental-overlay').classList.remove('vis');}
 document.getElementById('p-resp').addEventListener('keydown',function(e){if(e.key==='Enter') verificarParental();});
-
+ 
 // ══════ INIT ══════
 if(window.speechSynthesis) window.speechSynthesis.onvoiceschanged=function(){window.speechSynthesis.getVoices();};
 new MutationObserver(function(){

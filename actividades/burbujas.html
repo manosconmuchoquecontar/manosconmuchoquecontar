@@ -751,8 +751,30 @@
             ontouchstart="startFSTimer()" ontouchend="stopFSTimer()" title="Pantalla completa">📺</button>
 </div>
 
+<!-- ===== ANTESALA ===== -->
+<div id="nombre-screen" style="position:fixed;inset:0;background:linear-gradient(135deg,#e0f7fa,#80deea);display:flex;align-items:center;justify-content:center;z-index:9999;">
+  <div style="background:white;padding:40px;border-radius:40px;max-width:440px;width:90%;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.12);font-family:'Helvetica Neue',Arial,sans-serif;">
+    <div style="font-size:3.5rem;margin-bottom:15px;">🐠🌊</div>
+    <h2 style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:1.3rem;font-weight:600;margin:0 0 10px;color:#0096c7;text-transform:none;letter-spacing:normal;">¿Quién va a jugar?</h2>
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:0.9rem;color:#636e72;margin-bottom:20px;line-height:1.6;text-transform:none;">Si quieres, escribe el nombre del niño o niña para que Inma pueda ver cómo ha ido la sesión.</p>
+    <input id="nombre-input" type="text" placeholder="Nombre del niño/a..." maxlength="50"
+      style="width:100%;padding:13px 18px;border-radius:100px;border:2px solid #e0e0e0;font-size:1rem;font-family:'Helvetica Neue',Arial,sans-serif;text-align:center;outline:none;box-sizing:border-box;margin-bottom:15px;text-transform:none;">
+    <button onclick="guardarNombreYContinuar()"
+      style="width:100%;padding:14px;background:#0096c7;color:white;border:none;border-radius:100px;font-size:0.95rem;font-family:'Helvetica Neue',Arial,sans-serif;cursor:pointer;margin-bottom:10px;text-transform:none;letter-spacing:normal;">
+      Enviar informe a Inma ✓
+    </button>
+    <button onclick="continuarSinNombre()"
+      style="background:none;border:none;color:#aaa;font-size:0.82rem;font-family:'Helvetica Neue',Arial,sans-serif;cursor:pointer;text-decoration:underline;text-transform:none;letter-spacing:normal;">
+      Continuar sin enviar informe
+    </button>
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:0.75rem;color:#b2bec3;margin-top:18px;border-top:1px solid #f0f0f0;padding-top:12px;line-height:1.5;text-transform:none;">
+      🔒 Si escribes el nombre, al terminar Inma recibirá un informe con los resultados.<br>Es voluntario y los datos solo los verá ella para el seguimiento terapéutico.
+    </p>
+  </div>
+</div>
+
 <!-- ===== PANTALLA INICIO ===== -->
-<div id="start-screen" class="screen active">
+<div id="start-screen" class="screen">
     <div class="intro-fish">🐠</div>
     <div class="intro-title">El Cazador<br>de Sílabas</div>
     <p class="intro-sub">bajo el mar · aventura de lectura</p>
@@ -803,7 +825,7 @@
     <div class="end-card">
         <div class="end-trophy">🏆</div>
         <div class="end-title">¡Misión cumplida!</div>
-        <p style="color:rgba(224,247,255,0.6); margin-bottom:4px">Has completado las 20 palabras</p>
+        <p id="end-nombre" style="color:rgba(224,247,255,0.6); margin-bottom:4px">Has completado las 20 palabras</p>
         <div class="end-stats">
             <div class="stat-box">
                 <div class="stat-num" id="end-ok">—</div>
@@ -831,6 +853,11 @@
 /* =====================================================================
    ESTADO
    ===================================================================== */
+let alumnoNombre   = '';
+let alumnoCurso    = '';
+let alumnoEmail    = '';
+let emailActivo    = false;
+let ENVIAR_INFORME = false;
 let currentCase    = 'MAY';
 let currentLevel   = 1;
 let gameStats      = [];
@@ -847,10 +874,10 @@ let overlayMode    = null;   // 'exit' | 'report' | 'fullscreen'
 const dictionary = {
     1: [
         {w:'CASA',s:['CA','SA'],i:'🏠'},{w:'PATO',s:['PA','TO'],i:'🦆'},
-        {w:'LUNA',s:['LU','NA'],i:'🌙'},{w:'LOBO',s:['LO','BO'],i:'🐺'},
+        {w:'LUNA',s:['LU','NA'],i:'🌙'},{w:'MESA',s:['ME','SA'],i:'🪑'},
         {w:'BOCA',s:['BO','CA'],i:'👄'},{w:'PELO',s:['PE','LO'],i:'💇'},
         {w:'SAPO',s:['SA','PO'],i:'🐸'},{w:'MOTO',s:['MO','TO'],i:'🏍️'},
-        {w:'MONO',s:['MO','NO'],i:'🐒'},{w:'DADO',s:['DA','DO'],i:'🎲'},
+        {w:'PIPA',s:['PI','PA'],i:'🥨'},{w:'DADO',s:['DA','DO'],i:'🎲'},
         {w:'PIÑA',s:['PI','ÑA'],i:'🍍'},{w:'BOLA',s:['BO','LA'],i:'⚽'},
         {w:'TAZA',s:['TA','ZA'],i:'☕'},{w:'ROSA',s:['RO','SA'],i:'🌹'},
         {w:'LANA',s:['LA','NA'],i:'🧶'},{w:'NUBE',s:['NU','BE'],i:'☁️'},
@@ -864,9 +891,9 @@ const dictionary = {
         {w:'REGALO',s:['RE','GA','LO'],i:'🎁'},{w:'ZAPATO',s:['ZA','PA','TO'],i:'👟'},
         {w:'MALETA',s:['MA','LE','TA'],i:'🧳'},{w:'PÁJARO',s:['PÁ','JA','RO'],i:'🐦'},
         {w:'MUÑECA',s:['MU','ÑE','CA'],i:'🪆'},{w:'PIRATA',s:['PI','RA','TA'],i:'🏴‍☠️'},
-        {w:'COHETE',s:['CO','HE','TE'],i:'🚀'},{w:'GORILA',s:['GO','RI','LA'],i:'🦍'},
+        {w:'COHETE',s:['CO','HE','TE'],i:'🚀'},{w:'CANELA',s:['CA','NE','LA'],i:'🍂'},
         {w:'SIRENA',s:['SI','RE','NA'],i:'🧜‍♀️'},{w:'DINERO',s:['DI','NE','RO'],i:'💰'},
-        {w:'COCINA',s:['CO','CI','NA'],i:'🍳'},{w:'MAPACHE',s:['MA','PA','CHE'],i:'🦝'},
+        {w:'COCINA',s:['CO','CI','NA'],i:'🍳'},{w:'NEVERA',s:['NE','VE','RA'],i:'🧊'},
         {w:'BALLENA',s:['BA','LLE','NA'],i:'🐋'},{w:'CARACOL',s:['CA','RA','COL'],i:'🐌'}
     ],
     3: [
@@ -944,6 +971,29 @@ function createDecoFish() {
 /* =====================================================================
    MODO MAYUS / MINUS
    ===================================================================== */
+/* =====================================================================
+   ANTESALA
+   ===================================================================== */
+function guardarNombreYContinuar() {
+    const nombre = document.getElementById('nombre-input').value.trim();
+    if (nombre === '') {
+        document.getElementById('nombre-input').style.borderColor = '#ff7675';
+        return;
+    }
+    alumnoNombre   = nombre;
+    alumnoEmail    = '';   // sin email directo; se usa Google Sheet si hay URL
+    ENVIAR_INFORME = true;
+    document.getElementById('nombre-screen').style.display = 'none';
+    document.getElementById('start-screen').classList.add('active');
+}
+
+function continuarSinNombre() {
+    alumnoNombre   = 'Anónimo';
+    ENVIAR_INFORME = false;
+    document.getElementById('nombre-screen').style.display = 'none';
+    document.getElementById('start-screen').classList.add('active');
+}
+
 function setCase(c) {
     currentCase = c;
     document.body.className = (c === 'MAY') ? 'mode-mayus' : 'mode-minus';
@@ -1177,6 +1227,8 @@ function showEndScreen() {
     const err = gameStats.filter(g => g.res === 'ERROR').length;
     document.getElementById('end-ok').textContent  = ok;
     document.getElementById('end-err').textContent = err;
+    const nombre = alumnoNombre || 'aventurero/a';
+    document.getElementById('end-nombre').textContent = `¡Bien hecho, ${nombre}! Has completado las 20 palabras.`;
 }
 
 /* =====================================================================
@@ -1295,6 +1347,8 @@ function downloadReport() {
     const now = new Date().toLocaleDateString('es-ES', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
 
     const levelName = ['','Nivel 1 - Peces pequeños','Nivel 2 - Aguas profundas','Nivel 3 - El Gran Fondo'][currentLevel];
+    const nombreMostrar = alumnoNombre || 'Alumno/a';
+    const cursoMostrar  = alumnoCurso  ? ` · ${alumnoCurso}` : '';
 
     let rows = '';
     gameStats.forEach(g => {
@@ -1311,8 +1365,9 @@ function downloadReport() {
 <style>
     body{font-family:'Nunito',sans-serif;background:#f0f7ff;color:#1a1a2e;padding:40px;max-width:700px;margin:auto}
     h1{color:#005f8c;font-size:2rem;margin-bottom:4px}
+    .alumno{font-size:1.1rem;font-weight:700;color:#013a5c;margin-bottom:2px}
     .sub{color:#666;font-size:0.9rem;margin-bottom:30px}
-    .stats{display:flex;gap:20px;margin-bottom:30px}
+    .stats{display:flex;gap:20px;margin-bottom:30px;flex-wrap:wrap}
     .stat{background:white;border:1px solid #d0e8f5;border-radius:16px;padding:20px 30px;text-align:center}
     .num{font-size:2.5rem;font-weight:900;line-height:1}
     .lbl{font-size:0.75rem;color:#888;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
@@ -1321,10 +1376,10 @@ function downloadReport() {
     th{background:#005f8c;color:white;padding:12px 14px;text-align:left;font-size:0.85rem;letter-spacing:1px;text-transform:uppercase}
     td{padding:10px 14px;border-bottom:1px solid #e0eef8;font-size:0.95rem}
     tr:nth-child(even){background:#f8fbff}
-    .badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:0.8rem;font-weight:700}
 </style>
 </head><body>
 <h1>🐠 El Cazador de Sílabas</h1>
+<div class="alumno">👤 ${nombreMostrar}${cursoMostrar}</div>
 <div class="sub">${now} · ${levelName}</div>
 <div class="stats">
     <div class="stat"><div class="num ok">${ok}</div><div class="lbl">✓ Aciertos</div></div>
@@ -1342,6 +1397,30 @@ function downloadReport() {
     a.href     = URL.createObjectURL(blob);
     a.download = `informe_silabas_${new Date().toISOString().slice(0,10)}.html`;
     a.click();
+
+    // Envío por email si está activado
+    if (ENVIAR_INFORME && alumnoEmail) {
+        const asunto  = encodeURIComponent(`Informe El Cazador de Sílabas – ${nombreMostrar}`);
+        const cuerpo  = encodeURIComponent(
+            `Hola,
+
+Adjunto el informe de la sesión de "${nombreMostrar}"${alumnoCurso ? ' ('+alumnoCurso+')' : ''} en El Cazador de Sílabas.
+
+` +
+            `Fecha: ${now}
+Nivel: ${levelName}
+Aciertos: ${ok}  |  Errores: ${err}
+
+` +
+            `El archivo HTML se ha descargado en tu dispositivo. Puedes adjuntarlo a este correo.
+
+` +
+            `(Este correo se ha abierto automáticamente desde el juego)`
+        );
+        setTimeout(() => {
+            window.location.href = `mailto:${alumnoEmail}?subject=${asunto}&body=${cuerpo}`;
+        }, 800);
+    }
 }
 
 /* =====================================================================

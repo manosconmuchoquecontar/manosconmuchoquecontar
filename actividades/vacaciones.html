@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Aventuras de Verano</title>
+<link href="https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund:wght@100..400&family=Playwrite+HR+Lijeva:wght@100..400&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sol:#FFD93D; --mar:#4ECDC4; --coral:#FF6B6B;
+  --cielo:#74C0FC; --verde:#51CF66; --violeta:#B197FC;
+  --naranja:#FF922B; --oscuro:#2C3E50; --arena:#F9E4B7;
+  --font-may:'Playwrite DE Grund',cursive;
+  --font-min:'Playwrite HR Lijeva',cursive;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(160deg,#74C0FC 0%,#A5F3FC 40%,#FDE68A 70%,#FB923C 100%);}
+body{font-family:'Nunito',sans-serif;color:var(--oscuro);user-select:none;}
+#app{position:fixed;inset:0;overflow-y:auto;overflow-x:hidden;}
+
+.screen{display:none;position:relative;min-height:100vh;padding:22px 16px 30px;flex-direction:column;align-items:center;justify-content:center;}
+.screen.active{display:flex;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeIn .4s ease;}
+
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes wiggle{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+@keyframes sunSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes floatAnim{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+@keyframes cfFall{0%{transform:translateY(-40px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+@keyframes okFlash{0%,100%{background:#EBFBEE;border-color:var(--verde)}50%{background:#C3FAD5}}
+@keyframes koFlash{0%,100%{background:#FFF5F5;border-color:var(--coral)}50%{background:#FFE3E3}}
+
+.sol-deco{position:fixed;top:-40px;right:-40px;width:160px;height:160px;opacity:.5;animation:sunSpin 22s linear infinite;pointer-events:none;z-index:0;}
+
+.card{background:rgba(255,255,255,.93);border-radius:32px;padding:28px;box-shadow:0 12px 40px rgba(0,0,0,.13);width:100%;max-width:500px;text-align:center;border:5px solid white;z-index:1;}
+.titulo{font-size:clamp(1.8rem,5vw,3.4rem);color:white;text-shadow:3px 3px 0 var(--coral),6px 6px 0 rgba(0,0,0,.13);text-align:center;margin-bottom:8px;animation:bounce 2.5s ease-in-out infinite;line-height:1.25;z-index:1;}
+.subtitulo{font-size:1.1rem;color:white;text-shadow:1px 1px 3px rgba(0,0,0,.22);text-align:center;margin-bottom:22px;z-index:1;}
+
+.btn{padding:12px 28px;border-radius:50px;border:none;font-family:'Nunito',sans-serif;font-size:1.1rem;font-weight:900;cursor:pointer;transition:all .2s;box-shadow:0 4px 0 rgba(0,0,0,.12);}
+.btn:hover{transform:translateY(-2px);}
+.btn:active{transform:translateY(1px);box-shadow:none;}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;}
+.btn-rojo{background:linear-gradient(135deg,var(--coral),var(--naranja));color:white;}
+.btn-azul{background:linear-gradient(135deg,var(--mar),var(--cielo));color:white;}
+.btn-verde{background:linear-gradient(135deg,var(--verde),#40C057);color:white;}
+.btn-lila{background:linear-gradient(135deg,var(--violeta),#9775FA);color:white;}
+.btn-gris{background:#CED4DA;color:var(--oscuro);}
+.btn-amarillo{background:linear-gradient(135deg,var(--sol),var(--naranja));color:white;}
+
+.opciones-fila{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:18px;}
+.btn-op{padding:10px 18px;border-radius:50px;border:3px solid transparent;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s;background:var(--arena);color:var(--oscuro);}
+.btn-op.sel{background:var(--sol);border-color:var(--naranja);transform:scale(1.07);}
+.btn-op.may{font-family:var(--font-may);font-size:.76rem;line-height:1.9;}
+.btn-op.min{font-family:var(--font-min);font-size:.76rem;line-height:1.9;}
+
+.personajes{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin:14px 0;}
+.p-card{background:white;border-radius:20px;padding:18px 14px;text-align:center;cursor:pointer;border:4px solid transparent;transition:all .25s;box-shadow:0 6px 20px rgba(0,0,0,.11);width:168px;}
+.p-card:hover{transform:translateY(-6px);}
+.p-card.sel-nina{border-color:#FF8FAB;background:#FFF0F3;}
+.p-card.sel-nino{border-color:var(--cielo);background:#EFF8FF;}
+.p-card h3{font-size:1rem;margin-top:8px;}
+.p-card:hover svg,.p-card.sel-nina svg,.p-card.sel-nino svg{animation:wiggle .65s infinite;}
+.preview-p{margin:12px 0;animation:floatAnim 3.5s ease-in-out infinite;}
+
+.input-nombre{font-size:1.7rem;text-align:center;padding:12px 18px;border:3px solid var(--mar);border-radius:14px;background:white;color:var(--oscuro);outline:none;width:100%;max-width:320px;transition:border-color .2s;}
+.input-nombre:focus{border-color:var(--naranja);}
+
+/* GAME HEADER */
+#game-header{position:sticky;top:0;z-index:50;background:white;border-radius:0 0 20px 20px;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;width:100%;box-shadow:0 4px 18px rgba(0,0,0,.1);flex-wrap:wrap;gap:6px;}
+.hdr-left{display:flex;align-items:center;gap:8px;flex:1;min-width:110px;}
+.hdr-prog-wrap{display:flex;flex-direction:column;gap:2px;}
+.hdr-ronda{font-weight:900;font-size:.9rem;color:var(--oscuro);}
+.prog-bar{height:9px;background:#EEE;border-radius:10px;overflow:hidden;width:90px;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--sol),var(--naranja));border-radius:10px;transition:width .5s ease;}
+.hdr-stars{font-size:1.15rem;display:flex;gap:1px;}
+.hdr-pts{font-weight:900;font-size:.92rem;color:var(--naranja);white-space:nowrap;}
+.hdr-btns{display:flex;gap:6px;}
+.h-btn{width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.1);}
+.h-btn:hover{transform:scale(1.15);}
+.h-btn-fs{background:#FFF9DB;color:#CC8800;}
+.h-btn-casa{background:#EFF8FF;color:var(--cielo);}
+.h-btn-dl{background:#EBFBEE;color:var(--verde);}
+
+/* SITUACION */
+.sit-box{background:white;border-radius:20px;padding:16px 18px;max-width:720px;width:100%;box-shadow:0 6px 24px rgba(0,0,0,.1);margin-bottom:11px;text-align:center;}
+.sit-ilus{margin-bottom:8px;animation:floatAnim 4s ease-in-out infinite;}
+.sit-txt{font-size:1.12rem;color:var(--oscuro);line-height:1.55;margin-bottom:8px;}
+.nombre-span{color:var(--coral);}
+.btn-voz{background:linear-gradient(135deg,var(--violeta),#9775FA);color:white;border:none;border-radius:50px;padding:7px 16px;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:5px;}
+.btn-voz:hover{transform:scale(1.05);}
+.instruccion{font-size:.95rem;color:white;text-shadow:1px 1px 3px rgba(0,0,0,.28);font-weight:700;margin-bottom:8px;text-align:center;z-index:1;}
+
+/* GRID */
+.grid-obj{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px;max-width:720px;width:100%;margin-bottom:12px;z-index:1;}
+.obj-card{background:white;border-radius:16px;padding:10px 7px 8px;text-align:center;cursor:pointer;border:3px solid #EEE;transition:all .2s;box-shadow:0 3px 12px rgba(0,0,0,.07);animation:pop .3s ease;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.obj-card:hover{transform:translateY(-4px);box-shadow:0 7px 20px rgba(0,0,0,.13);border-color:#DDD;}
+.obj-card.sel{border-color:var(--naranja);background:#FFF3E0;}
+.obj-card.ok{border-color:var(--verde);background:#EBFBEE;animation:okFlash .5s;cursor:default;}
+.obj-card.ko{border-color:var(--coral);background:#FFF5F5;animation:koFlash .5s;cursor:default;}
+.obj-card.miss{border-color:var(--sol);background:#FFF9DB;cursor:default;}
+.obj-img-wrap{width:80px;height:80px;display:flex;align-items:center;justify-content:center;}
+.obj-img{width:80px;height:80px;object-fit:contain;display:block;}
+.obj-fallback{font-size:3rem;line-height:1;}
+.obj-lbl{font-size:.82rem;font-weight:700;color:var(--oscuro);line-height:1.2;word-break:break-word;max-width:115px;text-align:center;}
+.obj-badge{font-size:1rem;line-height:1;min-height:16px;}
+
+.acciones{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;z-index:1;padding-bottom:22px;}
+
+/* RESULTADO */
+.res-box{background:white;border-radius:28px;padding:32px;text-align:center;max-width:480px;width:100%;box-shadow:0 14px 48px rgba(0,0,0,.14);}
+.res-trofeo{font-size:4.2rem;animation:bounce 1s infinite;display:block;}
+.res-titulo{font-size:1.6rem;color:var(--coral);margin:10px 0;font-weight:900;}
+.res-pts{font-size:2.6rem;font-weight:900;color:var(--naranja);}
+.res-stats{display:flex;justify-content:center;gap:18px;margin:14px 0;flex-wrap:wrap;}
+.stat{text-align:center;}
+.stat-n{font-size:1.7rem;font-weight:900;}
+.stat-l{font-size:.76rem;color:#888;}
+
+/* PARENTAL */
+#parental-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9990;align-items:center;justify-content:center;}
+#parental-overlay.vis{display:flex;}
+.parental-card{background:white;border-radius:22px;padding:30px;text-align:center;max-width:340px;width:90%;}
+.parental-card h3{font-size:1.2rem;margin-bottom:6px;color:var(--oscuro);}
+.parental-card p{font-size:.92rem;color:#555;margin-bottom:14px;}
+.parental-sum{font-size:1.7rem;font-weight:900;color:var(--coral);margin-bottom:12px;}
+.parental-inp{font-size:1.6rem;text-align:center;padding:9px 14px;border:3px solid var(--mar);border-radius:12px;outline:none;width:110px;font-family:'Nunito',sans-serif;}
+.parental-inp:focus{border-color:var(--naranja);}
+.parental-err{color:var(--coral);font-size:.85rem;margin-top:6px;min-height:16px;}
+
+/* FEEDBACK */
+#feedback-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:200;pointer-events:none;opacity:0;transition:opacity .28s;}
+#feedback-overlay.vis{opacity:1;}
+.fb-burbuja{background:white;border-radius:20px;padding:24px 34px;text-align:center;box-shadow:0 18px 55px rgba(0,0,0,.22);animation:pop .28s ease;max-width:280px;}
+.fb-emoji{font-size:3.4rem;display:block;}
+.fb-txt{font-size:1.28rem;font-weight:900;margin-top:6px;}
+
+.cf{position:fixed;width:10px;height:10px;border-radius:2px;animation:cfFall 2.2s ease-in forwards;pointer-events:none;z-index:300;}
+
+.fnt{font-family:var(--font-min);}
+.fnt-may{font-family:var(--font-may);}
+
+@media(max-width:480px){
+  .grid-obj{grid-template-columns:repeat(auto-fill,minmax(94px,1fr));gap:7px;}
+  .obj-img-wrap,.obj-img{width:62px;height:62px;}
+  .obj-fallback{font-size:2.4rem;}
+  .obj-lbl{font-size:.74rem;}
+  .titulo{font-size:1.75rem;}
+  .personajes{gap:10px;}
+  .p-card{width:144px;padding:13px 8px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     PANTALLA 0 — INFORME (estilo Isla de Sinfones)
+═══════════════════════════════════════ -->
+<div id="nombre-screen" style="position:fixed;inset:0;background:linear-gradient(135deg,#e3f2fd,#bbdefb);display:flex;align-items:center;justify-content:center;z-index:9999;">
+  <div style="background:white;padding:38px;border-radius:40px;max-width:440px;width:90%;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,.1);font-family:'Helvetica Neue',Arial,sans-serif;">
+    <div style="font-size:3.2rem;margin-bottom:14px;">🌞🏖️</div>
+    <h2 style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:1.25rem;font-weight:600;margin:0 0 9px;color:#FF922B;text-transform:none;letter-spacing:normal;">¿Quién va a jugar?</h2>
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:.88rem;color:#636e72;margin-bottom:18px;line-height:1.6;text-transform:none;">Si quieres, escribe el nombre del niño o niña para que Inma pueda ver cómo ha ido la sesión.</p>
+    <input id="nombre-input" type="text" placeholder="Nombre del niño/a…" maxlength="50"
+      style="width:100%;padding:12px 16px;border-radius:100px;border:2px solid #e0e0e0;font-size:1rem;font-family:'Helvetica Neue',Arial,sans-serif;text-align:center;outline:none;box-sizing:border-box;margin-bottom:14px;text-transform:none;">
+    <button onclick="guardarNombreYContinuar()"
+      style="width:100%;padding:13px;background:#FF922B;color:white;border:none;border-radius:100px;font-size:.93rem;font-family:'Helvetica Neue',Arial,sans-serif;cursor:pointer;margin-bottom:9px;text-transform:none;letter-spacing:normal;">
+      Enviar informe a Inma ✓
+    </button>
+    <button onclick="continuarSinNombre()"
+      style="background:none;border:none;color:#aaa;font-size:.8rem;font-family:'Helvetica Neue',Arial,sans-serif;cursor:pointer;text-decoration:underline;text-transform:none;letter-spacing:normal;">
+      Continuar sin enviar informe
+    </button>
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:.73rem;color:#b2bec3;margin-top:16px;border-top:1px solid #f0f0f0;padding-top:11px;line-height:1.5;text-transform:none;">
+      🔒 Si escribes el nombre, al terminar Inma recibirá un informe con los resultados.<br>Es voluntario y los datos solo los verá ella para el seguimiento.
+    </p>
+  </div>
+</div>
+
+<!-- SOL -->
+<svg class="sol-deco" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="50" cy="50" r="26" fill="#FFD93D"/>
+  <g stroke="#FFD93D" stroke-width="4" stroke-linecap="round">
+    <line x1="50" y1="4" x2="50" y2="17"/><line x1="50" y1="83" x2="50" y2="96"/>
+    <line x1="4" y1="50" x2="17" y2="50"/><line x1="83" y1="50" x2="96" y2="50"/>
+    <line x1="18" y1="18" x2="27" y2="27"/><line x1="73" y1="73" x2="82" y2="82"/>
+    <line x1="82" y1="18" x2="73" y2="27"/><line x1="27" y1="73" x2="18" y2="82"/>
+  </g>
+</svg>
+
+<div id="app">
+
+<!-- ═══════════════════════════════════════
+     P1 — BIENVENIDA
+═══════════════════════════════════════ -->
+<div class="screen active" id="p-bienvenida">
+  <h1 class="titulo fnt">🌞 ¡Aventuras de Verano! 🌊</h1>
+  <p class="subtitulo">¡Aprende vocabulario del verano jugando!</p>
+  <div class="card">
+    <h2 style="font-size:1.1rem;margin-bottom:15px;">¿Cómo quieres ver las palabras?</h2>
+    <div class="opciones-fila" id="opciones-tipo">
+      <button class="btn-op may" onclick="selTipo('may',this)">ABC — Mayúsculas</button>
+      <button class="btn-op min sel" onclick="selTipo('min',this)">abc — minúsculas</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;align-items:center;">
+      <button class="btn btn-amarillo" onclick="irA('p-personaje')">¡Empezamos! 🚀</button>
+      <button class="btn btn-gris" style="font-size:.9rem;" onclick="toggleFS()">📺 Pantalla completa</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     P2 — PERSONAJE
+═══════════════════════════════════════ -->
+<div class="screen" id="p-personaje">
+  <h1 class="titulo fnt" style="font-size:2.1rem;">¿Quién va de aventuras?</h1>
+  <div class="personajes">
+    <div class="p-card" id="card-nina" onclick="selPersonaje('nina',this)">
+      <svg width="98" height="133" viewBox="0 0 110 150" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="55" cy="28" rx="28" ry="30" fill="#8B4513"/>
+        <rect x="27" y="38" width="12" height="55" rx="6" fill="#8B4513"/><rect x="71" y="38" width="12" height="55" rx="6" fill="#8B4513"/>
+        <ellipse cx="55" cy="35" rx="22" ry="24" fill="#FDBCB4"/>
+        <ellipse cx="47" cy="31" rx="4" ry="4.5" fill="white"/><ellipse cx="63" cy="31" rx="4" ry="4.5" fill="white"/>
+        <circle cx="47" cy="32" r="2.5" fill="#4A3728"/><circle cx="63" cy="32" r="2.5" fill="#4A3728"/>
+        <circle cx="48" cy="31" r="1" fill="white"/><circle cx="64" cy="31" r="1" fill="white"/>
+        <line x1="44" y1="27" x2="43" y2="24" stroke="#4A3728" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="47" y1="26" x2="47" y2="23" stroke="#4A3728" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="50" y1="27" x2="51" y2="24" stroke="#4A3728" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="60" y1="27" x2="59" y2="24" stroke="#4A3728" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="63" y1="26" x2="63" y2="23" stroke="#4A3728" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="66" y1="27" x2="67" y2="24" stroke="#4A3728" stroke-width="1.5" stroke-linecap="round"/>
+        <ellipse cx="42" cy="38" rx="5" ry="3" fill="#FF9BB0" opacity="0.6"/>
+        <ellipse cx="68" cy="38" rx="5" ry="3" fill="#FF9BB0" opacity="0.6"/>
+        <ellipse cx="55" cy="38" rx="2" ry="1.5" fill="#EFA090"/>
+        <path d="M 48 44 Q 55 50 62 44" stroke="#C0605A" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M 33 70 Q 25 100 20 130 L 90 130 Q 85 100 77 70 Z" fill="#FF6EB4"/>
+        <path d="M 33 70 Q 55 82 77 70 L 77 90 Q 55 102 33 90 Z" fill="#FF8FC4"/>
+        <rect x="48" y="56" width="14" height="15" rx="7" fill="#FDBCB4"/>
+        <path d="M 33 75 Q 10 90 15 105" stroke="#FDBCB4" stroke-width="12" stroke-linecap="round" fill="none"/>
+        <path d="M 77 75 Q 100 90 95 105" stroke="#FDBCB4" stroke-width="12" stroke-linecap="round" fill="none"/>
+        <rect x="36" y="126" width="14" height="22" rx="7" fill="#FDBCB4"/><rect x="60" y="126" width="14" height="22" rx="7" fill="#FDBCB4"/>
+        <ellipse cx="43" cy="149" rx="9" ry="5" fill="#FF6EB4"/><ellipse cx="67" cy="149" rx="9" ry="5" fill="#FF6EB4"/>
+        <path d="M 45 8 Q 55 16 65 8 Q 55 0 45 8Z" fill="#FF6EB4"/><circle cx="55" cy="8" r="4" fill="#FF3399"/>
+      </svg>
+      <h3>🌸 Niña</h3>
+    </div>
+    <div class="p-card" id="card-nino" onclick="selPersonaje('nino',this)">
+      <svg width="98" height="133" viewBox="0 0 110 150" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="55" cy="32" rx="24" ry="20" fill="#5C4033"/><rect x="31" y="28" width="48" height="12" rx="6" fill="#5C4033"/>
+        <ellipse cx="55" cy="38" rx="22" ry="24" fill="#FDBCB4"/>
+        <ellipse cx="33" cy="38" rx="5" ry="7" fill="#FDBCB4"/><ellipse cx="77" cy="38" rx="5" ry="7" fill="#FDBCB4"/>
+        <ellipse cx="47" cy="34" rx="4" ry="4.5" fill="white"/><ellipse cx="63" cy="34" rx="4" ry="4.5" fill="white"/>
+        <circle cx="47" cy="35" r="2.5" fill="#2C3E50"/><circle cx="63" cy="35" r="2.5" fill="#2C3E50"/>
+        <circle cx="48" cy="34" r="1" fill="white"/><circle cx="64" cy="34" r="1" fill="white"/>
+        <path d="M 43 29 Q 47 27 51 29" stroke="#5C4033" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M 59 29 Q 63 27 67 29" stroke="#5C4033" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="42" cy="41" rx="5" ry="3" fill="#FFB3A0" opacity="0.6"/>
+        <ellipse cx="68" cy="41" rx="5" ry="3" fill="#FFB3A0" opacity="0.6"/>
+        <ellipse cx="55" cy="41" rx="2" ry="1.5" fill="#EFA090"/>
+        <path d="M 49 47 Q 55 53 61 47" stroke="#C0605A" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <rect x="30" y="68" width="50" height="45" rx="8" fill="#4ECDC4"/>
+        <rect x="30" y="78" width="50" height="5" fill="#45B7B0" rx="2"/><rect x="30" y="93" width="50" height="5" fill="#45B7B0" rx="2"/>
+        <rect x="48" y="58" width="14" height="14" rx="7" fill="#FDBCB4"/>
+        <path d="M 30 75 Q 8 88 12 105" stroke="#FDBCB4" stroke-width="12" stroke-linecap="round" fill="none"/>
+        <path d="M 80 75 Q 102 88 98 105" stroke="#FDBCB4" stroke-width="12" stroke-linecap="round" fill="none"/>
+        <rect x="30" y="108" width="22" height="22" rx="5" fill="#2C3E50"/><rect x="58" y="108" width="22" height="22" rx="5" fill="#2C3E50"/>
+        <rect x="50" y="108" width="10" height="22" fill="#253545"/>
+        <rect x="34" y="126" width="14" height="20" rx="7" fill="#FDBCB4"/><rect x="62" y="126" width="14" height="20" rx="7" fill="#FDBCB4"/>
+        <ellipse cx="41" cy="147" rx="10" ry="5" fill="#2C3E50"/><ellipse cx="69" cy="147" rx="10" ry="5" fill="#2C3E50"/>
+      </svg>
+      <h3>⚽ Niño</h3>
+    </div>
+  </div>
+  <button class="btn btn-azul" onclick="irA('p-nombre')">¡Soy yo! 👋</button>
+</div>
+
+<!-- ═══════════════════════════════════════
+     P3 — NOMBRE
+═══════════════════════════════════════ -->
+<div class="screen" id="p-nombre">
+  <h1 class="titulo fnt" style="font-size:2rem;">¿Cómo te llamas?</h1>
+  <div class="preview-p" id="preview-nombre"></div>
+  <div style="text-align:center;width:100%;max-width:380px;display:flex;flex-direction:column;align-items:center;gap:14px;">
+    <input type="text" class="input-nombre fnt" id="input-nombre" placeholder="Escribe tu nombre…" maxlength="15" oninput="actualizarPreview()">
+    <button class="btn btn-verde" onclick="comenzarJuego()">¡A jugar! 🎮</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     P4 — JUEGO
+═══════════════════════════════════════ -->
+<div class="screen" id="p-juego" style="padding-top:0;justify-content:flex-start;">
+  <div id="game-header">
+    <div class="hdr-left">
+      <div class="hdr-prog-wrap">
+        <span class="hdr-ronda">Ronda <span id="h-ronda">1</span>/<span id="h-total">31</span></span>
+        <div class="prog-bar"><div class="prog-fill" id="h-prog" style="width:0%"></div></div>
+      </div>
+      <div class="hdr-stars" id="h-stars">⭐⭐⭐⭐⭐</div>
+    </div>
+    <span class="hdr-pts">⭐ <span id="h-pts">0</span></span>
+    <div class="hdr-btns">
+      <button class="h-btn h-btn-fs"   title="Pantalla completa" onclick="toggleFS()">⛶</button>
+      <button class="h-btn h-btn-casa" title="Ir al inicio"      onclick="abrirParental('home')">🏠</button>
+      <button class="h-btn h-btn-dl"   title="Descargar informe" onclick="descargarInforme()">📥</button>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;align-items:center;width:100%;padding:12px 14px 0;gap:10px;">
+    <div class="sit-box">
+      <div class="sit-ilus" id="sit-ilus"></div>
+      <p class="sit-txt fnt" id="sit-txt"></p>
+      <button class="btn-voz" onclick="escucharTexto()">🔊 Escuchar otra vez</button>
+    </div>
+    <p class="instruccion fnt" id="instruccion">selecciona lo que necesitas y pulsa ¡listo!</p>
+    <div class="grid-obj" id="grid-obj"></div>
+    <div class="acciones">
+      <button class="btn btn-azul" id="btn-listo" onclick="comprobar()">✅ ¡Listo!</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     P5 — RESULTADO
+═══════════════════════════════════════ -->
+<div class="screen" id="p-resultado">
+  <div class="res-box">
+    <span class="res-trofeo" id="r-trofeo">🏆</span>
+    <h2 class="res-titulo" id="r-titulo">¡Fantástico!</h2>
+    <div class="res-pts" id="r-pts">0</div>
+    <p style="color:#999;margin-bottom:14px;font-size:.9rem;">puntos totales</p>
+    <div class="res-stats">
+      <div class="stat"><div class="stat-n" id="r-aciertos" style="color:var(--verde)">0</div><div class="stat-l">✅ Aciertos</div></div>
+      <div class="stat"><div class="stat-n" id="r-rondas"   style="color:var(--cielo)">0</div><div class="stat-l">🎯 Rondas</div></div>
+      <div class="stat"><div class="stat-n" id="r-estrellas" style="color:var(--sol)">0</div><div class="stat-l">⭐ Estrellas</div></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:4px;">
+      <button class="btn btn-rojo"  onclick="reiniciar()">🔄 Otra vez</button>
+      <button class="btn btn-azul"  onclick="irA('p-bienvenida')">🏠 Inicio</button>
+      <button class="btn btn-verde" onclick="descargarInforme()">📥 Informe</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<!-- PARENTAL -->
+<div id="parental-overlay">
+  <div class="parental-card">
+    <h3>🔐 Control parental</h3>
+    <p>Resuelve la suma para continuar:</p>
+    <div class="parental-sum" id="p-suma"></div>
+    <input type="number" class="parental-inp" id="p-resp" placeholder="?">
+    <div class="parental-err" id="p-err"></div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:14px;">
+      <button class="btn btn-azul"  onclick="verificarParental()">Verificar</button>
+      <button class="btn btn-gris"  onclick="cerrarParental()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- FEEDBACK -->
+<div id="feedback-overlay">
+  <div class="fb-burbuja">
+    <span class="fb-emoji" id="fb-emoji">🎉</span>
+    <div class="fb-txt" id="fb-txt">¡Muy bien!</div>
+  </div>
+</div>
+
+<script>
+// ══════ CONFIG ══════
+var SHEET_URL = "https://script.google.com/macros/s/AKfycbw4AKlcc8-09jA0uBl7EYDW_lorkazvEOwhZTthN6FD_BIhM1Q6o4HJdNSeUvqba2an/exec";
+var NOMBRE_ALUMNO = "", ENVIAR_INFORME = false;
+
+function guardarNombreYContinuar(){
+  var n = document.getElementById('nombre-input').value.trim();
+  if(!n){ document.getElementById('nombre-input').style.borderColor='#ff7675'; return; }
+  NOMBRE_ALUMNO = n; ENVIAR_INFORME = true;
+  document.getElementById('nombre-screen').style.display='none';
+}
+function continuarSinNombre(){
+  NOMBRE_ALUMNO = "Anónimo"; ENVIAR_INFORME = false;
+  document.getElementById('nombre-screen').style.display='none';
+}
+function enviarASheet(extra){
+  if(!ENVIAR_INFORME) return;
+  var errores = G.intentos - G.aciertos;
+  var falladas = G.log.filter(function(l){return l.ko.length>0||l.perdidas.length>0;}).map(function(l){return l.situacion;}).join(', ')||'Ninguna';
+  fetch(SHEET_URL,{method:'POST',body:JSON.stringify({Nombre:NOMBRE_ALUMNO,Actividad:'Aventuras de Verano',Aciertos:G.aciertos,Errores:errores,PalabrasFalladas:falladas+(extra||'')}),headers:{'Content-Type':'application/json'}}).catch(function(){});
+}
+
+// ══════ ARASAAC ══════
+function arasaac(id){ return 'https://static.arasaac.org/pictograms/'+id+'/'+id+'_300.png'; }
+
+// ══════ OBJETOS ══════
+var OBJ = {
+  banador:     {label:'bañador',       pic:6034,  emoji:'🩱'},
+  toalla:      {label:'toalla',        pic:6334,  emoji:'🏖️'},
+  crema_solar: {label:'crema solar',   pic:37463, emoji:'🧴'},
+  gafas_sol:   {label:'gafas de sol',  pic:6654,  emoji:'🕶️'},
+  cubo:        {label:'cubo',          pic:2449,  emoji:'🪣'},
+  nevera:      {label:'nevera',        pic:8183,  emoji:'🧊'},
+  bocadillo:   {label:'bocadillo',     pic:2399,  emoji:'🥪'},
+  sandia:      {label:'sandía',        pic:5725,  emoji:'🍉'},
+  fruta:       {label:'fruta',         pic:3703,  emoji:'🍎'},
+  limon:       {label:'limón',         pic:4826,  emoji:'🍋'},
+  jarra:       {label:'jarra',         pic:4699,  emoji:'🫙'},
+  helado:      {label:'helado',        pic:3880,  emoji:'🍦'},
+  mermelada:   {label:'mermelada',     pic:4913,  emoji:'🍓'},
+  olla:        {label:'olla',          pic:5225,  emoji:'🫕'},
+  agua:        {label:'agua',          pic:2270,  emoji:'💧'},
+  palomitas:   {label:'palomitas',     pic:5252,  emoji:'🍿'},
+  leche:       {label:'leche',         pic:4804,  emoji:'🥛'},
+  chubasquero: {label:'chubasquero',   pic:2480,  emoji:'🧥'},
+  paraguas:    {label:'paraguas',      pic:5272,  emoji:'☂️'},
+  botas_agua:  {label:'botas de agua', pic:2422,  emoji:'🥾'},
+  manta:       {label:'manta',         pic:4892,  emoji:'🛏️'},
+  pala:        {label:'pala',          pic:5247,  emoji:'⛏️'},
+  arbol:       {label:'árbol',         pic:2284,  emoji:'🌳'},
+  cubo_agua:   {label:'cubo de agua',  pic:2449,  emoji:'🪣'},
+  guantes_jar: {label:'guantes',       pic:3798,  emoji:'🧤'},
+  piedras:     {label:'piedras',       pic:5313,  emoji:'🪨'},
+  palos:       {label:'palos',         pic:5247,  emoji:'🪵'},
+  hoja_morera: {label:'hoja morera',   pic:2284,  emoji:'🍃'},
+  gallina:     {label:'gallinas',      pic:3710,  emoji:'🐔'},
+  pienso:      {label:'pienso',        pic:5338,  emoji:'🌾'},
+  gusano:      {label:'gusano seda',   pic:3780,  emoji:'🐛'},
+  pelota:      {label:'pelota',        pic:5432,  emoji:'⚽'},
+  cometa:      {label:'cometa',        pic:2494,  emoji:'🪁'},
+  bici:        {label:'bicicleta',     pic:2358,  emoji:'🚲'},
+  casco:       {label:'casco',         pic:2443,  emoji:'⛑️'},
+  globos_agua: {label:'globos agua',   pic:3760,  emoji:'💦'},
+  bolos:       {label:'bolos',         pic:2414,  emoji:'🎳'},
+  zapatos_bolo:{label:'zapatos bolos', pic:6232,  emoji:'👟'},
+  juguete:     {label:'juguete',       pic:4688,  emoji:'🧸'},
+  libro:       {label:'libro',         pic:4814,  emoji:'📚'},
+  lapiz:       {label:'lápiz',         pic:4765,  emoji:'✏️'},
+  cuaderno:    {label:'cuaderno',      pic:2508,  emoji:'📓'},
+  camara:      {label:'cámara',        pic:2440,  emoji:'📷'},
+  cesta:       {label:'cesta',         pic:2462,  emoji:'🧺'},
+  mochila:     {label:'mochila',       pic:4938,  emoji:'🎒'},
+  mapa:        {label:'mapa',          pic:4882,  emoji:'🗺️'},
+  linterna:    {label:'linterna',      pic:4824,  emoji:'🔦'},
+  tienda_camp: {label:'tienda campaña',pic:5792,  emoji:'⛺'},
+  saco_dormir: {label:'saco de dormir',pic:5457,  emoji:'🛌'},
+  telescopio:  {label:'telescopio',    pic:5784,  emoji:'🔭'},
+  entrada:     {label:'entrada cine',  pic:2573,  emoji:'🎟️'},
+  monedas:     {label:'dinero',        pic:4979,  emoji:'💰'},
+  mercado:     {label:'mercadillo',    pic:4909,  emoji:'🏪'},
+  pegamento:   {label:'pegamento',     pic:5282,  emoji:'🧴'},
+  tijeras:     {label:'tijeras',       pic:5793,  emoji:'✂️'},
+  palo_helado:   {label:'palo helado',      pic:3880,  emoji:'🍡'},
+  // ── Nuevos objetos ──
+  bola_bolos:    {label:'bola de bolos',    pic:5429,  emoji:'🎳'},
+  silla_playa:   {label:'silla de playa',   pic:5587,  emoji:'🪑'},
+  semilla:       {label:'semilla',          pic:5544,  emoji:'🌱'},
+  comida:        {label:'comida',           pic:3498,  emoji:'🍱'},
+  mantel:        {label:'mantel',           pic:2460,  emoji:'🧻'},
+  luz:           {label:'luz',              pic:4858,  emoji:'💡'},
+  asiento:       {label:'asiento',          pic:5508,  emoji:'🪑'},
+  bolsa:         {label:'bolsa',            pic:2407,  emoji:'🛍️'},
+  bolsas_compra: {label:'bolsas de compra', pic:2407,  emoji:'🛍️'},
+  paso_cebra:    {label:'paso de cebra',    pic:3430,  emoji:'🚶'},
+  telefono:      {label:'llamar por teléfono', pic:5757, emoji:'📞'},
+  caja_zapatos:  {label:'caja de zapatos',  pic:2438,  emoji:'📦'},
+  viento:        {label:'viento',           pic:6189,  emoji:'💨'},
+  correr:        {label:'correr',           pic:2500,  emoji:'🏃'},
+  chaqueta:      {label:'chaqueta',         pic:2472,  emoji:'🧥'},
+  hielo:         {label:'hielo',            pic:3895,  emoji:'🧊'},
+  rio:           {label:'río',              pic:5405,  emoji:'🏞️'},
+  piedras_peq:   {label:'piedras pequeñas', pic:5313,  emoji:'🪨'},
+  azucar:        {label:'azúcar',           pic:754,   emoji:'🍬'},
+};
+
+// ══════ SITUACIONES (31) ══════
+var SITUACIONES = [
+  {id:'bolera',        txt:'{n} va hoy a la bolera. ¿Qué necesita llevar?',                       ok:['bolos','zapatos_bolo','bola_bolos'],         no:['banador','chubasquero','manta','lapiz','gusano']},
+  {id:'helado_casero', txt:'{n} prepara helado casero. ¿Qué necesitan?',                           ok:['fruta','olla','leche','azucar'],             no:['bolos','cometa','bici','paraguas','mapa']},
+  {id:'cine_verano',   txt:'{n} va al cine de verano al aire libre. ¿Qué se lleva?',               ok:['palomitas','entrada','agua','silla_playa'], no:['banador','crema_solar','pala','gallina','tijeras']},
+  {id:'museo',         txt:'{n} visita hoy un museo. ¿Qué necesita?',                              ok:['agua','bocadillo','camara'],                 no:['banador','botas_agua','cometa','globos_agua','gusano']},
+  {id:'lluvia',        txt:'¡Qué lluvia de verano! ¿Qué necesita {n}?',                            ok:['chubasquero','paraguas','botas_agua'],       no:['banador','gafas_sol','crema_solar','cometa','cesta']},
+  {id:'acampar',       txt:'{n} va a acampar esta noche. ¿Qué necesita?',                          ok:['tienda_camp','saco_dormir','linterna','mochila'],no:['banador','mermelada','bolos','tijeras','telescopio']},
+  {id:'puesta_sol',    txt:'{n} va a ver la puesta de sol. ¿Qué lleva?',                           ok:['manta','agua','camara','mochila'],           no:['bolos','gusano','mermelada','tijeras','pienso']},
+  {id:'globos_agua',   txt:'¡{n} quiere jugar con globos de agua! ¿Qué necesita?',                 ok:['globos_agua','cubo_agua','agua','banador'],  no:['mermelada','libro','camara','saco_dormir','mapa']},
+  {id:'plantar_arbol', txt:'{n} va a plantar un árbol en el jardín. ¿Qué necesita?',               ok:['pala','semilla','cubo_agua','guantes_jar'],  no:['palomitas','banador','gafas_sol','bolos','entrada']},
+  {id:'san_lorenzo',   txt:'Esta noche {n} quiere ver las estrellas fugaces de San Lorenzo. ¿Qué lleva?', ok:['manta','telescopio','linterna','agua'], no:['banador','crema_solar','bolos','mermelada','pienso']},
+  {id:'picnic',        txt:'{n} prepara un picnic saludable con su familia. ¿Qué pone en la cesta?',ok:['cesta','comida','agua','mantel','fruta'],    no:['bolos','saco_dormir','gusano','pegamento','entrada']},
+  {id:'excursion',     txt:'{n} hace una excursión por el campo. ¿Qué mete en la mochila?',         ok:['agua','bocadillo','mapa'],                  no:['bolos','mermelada','palomitas','gusano','hoja_morera']},
+  {id:'leer_cuentos',  txt:'{n} va a leer cuentos a la sombra del árbol. ¿Qué necesita?',          ok:['libro','luz','asiento'],                    no:['bolos','chubasquero','pienso','bici','jarra']},
+  {id:'cuaderno',      txt:'{n} quiere hacer un cuaderno de dibujos del verano. ¿Qué necesita?',   ok:['cuaderno','lapiz','pegamento','tijeras'],    no:['bolos','banador','gusano','gallina','saco_dormir']},
+  {id:'fotografiar',   txt:'{n} va a fotografiar momentos divertidos del verano. ¿Qué lleva?',     ok:['camara','agua','mochila'],                  no:['bolos','mermelada','gusano','pienso','tienda_camp']},
+  {id:'recoger_frutos',txt:'{n} va a recoger frutos del árbol. ¿Qué necesita?',                   ok:['cesta','guantes_jar','fruta'],               no:['palomitas','banador','gafas_sol','bolos','entrada']},
+  {id:'mercadillo',    txt:'{n} va de compras al mercadillo del pueblo. ¿Qué lleva?',              ok:['monedas','bolsa','mochila','agua'],          no:['bolos','gusano','telescopio','tienda_camp','saco_dormir']},
+  {id:'piscina_nat',   txt:'{n} visita una piscina natural. ¿Qué necesita?',                       ok:['banador','toalla','crema_solar','gafas_sol'],no:['chubasquero','botas_agua','mermelada','telescopio','saco_dormir']},
+  {id:'palos_helado',  txt:'{n} guarda palos de helado para hacer una manualidad. ¿Qué necesita?', ok:['palo_helado','pegamento','tijeras','lapiz'], no:['bolos','banador','saco_dormir','telescopio','gallina']},
+  {id:'ayudar_mayor',  txt:'{n} va a ayudar a una persona mayor del vecindario. ¿Qué puede hacer?',ok:['bolsas_compra','paso_cebra','telefono'],    no:['telescopio','gusano','palomitas','bolos','tienda_camp']},
+  {id:'mermelada',     txt:'{n} coge fruta del árbol para hacer mermelada. ¿Qué necesita?',        ok:['fruta','olla','cesta','azucar'],             no:['bolos','banador','cometa','telescopio','saco_dormir']},
+  {id:'gallinas',      txt:'{n} va a darle de comer a las gallinas. ¿Qué necesita?',               ok:['gallina','pienso','cubo_agua'],              no:['bolos','mermelada','palomitas','telescopio','entrada']},
+  {id:'refugio_palos', txt:'{n} construye un refugio con palos en el bosque. ¿Qué usa?',           ok:['palos','mochila','guantes_jar','agua'],      no:['bolos','mermelada','gusano','palo_helado','telescopio']},
+  {id:'gusanos_seda',  txt:'{n} cría gusanos de seda en casa. ¿Qué necesita?',                     ok:['gusano','hoja_morera','caja_zapatos'],       no:['bolos','banador','tienda_camp','palomitas','monedas']},
+  {id:'cometa',        txt:'{n} va a hacer volar una cometa en el parque. ¿Qué necesita?',         ok:['cometa','viento','correr'],                 no:['bolos','mermelada','gusano','saco_dormir','tijeras']},
+  {id:'senderismo',    txt:'{n} hace una ruta de senderismo. ¿Qué mete en la mochila?',            ok:['agua','bocadillo','mapa'],                  no:['bolos','palomitas','mermelada','gusano','hoja_morera']},
+  {id:'montar_bici',   txt:'{n} va a montar en bici por el carril bici. ¿Qué necesita?',          ok:['bici','casco','agua','mochila'],             no:['bolos','mermelada','gusano','palomitas','telescopio']},
+  {id:'paseo_noche',   txt:'{n} va a pasear de noche con la familia. ¿Qué lleva?',                ok:['linterna','agua','mochila','chaqueta'],      no:['banador','gafas_sol','crema_solar','gusano','pienso']},
+  {id:'limonada',      txt:'{n} prepara limonada fresca en casa. ¿Qué necesita?',                 ok:['limon','jarra','agua','hielo'],              no:['bolos','banador','cometa','saco_dormir','gallina']},
+  {id:'piedras_rio',   txt:'{n} va a lanzar piedras a un río. ¿Qué necesita?',                   ok:['piedras_peq','rio'],                         no:['bolos','mermelada','gusano','palomitas','tienda_camp']},
+  {id:'reciclar',      txt:'{n} va a reparar y reciclar un juguete viejo. ¿Qué necesita?',        ok:['juguete','tijeras','pegamento','lapiz'],     no:['bolos','banador','gallina','telescopio','cometa']},
+  {id:'playa',         txt:'{n} pasa el día en la playa. ¿Qué necesita?',                        ok:['banador','toalla','crema_solar','gafas_sol','cubo'],no:['chubasquero','botas_agua','mermelada','telescopio','gusano']},
+];
+
+// ══════ EMOJIS SITUACIÓN ══════
+var SIT_EMOJI = {bolera:'🎳',helado_casero:'🍨',cine_verano:'🎬',museo:'🏛️',lluvia:'🌧️',acampar:'⛺',puesta_sol:'🌅',globos_agua:'💦',plantar_arbol:'🌱',san_lorenzo:'🌠',picnic:'🧺',excursion:'🥾',leer_cuentos:'📚',cuaderno:'🎨',fotografiar:'📷',recoger_frutos:'🍎',mercadillo:'🛍️',piscina_nat:'🏊',palos_helado:'🍡',ayudar_mayor:'🤝',mermelada:'🍓',gallinas:'🐔',refugio_palos:'🪵',gusanos_seda:'🐛',cometa:'🪁',senderismo:'🏔️',montar_bici:'🚲',paseo_noche:'🔦',limonada:'🍋',piedras_rio:'🪨',reciclar:'♻️',playa:'🏖️'};
+
+// ══════ ESTADO ══════
+var G = {tipo:'min',personaje:'nina',nombre:'',rondas:[],rondaIdx:0,puntos:0,estrellas:5,aciertos:0,intentos:0,seleccion:new Set(),log:[],parentalAccion:'',parentalEsperado:0};
+
+// ══════ FUENTE ══════
+function aplicarFuente(el){
+  if(!el) return;
+  el.classList.remove('fnt','fnt-may');
+  el.classList.add(G.tipo==='may'?'fnt-may':'fnt');
+}
+function txt(t){ return G.tipo==='may'?t.toUpperCase():t.toLowerCase(); }
+
+// ══════ NAVEGACIÓN ══════
+function irA(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  document.getElementById('app').scrollTo(0,0);
+}
+
+// ══════ BIENVENIDA ══════
+function selTipo(tipo,btn){
+  G.tipo=tipo;
+  document.querySelectorAll('.btn-op').forEach(function(b){b.classList.remove('sel');});
+  btn.classList.add('sel');
+}
+
+// ══════ PERSONAJE ══════
+function selPersonaje(tipo,card){
+  G.personaje=tipo;
+  document.querySelectorAll('.p-card').forEach(function(c){c.classList.remove('sel-nina','sel-nino');});
+  card.classList.add(tipo==='nina'?'sel-nina':'sel-nino');
+}
+
+// ══════ NOMBRE ══════
+function actualizarPreview(){
+  var val = document.getElementById('input-nombre').value;
+  var cont = document.getElementById('preview-nombre');
+  cont.innerHTML = getSVGPersonaje(G.personaje);
+  if(val){
+    var lbl=document.createElement('div');
+    aplicarFuente(lbl);
+    lbl.style.cssText='font-size:1.3rem;color:white;text-shadow:2px 2px 0 rgba(0,0,0,.28);text-align:center;margin-top:7px;';
+    lbl.textContent='¡Hola, '+val+'!';
+    cont.appendChild(lbl);
+  }
+  aplicarFuente(document.getElementById('input-nombre'));
+}
+function getSVGPersonaje(tipo){
+  if(tipo==='nina') return '<svg width="88" height="120" viewBox="0 0 110 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="55" cy="28" rx="28" ry="30" fill="#8B4513"/><rect x="27" y="38" width="12" height="55" rx="6" fill="#8B4513"/><rect x="71" y="38" width="12" height="55" rx="6" fill="#8B4513"/><ellipse cx="55" cy="35" rx="22" ry="24" fill="#FDBCB4"/><ellipse cx="47" cy="31" rx="4" ry="4.5" fill="white"/><ellipse cx="63" cy="31" rx="4" ry="4.5" fill="white"/><circle cx="47" cy="32" r="2.5" fill="#4A3728"/><circle cx="63" cy="32" r="2.5" fill="#4A3728"/><ellipse cx="42" cy="38" rx="5" ry="3" fill="#FF9BB0" opacity="0.6"/><ellipse cx="68" cy="38" rx="5" ry="3" fill="#FF9BB0" opacity="0.6"/><path d="M 48 44 Q 55 50 62 44" stroke="#C0605A" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M 33 70 Q 25 100 20 130 L 90 130 Q 85 100 77 70 Z" fill="#FF6EB4"/><rect x="48" y="56" width="14" height="15" rx="7" fill="#FDBCB4"/><path d="M 33 75 Q 10 90 15 105" stroke="#FDBCB4" stroke-width="12" stroke-linecap="round" fill="none"/><path d="M 77 75 Q 100 90 95 105" stroke="#FDBCB4" stroke-width="12" stroke-linecap="round" fill="none"/><rect x="36" y="126" width="14" height="22" rx="7" fill="#FDBCB4"/><rect x="60" y="126" width="14" height="22" rx="7" fill="#FDBCB4"/><path d="M 45 8 Q 55 16 65 8 Q 55 0 45 8Z" fill="#FF6EB4"/><circle cx="55" cy="8" r="4" fill="#FF3399"/></svg>';
+  return '<svg width="88" height="120" viewBox="0 0 110 150" xmlns="http://www.w3.org/2000/svg"><ellipse cx="55" cy="32" rx="24" ry="20" fill="#5C4033"/><rect x="31" y="28" width="48" height="12" rx="6" fill="#5C4033"/><ellipse cx="55" cy="38" rx="22" ry="24" fill="#FDBCB4"/><ellipse cx="33" cy="38" rx="5" ry="7" fill="#FDBCB4"/><ellipse cx="77" cy="38" rx="5" ry="7" fill="#FDBCB4"/><ellipse cx="47" cy="34" rx="4" ry="4.5" fill="white"/><ellipse cx="63" cy="34" rx="4" ry="4.5" fill="white"/><circle cx="47" cy="35" r="2.5" fill="#2C3E50"/><circle cx="63" cy="35" r="2.5" fill="#2C3E50"/><path d="M 49 47 Q 55 53 61 47" stroke="#C0605A" stroke-width="2" fill="none" stroke-linecap="round"/><rect x="30" y="68" width="50" height="45" rx="8" fill="#4ECDC4"/><rect x="48" y="58" width="14" height="14" rx="7" fill="#FDBCB4"/><path d="M 30 75 Q 8 88 12 105" stroke="#FDBCB4" stroke-width="12" stroke-linecap="round" fill="none"/><path d="M 80 75 Q 102 88 98 105" stroke="#FDBCB4" stroke-width="12" stroke-linecap="round" fill="none"/><rect x="30" y="108" width="22" height="22" rx="5" fill="#2C3E50"/><rect x="58" y="108" width="22" height="22" rx="5" fill="#2C3E50"/><rect x="34" y="126" width="14" height="20" rx="7" fill="#FDBCB4"/><rect x="62" y="126" width="14" height="20" rx="7" fill="#FDBCB4"/></svg>';
+}
+
+// ══════ INICIO JUEGO ══════
+function comenzarJuego(){
+  var nombre=document.getElementById('input-nombre').value.trim();
+  if(!nombre){var inp=document.getElementById('input-nombre');inp.focus();inp.style.borderColor='var(--coral)';setTimeout(function(){inp.style.borderColor='var(--mar)';},1500);return;}
+  G.nombre=nombre;G.puntos=0;G.estrellas=5;G.rondaIdx=0;G.aciertos=0;G.intentos=0;G.log=[];G.seleccion=new Set();
+  G.rondas=SITUACIONES.slice().sort(function(){return Math.random()-.5;});
+  irA('p-juego');
+  setTimeout(cargarRonda,350);
+}
+
+// ══════ CARGAR RONDA ══════
+function cargarRonda(){
+  if(G.rondaIdx>=G.rondas.length){mostrarResultado();return;}
+  var ronda=G.rondas[G.rondaIdx];
+  G.seleccion=new Set();
+  document.getElementById('h-ronda').textContent=G.rondaIdx+1;
+  document.getElementById('h-total').textContent=G.rondas.length;
+  document.getElementById('h-prog').style.width=(G.rondaIdx/G.rondas.length*100)+'%';
+  document.getElementById('h-pts').textContent=G.puntos;
+  actualizarEstrellas();
+
+  // Texto situación
+  var sitTxt=document.getElementById('sit-txt');
+  sitTxt.innerHTML='';
+  aplicarFuente(sitTxt);
+  var partes=ronda.txt.split('{n}');
+  partes.forEach(function(parte,i){
+    sitTxt.appendChild(document.createTextNode(txt(parte)));
+    if(i<partes.length-1){
+      var sp=document.createElement('span');
+      sp.className='nombre-span';
+      sp.textContent=txt(G.nombre);
+      aplicarFuente(sp);
+      sitTxt.appendChild(sp);
+    }
+  });
+
+  // Emoji situación
+  var e=SIT_EMOJI[ronda.id]||'☀️';
+  document.getElementById('sit-ilus').innerHTML='<div style="font-size:3.8rem;line-height:1;">'+e+'</div>';
+
+  // Instrucción
+  var ins=document.getElementById('instruccion');
+  ins.textContent=txt('✋ selecciona todo lo que necesitas y pulsa ¡listo!');
+  aplicarFuente(ins);
+
+  // Botón
+  document.getElementById('btn-listo').disabled=false;
+  document.getElementById('btn-listo').style.opacity='1';
+
+  // Pool objetos
+  var okValidos=ronda.ok.filter(function(id){return OBJ[id];});
+  var noValidos=ronda.no.filter(function(id){return OBJ[id];});
+  var numExtra=Math.min(noValidos.length,Math.max(3,9-okValidos.length));
+  var pool=okValidos.concat(noValidos.slice(0,numExtra)).sort(function(){return Math.random()-.5;});
+
+  var grid=document.getElementById('grid-obj');
+  grid.innerHTML='';
+  pool.forEach(function(id,i){
+    var obj=OBJ[id];
+    var card=document.createElement('div');
+    card.className='obj-card';
+    card.dataset.id=id;
+    card.style.animationDelay=(i*0.05)+'s';
+
+    // Imagen ARASAAC
+    var imgWrap=document.createElement('div');
+    imgWrap.className='obj-img-wrap';
+    if(obj.pic){
+      var img=document.createElement('img');
+      img.className='obj-img';
+      img.alt=obj.label;
+      img.src=arasaac(obj.pic);
+      img.onerror=function(){imgWrap.innerHTML='<span class="obj-fallback">'+obj.emoji+'</span>';};
+      imgWrap.appendChild(img);
+    } else {
+      imgWrap.innerHTML='<span class="obj-fallback">'+obj.emoji+'</span>';
+    }
+    card.appendChild(imgWrap);
+
+    // Etiqueta con fuente del modo
+    var lbl=document.createElement('span');
+    lbl.className='obj-lbl';
+    lbl.textContent=txt(obj.label);
+    aplicarFuente(lbl);
+    card.appendChild(lbl);
+
+    // Badge resultado
+    var badge=document.createElement('span');
+    badge.className='obj-badge';
+    card.appendChild(badge);
+
+    card.onclick=function(){toggleObj(card,id);};
+    grid.appendChild(card);
+  });
+
+  setTimeout(function(){hablar(ronda.txt.replace(/\{n\}/g,G.nombre));},650);
+}
+
+// ══════ TOGGLE OBJETO ══════
+function toggleObj(card,id){
+  if(card.classList.contains('ok')||card.classList.contains('ko')||card.classList.contains('miss')) return;
+  if(G.seleccion.has(id)){G.seleccion.delete(id);card.classList.remove('sel');}
+  else{G.seleccion.add(id);card.classList.add('sel');}
+}
+
+// ══════ COMPROBAR ══════
+function comprobar(){
+  var ronda=G.rondas[G.rondaIdx];
+  var okSet=new Set(ronda.ok.filter(function(id){return OBJ[id];}));
+  var aciertos=0,fallos=0,logOk=[],logKo=[],logPerd=[];
+  document.querySelectorAll('.obj-card').forEach(function(card){
+    var id=card.dataset.id,esOk=okSet.has(id),esSel=G.seleccion.has(id);
+    var badge=card.querySelector('.obj-badge');
+    if(esSel&&esOk){card.classList.remove('sel');card.classList.add('ok');badge.textContent='✅';aciertos++;logOk.push(id);}
+    else if(esSel&&!esOk){card.classList.remove('sel');card.classList.add('ko');badge.textContent='❌';fallos++;logKo.push(id);}
+    else if(!esSel&&esOk){card.classList.add('miss');badge.textContent='👆';logPerd.push(id);}
+  });
+  G.puntos+=Math.max(0,aciertos*20-fallos*10);
+  G.aciertos+=aciertos;G.intentos+=aciertos+fallos;
+  if(fallos>0) G.estrellas=Math.max(0,G.estrellas-fallos);
+  actualizarEstrellas();
+  document.getElementById('h-pts').textContent=G.puntos;
+  G.log.push({situacion:ronda.id,ok:logOk,ko:logKo,perdidas:logPerd});
+  document.getElementById('btn-listo').disabled=true;
+  document.getElementById('btn-listo').style.opacity='.45';
+  var perfecto=aciertos===okSet.size&&fallos===0;
+  mostrarFeedback(perfecto,aciertos,fallos);
+  if(perfecto) confetti();
+  setTimeout(function(){ocultarFeedback();G.rondaIdx++;cargarRonda();},2700);
+}
+
+function escucharTexto(){
+  if(G.rondaIdx<G.rondas.length) hablar(G.rondas[G.rondaIdx].txt.replace(/\{n\}/g,G.nombre));
+}
+
+// ══════ VOZ ══════
+function hablar(t){
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(t);
+  u.lang='es-ES';u.rate=0.85;u.pitch=1.1;
+  var vv=window.speechSynthesis.getVoices();
+  var voz=vv.find(function(v){return v.lang.startsWith('es')&&/mujer|female|monica|lucia|conchita|maria/i.test(v.name);})||vv.find(function(v){return v.lang.startsWith('es');});
+  if(voz) u.voice=voz;
+  window.speechSynthesis.speak(u);
+}
+
+// ══════ ESTRELLAS ══════
+function actualizarEstrellas(){
+  var h='';for(var i=0;i<5;i++) h+=i<G.estrellas?'⭐':'☆';
+  document.getElementById('h-stars').innerHTML=h;
+}
+
+// ══════ FEEDBACK ══════
+function mostrarFeedback(perfecto,aciertos,fallos){
+  var ov=document.getElementById('feedback-overlay');
+  if(perfecto){
+    document.getElementById('fb-emoji').textContent=['🏆','🌟','🎯','🌈','🎉'][Math.floor(Math.random()*5)];
+    document.getElementById('fb-txt').textContent=['¡Perfecto!','¡Genial!','¡Increíble!','¡Muy bien!'][Math.floor(Math.random()*4)];
+    document.getElementById('fb-txt').style.color='var(--verde)';
+  } else if(aciertos>=fallos){
+    document.getElementById('fb-emoji').textContent='😊';
+    document.getElementById('fb-txt').textContent='¡Casi perfecto!';
+    document.getElementById('fb-txt').style.color='var(--naranja)';
+  } else {
+    document.getElementById('fb-emoji').textContent='💪';
+    document.getElementById('fb-txt').textContent='¡Vamos aprendiendo!';
+    document.getElementById('fb-txt').style.color='var(--coral)';
+  }
+  ov.classList.add('vis');ov.style.pointerEvents='all';
+}
+function ocultarFeedback(){var ov=document.getElementById('feedback-overlay');ov.classList.remove('vis');ov.style.pointerEvents='none';}
+
+// ══════ CONFETTI ══════
+function confetti(){
+  var c=['#FFD93D','#FF6B6B','#4ECDC4','#74C0FC','#51CF66','#FF6EB4','#B197FC'];
+  for(var i=0;i<40;i++){(function(d){setTimeout(function(){var p=document.createElement('div');p.className='cf';p.style.cssText='left:'+Math.random()*100+'vw;background:'+c[Math.floor(Math.random()*c.length)]+';animation-duration:'+(1.5+Math.random())+'s;animation-delay:'+Math.random()*.3+'s;transform:rotate('+Math.floor(Math.random()*360)+'deg)';document.body.appendChild(p);setTimeout(function(){p.remove();},3000);},d);})(i*35);}
+}
+
+// ══════ RESULTADO ══════
+function mostrarResultado(){
+  irA('p-resultado');
+  var pct=G.puntos/(G.rondas.length*100);
+  var trofeo,titulo;
+  if(pct>=.9){trofeo='🏆';titulo='¡Eres un campeón del verano!';}
+  else if(pct>=.7){trofeo='🌟';titulo='¡Lo has hecho genial!';}
+  else if(pct>=.5){trofeo='😊';titulo='¡Muy bien, sigue así!';}
+  else{trofeo='💪';titulo='¡La próxima lo harás mejor!';}
+  document.getElementById('r-trofeo').textContent=trofeo;
+  document.getElementById('r-titulo').textContent=titulo;
+  document.getElementById('r-pts').textContent=G.puntos;
+  document.getElementById('r-aciertos').textContent=G.aciertos;
+  document.getElementById('r-rondas').textContent=G.rondas.length;
+  document.getElementById('r-estrellas').textContent=G.estrellas;
+  if(pct>=.7) confetti();
+  enviarASheet('');
+  var msgs={'🏆':'¡Felicidades '+G.nombre+'! ¡Eres un auténtico experto del vocabulario de verano!','🌟':'¡Muy bien '+G.nombre+'! Lo has hecho genial.','😊':'¡Buen trabajo '+G.nombre+'! Sigue practicando.','💪':'¡Ánimo '+G.nombre+'! La próxima vez lo harás aún mejor.'};
+  setTimeout(function(){hablar(msgs[trofeo]);},500);
+}
+
+function reiniciar(){
+  G.rondaIdx=0;G.puntos=0;G.estrellas=5;G.aciertos=0;G.intentos=0;G.log=[];G.seleccion=new Set();
+  G.rondas=SITUACIONES.slice().sort(function(){return Math.random()-.5;});
+  irA('p-juego');setTimeout(cargarRonda,350);
+}
+
+// ══════ INFORME DESCARGABLE ══════
+function descargarInforme(){
+  var fecha=new Date().toLocaleDateString('es-ES',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  var errores=G.intentos-G.aciertos;
+  var filas=G.log.map(function(r){
+    var sit=SITUACIONES.find(function(s){return s.id===r.situacion;});
+    var textoSit=sit?sit.txt.replace(/\{n\}/g,G.nombre):r.situacion;
+    var okN=r.ok.map(function(id){return OBJ[id]?OBJ[id].label:id;}).join(', ')||'—';
+    var koN=r.ko.map(function(id){return OBJ[id]?OBJ[id].label:id;}).join(', ')||'—';
+    var perdN=r.perdidas.map(function(id){return OBJ[id]?OBJ[id].label:id;}).join(', ')||'—';
+    var estado=r.ko.length===0&&r.perdidas.length===0?'Perfecto ✅':(r.ko.length>0?'Con errores ❌':'Incompleto ⚠️');
+    return '<tr><td>'+textoSit+'</td><td class="ok">'+okN+'</td><td class="ko">'+koN+'</td><td class="perd">'+perdN+'</td><td>'+estado+'</td></tr>';
+  }).join('');
+  var html='<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Informe – Aventuras de Verano</title>'
+  +'<style>body{font-family:sans-serif;padding:24px;background:#f7f9fc;color:#333;}'
+  +'.header{background:linear-gradient(135deg,#FF922B,#FFD93D);color:white;padding:24px;border-radius:14px;margin-bottom:18px;}'
+  +'.header h1{margin:0;font-size:1.5rem;}.header p{margin:4px 0 0;opacity:.85;font-size:.9rem;}'
+  +'.stats{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px;}'
+  +'.stat{background:white;border-radius:10px;padding:14px 18px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.07);}'
+  +'.stat-n{font-size:1.9rem;font-weight:900;color:#FF922B;}.stat-l{font-size:.76rem;color:#888;}'
+  +'.card{background:white;padding:20px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.07);}'
+  +'table{width:100%;border-collapse:collapse;font-size:.85rem;}'
+  +'th{background:#FF922B;color:white;padding:10px 12px;text-align:left;font-weight:700;}'
+  +'td{padding:9px 12px;border-bottom:1px solid #eee;vertical-align:top;}'
+  +'tr:hover td{background:#FFF9DB;}'
+  +'.ok{color:#27AE60;font-weight:600;}.ko{color:#E74C3C;font-weight:600;}.perd{color:#E67E22;}'
+  +'</style></head><body>'
+  +'<div class="header"><h1>🌞 Informe: Aventuras de Verano</h1><p>'+fecha+'</p></div>'
+  +'<div class="stats">'
+  +'<div class="stat"><div class="stat-n">'+G.nombre+'</div><div class="stat-l">Alumno/a</div></div>'
+  +'<div class="stat"><div class="stat-n">'+G.aciertos+'</div><div class="stat-l">✅ Aciertos</div></div>'
+  +'<div class="stat"><div class="stat-n">'+errores+'</div><div class="stat-l">❌ Errores</div></div>'
+  +'<div class="stat"><div class="stat-n">'+G.rondas.length+'</div><div class="stat-l">🎯 Rondas</div></div>'
+  +'<div class="stat"><div class="stat-n">'+G.estrellas+'/5</div><div class="stat-l">⭐ Estrellas</div></div>'
+  +'<div class="stat"><div class="stat-n">'+G.puntos+'</div><div class="stat-l">🏆 Puntos</div></div>'
+  +'</div>'
+  +(G.log.length>0?'<div class="card"><table><tr><th>Situación</th><th>✅ Acertó</th><th>❌ Error</th><th>👆 No marcó</th><th>Resultado</th></tr>'+filas+'</table></div>':'<div class="card"><p>Sesión no completada.</p></div>')
+  +'</body></html>';
+  var blob=new Blob([html],{type:'text/html'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;a.download='informe_verano_'+G.nombre+'_'+Date.now()+'.html';a.click();
+}
+
+// ══════ PANTALLA COMPLETA ══════
+function toggleFS(){
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen().catch(function(){});
+  } else {
+    abrirParental('exitfs');
+  }
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'&&document.fullscreenElement){
+    e.preventDefault();e.stopPropagation();abrirParental('exitfs');
+  }
+},true);
+document.addEventListener('fullscreenchange',function(){
+  if(!document.fullscreenElement&&G.parentalAccion!=='exitfs_ok'){
+    setTimeout(function(){document.documentElement.requestFullscreen().catch(function(){});},400);
+  }
+  if(G.parentalAccion==='exitfs_ok') G.parentalAccion='';
+});
+
+// ══════ PARENTAL ══════
+function abrirParental(accion){
+  G.parentalAccion=accion;
+  var n1=Math.floor(Math.random()*9)+1,n2=Math.floor(Math.random()*9)+1;
+  G.parentalEsperado=n1+n2;
+  document.getElementById('p-suma').textContent='¿Cuánto es '+n1+' + '+n2+' ?';
+  document.getElementById('p-resp').value='';
+  document.getElementById('p-err').textContent='';
+  document.getElementById('parental-overlay').classList.add('vis');
+  setTimeout(function(){document.getElementById('p-resp').focus();},200);
+}
+function verificarParental(){
+  var resp=parseInt(document.getElementById('p-resp').value,10);
+  if(resp===G.parentalEsperado){
+    cerrarParental();
+    if(G.parentalAccion==='home'){
+      enviarASheet(' (sesión incompleta)');
+      descargarInforme();
+      location.reload();
+    } else if(G.parentalAccion==='exitfs'){
+      G.parentalAccion='exitfs_ok';
+      document.exitFullscreen().catch(function(){});
+    }
+  } else {
+    document.getElementById('p-err').textContent='❌ Respuesta incorrecta, inténtalo de nuevo';
+    document.getElementById('p-resp').value='';
+    document.getElementById('p-resp').focus();
+  }
+}
+function cerrarParental(){document.getElementById('parental-overlay').classList.remove('vis');}
+document.getElementById('p-resp').addEventListener('keydown',function(e){if(e.key==='Enter') verificarParental();});
+
+// ══════ INIT ══════
+if(window.speechSynthesis) window.speechSynthesis.onvoiceschanged=function(){window.speechSynthesis.getVoices();};
+new MutationObserver(function(){
+  if(document.getElementById('p-nombre').classList.contains('active')){
+    actualizarPreview();
+    aplicarFuente(document.getElementById('input-nombre'));
+  }
+}).observe(document.getElementById('p-nombre'),{attributes:true,attributeFilter:['class']});
+</script>
+</body>
+</html>

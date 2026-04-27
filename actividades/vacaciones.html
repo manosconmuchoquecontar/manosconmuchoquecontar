@@ -439,11 +439,11 @@ var OBJ = {
   cuaderno:    {label:'cuaderno',      pic:2508,  emoji:'📓'},
   camara:      {label:'cámara',        pic:2440,  emoji:'📷'},
   cesta:       {label:'cesta',         pic:2462,  emoji:'🧺'},
-  mochila:     {label:'mochila',       pic:4938,  emoji:'🎒'},
+  mochila:     {label:'mochila',       pic:2475,  emoji:'🎒'},
   mapa:        {label:'mapa',          pic:4882,  emoji:'🗺️'},
   linterna:    {label:'linterna',      pic:4824,  emoji:'🔦'},
   tienda_camp: {label:'tienda campaña',pic:5792,  emoji:'⛺'},
-  saco_dormir: {label:'saco de dormir',pic:5457,  emoji:'🛌'},
+  saco_dormir: {label:'saco de dormir',pic:4738,  emoji:'🛌'},
   telescopio:  {label:'telescopio',    pic:5784,  emoji:'🔭'},
   entrada:     {label:'entrada cine',  pic:2573,  emoji:'🎟️'},
   monedas:     {label:'dinero',        pic:4979,  emoji:'💰'},
@@ -456,7 +456,7 @@ var OBJ = {
   silla_playa:   {label:'silla de playa',   pic:5587,  emoji:'🪑'},
   semilla:       {label:'semilla',          pic:5544,  emoji:'🌱'},
   comida:        {label:'comida',           pic:3498,  emoji:'🍱'},
-  mantel:        {label:'mantel',           pic:2460,  emoji:'🧻'},
+  mantel:        {label:'mantel',           pic:null,  emoji:'🟦', svg:'<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><ellipse cx="40" cy="52" rx="34" ry="12" fill="#E8D5B0" opacity="0.5"/><rect x="6" y="24" width="68" height="40" rx="4" fill="#F9E4B7"/><rect x="6" y="24" width="68" height="40" rx="4" fill="none" stroke="#D4A017" stroke-width="2"/><line x1="6" y1="34" x2="74" y2="34" stroke="#D4A017" stroke-width="1.5" stroke-dasharray="5,4"/><line x1="6" y1="44" x2="74" y2="44" stroke="#D4A017" stroke-width="1.5" stroke-dasharray="5,4"/><line x1="6" y1="54" x2="74" y2="54" stroke="#D4A017" stroke-width="1.5" stroke-dasharray="5,4"/><line x1="25" y1="24" x2="25" y2="64" stroke="#D4A017" stroke-width="1.5" stroke-dasharray="5,4"/><line x1="44" y1="24" x2="44" y2="64" stroke="#D4A017" stroke-width="1.5" stroke-dasharray="5,4"/><line x1="63" y1="24" x2="63" y2="64" stroke="#D4A017" stroke-width="1.5" stroke-dasharray="5,4"/><path d="M6 24 L0 18 M74 24 L80 18 M6 64 L0 70 M74 64 L80 70" stroke="#D4A017" stroke-width="2" stroke-linecap="round"/></svg>'},
   luz:           {label:'luz',              pic:4858,  emoji:'💡'},
   asiento:       {label:'asiento',          pic:5508,  emoji:'🪑'},
   bolsa:         {label:'bolsa',            pic:2407,  emoji:'🛍️'},
@@ -480,7 +480,7 @@ var SITUACIONES = [
   {id:'cine_verano',   txt:'{n} va al cine de verano al aire libre. ¿Qué se lleva?',               ok:['palomitas','entrada','agua','silla_playa'], no:['banador','crema_solar','pala','gallina','tijeras']},
   {id:'museo',         txt:'{n} visita hoy un museo. ¿Qué necesita?',                              ok:['agua','bocadillo','camara'],                 no:['banador','botas_agua','cometa','globos_agua','gusano']},
   {id:'lluvia',        txt:'¡Qué lluvia de verano! ¿Qué necesita {n}?',                            ok:['chubasquero','paraguas','botas_agua'],       no:['banador','gafas_sol','crema_solar','cometa','cesta']},
-  {id:'acampar',       txt:'{n} va a acampar esta noche. ¿Qué necesita?',                          ok:['tienda_camp','saco_dormir','linterna','mochila'],no:['banador','mermelada','bolos','tijeras','telescopio']},
+  {id:'acampar',       txt:'{n} va a acampar esta noche. ¿Qué necesita?',                          ok:['tienda_camp','saco_dormir','linterna','mochila','telescopio'],no:['banador','mermelada','bolos','tijeras','helado']},
   {id:'puesta_sol',    txt:'{n} va a ver la puesta de sol. ¿Qué lleva?',                           ok:['manta','agua','camara','mochila'],           no:['bolos','gusano','mermelada','tijeras','pienso']},
   {id:'globos_agua',   txt:'¡{n} quiere jugar con globos de agua! ¿Qué necesita?',                 ok:['globos_agua','cubo_agua','agua','banador'],  no:['mermelada','libro','camara','saco_dormir','mapa']},
   {id:'plantar_arbol', txt:'{n} va a plantar un árbol en el jardín. ¿Qué necesita?',               ok:['pala','semilla','cubo_agua','guantes_jar'],  no:['palomitas','banador','gafas_sol','bolos','entrada']},
@@ -628,10 +628,13 @@ function cargarRonda(){
     card.dataset.id=id;
     card.style.animationDelay=(i*0.05)+'s';
 
-    // Imagen ARASAAC
+    // Imagen ARASAAC o SVG propio
     var imgWrap=document.createElement('div');
     imgWrap.className='obj-img-wrap';
-    if(obj.pic){
+    if(obj.svg){
+      imgWrap.innerHTML=obj.svg;
+      imgWrap.firstChild.style.cssText='width:76px;height:76px;';
+    } else if(obj.pic){
       var img=document.createElement('img');
       img.className='obj-img';
       img.alt=obj.label;

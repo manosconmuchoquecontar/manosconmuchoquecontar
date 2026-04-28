@@ -26,9 +26,9 @@
   --texto-sec: #7A5C8A;
   --sombra: 0 8px 32px rgba(199,125,255,0.15);
 }
- 
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
- 
+
 body {
   font-family: 'Nunito', sans-serif;
   background: var(--fondo);
@@ -36,9 +36,8 @@ body {
   overflow-x: hidden;
   color: var(--texto);
 }
- 
-/* ======= FUENTES DE JUEGO ======= */
-.fj { /* texto-juego: se sobreescribe según modo letra */
+
+.fj {
   font-family: 'Playwrite HR Lijeva', cursive;
   font-weight: 300;
 }
@@ -46,16 +45,14 @@ body.may .fj {
   font-family: 'Playwrite DE Grund', cursive;
   font-weight: 300;
 }
- 
-/* ======= PANTALLAS ======= */
+
 .pantalla { display: none; min-height: 100vh; }
 .pantalla.activa { display: flex; flex-direction: column; align-items: center; justify-content: center; }
- 
-/* ======= BURBUJAS ======= */
+
 .burbujas { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
 .burbuja { position: absolute; border-radius: 50%; opacity: 0.12; animation: flotar linear infinite; }
 @keyframes flotar { 0%{transform:translateY(110vh) rotate(0deg)} 100%{transform:translateY(-20vh) rotate(360deg)} }
- 
+
 /* ======= INICIO ======= */
 #inicio {
   background: linear-gradient(135deg,#FFE0F0 0%,#F0E0FF 50%,#E0F0FF 100%);
@@ -63,7 +60,7 @@ body.may .fj {
 }
 .logo-helado { font-size: 5rem; animation: balancear 2s ease-in-out infinite; display: inline-block; }
 @keyframes balancear { 0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg)} }
- 
+
 .titulo-principal {
   font-family: 'Fredoka One', cursive;
   font-size: clamp(2rem,6vw,3.5rem);
@@ -72,13 +69,13 @@ body.may .fj {
   margin: 0.5rem 0; line-height: 1.2;
 }
 .subtitulo { font-size: 1.1rem; color: var(--texto-sec); margin-bottom: 1.5rem; font-weight: 600; }
- 
+
 .panel {
   background: white; border-radius: 24px; padding: 1.5rem 2rem;
   box-shadow: var(--sombra); max-width: 520px; width: 100%; margin: 0 auto 1rem;
 }
 .panel h2 { font-family: 'Fredoka One', cursive; font-size: 1.2rem; color: var(--lila); margin-bottom: 0.8rem; text-align: left; }
- 
+
 .opciones-fila { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
 .btn-opcion {
   flex: 1; min-width: 120px; padding: 0.8rem 1rem;
@@ -90,9 +87,7 @@ body.may .fj {
 .btn-opcion .icono { font-size: 1.8rem; }
 .btn-opcion:hover { border-color: var(--lila); color: var(--lila); background: var(--lila-claro); }
 .btn-opcion.sel { border-color: var(--lila); background: var(--lila-claro); color: var(--lila); }
- 
-/* estilos email eliminados - sistema sustituido por Google Sheet */
- 
+
 .btn-jugar {
   width: 100%; max-width: 520px; padding: 1.1rem 2rem; border: none; border-radius: 20px;
   background: linear-gradient(135deg,var(--rosa),var(--lila)); color: white;
@@ -102,14 +97,25 @@ body.may .fj {
 }
 .btn-jugar:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(199,125,255,0.5); }
 .btn-jugar:active { transform: scale(0.97); }
- 
+
+/* Botón volver a la web en inicio */
+.btn-volver-inicio {
+  display: inline-block; margin-top: 1rem;
+  padding: 0.7rem 1.8rem; border-radius: 999px;
+  border: 2px solid rgba(199,125,255,0.4); background: white;
+  color: var(--texto-sec); font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem; font-weight: 700; text-decoration: none;
+  transition: all 0.2s; box-shadow: 0 2px 8px rgba(199,125,255,0.1);
+}
+.btn-volver-inicio:hover { border-color: var(--lila); color: var(--lila); box-shadow: 0 4px 16px rgba(199,125,255,0.3); }
+
 /* ======= JUEGO ======= */
 #juego {
   background: linear-gradient(160deg,#FFF5F9 0%,#F5F0FF 100%);
   padding: 1rem; align-items: stretch; min-height: 100vh;
 }
 .wrap { max-width: 900px; width: 100%; margin: 0 auto; padding: 0.5rem; flex: 1; display: flex; flex-direction: column; gap: 0.6rem; }
- 
+
 .barra {
   display: flex; justify-content: space-between; align-items: center;
   background: white; border-radius: 16px; padding: 0.6rem 1rem;
@@ -117,7 +123,7 @@ body.may .fj {
 }
 .chip { font-family: 'Fredoka One', cursive; font-size: 0.9rem; color: var(--lila); background: var(--lila-claro); padding: 0.25rem 0.8rem; border-radius: 20px; }
 .chip.fallo { background: #FFE0EC; color: var(--rosa); }
- 
+
 .btn-barra {
   padding: 0.3rem 0.7rem; border-radius: 10px; border: 2px solid #E0D0F0;
   background: white; font-size: 0.82rem; font-weight: 700; color: var(--texto-sec);
@@ -128,30 +134,20 @@ body.may .fj {
 .btn-barra.fs:hover { background: var(--turquesa-claro); }
 .btn-barra.rep { border-color: var(--naranja); color: var(--naranja); }
 .btn-barra.rep:hover { background: var(--naranja-claro); }
- 
+
 .progreso { width: 100%; height: 8px; background: #E8E0F0; border-radius: 4px; overflow: hidden; }
 .progreso-fill { height: 100%; background: linear-gradient(90deg,var(--rosa),var(--lila)); border-radius: 4px; transition: width 0.4s; }
- 
+
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; flex: 1; }
 @media(max-width:640px){.grid{grid-template-columns:1fr}}
- 
-/* ======= TABLET: todo en una pantalla ======= */
+
 @media(min-width:641px) and (max-width:1100px){
   #juego { padding: 0.5rem; overflow: hidden; height: 100vh; box-sizing: border-box; }
   .wrap { gap: 0.3rem; padding: 0.3rem; max-width: 100%; height: 100%; box-sizing: border-box; overflow: hidden; }
- 
-  /* Barra más compacta */
   .barra { padding: 0.35rem 0.7rem; border-radius: 12px; }
   .chip { font-size: 0.78rem; padding: 0.15rem 0.6rem; }
   .btn-barra { font-size: 0.72rem; padding: 0.2rem 0.5rem; }
   .progreso { height: 5px; }
- 
-  /* Grid 3 columnas con áreas nombradas
-     Izquierda: nota + cliente
-     Centro: cono
-     Derecha: sabores
-     Abajo: botones (full width)
-  */
   .grid {
     display: grid;
     grid-template-columns: 1fr 150px 1fr;
@@ -160,56 +156,39 @@ body.may .fj {
       "nota  cono sabores"
       "aud   cono sabores"
       "acc   acc  acc";
-    gap: 0.5rem;
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
+    gap: 0.5rem; flex: 1; min-height: 0; overflow: hidden;
   }
- 
   #zona-nota      { grid-area: nota; overflow-y: auto; }
   #zona-cono      { grid-area: cono; }
   #zona-sabores   { grid-area: sabores; overflow-y: auto; }
   #zona-aud       { grid-area: aud; }
   #zona-cliente   { grid-area: aud; justify-content: center; align-items: center; flex-direction: row; gap: 0.5rem; }
   .zona-acc       { grid-area: acc; }
- 
-  /* Nota compacta */
   .nota { padding: 0.7rem 0.9rem; }
   .nota::before { width: 20px; height: 20px; top: -8px; }
   .nota-tit { font-size: 0.85rem; margin-bottom: 0.4rem; margin-top: 0.2rem; }
   .nota-item { padding: 0.25rem 0.5rem; gap: 0.35rem; }
   .nota-num { font-size: 0.9rem; min-width: 20px; }
   .nota-lista { gap: 0.25rem; }
- 
-  /* Avatar pequeño */
   .avatar { font-size: 2.2rem; }
   .dialogo { font-size: 0.75rem; padding: 0.3rem 0.5rem; max-width: 110px; border-radius: 10px; }
   .dialogo::before { bottom: -5px; border-width: 5px; }
- 
-  /* Cono compacto */
   .bola { width: 50px; height: 50px; font-size: 1.15rem; margin-bottom: -15px; }
   .cono-svg { width: 56px; }
   .cono-tit { font-size: 0.82rem; margin-bottom: 0.2rem; }
   .zona-cono { gap: 0.15rem; }
- 
-  /* Sabores compactos */
   .sab-tit { font-size: 0.82rem; margin-bottom: 0.4rem; }
   .sab-grid { gap: 0.35rem; }
   .sab-btn { min-width: 58px; padding: 0.35rem 0.4rem; gap: 0.15rem; font-size: 0.72rem; border-radius: 10px; border-width: 2px; }
   .sab-bola { width: 34px; height: 34px; font-size: 1rem; }
- 
-  /* Botones acción */
   .btn-acc { padding: 0.5rem 1rem; font-size: 0.9rem; border-radius: 12px; }
- 
-  /* Auditivo compacto */
   .micro-box { padding: 0.7rem 1rem; border-radius: 14px; }
   .micro-ico { font-size: 2rem; margin-bottom: 0.3rem; }
   .btn-escuchar { padding: 0.45rem 1rem; font-size: 0.85rem; }
   .onda { height: 22px; margin: 0.2rem 0; }
   .zona-aud { gap: 0.5rem; }
 }
- 
-/* nota */
+
 .nota {
   background: var(--amarillo-claro); border: 3px solid var(--amarillo);
   border-radius: 20px; padding: 1.5rem; position: relative;
@@ -224,8 +203,7 @@ body.may .fj {
 .nota-lista { list-style:none; display:flex; flex-direction:column; gap:0.5rem; }
 .nota-item { display:flex; align-items:center; gap:0.6rem; padding:0.5rem 0.8rem; background:rgba(255,255,255,0.6); border-radius:12px; }
 .nota-num { font-family:'Fredoka One',cursive; font-size:1.1rem; color:var(--rosa); min-width:24px; }
- 
-/* cliente */
+
 .cliente { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.5rem; }
 .avatar { font-size:4rem; animation:esperar 3s ease-in-out infinite; display:inline-block; }
 @keyframes esperar{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
@@ -240,8 +218,7 @@ body.may .fj {
   content:''; position:absolute; bottom:-8px; left:50%; transform:translateX(-50%);
   border:8px solid transparent; border-top-color:white; border-bottom:none;
 }
- 
-/* auditivo */
+
 .zona-aud { grid-column:1/-1; display:flex; flex-direction:column; align-items:center; gap:1rem; }
 .micro-box { background:white; border-radius:24px; padding:1.5rem; text-align:center; box-shadow:var(--sombra); width:100%; max-width:400px; }
 .micro-ico { font-size:3.5rem; display:block; margin-bottom:0.8rem; animation:pulso 2s ease-in-out infinite; }
@@ -258,8 +235,7 @@ body.may .fj {
 .onda-b:nth-child(6){height:14px;animation-delay:.05s}
 @keyframes onda{0%,100%{transform:scaleY(0.4);opacity:0.5}50%{transform:scaleY(1);opacity:1}}
 .onda.off .onda-b{animation:none;transform:scaleY(0.2);opacity:0.3}
- 
-/* cono */
+
 .zona-cono { grid-column:1/-1; display:flex; flex-direction:column; align-items:center; gap:0.3rem; }
 .cono-tit { font-family:'Fredoka One',cursive; font-size:1rem; color:var(--texto-sec); }
 .cono-display { display:flex; flex-direction:column; align-items:center; }
@@ -275,8 +251,7 @@ body.may .fj {
 .bola:last-child{margin-bottom:0}
 @keyframes aparecer{from{transform:scale(0)rotate(-90deg);opacity:0}to{transform:scale(1)rotate(0);opacity:1}}
 .cono-svg { width:80px; display:block; }
- 
-/* sabores */
+
 .zona-sabores { grid-column:1/-1; }
 .sab-tit { font-size:1rem; color:var(--texto-sec); margin-bottom:0.6rem; text-align:center; }
 .sab-grid { display:flex; flex-wrap:wrap; gap:0.6rem; justify-content:center; }
@@ -290,15 +265,14 @@ body.may .fj {
 .sab-bola { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.4rem; box-shadow:0 3px 8px rgba(0,0,0,0.12); border:2px solid rgba(0,0,0,0.08); }
 .sab-btn:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.15)}
 .sab-btn:active{transform:scale(0.95)}
- 
-/* acciones */
+
 .zona-acc { grid-column:1/-1; display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
 .btn-acc { padding:0.8rem 1.8rem; border:none; border-radius:16px; font-family:'Fredoka One',cursive; font-size:1.1rem; cursor:pointer; transition:all 0.15s; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
 .btn-acc:hover{transform:translateY(-2px)}
 .btn-acc.ok { background:linear-gradient(135deg,var(--verde),var(--turquesa)); color:white; box-shadow:0 6px 16px rgba(78,205,196,0.4); }
 .btn-acc.del { background:white; color:var(--rosa); border:3px solid var(--rosa-claro); }
 .btn-acc:disabled{opacity:0.4;pointer-events:none}
- 
+
 /* ======= OVERLAY MATEMÁTICO ======= */
 .ov-mat {
   position:fixed; inset:0; background:rgba(45,27,51,0.88);
@@ -318,7 +292,7 @@ body.may .fj {
 .mat-err{color:var(--rosa);font-weight:700;font-size:0.9rem;min-height:1.2rem;margin-bottom:0.5rem}
 .mat-btn { width:100%; padding:0.9rem; border:none; border-radius:14px; background:linear-gradient(135deg,var(--rosa),var(--lila)); color:white; font-family:'Fredoka One',cursive; font-size:1.2rem; cursor:pointer; transition:transform 0.15s; }
 .mat-btn:hover{transform:translateY(-1px)}
- 
+
 /* ======= OVERLAY RESULTADO ======= */
 .ov-res { position:fixed; inset:0; background:rgba(45,27,51,0.6); display:none; align-items:center; justify-content:center; z-index:100; backdrop-filter:blur(4px); }
 .ov-res.vis{display:flex}
@@ -328,7 +302,7 @@ body.may .fj {
 .res-msg{color:var(--texto-sec);font-size:1rem;font-weight:600;margin-bottom:1.5rem}
 .res-ok .res-tit{color:var(--verde)}
 .res-err .res-tit{color:var(--rosa)}
- 
+
 /* ======= FIN ======= */
 #fin { background:linear-gradient(135deg,#FFE0F0 0%,#F0E0FF 50%,#E0F0FF 100%); padding:2rem; text-align:center; }
 .trofeo{font-size:5rem;display:block;animation:rebote 1s ease-in-out infinite}
@@ -339,16 +313,15 @@ body.may .fj {
 .btn-fin { margin-top:1rem; padding:1rem 2.2rem; border:none; border-radius:20px; background:linear-gradient(135deg,var(--rosa),var(--lila)); color:white; font-family:'Fredoka One',cursive; font-size:1.3rem; cursor:pointer; box-shadow:0 6px 20px rgba(199,125,255,0.4); transition:transform 0.15s; }
 .btn-fin:hover{transform:translateY(-2px)}
 .btn-fin.naranja{background:linear-gradient(135deg,var(--naranja),var(--rosa))}
- 
-/* ======= CONFETI ======= */
+
 .confeti-c{position:fixed;inset:0;pointer-events:none;z-index:200;overflow:hidden}
 .confeti-p{position:absolute;border-radius:2px;animation:caer linear forwards}
 @keyframes caer{0%{transform:translateY(-20px)rotate(0);opacity:1}100%{transform:translateY(110vh)rotate(720deg);opacity:0}}
 </style>
 </head>
 <body class="min">
- 
-<!-- ===== PANTALLA NOMBRE (estética heladería) ===== -->
+
+<!-- ===== PANTALLA NOMBRE ===== -->
 <div id="nombre-screen" style="
   position:fixed;inset:0;
   background:linear-gradient(135deg,#FFE0F0 0%,#F0E0FF 50%,#E0F0FF 100%);
@@ -393,16 +366,16 @@ body.may .fj {
     </p>
   </div>
 </div>
- 
+
 <div class="burbujas" id="burbujas"></div>
 <div class="confeti-c" id="confeti"></div>
- 
+
 <!-- ===== INICIO ===== -->
 <div class="pantalla activa" id="inicio">
   <span class="logo-helado">🍦</span>
   <h1 class="titulo-principal">La Heladería Mágica</h1>
   <p class="subtitulo">¡Prepara los helados perfectos!</p>
- 
+
   <div class="panel">
     <h2>🎮 Modo de juego</h2>
     <div class="opciones-fila">
@@ -427,16 +400,22 @@ body.may .fj {
       </button>
     </div>
   </div>
- 
+
   <button class="btn-jugar" onclick="iniciar()">¡A preparar helados! 🍨</button>
+
+  <!-- BOTÓN VOLVER A LA WEB -->
+  <a href="https://manosconmuchoquecontar.github.io/" target="_blank" class="btn-volver-inicio">
+    🏠 Volver a los juegos
+  </a>
 </div>
- 
+
 <!-- ===== JUEGO ===== -->
 <div class="pantalla" id="juego">
   <div class="wrap">
- 
+
     <div class="barra">
-      <button class="btn-barra" onclick="volverInicio()">← Salir</button>
+      <!-- Salir ahora pide control parental -->
+      <button class="btn-barra" onclick="pedirSalir()">← Salir</button>
       <div style="display:flex;gap:.4rem;flex-wrap:wrap;align-items:center">
         <div class="chip" id="ch-niv">Nivel 1</div>
         <div class="chip" id="ch-ped">Pedido 1</div>
@@ -448,20 +427,18 @@ body.may .fj {
         <button class="btn-barra fs" id="btn-fs" onclick="entrarFS()">⛶ Completa</button>
       </div>
     </div>
- 
+
     <div class="progreso"><div class="progreso-fill" id="prog" style="width:0%"></div></div>
- 
+
     <div class="grid">
- 
-      <!-- nota visual -->
+
       <div id="zona-nota" style="display:none">
         <div class="nota">
           <p class="nota-tit">📝 Tu pedido</p>
           <ul class="nota-lista" id="nota-lista"></ul>
         </div>
       </div>
- 
-      <!-- cono — columna central en tablet -->
+
       <div class="zona-cono" id="zona-cono">
         <p class="cono-tit fj">🍦 Tu helado</p>
         <div class="cono-display">
@@ -476,14 +453,12 @@ body.may .fj {
           </svg>
         </div>
       </div>
- 
-      <!-- sabores — columna derecha en tablet -->
+
       <div class="zona-sabores" id="zona-sabores">
         <p class="sab-tit fj">Elige en orden ⬇️</p>
         <div class="sab-grid" id="sab-grid"></div>
       </div>
- 
-      <!-- auditivo -->
+
       <div class="zona-aud" id="zona-aud" style="display:none">
         <div class="micro-box">
           <span class="micro-ico">🔊</span>
@@ -495,23 +470,21 @@ body.may .fj {
           <button class="btn-escuchar" onclick="leer()">🔊 Escuchar pedido</button>
         </div>
       </div>
- 
-      <!-- cliente -->
+
       <div class="cliente" id="zona-cliente">
         <div class="dialogo" id="dialogo">¡Quiero mi helado!</div>
         <span class="avatar" id="avatar">😊</span>
       </div>
- 
-      <!-- acciones -->
+
       <div class="zona-acc">
         <button class="btn-acc del" id="btn-del" onclick="borrar()" disabled>← Quitar última</button>
         <button class="btn-acc ok"  id="btn-ok"  onclick="entregar()" disabled>Entregar 🍨</button>
       </div>
- 
+
     </div>
   </div>
 </div>
- 
+
 <!-- ===== FIN ===== -->
 <div class="pantalla" id="fin">
   <span class="trofeo">🏆</span>
@@ -525,7 +498,7 @@ body.may .fj {
     <button class="btn-fin" onclick="volverInicio()">🏠 Volver al inicio</button>
   </div>
 </div>
- 
+
 <!-- ===== OVERLAY RESULTADO ===== -->
 <div class="ov-res" id="ov-res">
   <div class="res-card" id="res-card">
@@ -535,12 +508,12 @@ body.may .fj {
     <button class="btn-acc ok" style="width:100%;font-size:1rem" onclick="cerrarRes()">Siguiente pedido →</button>
   </div>
 </div>
- 
+
 <!-- ===== OVERLAY MATEMÁTICO ===== -->
 <div class="ov-mat" id="ov-mat">
   <div class="mat-card">
     <p class="mat-tit">🔒 Control parental</p>
-    <p style="color:var(--texto-sec);font-size:.9rem;font-weight:600;margin-bottom:.3rem">Resuelve esta operación para salir:</p>
+    <p style="color:var(--texto-sec);font-size:.9rem;font-weight:600;margin-bottom:.3rem" id="mat-desc">Resuelve esta operación para salir:</p>
     <p class="mat-q" id="mat-q">3 + 4 = ?</p>
     <input type="number" class="mat-inp" id="mat-inp" placeholder="?"
       onkeydown="if(event.key==='Enter')comprobar()" />
@@ -548,13 +521,13 @@ body.may .fj {
     <button class="mat-btn" onclick="comprobar()">✓ Comprobar</button>
   </div>
 </div>
- 
+
 <script>
-// ===== CONFIGURACIÓN GOOGLE SHEET =====
+// ===== CONFIGURACIÓN =====
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbw4AKlcc8-09jA0uBl7EYDW_lorkazvEOwhZTthN6FD_BIhM1Q6o4HJdNSeUvqba2an/exec";
 let nombreAlumno = "";
 let enviarInforme = false;
- 
+
 // ===== PANTALLA NOMBRE =====
 function guardarNombre(){
   const n = document.getElementById('nombre-inp').value.trim();
@@ -568,7 +541,7 @@ function sinNombre(){
   enviarInforme = false;
   document.getElementById('nombre-screen').style.display='none';
 }
- 
+
 // ===== DATOS =====
 const BASICOS = [
   {id:'fresa',     n:'Fresa',     e:'🍓', c:'#FF6B9D'},
@@ -583,7 +556,7 @@ const EXTRA = [
   {id:'pistacho', n:'Pistacho', e:'🌰', c:'#6BCB77'},
 ];
 const TODOS = [...BASICOS, ...EXTRA];
- 
+
 const NIVELES = [
   {b:2,p:3,s:5},{b:2,p:3,s:5},{b:2,p:3,s:5},
   {b:3,p:5,s:5},{b:3,p:5,s:5},
@@ -592,18 +565,18 @@ const NIVELES = [
   {b:5,p:5,s:8},{b:5,p:5,s:8},{b:5,p:5,s:8},
   {b:6,p:5,s:8},{b:6,p:5,s:8},
 ];
- 
+
 const AVATS  = ['😊','😄','🤩','😁','🥰'];
 const AVISOS = ['¡Quiero mi helado!','¡Por favor!','¡Tengo mucho calor!','¡Apunta bien!','¡Recuerda el orden!','¡Espero ansioso!'];
 const OK_MSG = ['¡Helado perfecto! 😍','¡Exactamente! 🌟','¡Qué buena memoria! 🧠','¡Maestro heladero! 👑','¡Bravo! 🎊'];
 const ERR_MSG= ['¡El orden era diferente! 😅','¡Se derritió! 🥵','¡Casi! Vuelve a intentarlo 💪','¡Recuerda bien el orden! 🤔'];
- 
+
 // ===== ESTADO =====
 let modo='visual', letra='min';
 let pedido=[], sel=[], puntos=0, fallos=0, comp=0;
 let plan=[], reg=[], t0=null, hablando=false;
 let matResp=0, matCb=null;
- 
+
 // ===== BURBUJAS =====
 function burbujas(){
   const c=document.getElementById('burbujas'); c.innerHTML='';
@@ -615,13 +588,13 @@ function burbujas(){
     c.appendChild(b);
   }
 }
- 
+
 // ===== PANTALLAS =====
 function show(id){
   document.querySelectorAll('.pantalla').forEach(p=>p.classList.remove('activa'));
   document.getElementById(id).classList.add('activa');
 }
- 
+
 // ===== OPCIONES =====
 function selOp(tipo,val,btn){
   const gs={modo:['bm-vis','bm-aud'],letra:['bl-min','bl-may']};
@@ -630,46 +603,38 @@ function selOp(tipo,val,btn){
   if(tipo==='modo') modo=val;
   else { letra=val; document.body.className=val; }
 }
- 
+
 // ===== INICIAR =====
 function iniciar(){
   document.body.className=letra;
- 
   plan=[];
   NIVELES.forEach(n=>{
     const pool=n.s===5?BASICOS:[...BASICOS,...EXTRA];
     for(let i=0;i<n.p;i++) plan.push({b:n.b,pool});
   });
- 
   puntos=0; fallos=0; comp=0; sel=[]; reg=[]; t0=new Date();
   show('juego'); burbujas(); cargar();
 }
- 
+
 // ===== PEDIDO =====
 function getSabor(id){ return TODOS.find(s=>s.id===id); }
- 
 function fmt(txt){ return letra==='may'?txt.toUpperCase():txt.toLowerCase(); }
- 
 function fuente(el){
-  el.style.fontFamily = letra==='may'
-    ? "'Playwrite DE Grund', cursive"
-    : "'Playwrite HR Lijeva', cursive";
+  el.style.fontFamily = letra==='may' ? "'Playwrite DE Grund', cursive" : "'Playwrite HR Lijeva', cursive";
   el.style.fontWeight='300';
 }
- 
 function nivelDe(idx){
   let a=0;
   for(let i=0;i<NIVELES.length;i++){ a+=NIVELES[i].p; if(idx<a)return i+1; }
   return NIVELES.length;
 }
- 
 function genPedido(bolas,pool){
   const m=[...pool].sort(()=>Math.random()-.5);
   const r=[];
   for(let i=0;i<bolas;i++) r.push(m[i%m.length]);
   return r.map(s=>s.id);
 }
- 
+
 function cargar(){
   if(comp>=plan.length){ fin(); return; }
   const pl=plan[comp]; sel=[];
@@ -679,9 +644,7 @@ function cargar(){
   document.getElementById('ch-pts').textContent=`⭐ ${puntos}`;
   document.getElementById('ch-fal').textContent=`❌ ${fallos}`;
   document.getElementById('prog').style.width=(comp/plan.length*100)+'%';
- 
   pedido=genPedido(pl.b,pl.pool);
- 
   if(modo==='visual'){
     document.getElementById('zona-nota').style.display='block';
     document.getElementById('zona-aud').style.display='none';
@@ -691,16 +654,14 @@ function cargar(){
     document.getElementById('zona-aud').style.display='flex';
     setTimeout(leer,800);
   }
- 
   const av=document.getElementById('avatar');
   av.textContent=AVATS[Math.floor(Math.random()*AVATS.length)];
   av.style.animation='none'; void av.offsetWidth;
   av.style.animation='esperar 3s ease-in-out infinite';
   document.getElementById('dialogo').textContent=AVISOS[Math.floor(Math.random()*AVISOS.length)];
- 
   renderCono(); renderSabores(pl.pool); updBtn();
 }
- 
+
 function renderNota(){
   const ul=document.getElementById('nota-lista'); ul.innerHTML='';
   pedido.forEach((id,i)=>{
@@ -712,7 +673,7 @@ function renderNota(){
     li.append(num,em,tx); ul.appendChild(li);
   });
 }
- 
+
 function renderCono(){
   const st=document.getElementById('stack'); st.innerHTML='';
   sel.forEach((id,i)=>{
@@ -723,7 +684,7 @@ function renderCono(){
     st.appendChild(b);
   });
 }
- 
+
 function renderSabores(pool){
   const g=document.getElementById('sab-grid'); g.innerHTML='';
   pool.forEach(s=>{
@@ -735,7 +696,7 @@ function renderSabores(pool){
     btn.append(bola,nom); g.appendChild(btn);
   });
 }
- 
+
 // ===== INTERACCIÓN =====
 function elegir(id){
   if(sel.length>=pedido.length) return;
@@ -749,14 +710,13 @@ function updBtn(){
   document.getElementById('btn-del').disabled=sel.length===0;
   document.getElementById('btn-ok').disabled=sel.length!==pedido.length;
 }
- 
+
 function entregar(){
   const ok=pedido.every((id,i)=>id===sel[i]);
   const niv=nivelDe(comp);
   reg.push({n:comp+1,niv,b:pedido.length,
     pedido:pedido.map(id=>getSabor(id).n),
     resp:sel.map(id=>getSabor(id).n), ok});
- 
   if(ok){
     puntos+=pedido.length*10; comp++;
     mostrarRes(true); celAvatar(); confeti();
@@ -764,7 +724,7 @@ function entregar(){
     fallos++; mostrarRes(false); derAvatar();
   }
 }
- 
+
 function mostrarRes(ok){
   document.getElementById('ov-res').classList.add('vis');
   document.getElementById('res-card').className='res-card '+(ok?'res-ok':'res-err');
@@ -776,7 +736,7 @@ function cerrarRes(){
   document.getElementById('ov-res').classList.remove('vis');
   if(comp>=plan.length) fin(); else { sel=[]; cargar(); }
 }
- 
+
 // ===== AUDITIVO =====
 function leer(){
   if(hablando||!window.speechSynthesis) return;
@@ -793,7 +753,7 @@ function leer(){
   speechSynthesis.cancel(); speechSynthesis.speak(u);
 }
 if(window.speechSynthesis) speechSynthesis.onvoiceschanged=()=>{};
- 
+
 // ===== AVATARES =====
 function celAvatar(){
   const av=document.getElementById('avatar');
@@ -809,7 +769,7 @@ function derAvatar(){
   av.addEventListener('animationend',()=>{av.style.animation='esperar 3s ease-in-out infinite';av.style.opacity='1';av.style.transform='';},{once:true});
   document.getElementById('dialogo').textContent='¡Repítelo! 😢';
 }
- 
+
 function confeti(){
   const c=document.getElementById('confeti');
   const cs=['#FF6B9D','#C77DFF','#FFD93D','#4ECDC4','#FF8E53','#6BCB77','#4D96FF'];
@@ -820,32 +780,37 @@ function confeti(){
     p.addEventListener('animationend',()=>p.remove());
   }
 }
- 
+
 // ===== PANTALLA COMPLETA =====
 function entrarFS(){
   const el=document.documentElement;
   if(el.requestFullscreen) el.requestFullscreen();
   else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
 }
- 
+
 function enJuego(){ return document.getElementById('juego').classList.contains('activa'); }
- 
+
 function generarOp(){
   const r=Math.floor(Math.random()*3);
   if(r===0){const a=1+Math.floor(Math.random()*10),b=1+Math.floor(Math.random()*10);return{t:`${a} + ${b} = ?`,r:a+b};}
   if(r===1){const a=6+Math.floor(Math.random()*9),b=1+Math.floor(Math.random()*5);return{t:`${a} - ${b} = ?`,r:a-b};}
   const a=2+Math.floor(Math.random()*5),b=2+Math.floor(Math.random()*5);return{t:`${a} × ${b} = ?`,r:a*b};
 }
- 
-function pedirMat(cb){
-  const op=generarOp(); matResp=op.r; matCb=cb;
+
+// ===== CONTROL PARENTAL UNIFICADO =====
+// desc: texto descriptivo que aparece en el overlay
+// cb:   función a ejecutar si se acierta la operación
+function pedirMat(desc, cb){
+  const op=generarOp();
+  matResp=op.r; matCb=cb;
+  document.getElementById('mat-desc').textContent = desc;
   document.getElementById('mat-q').textContent=op.t;
   document.getElementById('mat-inp').value='';
   document.getElementById('mat-err').textContent='';
   document.getElementById('ov-mat').classList.add('vis');
   setTimeout(()=>document.getElementById('mat-inp').focus(),120);
 }
- 
+
 function comprobar(){
   const v=parseInt(document.getElementById('mat-inp').value,10);
   if(v===matResp){
@@ -857,34 +822,45 @@ function comprobar(){
     document.getElementById('mat-inp').focus();
   }
 }
- 
-// Detectar salida de fullscreen
+
+// Botón ← Salir: pide control parental, envía informe si procede y vuelve al inicio
+function pedirSalir(){
+  pedirMat('Resuelve esta operación para volver al inicio:', ()=>{
+    enviarASheet('salida_manual');
+    volverInicio();
+  });
+}
+
+// Detección de salida de pantalla completa (Escape o botón del navegador)
 function onFSChange(){
   const enFS=!!(document.fullscreenElement||document.webkitFullscreenElement);
   if(!enFS && enJuego()){
-    pedirMat(()=>{
+    pedirMat('Resuelve esta operación para volver a pantalla completa:', ()=>{
       entrarFS();
-      if(enviarInforme) enviarASheet('salida_fs');
     });
+    // Enviar informe aunque no acierte (ya salió de fullscreen)
+    enviarASheet('salida_fs');
   }
 }
 document.addEventListener('fullscreenchange',onFSChange);
 document.addEventListener('webkitfullscreenchange',onFSChange);
- 
+
 // Bloquear Escape cuando overlay matemático está visible
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&document.getElementById('ov-mat').classList.contains('vis')){
     e.preventDefault(); e.stopPropagation();
   }
 },true);
- 
+
 // ===== GOOGLE SHEET =====
 function enviarASheet(motivo){
   if(!enviarInforme) return;
   const oks   = reg.filter(r=>r.ok).length;
   const errs  = reg.filter(r=>!r.ok).length;
   const falls = reg.filter(r=>!r.ok).map(r=>r.pedido.join('→')+' (respondió: '+r.resp.join('→')+')').join(' | ') || 'Ninguna';
-  const nota  = motivo==='salida_fs' ? '(sesión incompleta - salió de pantalla completa)' : '';
+  let nota = '';
+  if(motivo==='salida_fs')     nota = '(sesión incompleta - salió de pantalla completa)';
+  if(motivo==='salida_manual') nota = '(sesión incompleta - salió manualmente)';
   fetch(SHEET_URL,{
     method:'POST',
     body: JSON.stringify({
@@ -898,7 +874,7 @@ function enviarASheet(motivo){
     headers:{'Content-Type':'application/json'}
   }).catch(e=>console.log('Sheet error:',e));
 }
- 
+
 // ===== REPORTE HTML LOCAL =====
 function htmlReporte(motivo){
   const now=new Date();
@@ -907,7 +883,7 @@ function htmlReporte(motivo){
   const oks=reg.filter(r=>r.ok).length;
   const tot=reg.length;
   const pct=tot>0?Math.round(oks/tot*100):0;
- 
+
   const filas=reg.map(r=>`
     <tr style="background:${r.ok?'#F0FFF4':'#FFF5F5'}">
       <td style="padding:8px 12px;text-align:center;font-weight:700">${r.n}</td>
@@ -917,7 +893,7 @@ function htmlReporte(motivo){
       <td style="padding:8px 12px">${r.resp.join(' → ')}</td>
       <td style="padding:8px 12px;text-align:center;font-size:1.2rem">${r.ok?'✅':'❌'}</td>
     </tr>`).join('');
- 
+
   return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
 <title>Reporte · La Heladería Mágica</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
@@ -936,7 +912,7 @@ function htmlReporte(motivo){
 </style></head><body>
 <h1>🍦 La Heladería Mágica — Reporte</h1>
 <p style="color:#7A5C8A;font-weight:600">Alumno/a: <strong>${nombreAlumno||'Anónimo'}</strong> · Generado el ${now.toLocaleDateString('es-ES',{weekday:'long',year:'numeric',month:'long',day:'numeric'})} a las ${now.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})}</p>
-${motivo==='salida_fs'?'<p class="aviso">⚠️ Reporte generado al salir de pantalla completa (partida en curso)</p>':''}
+${(motivo==='salida_fs'||motivo==='salida_manual')?'<p class="aviso">⚠️ Reporte generado en sesión incompleta</p>':''}
 <div class="chips">
   <div class="chip">Modo: <span>${modo==='visual'?'👀 Visual':'👂 Auditivo'}</span></div>
   <div class="chip">Letras: <span>${letra==='may'?'ABC Mayúscula':'abc Minúscula'}</span></div>
@@ -954,7 +930,7 @@ ${motivo==='salida_fs'?'<p class="aviso">⚠️ Reporte generado al salir de pan
 <footer>La Heladería Mágica · Juego educativo</footer>
 </body></html>`;
 }
- 
+
 function descargar(){
   const blob=new Blob([htmlReporte('descarga')],{type:'text/html;charset=utf-8'});
   const url=URL.createObjectURL(blob);
@@ -962,7 +938,7 @@ function descargar(){
   a.download=`reporte_heladeria_${nombreAlumno||'anonimo'}_${new Date().toISOString().slice(0,10)}.html`;
   a.click(); URL.revokeObjectURL(url);
 }
- 
+
 // ===== FIN =====
 function fin(){
   show('fin');
@@ -975,7 +951,7 @@ function fin(){
   document.getElementById('fin-msg').textContent=msg;
   enviarASheet('fin');
 }
- 
+
 // ===== VOLVER =====
 function volverInicio(){
   window.speechSynthesis&&speechSynthesis.cancel();
@@ -986,7 +962,7 @@ function volverInicio(){
   }
   show('inicio');
 }
- 
+
 // ===== INIT =====
 burbujas();
 </script>

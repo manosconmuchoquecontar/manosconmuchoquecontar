@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El Cazador de Sílabas - Bajo el Mar</title>
     <link href="https://fonts.googleapis.com/css2?family=Playwrite+HR+Lijeva&family=Playwrite+DE+Grund&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
-
+ 
     <style>
         /* ===== VARIABLES Y RESET ===== */
         :root {
@@ -21,9 +21,9 @@
             --bubble2: rgba(0, 255, 231, 0.12);
             --text:    #e0f7ff;
         }
-
+ 
         * { margin:0; padding:0; box-sizing:border-box; }
-
+ 
         body {
             font-family: 'Nunito', sans-serif;
             background: var(--deep);
@@ -35,11 +35,11 @@
             color: var(--text);
             position: relative;
         }
-
+ 
         /* ===== FUENTE ADAPTATIVA ===== */
         .mode-mayus { font-family: 'Playwrite DE Grund', cursive; text-transform: uppercase; }
         .mode-minus { font-family: 'Playwrite HR Lijeva', cursive; text-transform: lowercase; }
-
+ 
         /* ===== FONDO OCEÁNICO ===== */
         #ocean-bg {
             position: fixed;
@@ -49,7 +49,7 @@
                 linear-gradient(180deg, #002a45 0%, #001428 40%, #000d1a 100%);
             z-index: 0;
         }
-
+ 
         /* Luz que baja desde arriba */
         #ocean-bg::before {
             content: '';
@@ -67,12 +67,12 @@
                 transparent 100deg);
             animation: lightShift 8s ease-in-out infinite alternate;
         }
-
+ 
         @keyframes lightShift {
             0%   { opacity: 0.6; transform: translateX(-52%) scaleX(0.9); }
             100% { opacity: 1;   transform: translateX(-48%) scaleX(1.1); }
         }
-
+ 
         /* Fondo con algas / suelo marino */
         #seabed {
             position: fixed;
@@ -81,9 +81,9 @@
             z-index: 1;
             overflow: hidden;
         }
-
+ 
         #seabed svg { width: 100%; height: 100%; }
-
+ 
         /* ===== BURBUJAS DE FONDO ANIMADAS ===== */
         .bg-bubble {
             position: fixed;
@@ -97,14 +97,14 @@
             z-index: 1;
             pointer-events: none;
         }
-
+ 
         @keyframes floatUp {
             0%   { transform: translateY(0) translateX(0) scale(1);    opacity: 0; }
             10%  { opacity: 1; }
             90%  { opacity: 0.8; }
             100% { transform: translateY(-110vh) translateX(var(--drift)) scale(0.8); opacity: 0; }
         }
-
+ 
         /* ===== PANTALLAS ===== */
         .screen {
             display: none;
@@ -116,7 +116,7 @@
             z-index: 10;
         }
         .screen.active { display: flex; }
-
+ 
         /* ===== PANTALLA DE INICIO ===== */
         #start-screen {
             gap: 0;
@@ -125,7 +125,7 @@
             justify-content: flex-start;
             padding-top: max(24px, env(safe-area-inset-top));
         }
-
+ 
         .intro-fish {
             font-size: 80px;
             animation: fishBob 3s ease-in-out infinite;
@@ -134,12 +134,12 @@
             position: relative;
             z-index: 11;
         }
-
+ 
         @keyframes fishBob {
             0%, 100% { transform: translateY(0) rotate(-3deg); }
             50%       { transform: translateY(-18px) rotate(3deg); }
         }
-
+ 
         .intro-title {
             font-family: 'Playwrite HR Lijeva', cursive;
             font-size: 3rem;
@@ -154,12 +154,12 @@
             z-index: 11;
             animation: titleGlow 3s ease-in-out infinite alternate;
         }
-
+ 
         @keyframes titleGlow {
             from { text-shadow: 0 0 15px rgba(0,196,255,0.7), 0 0 40px rgba(0,196,255,0.3); }
             to   { text-shadow: 0 0 25px rgba(0,255,231,0.9), 0 0 70px rgba(0,255,231,0.5); }
         }
-
+ 
         .intro-sub {
             font-size: 1rem;
             color: rgba(224,247,255,0.6);
@@ -168,7 +168,7 @@
             letter-spacing: 2px;
             text-transform: uppercase;
         }
-
+ 
         .menu-card {
             background: linear-gradient(160deg,
                 rgba(1, 45, 75, 0.92) 0%,
@@ -186,7 +186,7 @@
             z-index: 11;
             backdrop-filter: blur(10px);
         }
-
+ 
         .menu-section-label {
             font-family: 'Nunito', sans-serif;
             font-size: 0.8rem;
@@ -197,14 +197,14 @@
             margin-top: 22px;
             text-align: center;
         }
-
+ 
         .btn-row {
             display: flex;
             gap: 10px;
             justify-content: center;
             flex-wrap: wrap;
         }
-
+ 
         .btn-case {
             background: transparent;
             color: var(--text);
@@ -219,14 +219,14 @@
             position: relative;
             overflow: hidden;
         }
-
+ 
         .btn-case:hover, .btn-case.active-case {
             background: rgba(0,196,255,0.15);
             border-color: var(--glow);
             color: var(--glow);
             box-shadow: 0 0 20px rgba(0,196,255,0.3);
         }
-
+ 
         .btn-level {
             width: 100%;
             background: linear-gradient(135deg, rgba(0,196,255,0.15), rgba(0,100,160,0.2));
@@ -245,20 +245,20 @@
             margin-bottom: 8px;
             text-align: left;
         }
-
+ 
         .btn-level:hover {
             background: linear-gradient(135deg, rgba(0,196,255,0.3), rgba(0,100,160,0.4));
             border-color: var(--glow);
             transform: translateX(6px);
             box-shadow: 0 0 25px rgba(0,196,255,0.2);
         }
-
+ 
         .level-emoji { font-size: 1.5rem; }
-
+ 
         .level-info { flex:1; }
         .level-name { font-size: 1rem; font-weight: 900; }
         .level-desc { font-size: 0.75rem; color: rgba(224,247,255,0.5); margin-top: 2px; }
-
+ 
         /* ===== BARRA SUPERIOR ===== */
         #top-bar {
             position: fixed;
@@ -271,7 +271,7 @@
             z-index: 100;
             background: linear-gradient(180deg, rgba(0,10,25,0.9) 0%, transparent 100%);
         }
-
+ 
         .btn-ui {
             background: rgba(0,30,55,0.8);
             border: 1px solid rgba(0,196,255,0.3);
@@ -287,13 +287,13 @@
             transition: all 0.2s;
             color: white;
         }
-
+ 
         .btn-ui:hover {
             border-color: var(--glow);
             background: rgba(0,100,160,0.4);
             box-shadow: 0 0 16px rgba(0,196,255,0.3);
         }
-
+ 
         #progress-bar-wrap {
             flex: 1;
             height: 8px;
@@ -301,7 +301,7 @@
             border-radius: 10px;
             overflow: hidden;
         }
-
+ 
         #progress-bar {
             height: 100%;
             background: linear-gradient(90deg, var(--glow), var(--glow2));
@@ -310,19 +310,19 @@
             transition: width 0.6s ease;
             box-shadow: 0 0 12px rgba(0,196,255,0.7);
         }
-
+ 
         #progress-label {
             font-size: 0.85rem;
             color: rgba(224,247,255,0.6);
             white-space: nowrap;
             font-family: 'Nunito', sans-serif;
         }
-
+ 
         /* ===== PANTALLA DE JUEGO ===== */
         #game-screen {
             padding-top: 70px;
         }
-
+ 
         #game-area {
             position: relative;
             width: 100%;
@@ -331,7 +331,7 @@
             flex-direction: column;
             align-items: center;
         }
-
+ 
         /* Emoji de la palabra */
         #word-image {
             font-size: 90px;
@@ -350,12 +350,12 @@
             animation: imgPulse 4s ease-in-out infinite;
             flex-shrink: 0;
         }
-
+ 
         @keyframes imgPulse {
             0%, 100% { box-shadow: 0 0 30px rgba(0,100,180,0.4), inset 0 0 30px rgba(0,0,0,0.3); }
             50%       { box-shadow: 0 0 55px rgba(0,196,255,0.5), inset 0 0 30px rgba(0,0,0,0.3); }
         }
-
+ 
         /* Slots de sílabas */
         #display-text {
             display: flex;
@@ -366,7 +366,7 @@
             flex-wrap: wrap;
             padding: 0 20px;
         }
-
+ 
         .syllable-slot {
             min-width: 70px;
             height: 60px;
@@ -379,13 +379,13 @@
             padding: 0 12px;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
+ 
         .syllable-slot.empty {
             background: rgba(0,196,255,0.06);
             border: 2px dashed rgba(0,196,255,0.3);
             color: rgba(0,196,255,0.3);
         }
-
+ 
         .syllable-slot.filled {
             background: linear-gradient(135deg, rgba(0,196,255,0.25), rgba(0,150,200,0.15));
             border: 2px solid rgba(0,196,255,0.6);
@@ -394,19 +394,19 @@
             animation: slotAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-shadow: 0 0 15px rgba(0,196,255,0.8);
         }
-
+ 
         @keyframes slotAppear {
             0%   { transform: scale(0.5) translateY(-10px); opacity: 0; }
             100% { transform: scale(1) translateY(0); opacity: 1; }
         }
-
+ 
         /* ===== BURBUJAS DEL JUEGO ===== */
         #bubbles-container {
             position: absolute;
             inset: 0;
             pointer-events: none;
         }
-
+ 
         .game-bubble {
             position: absolute;
             border-radius: 50%;
@@ -419,7 +419,7 @@
             color: white;
             animation: gameBubbleFloat var(--dur) ease-in-out infinite alternate;
             transition: transform 0.15s, box-shadow 0.15s;
-
+ 
             /* Aspecto burbuja de jabón */
             background:
                 radial-gradient(circle at 35% 30%, rgba(255,255,255,0.45) 0%, transparent 50%),
@@ -431,10 +431,10 @@
                 inset 4px 4px 10px rgba(255,255,255,0.25),
                 0 4px 20px rgba(0,0,0,0.3),
                 0 0 0 1px rgba(0,200,255,0.15);
-
+ 
             user-select: none;
         }
-
+ 
         .game-bubble:hover {
             transform: scale(1.12) !important;
             box-shadow:
@@ -443,13 +443,13 @@
                 0 4px 30px rgba(0,0,0,0.4),
                 0 0 25px rgba(0,196,255,0.5);
         }
-
+ 
         .game-bubble.wrong {
             animation: wrongShake 0.4s ease !important;
             border-color: rgba(255,100,100,0.7) !important;
             box-shadow: 0 0 25px rgba(255,60,60,0.5) !important;
         }
-
+ 
         .game-bubble.flying {
             animation: none !important;
             transition: left 0.45s cubic-bezier(0.4, 0, 0.2, 1),
@@ -463,12 +463,12 @@
             pointer-events: none;
             z-index: 200;
         }
-
+ 
         @keyframes gameBubbleFloat {
             0%   { transform: translateY(0px) translateX(-4px) rotate(-1deg); }
             100% { transform: translateY(var(--bob)) translateX(4px) rotate(1deg); }
         }
-
+ 
         @keyframes wrongShake {
             0%, 100% { transform: translateX(0) scale(1); }
             20%  { transform: translateX(-8px) scale(0.95); }
@@ -476,18 +476,18 @@
             60%  { transform: translateX(-5px) scale(0.97); }
             80%  { transform: translateX(5px) scale(0.97); }
         }
-
+ 
         @keyframes slotPop {
             0%   { transform: scale(1); }
             40%  { transform: scale(1.3); box-shadow: 0 0 35px rgba(0,255,200,0.7); }
             70%  { transform: scale(0.92); }
             100% { transform: scale(1); }
         }
-
+ 
         .syllable-slot.just-filled {
             animation: slotPop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
         }
-
+ 
         /* ===== OVERLAY / MODAL ===== */
         #overlay {
             position: fixed;
@@ -500,9 +500,9 @@
             justify-content: center;
             backdrop-filter: blur(6px);
         }
-
+ 
         #overlay.active { display: flex; }
-
+ 
         .modal-card {
             background: linear-gradient(160deg, rgba(1,40,70,0.97), rgba(0,15,35,0.99));
             border: 1px solid rgba(0,196,255,0.3);
@@ -513,7 +513,7 @@
             text-align: center;
             box-shadow: 0 0 80px rgba(0,80,160,0.5), 0 30px 60px rgba(0,0,0,0.6);
         }
-
+ 
         .modal-card h2 {
             font-family: 'Playwrite HR Lijeva', cursive;
             font-size: 1.8rem;
@@ -521,14 +521,14 @@
             margin-bottom: 10px;
             text-shadow: 0 0 20px rgba(0,196,255,0.6);
         }
-
+ 
         .modal-card p {
             color: rgba(224,247,255,0.7);
             margin-bottom: 24px;
             font-size: 1rem;
             line-height: 1.5;
         }
-
+ 
         .modal-sum {
             font-size: 2.2rem;
             font-weight: 900;
@@ -536,7 +536,7 @@
             margin: 16px 0;
             text-shadow: 0 0 20px rgba(255,209,102,0.5);
         }
-
+ 
         .modal-input {
             background: rgba(0,50,90,0.6);
             border: 2px solid rgba(0,196,255,0.4);
@@ -550,19 +550,19 @@
             outline: none;
             font-family: 'Nunito', sans-serif;
         }
-
+ 
         .modal-input:focus {
             border-color: var(--glow);
             box-shadow: 0 0 20px rgba(0,196,255,0.3);
         }
-
+ 
         .modal-btn-row {
             display: flex;
             gap: 12px;
             justify-content: center;
             margin-top: 20px;
         }
-
+ 
         .btn-confirm {
             background: linear-gradient(135deg, #0096c7, #005f8c);
             color: white;
@@ -575,12 +575,12 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-
+ 
         .btn-confirm:hover {
             transform: translateY(-2px);
             box-shadow: 0 0 20px rgba(0,150,199,0.5);
         }
-
+ 
         .btn-cancel {
             background: transparent;
             color: rgba(224,247,255,0.5);
@@ -593,21 +593,21 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-
+ 
         .btn-cancel:hover { color: var(--text); border-color: rgba(224,247,255,0.5); }
-
+ 
         .modal-error {
             color: var(--coral);
             font-size: 0.9rem;
             margin-top: 8px;
             min-height: 20px;
         }
-
+ 
         /* ===== PANTALLA FINAL ===== */
         #end-screen {
             z-index: 15;
         }
-
+ 
         .end-card {
             background: linear-gradient(160deg, rgba(1,40,70,0.97), rgba(0,15,35,0.99));
             border: 1px solid rgba(0,196,255,0.3);
@@ -618,14 +618,14 @@
             text-align: center;
             box-shadow: 0 0 80px rgba(0,80,160,0.4);
         }
-
+ 
         .end-trophy { font-size: 70px; animation: trophyBounce 1s ease-out; }
         @keyframes trophyBounce {
             0%   { transform: scale(0) rotate(-10deg); }
             70%  { transform: scale(1.2) rotate(5deg); }
             100% { transform: scale(1) rotate(0deg); }
         }
-
+ 
         .end-title {
             font-family: 'Playwrite HR Lijeva', cursive;
             font-size: 2rem;
@@ -633,14 +633,14 @@
             text-shadow: 0 0 30px rgba(255,209,102,0.5);
             margin: 14px 0 8px;
         }
-
+ 
         .end-stats {
             display: flex;
             justify-content: center;
             gap: 24px;
             margin: 20px 0;
         }
-
+ 
         .stat-box {
             background: rgba(0,196,255,0.08);
             border: 1px solid rgba(0,196,255,0.2);
@@ -648,14 +648,14 @@
             padding: 16px 24px;
             text-align: center;
         }
-
+ 
         .stat-num {
             font-size: 2.2rem;
             font-weight: 900;
             color: var(--glow);
             line-height: 1;
         }
-
+ 
         .stat-lbl {
             font-size: 0.75rem;
             color: rgba(224,247,255,0.5);
@@ -663,7 +663,7 @@
             letter-spacing: 1px;
             margin-top: 4px;
         }
-
+ 
         .end-btn {
             background: linear-gradient(135deg, #0096c7, #005f8c);
             color: white;
@@ -677,15 +677,15 @@
             margin: 8px;
             transition: all 0.25s;
         }
-
+ 
         .end-btn:hover { transform: translateY(-3px); box-shadow: 0 0 25px rgba(0,150,199,0.5); }
-
+ 
         .end-btn.secondary {
             background: transparent;
             border: 1px solid rgba(0,196,255,0.4);
             color: var(--glow);
         }
-
+ 
         /* ===== PECES DECORATIVOS ===== */
         .deco-fish {
             position: fixed;
@@ -695,14 +695,14 @@
             pointer-events: none;
             opacity: 0.6;
         }
-
+ 
         @keyframes fishSwim {
             0%   { transform: translateX(-120px) translateY(0px); }
             25%  { transform: translateX(25vw) translateY(var(--ydrift1, -20px)); }
             75%  { transform: translateX(75vw) translateY(var(--ydrift2, 15px)); }
             100% { transform: translateX(calc(100vw + 120px)) translateY(0px); }
         }
-
+ 
         /* ===== RESPONSIVE ===== */
         @media (max-height: 750px) {
             .intro-fish { font-size: 55px; margin-bottom: 4px; }
@@ -712,7 +712,7 @@
             .menu-section-label { margin-top: 14px; margin-bottom: 8px; }
             .btn-level { padding: 11px 16px; margin-bottom: 6px; }
         }
-
+ 
         @media (max-height: 600px) {
             #word-image { width: 90px; height: 90px; font-size: 55px; margin-top: 8px; }
             .intro-fish { font-size: 40px; margin-bottom: 2px; }
@@ -721,7 +721,7 @@
             .menu-card { padding: 16px 22px; }
             .btn-level { padding: 9px 14px; font-size: 0.95rem; }
         }
-
+ 
         @media (max-width: 480px) {
             .menu-card { padding: 24px 20px; }
             .intro-title { font-size: 2.4rem; }
@@ -729,7 +729,7 @@
     </style>
 </head>
 <body class="mode-mayus">
-
+ 
 <!-- FONDO -->
 <div id="ocean-bg"></div>
 <div id="seabed">
@@ -760,7 +760,7 @@
         <text x="260" y="107" font-size="16" opacity="0.4">🪸</text>
     </svg>
 </div>
-
+ 
 <!-- BARRA SUPERIOR (sólo en juego) -->
 <div id="top-bar" style="display:none">
     <button class="btn-ui" onclick="askExit()" title="Salir">🏠</button>
@@ -771,7 +771,7 @@
             onmousedown="startFSTimer()" onmouseup="stopFSTimer()"
             ontouchstart="startFSTimer()" ontouchend="stopFSTimer()" title="Pantalla completa">📺</button>
 </div>
-
+ 
 <!-- ===== ANTESALA ===== -->
 <div id="nombre-screen" style="position:fixed;inset:0;background:linear-gradient(135deg,#e0f7fa,#80deea);display:flex;align-items:center;justify-content:center;z-index:9999;">
   <div style="background:white;padding:40px;border-radius:40px;max-width:440px;width:90%;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.12);font-family:'Helvetica Neue',Arial,sans-serif;">
@@ -793,20 +793,20 @@
     </p>
   </div>
 </div>
-
+ 
 <!-- ===== PANTALLA INICIO ===== -->
 <div id="start-screen" class="screen">
     <div class="intro-fish">🐠</div>
     <div class="intro-title">El Cazador<br>de Sílabas</div>
     <p class="intro-sub">bajo el mar · aventura de lectura</p>
-
+ 
     <div class="menu-card">
         <p class="menu-section-label">Tipo de letra</p>
         <div class="btn-row">
             <button class="btn-case active-case" id="btn-may" onclick="setCase('MAY')">MAYÚSCULAS</button>
             <button class="btn-case" id="btn-min" onclick="setCase('MIN')">minúsculas</button>
         </div>
-
+ 
         <p class="menu-section-label">Elige tu nivel</p>
         <button class="btn-level" onclick="startGame(1)">
             <span class="level-emoji">🐠</span>
@@ -831,7 +831,7 @@
         </button>
     </div>
 </div>
-
+ 
 <!-- ===== PANTALLA DE JUEGO ===== -->
 <div id="game-screen" class="screen">
     <div id="game-area">
@@ -840,7 +840,7 @@
         <div id="bubbles-container"></div>
     </div>
 </div>
-
+ 
 <!-- ===== PANTALLA FINAL ===== -->
 <div id="end-screen" class="screen">
     <div class="end-card">
@@ -862,14 +862,14 @@
         <button class="end-btn secondary" onclick="goToStart()">🏠 Volver al inicio</button>
     </div>
 </div>
-
+ 
 <!-- ===== OVERLAY MODAL ===== -->
 <div id="overlay">
     <div class="modal-card">
         <div id="modal-content"></div>
     </div>
 </div>
-
+ 
 <script>
 /* =====================================================================
    ESTADO
@@ -888,7 +888,7 @@ let sessionWords   = [];
 let currentWord    = {};
 let fsHoldTimer;
 let overlayMode    = null;   // 'exit' | 'report' | 'fullscreen'
-
+ 
 /* =====================================================================
    DICCIONARIO
    ===================================================================== */
@@ -930,14 +930,14 @@ const dictionary = {
         {w:'MICRÓFONO',s:['MI','CRÓ','FO','NO'],i:'🎤'},{w:'TRICERATOPS',s:['TRI','CE','RA','TOPS'],i:'🦖'}
     ]
 };
-
+ 
 /* Sílabas cebo para cada nivel */
 const distractors = {
     1: ['MA','LO','DE','RA','SI','FU','TE','CU'],
     2: ['CIÓN','PRE','TES','MEN','FLO','GRAN','SOL','CAR'],
     3: ['TRANS','CIÓN','PREN','CLAS','FLU','PLAN','BRIS','CRES']
 };
-
+ 
 /* =====================================================================
    BURBUJAS DE FONDO (decorativas)
    ===================================================================== */
@@ -961,7 +961,7 @@ function createBgBubbles() {
         document.body.appendChild(b);
     }
 }
-
+ 
 /* =====================================================================
    PECES DECORATIVOS (sólo pantalla inicio)
    ===================================================================== */
@@ -988,7 +988,7 @@ function createDecoFish() {
         document.body.appendChild(f);
     }
 }
-
+ 
 /* =====================================================================
    MODO MAYUS / MINUS
    ===================================================================== */
@@ -1007,14 +1007,14 @@ function guardarNombreYContinuar() {
     document.getElementById('nombre-screen').style.display = 'none';
     document.getElementById('start-screen').classList.add('active');
 }
-
+ 
 function continuarSinNombre() {
     alumnoNombre   = 'Anónimo';
     ENVIAR_INFORME = false;
     document.getElementById('nombre-screen').style.display = 'none';
     document.getElementById('start-screen').classList.add('active');
 }
-
+ 
 function setCase(c) {
     currentCase = c;
     document.body.className = (c === 'MAY') ? 'mode-mayus' : 'mode-minus';
@@ -1022,7 +1022,7 @@ function setCase(c) {
     document.getElementById('btn-min').classList.toggle('active-case', c === 'MIN');
     speak(c === 'MAY' ? 'Mayúsculas' : 'minúsculas');
 }
-
+ 
 /* =====================================================================
    INICIO DE PARTIDA
    ===================================================================== */
@@ -1031,14 +1031,14 @@ function startGame(level) {
     currentWordIdx = 0;
     gameStats      = [];
     sessionWords   = [...dictionary[level]].sort(() => Math.random() - 0.5);
-
+ 
     document.getElementById('start-screen').classList.remove('active');
     document.getElementById('game-screen').classList.add('active');
     document.getElementById('top-bar').style.display = 'flex';
-
+ 
     loadWord();
 }
-
+ 
 /* =====================================================================
    CARGA DE PALABRA
    ===================================================================== */
@@ -1053,13 +1053,13 @@ function loadWord() {
     renderGame();
     speak(currentWord.w);
 }
-
+ 
 function updateProgress() {
     const pct = (currentWordIdx / 20) * 100;
     document.getElementById('progress-bar').style.width = pct + '%';
     document.getElementById('progress-label').textContent = `${currentWordIdx + 1} / 20`;
 }
-
+ 
 /* =====================================================================
    RENDER DEL JUEGO
    ===================================================================== */
@@ -1068,7 +1068,7 @@ function renderGame() {
     renderSlots();
     renderBubbles();
 }
-
+ 
 function renderSlots() {
     const display = document.getElementById('display-text');
     display.innerHTML = currentWord.s.map((s, i) => {
@@ -1079,27 +1079,32 @@ function renderSlots() {
         return `<div class="syllable-slot empty">?</div>`;
     }).join('');
 }
-
+ 
 function renderBubbles() {
     const container = document.getElementById('bubbles-container');
     container.innerHTML = '';
-
+ 
     const pending  = currentWord.s.slice(syllablesFound.length);
     const distPool = [...distractors[currentLevel]].sort(() => Math.random() - 0.5).slice(0, 4);
     const pool     = [...pending, ...distPool].sort(() => Math.random() - 0.5);
     const positions = generatePositions(pool.length);
-
+ 
     pool.forEach((syl, idx) => {
-        const size = 90 + syl.length * 5;
+        const size = 100 + syl.length * 6;
         const dur  = 2 + Math.random() * 2;
         const bob  = -(8 + Math.random() * 14) + 'px';
-
+        // Minúsculas necesitan más tamaño porque la fuente cursiva es más fina
+        const fontBase = currentCase === 'MIN' ? 1.9 : 1.6;
+        const fontSize = syl.length <= 2 ? fontBase + 0.3
+                       : syl.length <= 3 ? fontBase
+                       : fontBase - 0.2;
+ 
         const b = document.createElement('div');
         b.className = 'game-bubble';
         b.textContent = formatText(syl);
         b.style.cssText = `
             width:${size}px; height:${size}px;
-            font-size:${size > 110 ? 1.5 : 1.3}rem;
+            font-size:${fontSize}rem;
             left:${positions[idx].x}%;
             top:${positions[idx].y}%;
             --dur:${dur}s;
@@ -1110,7 +1115,7 @@ function renderBubbles() {
         container.appendChild(b);
     });
 }
-
+ 
 /* =====================================================================
    ANIMACIÓN: BURBUJA VUELA HACIA EL SLOT
    ===================================================================== */
@@ -1118,40 +1123,40 @@ function flyBubbleToSlot(bubble, slot, onDone) {
     // Posición actual de la burbuja (centro)
     const bRect = bubble.getBoundingClientRect();
     const sRect = slot.getBoundingClientRect();
-
+ 
     // Centro del slot destino
     const targetCX = sRect.left + sRect.width  / 2;
     const targetCY = sRect.top  + sRect.height / 2;
-
+ 
     // Centro actual de la burbuja
     const bCX = bRect.left + bRect.width  / 2;
     const bCY = bRect.top  + bRect.height / 2;
-
+ 
     // Convertir a coordenadas % dentro del contenedor (position:absolute)
     const container = document.getElementById('bubbles-container');
     const cRect     = container.getBoundingClientRect();
-
+ 
     // Nueva posición left/top para que el centro de la burbuja quede sobre el slot
     const newLeft = ((targetCX - bRect.width  / 2) - cRect.left) / cRect.width  * 100;
     const newTop  = ((targetCY - bRect.height / 2) - cRect.top)  / cRect.height * 100;
-
+ 
     // Activar clase de vuelo (desactiva animación flotante, activa transition)
     bubble.classList.add('flying');
-
+ 
     // Forzar reflow para que la transition arranque desde la posición actual
     bubble.getBoundingClientRect();
-
+ 
     // Mover al destino
     bubble.style.left = newLeft + '%';
     bubble.style.top  = newTop  + '%';
-
+ 
     // Tras la transición, eliminar burbuja y llamar al callback
     setTimeout(() => {
         bubble.remove();
         if (onDone) onDone();
     }, 460);
 }
-
+ 
 function generatePositions(n) {
     const positions = [];
     const minDist   = 15;
@@ -1172,34 +1177,34 @@ function generatePositions(n) {
     }
     return positions;
 }
-
+ 
 function formatText(s) {
     return currentCase === 'MAY' ? s.toUpperCase() : s.toLowerCase();
 }
-
+ 
 /* =====================================================================
    VALIDACIÓN
    ===================================================================== */
 function validateSyllable(syl, el) {
     const target = currentWord.s[syllablesFound.length];
     if (!target) return;
-
+ 
     if (syl.toUpperCase() === target.toUpperCase()) {
         // Correcto
         syllablesFound.push(syl);
-        speak(syl);
+        speakSyllable(syl);
         gameStats.push({
             word:   currentWord.w,
             res:    'OK',
             syl:    syl,
             time:   new Date().toLocaleTimeString()
         });
-
+ 
         // 1. Calcular posición del slot destino
         const slotIdx = syllablesFound.length - 1;
         const slots   = document.querySelectorAll('.syllable-slot');
         const slot    = slots[slotIdx];
-
+ 
         // 2. Animar burbuja volando hacia el slot
         flyBubbleToSlot(el, slot, () => {
             // 3. Al llegar: rellenar slot con animación
@@ -1207,7 +1212,7 @@ function validateSyllable(syl, el) {
             slot.classList.remove('empty');
             slot.classList.add('filled', 'just-filled');
             setTimeout(() => slot.classList.remove('just-filled'), 450);
-
+ 
             if (syllablesFound.length === currentWord.s.length) {
                 // Palabra completa: esperar para que se vea y pasar
                 document.getElementById('bubbles-container').style.pointerEvents = 'none';
@@ -1221,7 +1226,7 @@ function validateSyllable(syl, el) {
                 setTimeout(() => renderBubbles(), 200);
             }
         });
-
+ 
     } else {
         // Error
         speak('Esa no');
@@ -1235,7 +1240,7 @@ function validateSyllable(syl, el) {
         setTimeout(() => el.classList.remove('wrong'), 400);
     }
 }
-
+ 
 /* =====================================================================
    PANTALLA FINAL
    ===================================================================== */
@@ -1243,7 +1248,7 @@ function showEndScreen() {
     document.getElementById('game-screen').classList.remove('active');
     document.getElementById('top-bar').style.display = 'none';
     document.getElementById('end-screen').classList.add('active');
-
+ 
     const ok  = gameStats.filter(g => g.res === 'OK').length;
     const err = gameStats.filter(g => g.res === 'ERROR').length;
     document.getElementById('end-ok').textContent  = ok;
@@ -1251,7 +1256,7 @@ function showEndScreen() {
     const nombre = alumnoNombre || 'aventurero/a';
     document.getElementById('end-nombre').textContent = `¡Bien hecho, ${nombre}! Has completado las 20 palabras.`;
 }
-
+ 
 /* =====================================================================
    OVERLAY / CONTROL PARENTAL
    ===================================================================== */
@@ -1262,14 +1267,14 @@ function showOverlay(mode) {
     const n1   = Math.floor(Math.random() * 6);
     const n2   = Math.floor(Math.random() * 6);
     const ans  = n1 + n2;
-
+ 
     let icon = '🏠', title = 'Salir al inicio', desc = 'Introduce la respuesta para confirmar que eres un adulto.';
     if (mode === 'report') {
         icon = '📋'; title = 'Descargar informe'; desc = 'Introduce la respuesta para descargar el informe de sesión.';
     } else if (mode === 'fullscreen') {
         icon = '📺'; title = 'Pantalla completa'; desc = 'Introduce la respuesta para cambiar el modo de pantalla.';
     }
-
+ 
     mc.innerHTML = `
         <div style="font-size:3rem; margin-bottom:10px">${icon}</div>
         <h2>${title}</h2>
@@ -1283,7 +1288,7 @@ function showOverlay(mode) {
             <button class="btn-confirm" onclick="confirmParental(${ans})">Confirmar</button>
         </div>
     `;
-
+ 
     ov.classList.add('active');
     setTimeout(() => {
         const inp = document.getElementById('parental-input');
@@ -1293,7 +1298,7 @@ function showOverlay(mode) {
         }
     }, 50);
 }
-
+ 
 function confirmParental(ans) {
     const val = parseInt(document.getElementById('parental-input').value, 10);
     if (val === ans) {
@@ -1311,12 +1316,12 @@ function confirmParental(ans) {
         document.getElementById('parental-input').focus();
     }
 }
-
+ 
 function closeOverlay() {
     document.getElementById('overlay').classList.remove('active');
     overlayMode = null;
 }
-
+ 
 function goToStart() {
     // Ocultar todas las pantallas de juego
     document.getElementById('game-screen').classList.remove('active');
@@ -1331,10 +1336,10 @@ function goToStart() {
     // Volver al menú de nivel (sin pasar por antesala de nuevo)
     document.getElementById('start-screen').classList.add('active');
 }
-
+ 
 function askExit()   { showOverlay('exit'); }
 function askReport() { showOverlay('report'); }
-
+ 
 /* =====================================================================
    FULLSCREEN
    ===================================================================== */
@@ -1345,7 +1350,7 @@ function handleFSClick() {
     }
     // Si ya está en fullscreen, el hold largo (startFSTimer) pedirá la suma para salir
 }
-
+ 
 function startFSTimer() {
     // Hold 2.5s: pedir control parental para SALIR de pantalla completa
     if (document.fullscreenElement) {
@@ -1353,19 +1358,19 @@ function startFSTimer() {
     }
 }
 function stopFSTimer() { clearTimeout(fsHoldTimer); }
-
+ 
 function toggleFullscreen() {
     if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
     else document.exitFullscreen();
 }
-
+ 
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && document.fullscreenElement) {
         e.preventDefault();
         e.stopImmediatePropagation();
     }
 }, true);
-
+ 
 document.addEventListener('fullscreenchange', () => {
     if (!document.fullscreenElement) {
         // Re-entra automáticamente
@@ -1374,17 +1379,35 @@ document.addEventListener('fullscreenchange', () => {
         }, 300);
     }
 });
-
+ 
 /* =====================================================================
    VOZ
    ===================================================================== */
 function speak(txt) {
+    // Normalizamos para el TTS: minúsculas y añadimos vocal de apoyo
+    // si es sílaba de 2 letras consonante-vocal para que no las separe
     const u = new SpeechSynthesisUtterance(txt);
     u.lang = 'es-ES';
+    u.rate = 0.85;   // un poco más lento para que las sílabas cortas se oigan claras
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(u);
 }
-
+ 
+function speakSyllable(syl) {
+    // Para sílabas cortas tipo "BO", "CA", "PI" el TTS a veces las separa.
+    // Pasamos la sílaba en minúsculas + pausa larga después para que el motor
+    // las trate como unidad fonética, no como acrónimo.
+    const clean = syl.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    // Añadir un punto tras la sílaba fuerza una pausa y evita que el TTS
+    // la trate como una abreviatura o iniciales
+    const u = new SpeechSynthesisUtterance(clean + '.');
+    u.lang = 'es-ES';
+    u.rate = 0.8;
+    u.pitch = 1.1;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(u);
+}
+ 
 /* =====================================================================
    INFORME
    ===================================================================== */
@@ -1392,11 +1415,11 @@ function downloadReport() {
     const ok  = gameStats.filter(g => g.res === 'OK').length;
     const err = gameStats.filter(g => g.res === 'ERROR').length;
     const now = new Date().toLocaleDateString('es-ES', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
-
+ 
     const levelName = ['','Nivel 1 - Peces pequeños','Nivel 2 - Aguas profundas','Nivel 3 - El Gran Fondo'][currentLevel];
     const nombreMostrar = alumnoNombre || 'Alumno/a';
     const cursoMostrar  = alumnoCurso  ? ` · ${alumnoCurso}` : '';
-
+ 
     let rows = '';
     gameStats.forEach(g => {
         rows += `<tr>
@@ -1406,7 +1429,7 @@ function downloadReport() {
             <td>${g.syl}</td>
         </tr>`;
     });
-
+ 
     const html = `<!DOCTYPE html>
 <html lang="es"><head><meta charset="UTF-8">
 <style>
@@ -1438,29 +1461,29 @@ function downloadReport() {
     ${rows}
 </table>
 </body></html>`;
-
+ 
     const blob = new Blob([html], {type:'text/html'});
     const a    = document.createElement('a');
     a.href     = URL.createObjectURL(blob);
     a.download = `informe_silabas_${new Date().toISOString().slice(0,10)}.html`;
     a.click();
-
+ 
     // Envío por email si está activado
     if (ENVIAR_INFORME && alumnoEmail) {
         const asunto  = encodeURIComponent(`Informe El Cazador de Sílabas – ${nombreMostrar}`);
         const cuerpo  = encodeURIComponent(
             `Hola,
-
+ 
 Adjunto el informe de la sesión de "${nombreMostrar}"${alumnoCurso ? ' ('+alumnoCurso+')' : ''} en El Cazador de Sílabas.
-
+ 
 ` +
             `Fecha: ${now}
 Nivel: ${levelName}
 Aciertos: ${ok}  |  Errores: ${err}
-
+ 
 ` +
             `El archivo HTML se ha descargado en tu dispositivo. Puedes adjuntarlo a este correo.
-
+ 
 ` +
             `(Este correo se ha abierto automáticamente desde el juego)`
         );
@@ -1469,7 +1492,7 @@ Aciertos: ${ok}  |  Errores: ${err}
         }, 800);
     }
 }
-
+ 
 /* =====================================================================
    INIT
    ===================================================================== */

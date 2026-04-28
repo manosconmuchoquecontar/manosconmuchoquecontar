@@ -125,10 +125,10 @@
         }
  
         .intro-fish {
-            font-size: 80px;
+            font-size: 55px;
             animation: fishBob 3s ease-in-out infinite;
             filter: drop-shadow(0 0 20px rgba(0,196,255,0.6));
-            margin-bottom: 10px;
+            margin-bottom: 4px;
             position: relative;
             z-index: 11;
         }
@@ -140,7 +140,7 @@
  
         .intro-title {
             font-family: 'Playwrite HR Lijeva', cursive;
-            font-size: 3rem;
+            font-size: 2.2rem;
             color: var(--glow);
             text-shadow:
                 0 0 20px rgba(0,196,255,0.8),
@@ -159,9 +159,9 @@
         }
  
         .intro-sub {
-            font-size: 1rem;
+            font-size: 0.85rem;
             color: rgba(224,247,255,0.6);
-            margin-bottom: 30px;
+            margin-bottom: 14px;
             text-align: center;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -171,7 +171,7 @@
             background: linear-gradient(160deg,
                 rgba(1, 45, 75, 0.92) 0%,
                 rgba(0, 20, 40, 0.95) 100%);
-            padding: 35px 45px;
+            padding: 20px 30px;
             border-radius: 30px;
             border: 1px solid rgba(0,196,255,0.3);
             box-shadow:
@@ -191,8 +191,8 @@
             letter-spacing: 3px;
             text-transform: uppercase;
             color: rgba(0,196,255,0.6);
-            margin-bottom: 12px;
-            margin-top: 22px;
+            margin-bottom: 8px;
+            margin-top: 12px;
             text-align: center;
         }
  
@@ -230,9 +230,9 @@
             background: linear-gradient(135deg, rgba(0,196,255,0.15), rgba(0,100,160,0.2));
             color: var(--text);
             border: 1px solid rgba(0,196,255,0.3);
-            padding: 14px 20px;
+            padding: 10px 16px;
             border-radius: 16px;
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-family: 'Nunito', sans-serif;
             font-weight: 700;
             cursor: pointer;
@@ -240,7 +240,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             text-align: left;
         }
  
@@ -819,12 +819,11 @@
             </span>
         </button>
 
+        <!-- BOTÓN VOLVER A LA WEB -->
+        <a href="https://manosconmuchoquecontar.github.io/" target="_blank" class="btn-volver-web" style="display:block;margin-top:20px;text-align:center;">
+            🏠 Volver a los juegos
+        </a>
     </div>
-
-    <!-- BOTÓN VOLVER A LA WEB (fuera del card, siempre visible) -->
-    <a href="https://manosconmuchoquecontar.github.io/" target="_blank" class="btn-volver-web" style="max-width:480px;width:90%;margin-top:16px;margin-bottom:8px;">
-        🏠 Volver a los juegos
-    </a>
 </div>
  
 <!-- ===== PANTALLA DE JUEGO ===== -->
@@ -1305,10 +1304,10 @@ function speak(txt) {
 }
 
 function speakSyllable(syl) {
-    const clean = syl.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    const u = new SpeechSynthesisUtterance(clean + '.');
+    // Pronunciamos la sílaba sola, sin punto ni trucos que confundan al TTS
+    const u = new SpeechSynthesisUtterance(syl.toLowerCase());
     u.lang = 'es-ES';
-    u.rate = 0.8;
+    u.rate = 0.65;   // más lento para que no se coma la sílaba
     u.pitch = 1.1;
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(u);

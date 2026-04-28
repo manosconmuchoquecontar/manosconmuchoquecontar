@@ -50,7 +50,6 @@
             z-index: 0;
         }
  
-        /* Luz que baja desde arriba */
         #ocean-bg::before {
             content: '';
             position: absolute;
@@ -73,7 +72,6 @@
             100% { opacity: 1;   transform: translateX(-48%) scaleX(1.1); }
         }
  
-        /* Fondo con algas / suelo marino */
         #seabed {
             position: fixed;
             bottom: 0; left: 0; right: 0;
@@ -84,7 +82,7 @@
  
         #seabed svg { width: 100%; height: 100%; }
  
-        /* ===== BURBUJAS DE FONDO ANIMADAS ===== */
+        /* ===== BURBUJAS DE FONDO ===== */
         .bg-bubble {
             position: fixed;
             border-radius: 50%;
@@ -121,7 +119,7 @@
         #start-screen {
             gap: 0;
             overflow-y: auto;
-            padding: 16px 16px 180px;  /* padding-bottom para no tapar con el suelo marino */
+            padding: 16px 16px 200px;
             justify-content: flex-start;
             padding-top: max(24px, env(safe-area-inset-top));
         }
@@ -254,10 +252,33 @@
         }
  
         .level-emoji { font-size: 1.5rem; }
- 
         .level-info { flex:1; }
         .level-name { font-size: 1rem; font-weight: 900; }
         .level-desc { font-size: 0.75rem; color: rgba(224,247,255,0.5); margin-top: 2px; }
+
+        /* ===== BOTÓN VOLVER ===== */
+        .btn-volver-web {
+            display: block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: transparent;
+            border: 2px solid rgba(0,196,255,0.4);
+            border-radius: 999px;
+            color: rgba(224,247,255,0.7);
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-decoration: none;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            transition: all 0.2s;
+        }
+        .btn-volver-web:hover {
+            border-color: var(--glow);
+            color: var(--glow);
+            box-shadow: 0 0 16px rgba(0,196,255,0.3);
+        }
  
         /* ===== BARRA SUPERIOR ===== */
         #top-bar {
@@ -319,9 +340,7 @@
         }
  
         /* ===== PANTALLA DE JUEGO ===== */
-        #game-screen {
-            padding-top: 70px;
-        }
+        #game-screen { padding-top: 70px; }
  
         #game-area {
             position: relative;
@@ -332,7 +351,6 @@
             align-items: center;
         }
  
-        /* Emoji de la palabra */
         #word-image {
             font-size: 90px;
             margin-top: 20px;
@@ -344,9 +362,7 @@
             border-radius: 50%;
             background: radial-gradient(circle, rgba(0,60,100,0.6), rgba(0,20,40,0.4));
             border: 2px solid rgba(0,196,255,0.25);
-            box-shadow:
-                0 0 40px rgba(0,100,180,0.4),
-                inset 0 0 30px rgba(0,0,0,0.3);
+            box-shadow: 0 0 40px rgba(0,100,180,0.4), inset 0 0 30px rgba(0,0,0,0.3);
             animation: imgPulse 4s ease-in-out infinite;
             flex-shrink: 0;
         }
@@ -356,7 +372,6 @@
             50%       { box-shadow: 0 0 55px rgba(0,196,255,0.5), inset 0 0 30px rgba(0,0,0,0.3); }
         }
  
-        /* Slots de sílabas */
         #display-text {
             display: flex;
             gap: 14px;
@@ -400,7 +415,6 @@
             100% { transform: scale(1) translateY(0); opacity: 1; }
         }
  
-        /* ===== BURBUJAS DEL JUEGO ===== */
         #bubbles-container {
             position: absolute;
             inset: 0;
@@ -419,8 +433,6 @@
             color: white;
             animation: gameBubbleFloat var(--dur) ease-in-out infinite alternate;
             transition: transform 0.15s, box-shadow 0.15s;
- 
-            /* Aspecto burbuja de jabón */
             background:
                 radial-gradient(circle at 35% 30%, rgba(255,255,255,0.45) 0%, transparent 50%),
                 radial-gradient(circle at 70% 70%, rgba(0,220,255,0.2) 0%, transparent 40%),
@@ -431,7 +443,6 @@
                 inset 4px 4px 10px rgba(255,255,255,0.25),
                 0 4px 20px rgba(0,0,0,0.3),
                 0 0 0 1px rgba(0,200,255,0.15);
- 
             user-select: none;
         }
  
@@ -576,10 +587,7 @@
             transition: all 0.2s;
         }
  
-        .btn-confirm:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 20px rgba(0,150,199,0.5);
-        }
+        .btn-confirm:hover { transform: translateY(-2px); box-shadow: 0 0 20px rgba(0,150,199,0.5); }
  
         .btn-cancel {
             background: transparent;
@@ -604,9 +612,7 @@
         }
  
         /* ===== PANTALLA FINAL ===== */
-        #end-screen {
-            z-index: 15;
-        }
+        #end-screen { z-index: 15; }
  
         .end-card {
             background: linear-gradient(160deg, rgba(1,40,70,0.97), rgba(0,15,35,0.99));
@@ -649,20 +655,8 @@
             text-align: center;
         }
  
-        .stat-num {
-            font-size: 2.2rem;
-            font-weight: 900;
-            color: var(--glow);
-            line-height: 1;
-        }
- 
-        .stat-lbl {
-            font-size: 0.75rem;
-            color: rgba(224,247,255,0.5);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 4px;
-        }
+        .stat-num { font-size: 2.2rem; font-weight: 900; color: var(--glow); line-height: 1; }
+        .stat-lbl { font-size: 0.75rem; color: rgba(224,247,255,0.5); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
  
         .end-btn {
             background: linear-gradient(135deg, #0096c7, #005f8c);
@@ -734,10 +728,7 @@
 <div id="ocean-bg"></div>
 <div id="seabed">
     <svg viewBox="0 0 1440 160" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Arena -->
-        <path d="M0,100 Q180,80 360,95 Q540,110 720,90 Q900,70 1080,95 Q1260,115 1440,95 L1440,160 L0,160 Z"
-              fill="#021628" opacity="0.8"/>
-        <!-- Algas -->
+        <path d="M0,100 Q180,80 360,95 Q540,110 720,90 Q900,70 1080,95 Q1260,115 1440,95 L1440,160 L0,160 Z" fill="#021628" opacity="0.8"/>
         <g fill="#013a5c" opacity="0.7">
             <path d="M80,100 Q70,70 80,50 Q90,30 85,10 Q82,25 78,45 Q72,65 80,100"/>
             <path d="M90,100 Q105,75 95,55 Q88,35 93,15 Q97,30 100,50 Q103,70 90,100"/>
@@ -749,21 +740,19 @@
             <path d="M1095,95 Q1109,69 1099,49 Q1091,29 1096,11 Q1101,29 1104,49 Q1107,69 1095,95"/>
             <path d="M1380,95 Q1368,65 1378,43 Q1386,23 1381,7 Q1377,23 1373,43 Q1366,65 1380,95"/>
         </g>
-        <!-- Piedras -->
         <ellipse cx="200" cy="105" rx="35" ry="18" fill="#010f20" opacity="0.9"/>
         <ellipse cx="560" cy="108" rx="28" ry="14" fill="#010f20" opacity="0.9"/>
         <ellipse cx="900" cy="103" rx="40" ry="19" fill="#010f20" opacity="0.9"/>
         <ellipse cx="1280" cy="106" rx="30" ry="15" fill="#010f20" opacity="0.9"/>
-        <!-- Estrella de mar -->
         <text x="480" y="108" font-size="22" opacity="0.5">⭐</text>
         <text x="1150" y="110" font-size="18" opacity="0.4">🐚</text>
         <text x="260" y="107" font-size="16" opacity="0.4">🪸</text>
     </svg>
 </div>
  
-<!-- BARRA SUPERIOR (sólo en juego) -->
+<!-- BARRA SUPERIOR -->
 <div id="top-bar" style="display:none">
-    <button class="btn-ui" onclick="askExit()" title="Salir">🏠</button>
+    <button class="btn-ui" onclick="askExit()" title="Volver al inicio">🏠</button>
     <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
     <span id="progress-label">0 / 20</span>
     <button class="btn-ui" onclick="askReport()" title="Informe">📋</button>
@@ -822,15 +811,19 @@
                 <div class="level-desc">Palabras de 3 sílabas · medio</div>
             </span>
         </button>
-          <button class="btn-level" onclick="startGame(3)">
+        <button class="btn-level" onclick="startGame(3)">
             <span class="level-emoji">🦈</span>
             <span class="level-info">
                 <div class="level-name">Nivel 3 — El Gran Fondo</div>
                 <div class="level-desc">Palabras difíciles · reto</div>
             </span>
         </button>
-        <a href="https://manosconmuchoquecontar.github.io/" target="_blank" style="display:inline-block;margin-top:16px;padding:10px 24px;background:transparent;border:2px solid rgba(0,196,255,0.4);border-radius:999px;color:rgba(224,247,255,0.7);font-family:'Nunito',sans-serif;font-size:0.9em;text-decoration:none;opacity:0.75;transition:opacity 0.2s;text-align:center;width:100%;box-sizing:border-box;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.75'">🏠 Volver a los juegos</a>
-    </div>  <!-- cierre menu-card -->
+
+        <!-- BOTÓN VOLVER A LA WEB -->
+        <a href="https://manosconmuchoquecontar.github.io/" target="_blank" class="btn-volver-web">
+            🏠 Volver a los juegos
+        </a>
+    </div>
 </div>
  
 <!-- ===== PANTALLA DE JUEGO ===== -->
@@ -888,8 +881,9 @@ let syllablesFound = [];
 let sessionWords   = [];
 let currentWord    = {};
 let fsHoldTimer;
-let overlayMode    = null;   // 'exit' | 'report' | 'fullscreen'
- 
+let overlayMode    = null;
+let pendingParentalAnswer = 0;
+
 /* =====================================================================
    DICCIONARIO
    ===================================================================== */
@@ -931,16 +925,15 @@ const dictionary = {
         {w:'MICRÓFONO',s:['MI','CRÓ','FO','NO'],i:'🎤'},{w:'TRICERATOPS',s:['TRI','CE','RA','TOPS'],i:'🦖'}
     ]
 };
- 
-/* Sílabas cebo para cada nivel */
+
 const distractors = {
     1: ['MA','LO','DE','RA','SI','FU','TE','CU'],
     2: ['CIÓN','PRE','TES','MEN','FLO','GRAN','SOL','CAR'],
     3: ['TRANS','CIÓN','PREN','CLAS','FLU','PLAN','BRIS','CRES']
 };
- 
+
 /* =====================================================================
-   BURBUJAS DE FONDO (decorativas)
+   BURBUJAS DE FONDO
    ===================================================================== */
 function createBgBubbles() {
     const count = 22;
@@ -951,21 +944,11 @@ function createBgBubbles() {
         const dur  = 8 + Math.random() * 18;
         const delay = Math.random() * 20;
         const drift = (Math.random() - 0.5) * 60;
-        b.style.cssText = `
-            width:${size}px; height:${size}px;
-            left:${Math.random()*95}%;
-            bottom:-${size}px;
-            animation-duration:${dur}s;
-            animation-delay:-${delay}s;
-            --drift:${drift}px;
-        `;
+        b.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*95}%;bottom:-${size}px;animation-duration:${dur}s;animation-delay:-${delay}s;--drift:${drift}px;`;
         document.body.appendChild(b);
     }
 }
- 
-/* =====================================================================
-   PECES DECORATIVOS (sólo pantalla inicio)
-   ===================================================================== */
+
 function createDecoFish() {
     const fish = ['🐟','🐡','🐠','🦑','🦐'];
     for (let i = 0; i < 4; i++) {
@@ -978,21 +961,11 @@ function createDecoFish() {
         const y1    = (Math.random() - 0.5) * 40;
         const y2    = (Math.random() - 0.5) * 40;
         f.textContent = fish[Math.floor(Math.random() * fish.length)];
-        f.style.cssText = `
-            font-size:${size}px;
-            top:${top}%;
-            --swimdur:${dur}s;
-            animation-delay:-${delay}s;
-            --ydrift1:${y1}px;
-            --ydrift2:${y2}px;
-        `;
+        f.style.cssText = `font-size:${size}px;top:${top}%;--swimdur:${dur}s;animation-delay:-${delay}s;--ydrift1:${y1}px;--ydrift2:${y2}px;`;
         document.body.appendChild(f);
     }
 }
- 
-/* =====================================================================
-   MODO MAYUS / MINUS
-   ===================================================================== */
+
 /* =====================================================================
    ANTESALA
    ===================================================================== */
@@ -1003,19 +976,18 @@ function guardarNombreYContinuar() {
         return;
     }
     alumnoNombre   = nombre;
-    alumnoEmail    = '';   // sin email directo; se usa Google Sheet si hay URL
     ENVIAR_INFORME = true;
     document.getElementById('nombre-screen').style.display = 'none';
     document.getElementById('start-screen').classList.add('active');
 }
- 
+
 function continuarSinNombre() {
     alumnoNombre   = 'Anónimo';
     ENVIAR_INFORME = false;
     document.getElementById('nombre-screen').style.display = 'none';
     document.getElementById('start-screen').classList.add('active');
 }
- 
+
 function setCase(c) {
     currentCase = c;
     document.body.className = (c === 'MAY') ? 'mode-mayus' : 'mode-minus';
@@ -1023,7 +995,7 @@ function setCase(c) {
     document.getElementById('btn-min').classList.toggle('active-case', c === 'MIN');
     speak(c === 'MAY' ? 'Mayúsculas' : 'minúsculas');
 }
- 
+
 /* =====================================================================
    INICIO DE PARTIDA
    ===================================================================== */
@@ -1032,35 +1004,32 @@ function startGame(level) {
     currentWordIdx = 0;
     gameStats      = [];
     sessionWords   = [...dictionary[level]].sort(() => Math.random() - 0.5);
- 
+
     document.getElementById('start-screen').classList.remove('active');
     document.getElementById('game-screen').classList.add('active');
     document.getElementById('top-bar').style.display = 'flex';
- 
+
     loadWord();
 }
- 
+
 /* =====================================================================
    CARGA DE PALABRA
    ===================================================================== */
 function loadWord() {
-    if (currentWordIdx >= 20) {
-        showEndScreen();
-        return;
-    }
+    if (currentWordIdx >= 20) { showEndScreen(); return; }
     currentWord    = sessionWords[currentWordIdx];
     syllablesFound = [];
     updateProgress();
     renderGame();
     speak(currentWord.w);
 }
- 
+
 function updateProgress() {
     const pct = (currentWordIdx / 20) * 100;
     document.getElementById('progress-bar').style.width = pct + '%';
     document.getElementById('progress-label').textContent = `${currentWordIdx + 1} / 20`;
 }
- 
+
 /* =====================================================================
    RENDER DEL JUEGO
    ===================================================================== */
@@ -1069,95 +1038,59 @@ function renderGame() {
     renderSlots();
     renderBubbles();
 }
- 
+
 function renderSlots() {
     const display = document.getElementById('display-text');
     display.innerHTML = currentWord.s.map((s, i) => {
         const fmt = formatText(s);
-        if (i < syllablesFound.length) {
-            return `<div class="syllable-slot filled">${fmt}</div>`;
-        }
+        if (i < syllablesFound.length) return `<div class="syllable-slot filled">${fmt}</div>`;
         return `<div class="syllable-slot empty">?</div>`;
     }).join('');
 }
- 
+
 function renderBubbles() {
     const container = document.getElementById('bubbles-container');
     container.innerHTML = '';
- 
     const pending  = currentWord.s.slice(syllablesFound.length);
     const distPool = [...distractors[currentLevel]].sort(() => Math.random() - 0.5).slice(0, 4);
     const pool     = [...pending, ...distPool].sort(() => Math.random() - 0.5);
     const positions = generatePositions(pool.length);
- 
+
     pool.forEach((syl, idx) => {
         const size = 100 + syl.length * 6;
         const dur  = 2 + Math.random() * 2;
         const bob  = -(8 + Math.random() * 14) + 'px';
-        // Minúsculas necesitan más tamaño porque la fuente cursiva es más fina
         const fontBase = currentCase === 'MIN' ? 1.9 : 1.6;
-        const fontSize = syl.length <= 2 ? fontBase + 0.3
-                       : syl.length <= 3 ? fontBase
-                       : fontBase - 0.2;
- 
+        const fontSize = syl.length <= 2 ? fontBase + 0.3 : syl.length <= 3 ? fontBase : fontBase - 0.2;
+
         const b = document.createElement('div');
         b.className = 'game-bubble';
         b.textContent = formatText(syl);
-        b.style.cssText = `
-            width:${size}px; height:${size}px;
-            font-size:${fontSize}rem;
-            left:${positions[idx].x}%;
-            top:${positions[idx].y}%;
-            --dur:${dur}s;
-            --bob:${bob};
-            animation-delay:${Math.random() * -dur}s;
-        `;
+        b.style.cssText = `width:${size}px;height:${size}px;font-size:${fontSize}rem;left:${positions[idx].x}%;top:${positions[idx].y}%;--dur:${dur}s;--bob:${bob};animation-delay:${Math.random() * -dur}s;`;
         b.addEventListener('click', () => validateSyllable(syl, b));
         container.appendChild(b);
     });
 }
- 
+
 /* =====================================================================
    ANIMACIÓN: BURBUJA VUELA HACIA EL SLOT
    ===================================================================== */
 function flyBubbleToSlot(bubble, slot, onDone) {
-    // Posición actual de la burbuja (centro)
     const bRect = bubble.getBoundingClientRect();
     const sRect = slot.getBoundingClientRect();
- 
-    // Centro del slot destino
     const targetCX = sRect.left + sRect.width  / 2;
     const targetCY = sRect.top  + sRect.height / 2;
- 
-    // Centro actual de la burbuja
-    const bCX = bRect.left + bRect.width  / 2;
-    const bCY = bRect.top  + bRect.height / 2;
- 
-    // Convertir a coordenadas % dentro del contenedor (position:absolute)
     const container = document.getElementById('bubbles-container');
     const cRect     = container.getBoundingClientRect();
- 
-    // Nueva posición left/top para que el centro de la burbuja quede sobre el slot
     const newLeft = ((targetCX - bRect.width  / 2) - cRect.left) / cRect.width  * 100;
     const newTop  = ((targetCY - bRect.height / 2) - cRect.top)  / cRect.height * 100;
- 
-    // Activar clase de vuelo (desactiva animación flotante, activa transition)
     bubble.classList.add('flying');
- 
-    // Forzar reflow para que la transition arranque desde la posición actual
     bubble.getBoundingClientRect();
- 
-    // Mover al destino
     bubble.style.left = newLeft + '%';
     bubble.style.top  = newTop  + '%';
- 
-    // Tras la transición, eliminar burbuja y llamar al callback
-    setTimeout(() => {
-        bubble.remove();
-        if (onDone) onDone();
-    }, 460);
+    setTimeout(() => { bubble.remove(); if (onDone) onDone(); }, 460);
 }
- 
+
 function generatePositions(n) {
     const positions = [];
     const minDist   = 15;
@@ -1178,44 +1111,34 @@ function generatePositions(n) {
     }
     return positions;
 }
- 
+
 function formatText(s) {
     return currentCase === 'MAY' ? s.toUpperCase() : s.toLowerCase();
 }
- 
+
 /* =====================================================================
    VALIDACIÓN
    ===================================================================== */
 function validateSyllable(syl, el) {
     const target = currentWord.s[syllablesFound.length];
     if (!target) return;
- 
+
     if (syl.toUpperCase() === target.toUpperCase()) {
-        // Correcto
         syllablesFound.push(syl);
         speakSyllable(syl);
-        gameStats.push({
-            word:   currentWord.w,
-            res:    'OK',
-            syl:    syl,
-            time:   new Date().toLocaleTimeString()
-        });
- 
-        // 1. Calcular posición del slot destino
+        gameStats.push({ word: currentWord.w, res: 'OK', syl: syl, time: new Date().toLocaleTimeString() });
+
         const slotIdx = syllablesFound.length - 1;
         const slots   = document.querySelectorAll('.syllable-slot');
         const slot    = slots[slotIdx];
- 
-        // 2. Animar burbuja volando hacia el slot
+
         flyBubbleToSlot(el, slot, () => {
-            // 3. Al llegar: rellenar slot con animación
             slot.textContent = formatText(syl);
             slot.classList.remove('empty');
             slot.classList.add('filled', 'just-filled');
             setTimeout(() => slot.classList.remove('just-filled'), 450);
- 
+
             if (syllablesFound.length === currentWord.s.length) {
-                // Palabra completa: esperar para que se vea y pasar
                 document.getElementById('bubbles-container').style.pointerEvents = 'none';
                 setTimeout(() => {
                     document.getElementById('bubbles-container').style.pointerEvents = '';
@@ -1223,25 +1146,18 @@ function validateSyllable(syl, el) {
                     loadWord();
                 }, 1000);
             } else {
-                // Sílaba intermedia: redibujar burbujas
                 setTimeout(() => renderBubbles(), 200);
             }
         });
- 
+
     } else {
-        // Error
         speak('Esa no');
-        gameStats.push({
-            word:   currentWord.w,
-            res:    'ERROR',
-            syl:    syl,
-            time:   new Date().toLocaleTimeString()
-        });
+        gameStats.push({ word: currentWord.w, res: 'ERROR', syl: syl, time: new Date().toLocaleTimeString() });
         el.classList.add('wrong');
         setTimeout(() => el.classList.remove('wrong'), 400);
     }
 }
- 
+
 /* =====================================================================
    PANTALLA FINAL
    ===================================================================== */
@@ -1249,7 +1165,7 @@ function showEndScreen() {
     document.getElementById('game-screen').classList.remove('active');
     document.getElementById('top-bar').style.display = 'none';
     document.getElementById('end-screen').classList.add('active');
- 
+
     const ok  = gameStats.filter(g => g.res === 'OK').length;
     const err = gameStats.filter(g => g.res === 'ERROR').length;
     document.getElementById('end-ok').textContent  = ok;
@@ -1257,9 +1173,11 @@ function showEndScreen() {
     const nombre = alumnoNombre || 'aventurero/a';
     document.getElementById('end-nombre').textContent = `¡Bien hecho, ${nombre}! Has completado las 20 palabras.`;
 }
- 
+
 /* =====================================================================
    OVERLAY / CONTROL PARENTAL
+   — Se guarda la respuesta en pendingParentalAnswer para no pasarla
+     como parámetro inline (evita el bug de scope en el onclick)
    ===================================================================== */
 function showOverlay(mode) {
     overlayMode = mode;
@@ -1267,48 +1185,48 @@ function showOverlay(mode) {
     const mc   = document.getElementById('modal-content');
     const n1   = Math.floor(Math.random() * 6);
     const n2   = Math.floor(Math.random() * 6);
-    const ans  = n1 + n2;
- 
-    let icon = '🏠', title = 'Salir al inicio', desc = 'Introduce la respuesta para confirmar que eres un adulto.';
+    pendingParentalAnswer = n1 + n2;
+
+    let icon = '🏠', title = 'Volver al inicio', desc = 'Introduce la respuesta para confirmar que eres un adulto.';
     if (mode === 'report') {
         icon = '📋'; title = 'Descargar informe'; desc = 'Introduce la respuesta para descargar el informe de sesión.';
     } else if (mode === 'fullscreen') {
         icon = '📺'; title = 'Pantalla completa'; desc = 'Introduce la respuesta para cambiar el modo de pantalla.';
     }
- 
+
     mc.innerHTML = `
         <div style="font-size:3rem; margin-bottom:10px">${icon}</div>
         <h2>${title}</h2>
         <p>Control parental — ${desc}</p>
         <div class="modal-sum">${n1} + ${n2} = ?</div>
-        <input class="modal-input" id="parental-input" type="number" min="0" max="12"
-               placeholder="?" autofocus>
+        <input class="modal-input" id="parental-input" type="number" min="0" max="12" placeholder="?" autofocus>
         <div class="modal-error" id="modal-error"></div>
         <div class="modal-btn-row">
             <button class="btn-cancel" onclick="closeOverlay()">Cancelar</button>
-            <button class="btn-confirm" onclick="confirmParental(${ans})">Confirmar</button>
+            <button class="btn-confirm" onclick="confirmParental()">Confirmar</button>
         </div>
     `;
- 
+
     ov.classList.add('active');
     setTimeout(() => {
         const inp = document.getElementById('parental-input');
         if (inp) {
             inp.focus();
-            inp.addEventListener('keydown', e => { if (e.key === 'Enter') confirmParental(ans); });
+            inp.addEventListener('keydown', e => { if (e.key === 'Enter') confirmParental(); });
         }
     }, 50);
 }
- 
-function confirmParental(ans) {
+
+function confirmParental() {
     const val = parseInt(document.getElementById('parental-input').value, 10);
-    if (val === ans) {
+    if (val === pendingParentalAnswer) {
+        const mode = overlayMode;
         closeOverlay();
-        if (overlayMode === 'exit') {
+        if (mode === 'exit') {
             goToStart();
-        } else if (overlayMode === 'report') {
+        } else if (mode === 'report') {
             downloadReport();
-        } else if (overlayMode === 'fullscreen') {
+        } else if (mode === 'fullscreen') {
             toggleFullscreen();
         }
     } else {
@@ -1317,90 +1235,76 @@ function confirmParental(ans) {
         document.getElementById('parental-input').focus();
     }
 }
- 
+
 function closeOverlay() {
     document.getElementById('overlay').classList.remove('active');
     overlayMode = null;
 }
- 
+
 function goToStart() {
-    // Ocultar todas las pantallas de juego
     document.getElementById('game-screen').classList.remove('active');
     document.getElementById('end-screen').classList.remove('active');
     document.getElementById('top-bar').style.display = 'none';
-    // Resetear estado
     gameStats      = [];
     currentWordIdx = 0;
     syllablesFound = [];
     sessionWords   = [];
     currentWord    = {};
-    // Volver al menú de nivel (sin pasar por antesala de nuevo)
     document.getElementById('start-screen').classList.add('active');
 }
- 
+
 function askExit()   { showOverlay('exit'); }
 function askReport() { showOverlay('report'); }
- 
+
 /* =====================================================================
    FULLSCREEN
    ===================================================================== */
 function handleFSClick() {
-    // Tap simple: entrar en pantalla completa directamente (gesto de usuario directo)
     if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(() => {});
     }
-    // Si ya está en fullscreen, el hold largo (startFSTimer) pedirá la suma para salir
 }
- 
+
 function startFSTimer() {
-    // Hold 2.5s: pedir control parental para SALIR de pantalla completa
     if (document.fullscreenElement) {
         fsHoldTimer = setTimeout(() => showOverlay('fullscreen'), 2500);
     }
 }
 function stopFSTimer() { clearTimeout(fsHoldTimer); }
- 
+
 function toggleFullscreen() {
     if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
     else document.exitFullscreen();
 }
- 
+
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && document.fullscreenElement) {
         e.preventDefault();
         e.stopImmediatePropagation();
     }
 }, true);
- 
+
 document.addEventListener('fullscreenchange', () => {
     if (!document.fullscreenElement) {
-        // Re-entra automáticamente
         setTimeout(() => {
             if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
         }, 300);
     }
 });
- 
+
 /* =====================================================================
    VOZ
    ===================================================================== */
 function speak(txt) {
-    // Normalizamos para el TTS: minúsculas y añadimos vocal de apoyo
-    // si es sílaba de 2 letras consonante-vocal para que no las separe
     const u = new SpeechSynthesisUtterance(txt);
     u.lang = 'es-ES';
-    u.rate = 0.85;   // un poco más lento para que las sílabas cortas se oigan claras
+    u.rate = 0.85;
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(u);
 }
- 
+
 function speakSyllable(syl) {
-    // Para sílabas cortas tipo "BO", "CA", "PI" el TTS a veces las separa.
-    // Pasamos la sílaba en minúsculas + pausa larga después para que el motor
-    // las trate como unidad fonética, no como acrónimo.
-    const clean = syl.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-    // Añadir un punto tras la sílaba fuerza una pausa y evita que el TTS
-    // la trate como una abreviatura o iniciales
+    const clean = syl.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     const u = new SpeechSynthesisUtterance(clean + '.');
     u.lang = 'es-ES';
     u.rate = 0.8;
@@ -1408,7 +1312,7 @@ function speakSyllable(syl) {
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(u);
 }
- 
+
 /* =====================================================================
    INFORME
    ===================================================================== */
@@ -1416,84 +1320,32 @@ function downloadReport() {
     const ok  = gameStats.filter(g => g.res === 'OK').length;
     const err = gameStats.filter(g => g.res === 'ERROR').length;
     const now = new Date().toLocaleDateString('es-ES', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
- 
     const levelName = ['','Nivel 1 - Peces pequeños','Nivel 2 - Aguas profundas','Nivel 3 - El Gran Fondo'][currentLevel];
     const nombreMostrar = alumnoNombre || 'Alumno/a';
     const cursoMostrar  = alumnoCurso  ? ` · ${alumnoCurso}` : '';
- 
+
     let rows = '';
     gameStats.forEach(g => {
-        rows += `<tr>
-            <td>${g.time}</td>
-            <td style="font-weight:700">${g.word}</td>
-            <td style="color:${g.res==='OK'?'#2b9348':'#d62828'}; font-weight:700">${g.res==='OK' ? '✓ Correcto' : '✗ Error'}</td>
-            <td>${g.syl}</td>
-        </tr>`;
+        rows += `<tr><td>${g.time}</td><td style="font-weight:700">${g.word}</td><td style="color:${g.res==='OK'?'#2b9348':'#d62828'};font-weight:700">${g.res==='OK' ? '✓ Correcto' : '✗ Error'}</td><td>${g.syl}</td></tr>`;
     });
- 
-    const html = `<!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8">
-<style>
-    body{font-family:'Nunito',sans-serif;background:#f0f7ff;color:#1a1a2e;padding:40px;max-width:700px;margin:auto}
-    h1{color:#005f8c;font-size:2rem;margin-bottom:4px}
-    .alumno{font-size:1.1rem;font-weight:700;color:#013a5c;margin-bottom:2px}
-    .sub{color:#666;font-size:0.9rem;margin-bottom:30px}
-    .stats{display:flex;gap:20px;margin-bottom:30px;flex-wrap:wrap}
-    .stat{background:white;border:1px solid #d0e8f5;border-radius:16px;padding:20px 30px;text-align:center}
-    .num{font-size:2.5rem;font-weight:900;line-height:1}
-    .lbl{font-size:0.75rem;color:#888;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
-    .ok{color:#2b9348}.err{color:#d62828}
-    table{width:100%;border-collapse:collapse}
-    th{background:#005f8c;color:white;padding:12px 14px;text-align:left;font-size:0.85rem;letter-spacing:1px;text-transform:uppercase}
-    td{padding:10px 14px;border-bottom:1px solid #e0eef8;font-size:0.95rem}
-    tr:nth-child(even){background:#f8fbff}
-</style>
+
+    const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+<style>body{font-family:'Nunito',sans-serif;background:#f0f7ff;color:#1a1a2e;padding:40px;max-width:700px;margin:auto}h1{color:#005f8c;font-size:2rem;margin-bottom:4px}.alumno{font-size:1.1rem;font-weight:700;color:#013a5c;margin-bottom:2px}.sub{color:#666;font-size:0.9rem;margin-bottom:30px}.stats{display:flex;gap:20px;margin-bottom:30px;flex-wrap:wrap}.stat{background:white;border:1px solid #d0e8f5;border-radius:16px;padding:20px 30px;text-align:center}.num{font-size:2.5rem;font-weight:900;line-height:1}.lbl{font-size:0.75rem;color:#888;text-transform:uppercase;letter-spacing:1px;margin-top:4px}.ok{color:#2b9348}.err{color:#d62828}table{width:100%;border-collapse:collapse}th{background:#005f8c;color:white;padding:12px 14px;text-align:left;font-size:0.85rem;letter-spacing:1px;text-transform:uppercase}td{padding:10px 14px;border-bottom:1px solid #e0eef8;font-size:0.95rem}tr:nth-child(even){background:#f8fbff}</style>
 </head><body>
 <h1>🐠 El Cazador de Sílabas</h1>
 <div class="alumno">👤 ${nombreMostrar}${cursoMostrar}</div>
 <div class="sub">${now} · ${levelName}</div>
-<div class="stats">
-    <div class="stat"><div class="num ok">${ok}</div><div class="lbl">✓ Aciertos</div></div>
-    <div class="stat"><div class="num err">${err}</div><div class="lbl">✗ Errores</div></div>
-    <div class="stat"><div class="num">${gameStats.length}</div><div class="lbl">Total pulsaciones</div></div>
-</div>
-<table>
-    <tr><th>Hora</th><th>Palabra</th><th>Resultado</th><th>Sílaba pulsada</th></tr>
-    ${rows}
-</table>
+<div class="stats"><div class="stat"><div class="num ok">${ok}</div><div class="lbl">✓ Aciertos</div></div><div class="stat"><div class="num err">${err}</div><div class="lbl">✗ Errores</div></div><div class="stat"><div class="num">${gameStats.length}</div><div class="lbl">Total pulsaciones</div></div></div>
+<table><tr><th>Hora</th><th>Palabra</th><th>Resultado</th><th>Sílaba pulsada</th></tr>${rows}</table>
 </body></html>`;
- 
+
     const blob = new Blob([html], {type:'text/html'});
     const a    = document.createElement('a');
     a.href     = URL.createObjectURL(blob);
     a.download = `informe_silabas_${new Date().toISOString().slice(0,10)}.html`;
     a.click();
- 
-    // Envío por email si está activado
-    if (ENVIAR_INFORME && alumnoEmail) {
-        const asunto  = encodeURIComponent(`Informe El Cazador de Sílabas – ${nombreMostrar}`);
-        const cuerpo  = encodeURIComponent(
-            `Hola,
- 
-Adjunto el informe de la sesión de "${nombreMostrar}"${alumnoCurso ? ' ('+alumnoCurso+')' : ''} en El Cazador de Sílabas.
- 
-` +
-            `Fecha: ${now}
-Nivel: ${levelName}
-Aciertos: ${ok}  |  Errores: ${err}
- 
-` +
-            `El archivo HTML se ha descargado en tu dispositivo. Puedes adjuntarlo a este correo.
- 
-` +
-            `(Este correo se ha abierto automáticamente desde el juego)`
-        );
-        setTimeout(() => {
-            window.location.href = `mailto:${alumnoEmail}?subject=${asunto}&body=${cuerpo}`;
-        }, 800);
-    }
 }
- 
+
 /* =====================================================================
    INIT
    ===================================================================== */

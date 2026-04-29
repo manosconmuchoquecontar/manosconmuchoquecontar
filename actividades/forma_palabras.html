@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Constructor de Sílabas Pro - Letra Ligada</title>
+    <title>¿Cómo se llama? - Constructor de Sílabas</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Varela+Round&family=Playwrite+HR+Lijeva:wght@100..400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Varela+Round&family=Playwrite+HR+Lijeva:wght@100..400&family=Playwrite+DE+Grund:wght@100..400&family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap');
 
         :root {
             --level1: #4CAF50;
@@ -13,7 +13,10 @@
             --level3: #FF9800;
             --danger: #f44336;
             --font-main: 'Varela Round', sans-serif;
-            --font-ligada: 'Playwrite HR Lijeva', cursive;
+            --font-min: 'Playwrite HR Lijeva', cursive;
+            --font-may: 'Playwrite DE Grund', cursive;
+            --lila: #C77DFF;
+            --lila-claro: #E8C4FF;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
@@ -28,7 +31,70 @@
             overflow: hidden;
         }
 
-        /* ANTESALA */
+        /* ===== PANTALLA NOMBRE ===== */
+        #nombre-screen {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #6dd5ed 0%, #2193b0 100%);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Nunito', sans-serif;
+        }
+        .nombre-card {
+            background: white;
+            padding: 2.5rem 2rem;
+            border-radius: 32px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            border: 3px solid rgba(255,255,255,0.5);
+        }
+        .nombre-card h2 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.6rem;
+            color: #2193b0;
+            margin: 0 0 0.4rem;
+        }
+        .nombre-card p {
+            color: #555;
+            font-size: 0.9rem;
+            margin-bottom: 1.2rem;
+            line-height: 1.6;
+        }
+        .nombre-inp {
+            width: 100%; padding: 0.8rem 1.2rem;
+            border-radius: 100px; border: 2px solid #cce5f0;
+            font-size: 1rem; font-family: 'Nunito', sans-serif;
+            text-align: center; outline: none;
+            box-sizing: border-box; margin-bottom: 1rem;
+            transition: border-color 0.2s;
+        }
+        .nombre-inp:focus { border-color: #2193b0; }
+        .btn-nombre-ok {
+            width: 100%; padding: 0.9rem; border: none;
+            border-radius: 100px;
+            background: linear-gradient(135deg, #6dd5ed, #2193b0);
+            color: white; font-family: 'Fredoka One', cursive;
+            font-size: 1.1rem; cursor: pointer; margin-bottom: 0.7rem;
+            box-shadow: 0 6px 20px rgba(33,147,176,0.35);
+            transition: transform 0.15s;
+        }
+        .btn-nombre-ok:hover { transform: translateY(-1px); }
+        .btn-sin-nombre {
+            background: none; border: none; color: #aaa;
+            font-size: 0.85rem; font-family: 'Nunito', sans-serif;
+            cursor: pointer; text-decoration: underline;
+        }
+        .nombre-nota {
+            font-size: 0.75rem; color: #bbb; margin-top: 1rem;
+            border-top: 1px solid #f0f0f0; padding-top: 0.8rem;
+            line-height: 1.5;
+        }
+
+        /* ===== SPLASH ===== */
         #splash-screen {
             position: fixed;
             inset: 0;
@@ -41,6 +107,7 @@
             color: white;
             padding: 20px;
             text-align: center;
+            overflow-y: auto;
         }
 
         .bg-emoji {
@@ -50,28 +117,65 @@
             animation: float 6s infinite ease-in-out;
             z-index: -1;
         }
-
         @keyframes float {
             0%, 100% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-20px) rotate(20deg); }
         }
 
         .welcome-box {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 30px;
+            background: rgba(255,255,255,0.2);
+            padding: 24px 30px 18px;
             border-radius: 40px;
             backdrop-filter: blur(10px);
-            margin-bottom: 20px;
+            margin-bottom: 16px;
+            max-width: 520px;
+            width: 100%;
         }
+        .welcome-box h1 { font-family: 'Fredoka One', cursive; font-size: 2.2rem; margin-bottom: 6px; }
+        .welcome-box p { font-size: 1.1rem; opacity: 0.9; }
+
+        /* Selector may/min en splash */
+        .letra-panel {
+            background: rgba(255,255,255,0.2);
+            border-radius: 24px;
+            padding: 16px 24px;
+            margin-bottom: 14px;
+            max-width: 520px;
+            width: 100%;
+            backdrop-filter: blur(6px);
+        }
+        .letra-panel h3 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        .letra-fila { display: flex; gap: 10px; justify-content: center; }
+        .btn-letra {
+            flex: 1; padding: 10px 16px;
+            border: 3px solid rgba(255,255,255,0.4);
+            border-radius: 16px; background: rgba(255,255,255,0.15);
+            cursor: pointer; color: white;
+            font-family: 'Nunito', sans-serif; font-size: 0.95rem; font-weight: 700;
+            transition: all 0.2s; display: flex; flex-direction: column;
+            align-items: center; gap: 4px;
+        }
+        .btn-letra.sel {
+            background: rgba(255,255,255,0.35);
+            border-color: white;
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
+        }
+        .letra-preview-min { font-family: var(--font-min); font-size: 1.4rem; font-weight: 300; }
+        .letra-preview-may { font-family: var(--font-may); font-size: 1.1rem; font-weight: 300; text-transform: uppercase; }
 
         .level-card {
             background: white;
             color: #333;
             width: 95%;
-            max-width: 550px;
-            padding: 20px;
-            margin: 10px;
-            border-radius: 30px;
+            max-width: 520px;
+            padding: 18px 20px;
+            margin: 6px auto;
+            border-radius: 24px;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
@@ -79,8 +183,24 @@
             gap: 20px;
             box-shadow: 0 6px 15px rgba(0,0,0,0.1);
         }
+        .level-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
 
-        /* JUEGO */
+        /* Botón volver splash */
+        .btn-volver-splash {
+            display: inline-block; margin-top: 12px;
+            padding: 10px 26px; border-radius: 999px;
+            border: 2px solid rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.15);
+            color: white; font-family: 'Nunito', sans-serif;
+            font-size: 0.95rem; font-weight: 700; text-decoration: none;
+            transition: all 0.2s; backdrop-filter: blur(4px);
+        }
+        .btn-volver-splash:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: white;
+        }
+
+        /* ===== JUEGO ===== */
         #game-container {
             background: white;
             width: 98vw;
@@ -105,7 +225,9 @@
             border-radius: 20px; border: none;
             cursor: pointer; color: white; font-size: 1.6rem;
             display: flex; align-items: center; justify-content: center;
+            transition: transform 0.15s;
         }
+        .btn-system:hover { transform: scale(1.08); }
 
         #main-stage {
             flex: 1;
@@ -124,18 +246,18 @@
         }
 
         #word-slots { display: flex; gap: 20px; min-height: 100px; }
-        
+
         .slot {
             width: clamp(70px, 15vw, 120px);
             height: 90px;
             border-bottom: 8px solid #ddd;
             display: flex;
             align-items: center; justify-content: center;
-            font-family: var(--font-ligada);
             font-size: 2.5rem;
             color: #2196F3;
-            text-transform: lowercase;
         }
+        .slot.mode-min { font-family: var(--font-min); font-weight: 300; }
+        .slot.mode-may { font-family: var(--font-may); font-weight: 300; text-transform: uppercase; }
 
         #syllables-bank {
             display: flex; flex-wrap: wrap; gap: 15px;
@@ -145,29 +267,67 @@
         }
 
         .syllable-card {
-            padding: 15px 35px; 
+            padding: 15px 35px;
             background: white;
-            border: 4px solid #ddd; 
+            border: 4px solid #ddd;
             border-radius: 20px;
-            font-family: var(--font-ligada);
-            font-size: 2.2rem; 
+            font-size: 2.2rem;
             font-weight: 400;
-            text-transform: lowercase;
             cursor: pointer;
             box-shadow: 0 6px 0 #ccc;
             color: #333;
+            transition: border-color 0.15s;
         }
-
+        .syllable-card.mode-min { font-family: var(--font-min); }
+        .syllable-card.mode-may { font-family: var(--font-may); text-transform: uppercase; }
         .syllable-card:active { transform: translateY(6px); box-shadow: none; }
 
         #btn-listen-again {
-            font-family: var(--font-ligada);
             font-size: 1.5rem;
-            text-transform: lowercase;
             background: #fff9c4; border: 3px solid #fdd835;
             padding: 12px 35px; border-radius: 60px;
             cursor: pointer; color: #333;
             display: flex; align-items: center; gap: 12px;
+            font-family: var(--font-main);
+        }
+
+        /* ===== CONTROL PARENTAL ===== */
+        #parental-modal {
+            display: none; position: fixed;
+            inset: 0; background: rgba(0,0,0,0.92);
+            z-index: 3000; color: white;
+            align-items: center; justify-content: center;
+            flex-direction: column; text-align: center;
+        }
+        #parental-modal.vis { display: flex; }
+        .parental-card {
+            background: white; color: #333;
+            border-radius: 28px; padding: 2.5rem 2rem;
+            max-width: 340px; width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .parental-card h2 { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: #2193b0; margin-bottom: 0.3rem; }
+        .parental-sum { font-size: 2.2rem; font-weight: 900; color: #FF9800; margin: 1rem 0; }
+        .parental-inp {
+            width: 100%; padding: 0.8rem; border: 3px solid #cce5f0;
+            border-radius: 14px; font-size: 1.5rem; font-weight: 800;
+            text-align: center; font-family: 'Nunito', sans-serif;
+            outline: none; margin-bottom: 0.8rem;
+        }
+        .parental-inp:focus { border-color: #2193b0; }
+        .parental-err { color: #f44336; font-size: 0.9rem; min-height: 1.2rem; margin-bottom: 0.5rem; }
+        .btn-parental-ok {
+            width: 100%; padding: 0.9rem; border: none; border-radius: 14px;
+            background: linear-gradient(135deg, #6dd5ed, #2193b0);
+            color: white; font-family: 'Fredoka One', cursive;
+            font-size: 1.2rem; cursor: pointer; margin-bottom: 0.5rem;
+            transition: transform 0.15s;
+        }
+        .btn-parental-ok:hover { transform: translateY(-1px); }
+        .btn-parental-cancel {
+            background: none; border: none; color: #aaa;
+            font-size: 0.85rem; cursor: pointer; font-family: 'Nunito', sans-serif;
         }
 
         .hidden { display: none !important; }
@@ -175,119 +335,227 @@
 </head>
 <body>
 
-    <div id="splash-screen">
-        <div id="emoji-bg-container"></div>
-        <div class="welcome-box">
-            <h1 style="font-size: 3rem;">🌟 ¿Cómo se llama? 🌟</h1>
-            <p style="font-size: 1.5rem;">Forma las palabras que escuchas</p>
-        </div>
-        
-        <div class="level-card" onclick="startGame(1)">
-            <div style="font-size: 3rem;">🌱</div>
-            <div style="text-align: left;">
-                <h2 style="color: var(--level1)">Nivel 1</h2>
-                <p>Palabras bisílabas directas</p>
-            </div>
-        </div>
+<!-- ===== PANTALLA NOMBRE ===== -->
+<div id="nombre-screen">
+    <div id="emoji-bg-nombre"></div>
+    <div class="nombre-card">
+        <div style="font-size:3rem;margin-bottom:0.5rem;">🌟</div>
+        <h2>¿Quién va a jugar?</h2>
+        <p>Si quieres, escribe el nombre del niño o niña para que Inma pueda ver cómo ha ido la sesión.</p>
+        <input id="nombre-inp" class="nombre-inp" type="text"
+            placeholder="Nombre del niño/a…" maxlength="50"
+            onkeydown="if(event.key==='Enter')guardarNombre()">
+        <button class="btn-nombre-ok" onclick="guardarNombre()">Enviar informe a Inma ✓</button>
+        <button class="btn-sin-nombre" onclick="sinNombre()">Continuar sin enviar informe</button>
+        <p class="nombre-nota">
+            🔒 Si escribes el nombre, al terminar Inma recibirá un informe con los resultados.<br>
+            Es voluntario y los datos solo los verá ella para el seguimiento terapéutico.
+        </p>
+    </div>
+</div>
 
-        <div class="level-card" onclick="startGame(2)">
-            <div style="font-size: 3rem;">🚀</div>
-            <div style="text-align: left;">
-                <h2 style="color: var(--level2)">Nivel 2</h2>
-                <p>Palabras trisílabas directas</p>
-            </div>
-        </div>
+<!-- ===== SPLASH ===== -->
+<div id="splash-screen" class="hidden">
+    <div id="emoji-bg-container"></div>
 
-        <div class="level-card" onclick="startGame(3)">
-            <div style="font-size: 3rem;">🏆</div>
-            <div style="text-align: left;">
-                <h2 style="color: var(--level3)">Nivel 3</h2>
-                <p>Palabras con sílabas trabadas</p>
-            </div>
-        </div>
+    <div class="welcome-box">
+        <h1>🌟 ¿Cómo se llama? 🌟</h1>
+        <p>Forma las palabras que escuchas</p>
     </div>
 
-    <div id="game-container" class="hidden">
-        <div class="top-bar">
-            <button class="btn-system" style="background: #ff5722;" onclick="location.reload()">🏠</button>
-            <div id="level-indicator" style="font-weight: bold; font-size: 1.5rem; color: #666;"></div>
-            <div style="display: flex; gap: 12px;">
-                <button class="btn-system" style="background: #9c27b0;" onclick="generateReport()">📋</button>
-                <button id="btn-fs" class="btn-system" style="background: #607d8b;" onclick="toggleFS()">⛶</button>
-            </div>
-        </div>
-
-        <div id="main-stage">
-            <div id="target-icon">❓</div>
-            <div id="word-slots"></div>
-            <button id="btn-listen-again" onclick="speakCurrentWord()">
-                <span>🔊</span> volver a escuchar
+    <!-- SELECTOR TIPO DE LETRA -->
+    <div class="letra-panel">
+        <h3>🔤 Tipo de letra</h3>
+        <div class="letra-fila">
+            <button class="btn-letra sel" id="btn-min" onclick="setLetra('min', this)">
+                <span class="letra-preview-min">abc</span>
+                <span>minúsculas</span>
             </button>
-            <div id="syllables-bank"></div>
+            <button class="btn-letra" id="btn-may" onclick="setLetra('may', this)">
+                <span class="letra-preview-may">ABC</span>
+                <span>MAYÚSCULAS</span>
+            </button>
         </div>
     </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <div class="level-card" onclick="startGame(1)">
+        <div style="font-size: 3rem;">🌱</div>
+        <div style="text-align: left;">
+            <h2 style="color: var(--level1); font-family:'Fredoka One',cursive;">Nivel 1</h2>
+            <p>Palabras bisílabas directas</p>
+        </div>
+    </div>
+
+    <div class="level-card" onclick="startGame(2)">
+        <div style="font-size: 3rem;">🚀</div>
+        <div style="text-align: left;">
+            <h2 style="color: var(--level2); font-family:'Fredoka One',cursive;">Nivel 2</h2>
+            <p>Palabras trisílabas directas</p>
+        </div>
+    </div>
+
+    <div class="level-card" onclick="startGame(3)">
+        <div style="font-size: 3rem;">🏆</div>
+        <div style="text-align: left;">
+            <h2 style="color: var(--level3); font-family:'Fredoka One',cursive;">Nivel 3</h2>
+            <p>Palabras con sílabas trabadas</p>
+        </div>
+    </div>
+
+    <a href="https://manosconmuchoquecontar.github.io/" target="_blank" class="btn-volver-splash">
+        🏠 Volver a los juegos
+    </a>
+</div>
+
+<!-- ===== JUEGO ===== -->
+<div id="game-container" class="hidden">
+    <div class="top-bar">
+        <button class="btn-system" style="background: #ff5722;" onclick="abrirParental('salir')">🏠</button>
+        <div id="level-indicator" style="font-weight: bold; font-size: 1.5rem; color: #666;"></div>
+        <div style="display: flex; gap: 12px;">
+            <button class="btn-system" style="background: #9c27b0;" onclick="generateReport()">📋</button>
+            <button id="btn-fs" class="btn-system" style="background: #607d8b;" onclick="abrirParental('fs')">⛶</button>
+        </div>
+    </div>
+
+    <div id="main-stage">
+        <div id="target-icon">❓</div>
+        <div id="word-slots"></div>
+        <button id="btn-listen-again" onclick="speakCurrentWord()">
+            <span>🔊</span> volver a escuchar
+        </button>
+        <div id="syllables-bank"></div>
+    </div>
+</div>
+
+<!-- ===== CONTROL PARENTAL ===== -->
+<div id="parental-modal">
+    <div class="parental-card">
+        <h2>🔒 Control parental</h2>
+        <p style="color:#666;font-size:0.9rem;margin-bottom:0.3rem;" id="parental-desc">Resuelve la suma para salir:</p>
+        <p class="parental-sum" id="parental-suma">3 + 4 = ?</p>
+        <input type="number" class="parental-inp" id="parental-inp" placeholder="?"
+            onkeydown="if(event.key==='Enter')verificarParental()">
+        <p class="parental-err" id="parental-err"></p>
+        <button class="btn-parental-ok" onclick="verificarParental()">✓ Comprobar</button>
+        <br>
+        <button class="btn-parental-cancel" onclick="cerrarParental()">Cancelar</button>
+    </div>
+</div>
+
 <script>
+    // ===== CONFIG =====
+    const SHEET_URL = "https://script.google.com/macros/s/AKfycbw4AKlcc8-09jA0uBl7EYDW_lorkazvEOwhZTthN6FD_BIhM1Q6o4HJdNSeUvqba2an/exec";
+    let nombreAlumno = "";
+    let enviarInforme = false;
+    let modoLetra = 'min'; // 'min' | 'may'
+    let parentalAccion = '';
+    let parentalEsperado = 0;
+
     const synth = window.speechSynthesis;
-    const fillerSyllables = ['ma', 'pe', 'ta', 'lo', 'su', 'ri', 'bo', 'na', 'co', 'lu', 'de', 'fi', 'ga', 'se', 'ti', 'po', 'ru', 'za', 'me', 'li'];
+    const fillerSyllables = ['ma','pe','ta','lo','su','ri','bo','na','co','lu','de','fi','ga','se','ti','po','ru','za','me','li'];
 
     const wordBank = {
         1: [
-            {p:'CASA', s:['ca','sa'], i:'🏠'}, {p:'MESA', s:['me','sa'], i:'🪑'},
-            {p:'PATO', s:['pa','to'], i:'🦆'}, {p:'GATO', s:['ga','to'], i:'🐱'},
-            {p:'LUNA', s:['lu','na'], i:'🌙'}, {p:'BOCA', s:['bo','ca'], i:'👄'},
-            {p:'PIPA', s:['pi','pa'], i:'🚬'}, {p:'MONO', s:['mo','no'], i:'🐒'},
-            {p:'SAPO', s:['sa','po'], i:'🐸'}, {p:'LOBO', s:['lo','bo'], i:'🐺'},
-            {p:'ROSA', s:['ro','sa'], i:'🌹'}, {p:'PIÑA', s:['pi','ña'], i:'🍍'},
-            {p:'PERA', s:['pe','ra'], i:'🍐'}, {p:'SOPA', s:['so','pa'], i:'🥣'},
-            {p:'VACA', s:['va','ca'], i:'🐄'}, {p:'BOTA', s:['bo','ta'], i:'🥾'},
-            {p:'MOTO', s:['mo','to'], i:'🛵'}, {p:'NUBE', s:['nu','be'], i:'☁️'},
-            {p:'COPA', s:['co','pa'], i:'🏆'}, {p:'PALA', s:['pa','la'], i:'🧹'}
+            {p:'CASA',s:['ca','sa'],i:'🏠'},{p:'MESA',s:['me','sa'],i:'🪑'},
+            {p:'PATO',s:['pa','to'],i:'🦆'},{p:'GATO',s:['ga','to'],i:'🐱'},
+            {p:'LUNA',s:['lu','na'],i:'🌙'},{p:'BOCA',s:['bo','ca'],i:'👄'},
+            {p:'MONO',s:['mo','no'],i:'🐒'},{p:'SAPO',s:['sa','po'],i:'🐸'},
+            {p:'LOBO',s:['lo','bo'],i:'🐺'},{p:'ROSA',s:['ro','sa'],i:'🌹'},
+            {p:'PIÑA',s:['pi','ña'],i:'🍍'},{p:'PERA',s:['pe','ra'],i:'🍐'},
+            {p:'SOPA',s:['so','pa'],i:'🥣'},{p:'VACA',s:['va','ca'],i:'🐄'},
+            {p:'BOTA',s:['bo','ta'],i:'🥾'},{p:'MOTO',s:['mo','to'],i:'🛵'},
+            {p:'NUBE',s:['nu','be'],i:'☁️'},{p:'COPA',s:['co','pa'],i:'🏆'},
+            {p:'PALA',s:['pa','la'],i:'🧹'},{p:'PIPA',s:['pi','pa'],i:'🎶'}
         ],
         2: [
-            {p:'PELOTA', s:['pe','lo','ta'], i:'⚽'}, {p:'TOMATE', s:['to','ma','te'], i:'🍅'},
-            {p:'MALETA', s:['ma','le','ta'], i:'🧳'}, {p:'CABALLO', s:['ca','ba','llo'], i:'🐎'},
-            {p:'COMIDA', s:['co','mi','da'], i:'🍱'}, {p:'ESPEJO', s:['es','pe','jo'], i:'🪞'},
-            {p:'PÁJARO', s:['pá','ja','ro'], i:'🐦'}, {p:'ZAPATO', s:['za','pa','to'], i:'👞'},
-            {p:'CAMINO', s:['ca','mi','no'], i:'🛤️'}, {p:'CÁMARA', s:['cá','ma','ra'], i:'📷'},
-            {p:'MÁQUINA', s:['má','qui','na'], i:'⚙️'}, {p:'NEVERA', s:['ne','ve','ra'], i:'🧊'},
-            {p:'SÁBANA', s:['sá','ba','na'], i:'🛌'}, {p:'COMETA', s:['co','me','ta'], i:'🪁'},
-            {p:'PIRATA', s:['pi','ra','ta'], i:'🏴‍☠️'}, {p:'REGALO', s:['re','ga','lo'], i:'🎁'},
-            {p:'COCINA', s:['co','ci','na'], i:'🍳'}, {p:'BALLENA', s:['ba','lle','na'], i:'🐋'},
-            {p:'COLEGIO', s:['co','le','gio'], i:'🏫'}, {p:'CEREZA', s:['ce','re','za'], i:'🍒'}
+            {p:'PELOTA',s:['pe','lo','ta'],i:'⚽'},{p:'TOMATE',s:['to','ma','te'],i:'🍅'},
+            {p:'MALETA',s:['ma','le','ta'],i:'🧳'},{p:'CABALLO',s:['ca','ba','llo'],i:'🐎'},
+            {p:'COMIDA',s:['co','mi','da'],i:'🍱'},{p:'ESPEJO',s:['es','pe','jo'],i:'🪞'},
+            {p:'PÁJARO',s:['pá','ja','ro'],i:'🐦'},{p:'ZAPATO',s:['za','pa','to'],i:'👞'},
+            {p:'CAMINO',s:['ca','mi','no'],i:'🛤️'},{p:'NEVERA',s:['ne','ve','ra'],i:'🧊'},
+            {p:'COMETA',s:['co','me','ta'],i:'🪁'},{p:'PIRATA',s:['pi','ra','ta'],i:'🏴‍☠️'},
+            {p:'REGALO',s:['re','ga','lo'],i:'🎁'},{p:'COCINA',s:['co','ci','na'],i:'🍳'},
+            {p:'BALLENA',s:['ba','lle','na'],i:'🐋'},{p:'COLEGIO',s:['co','le','gio'],i:'🏫'},
+            {p:'CEREZA',s:['ce','re','za'],i:'🍒'},{p:'SÁBANA',s:['sá','ba','na'],i:'🛌'},
+            {p:'CÁMARA',s:['cá','ma','ra'],i:'📷'},{p:'MÁQUINA',s:['má','qui','na'],i:'⚙️'}
         ],
         3: [
-            {p:'TROMPO', s:['trom','po'], i:'🪀'}, {p:'ESTRELLA', s:['es','tre','lla'], i:'⭐'},
-            {p:'PLÁTANO', s:['plá','ta','no'], i:'🍌'}, {p:'GLOBO', s:['glo','bo'], i:'🎈'},
-            {p:'BRAZO', s:['bra','zo'], i:'💪'}, {p:'FRUTA', s:['fru','ta'], i:'🍎'},
-            {p:'CHICLE', s:['chi','cle'], i:'🍬'}, {p:'DRAGÓN', s:['dra','gón'], i:'🐲'},
-            {p:'TRACTOR', s:['trac','tor'], i:'🚜'}, {p:'BLUSA', s:['blu','sa'], i:'👚'},
-            {p:'PLATO', s:['pla','to'], i:'🍽️'}, {p:'FRESA', s:['fre','sa'], i:'🍓'},
-            {p:'TIGRE', s:['ti','gre'], i:'🐅'}, {p:'LIBRO', s:['li','bro'], i:'📚'},
-            {p:'CEBRA', s:['ce','bra'], i:'🦓'}, {p:'PUEBLO', s:['pue','blo'], i:'🏘️'},
-            {p:'GRANJA', s:['gran','ja'], i:'🚜'}, {p:'CRUZ', s:['cruz'], i:'✝️'},
-            {p:'PREMIO', s:['pre','mio'], i:'🥇'}, {p:'BRÚJULA', s:['brú','ju','la'], i:'🧭'}
+            {p:'TROMPO',s:['trom','po'],i:'🪀'},{p:'ESTRELLA',s:['es','tre','lla'],i:'⭐'},
+            {p:'PLÁTANO',s:['plá','ta','no'],i:'🍌'},{p:'GLOBO',s:['glo','bo'],i:'🎈'},
+            {p:'BRAZO',s:['bra','zo'],i:'💪'},{p:'FRUTA',s:['fru','ta'],i:'🍎'},
+            {p:'CHICLE',s:['chi','cle'],i:'🍬'},{p:'DRAGÓN',s:['dra','gón'],i:'🐲'},
+            {p:'TRACTOR',s:['trac','tor'],i:'🚜'},{p:'BLUSA',s:['blu','sa'],i:'👚'},
+            {p:'PLATO',s:['pla','to'],i:'🍽️'},{p:'FRESA',s:['fre','sa'],i:'🍓'},
+            {p:'TIGRE',s:['ti','gre'],i:'🐅'},{p:'LIBRO',s:['li','bro'],i:'📚'},
+            {p:'CEBRA',s:['ce','bra'],i:'🦓'},{p:'PUEBLO',s:['pue','blo'],i:'🏘️'},
+            {p:'PREMIO',s:['pre','mio'],i:'🥇'},{p:'BRÚJULA',s:['brú','ju','la'],i:'🧭'},
+            {p:'GRANJA',s:['gran','ja'],i:'🐄'},{p:'TROMPA',s:['trom','pa'],i:'🐘'}
         ]
     };
 
     let selectedLevel = 1, currentWord = null, userProgress = [], sessionLog = [], usedWords = [];
 
-    function createEmojiBG() {
-        const container = document.getElementById('emoji-bg-container');
-        ['🎈','🧩','🎨','⭐','🌈','🍎','🐱','⚽','🚗'].forEach(emoji => {
-            for(let i=0; i<3; i++) {
-                const s = document.createElement('span'); s.className = 'bg-emoji';
-                s.innerText = emoji; s.style.left = Math.random()*90+'vw';
-                s.style.top = Math.random()*90+'vh'; s.style.animationDelay = Math.random()*5+'s';
+    // ===== EMOJIS FONDO =====
+    function createEmojiBG(containerId) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+        ['🎈','🧩','🎨','⭐','🌈','🍎','🐱','⚽','🚗','🌟'].forEach(emoji => {
+            for(let i = 0; i < 2; i++) {
+                const s = document.createElement('span');
+                s.className = 'bg-emoji';
+                s.innerText = emoji;
+                s.style.left = Math.random() * 90 + 'vw';
+                s.style.top = Math.random() * 90 + 'vh';
+                s.style.animationDelay = Math.random() * 5 + 's';
+                s.style.position = 'fixed';
                 container.appendChild(s);
             }
         });
     }
-    createEmojiBG();
+    createEmojiBG('emoji-bg-nombre');
 
+    // ===== PANTALLA NOMBRE =====
+    function guardarNombre() {
+        const n = document.getElementById('nombre-inp').value.trim();
+        if (!n) {
+            document.getElementById('nombre-inp').style.borderColor = '#f44336';
+            return;
+        }
+        nombreAlumno = n;
+        enviarInforme = true;
+        document.getElementById('nombre-screen').style.display = 'none';
+        document.getElementById('splash-screen').classList.remove('hidden');
+        createEmojiBG('emoji-bg-container');
+    }
+
+    function sinNombre() {
+        nombreAlumno = "Anónimo";
+        enviarInforme = false;
+        document.getElementById('nombre-screen').style.display = 'none';
+        document.getElementById('splash-screen').classList.remove('hidden');
+        createEmojiBG('emoji-bg-container');
+    }
+
+    // ===== SELECTOR LETRA =====
+    function setLetra(modo, btn) {
+        modoLetra = modo;
+        document.querySelectorAll('.btn-letra').forEach(b => b.classList.remove('sel'));
+        btn.classList.add('sel');
+    }
+
+    function fmt(texto) {
+        return modoLetra === 'may' ? texto.toUpperCase() : texto.toLowerCase();
+    }
+
+    function claseLetra() {
+        return modoLetra === 'may' ? 'mode-may' : 'mode-min';
+    }
+
+    // ===== INICIO JUEGO =====
     async function startGame(level) {
-        selectedLevel = level; usedWords = [];
+        selectedLevel = level;
+        usedWords = [];
         document.getElementById('splash-screen').classList.add('hidden');
         document.getElementById('game-container').classList.remove('hidden');
         document.getElementById('level-indicator').innerText = `Nivel ${level}`;
@@ -297,38 +565,59 @@
     function loadWord() {
         const pool = wordBank[selectedLevel];
         if (usedWords.length === pool.length) usedWords = [];
-        let pick; do { pick = pool[Math.floor(Math.random() * pool.length)]; } while (usedWords.includes(pick.p));
-        currentWord = pick; usedWords.push(pick.p); userProgress = [];
+        let pick;
+        do { pick = pool[Math.floor(Math.random() * pool.length)]; }
+        while (usedWords.includes(pick.p));
+        currentWord = pick;
+        usedWords.push(pick.p);
+        userProgress = [];
 
         document.getElementById('target-icon').innerText = currentWord.i;
-        const slots = document.getElementById('word-slots'); slots.innerHTML = '';
-        currentWord.s.forEach(() => { const d = document.createElement('div'); d.className = 'slot'; slots.appendChild(d); });
 
+        // Slots
+        const slots = document.getElementById('word-slots');
+        slots.innerHTML = '';
+        currentWord.s.forEach(() => {
+            const d = document.createElement('div');
+            d.className = 'slot ' + claseLetra();
+            slots.appendChild(d);
+        });
+
+        // Banco de sílabas
         let bankSyllables = [...currentWord.s];
-        while(bankSyllables.length < currentWord.s.length + 3) {
-            const randomFiller = fillerSyllables[Math.floor(Math.random()*fillerSyllables.length)];
-            if(!bankSyllables.includes(randomFiller)) bankSyllables.push(randomFiller);
+        while (bankSyllables.length < currentWord.s.length + 3) {
+            const rf = fillerSyllables[Math.floor(Math.random() * fillerSyllables.length)];
+            if (!bankSyllables.includes(rf)) bankSyllables.push(rf);
         }
 
-        const bank = document.getElementById('syllables-bank'); bank.innerHTML = '';
+        const bank = document.getElementById('syllables-bank');
+        bank.innerHTML = '';
         bankSyllables.sort(() => Math.random() - 0.5).forEach(sil => {
-            const b = document.createElement('div'); b.className = 'syllable-card'; b.innerText = sil;
-            b.onclick = () => checkSyllable(sil, b); bank.appendChild(b);
+            const b = document.createElement('div');
+            b.className = 'syllable-card ' + claseLetra();
+            b.innerText = fmt(sil);
+            b.onclick = () => checkSyllable(sil, b);
+            bank.appendChild(b);
         });
+
         speakCurrentWord();
     }
 
-    function speakCurrentWord() { speak(currentWord.p); }
+    function speakCurrentWord() {
+        speak(currentWord.p);
+    }
 
     function checkSyllable(sil, element) {
         const expected = currentWord.s[userProgress.length];
-        if (sil === expected) {
+        if (sil.toLowerCase() === expected.toLowerCase()) {
             userProgress.push(sil);
-            document.querySelectorAll('.slot')[userProgress.length-1].innerText = sil;
+            const slot = document.querySelectorAll('.slot')[userProgress.length - 1];
+            slot.innerText = fmt(sil);
             element.style.visibility = 'hidden';
             logAction('ACIERTO', sil, expected);
             if (userProgress.length === currentWord.s.length) {
-                setTimeout(async () => { await speak("¡Muy bien!"); loadWord(); }, 600);
+                speak("¡Muy bien!");
+                setTimeout(() => loadWord(), 1000);
             }
         } else {
             logAction('ERROR', sil, expected);
@@ -339,28 +628,148 @@
     }
 
     function logAction(res, got, exp) {
-        sessionLog.push({h: new Date().toLocaleTimeString(), l: selectedLevel, p: currentWord.p, r: res, pulsado: got, esperado: exp});
+        sessionLog.push({
+            h: new Date().toLocaleTimeString(),
+            l: selectedLevel,
+            p: currentWord.p,
+            r: res,
+            pulsado: got,
+            esperado: exp
+        });
     }
 
-    function toggleFS() {
-        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-        else {
-            const n1 = Math.floor(Math.random()*5)+5, n2 = Math.floor(Math.random()*5)+1;
-            Swal.fire({ title: 'Control Parental', text: `Resuelve: ${n1} + ${n2}`, input: 'number' })
-            .then(r => { if(parseInt(r.value) === (n1+n2)) document.exitFullscreen(); });
+    // ===== CONTROL PARENTAL =====
+    function abrirParental(accion) {
+        parentalAccion = accion;
+        const n1 = Math.floor(Math.random() * 8) + 2;
+        const n2 = Math.floor(Math.random() * 8) + 2;
+        parentalEsperado = n1 + n2;
+        const desc = accion === 'fs'
+            ? 'Resuelve la suma para cambiar pantalla completa:'
+            : 'Resuelve la suma para salir:';
+        document.getElementById('parental-desc').textContent = desc;
+        document.getElementById('parental-suma').textContent = `${n1} + ${n2} = ?`;
+        document.getElementById('parental-inp').value = '';
+        document.getElementById('parental-err').textContent = '';
+        document.getElementById('parental-modal').classList.add('vis');
+        setTimeout(() => document.getElementById('parental-inp').focus(), 120);
+    }
+
+    function verificarParental() {
+        const val = parseInt(document.getElementById('parental-inp').value, 10);
+        if (val === parentalEsperado) {
+            cerrarParental();
+            if (parentalAccion === 'salir') {
+                enviarASheet('salida manual');
+                // Volver al splash
+                document.getElementById('game-container').classList.add('hidden');
+                document.getElementById('splash-screen').classList.remove('hidden');
+            } else if (parentalAccion === 'fs') {
+                toggleFS();
+            }
+        } else {
+            document.getElementById('parental-err').textContent = '❌ Incorrecto, inténtalo de nuevo.';
+            document.getElementById('parental-inp').value = '';
+            document.getElementById('parental-inp').focus();
         }
     }
 
-    function generateReport() {
-        let rows = sessionLog.map(l => `<tr><td>${l.h}</td><td>${l.l}</td><td>${l.p}</td><td style="color:${l.r==='ACIERTO'?'green':'red'}">${l.r}</td><td>${l.pulsado}</td><td>${l.esperado}</td></tr>`).join('');
-        const html = `<html><body style="font-family:sans-serif; padding:20px;"><h2>Informe de Desempeño</h2><table border="1" style="width:100%; border-collapse:collapse"><thead><tr style="background:#eee"><th>Hora</th><th>Nivel</th><th>Palabra</th><th>Resultado</th><th>Tocado</th><th>Esperado</th></tr></thead><tbody>${rows}</tbody></table></body></html>`;
-        const blob = new Blob([html], {type: 'text/html'});
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'informe.html'; a.click();
+    function cerrarParental() {
+        document.getElementById('parental-modal').classList.remove('vis');
     }
 
+    // ===== PANTALLA COMPLETA =====
+    function toggleFS() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
+    // Bloquear Escape cuando parental está abierto
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && document.getElementById('parental-modal').classList.contains('vis')) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }, true);
+
+    // ===== GOOGLE SHEET =====
+    function enviarASheet(motivo) {
+        if (!enviarInforme) return;
+        const aciertos = sessionLog.filter(l => l.r === 'ACIERTO').length;
+        const errores  = sessionLog.filter(l => l.r === 'ERROR').length;
+        const falladas = [...new Set(sessionLog.filter(l => l.r === 'ERROR').map(l => l.p))].join(', ') || 'Ninguna';
+        fetch(SHEET_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+                Nombre: nombreAlumno,
+                Actividad: `¿Cómo se llama? - Nivel ${selectedLevel} - ${modoLetra === 'may' ? 'Mayúsculas' : 'Minúsculas'}`,
+                Aciertos: aciertos,
+                Errores: errores,
+                PalabrasFalladas: falladas + (motivo ? ` (${motivo})` : '')
+            }),
+            headers: { 'Content-Type': 'application/json' }
+        }).catch(e => console.log('Sheet error:', e));
+    }
+
+    // ===== INFORME =====
+    function generateReport() {
+        enviarASheet('descarga informe');
+        const aciertos = sessionLog.filter(l => l.r === 'ACIERTO').length;
+        const errores  = sessionLog.filter(l => l.r === 'ERROR').length;
+        let rows = sessionLog.map(l =>
+            `<tr>
+                <td>${l.h}</td>
+                <td>${l.l}</td>
+                <td style="font-weight:700">${l.p}</td>
+                <td style="color:${l.r === 'ACIERTO' ? '#2b9348' : '#d62828'};font-weight:700">${l.r}</td>
+                <td>${l.pulsado}</td>
+                <td>${l.esperado}</td>
+            </tr>`
+        ).join('');
+        const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+<style>
+body{font-family:'Nunito',sans-serif;background:#f0f8ff;padding:30px;color:#333;}
+h1{color:#2193b0;margin-bottom:4px;}
+.chips{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0 24px;}
+.chip{background:white;border-radius:12px;padding:10px 18px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.chip span{color:#2196F3;}
+table{width:100%;border-collapse:collapse;background:white;border-radius:12px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.08);}
+th{background:linear-gradient(135deg,#6dd5ed,#2193b0);color:white;padding:10px 12px;text-align:left;}
+td{padding:9px 12px;border-bottom:1px solid #eee;font-size:.9rem;}
+</style>
+</head><body>
+<h1>🌟 ¿Cómo se llama? — Informe</h1>
+<p style="color:#666">Alumno/a: <strong>${nombreAlumno}</strong> · ${new Date().toLocaleDateString('es-ES',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</p>
+<div class="chips">
+  <div class="chip">Nivel: <span>${selectedLevel}</span></div>
+  <div class="chip">Letra: <span>${modoLetra === 'may' ? 'ABC Mayúscula' : 'abc Minúscula'}</span></div>
+  <div class="chip">Aciertos: <span>${aciertos}</span></div>
+  <div class="chip">Errores: <span>${errores}</span></div>
+</div>
+<table>
+<thead><tr><th>Hora</th><th>Nivel</th><th>Palabra</th><th>Resultado</th><th>Pulsado</th><th>Esperado</th></tr></thead>
+<tbody>${rows || '<tr><td colspan="6" style="text-align:center;color:#999;padding:1rem;">Sin registros aún</td></tr>'}</tbody>
+</table>
+</body></html>`;
+        const blob = new Blob([html], { type: 'text/html' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `informe_como_se_llama_${nombreAlumno}_${new Date().toISOString().slice(0,10)}.html`;
+        a.click();
+    }
+
+    // ===== VOZ =====
     function speak(t) {
         return new Promise(r => {
-            const m = new SpeechSynthesisUtterance(t); m.lang = 'es-ES'; m.rate = 0.8; m.onend = r; synth.speak(m);
+            const m = new SpeechSynthesisUtterance(t);
+            m.lang = 'es-ES';
+            m.rate = 0.8;
+            m.onend = r;
+            synth.cancel();
+            synth.speak(m);
         });
     }
 </script>

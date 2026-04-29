@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Letra Inicial vs Letra Final - EdTech</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund:wght@100..400&family=Playwrite+HR+Lijeva:wght@100..400&display=swap" rel="stylesheet">
-    
+    <title>Letra Inicial vs Letra Final</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund:wght@100..400&family=Playwrite+HR+Lijeva:wght@100..400&family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --verde: #81C784; --azul: #4FC3F7; --rojo: #FF5252; --fondo: #F0F7F9;
@@ -26,26 +24,74 @@
         .case-mayus { font-family: var(--font-mayus); text-transform: uppercase; }
         .case-minus { font-family: var(--font-minus); text-transform: lowercase; }
 
-        /* Pantalla de Inicio */
+        /* ===== ANTESALA NOMBRE ===== */
+        #nombre-screen {
+            position: fixed; inset: 0; z-index: 9999;
+            background: linear-gradient(135deg, #E1F5FE 0%, #B3E5FC 100%);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Nunito', sans-serif;
+        }
+        .nombre-card {
+            background: white; padding: 2.5rem 2rem; border-radius: 32px;
+            max-width: 420px; width: 90%; text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+            border: 3px solid #B3E5FC;
+        }
+        .nombre-card h2 {
+            font-family: 'Fredoka One', cursive; font-size: 1.6rem;
+            color: #039BE5; margin: 0 0 0.4rem;
+        }
+        .nombre-card p { color: #777; font-size: 0.9rem; margin-bottom: 1.2rem; line-height: 1.6; }
+        .nombre-inp {
+            width: 100%; padding: 0.8rem 1.2rem; border-radius: 100px;
+            border: 2px solid #B3E5FC; font-size: 1rem;
+            font-family: 'Nunito', sans-serif; text-align: center;
+            outline: none; box-sizing: border-box; margin-bottom: 1rem;
+            transition: border-color 0.2s;
+        }
+        .nombre-inp:focus { border-color: #039BE5; }
+        .btn-nombre-ok {
+            width: 100%; padding: 0.9rem; border: none; border-radius: 100px;
+            background: linear-gradient(135deg, #4FC3F7, #039BE5);
+            color: white; font-family: 'Fredoka One', cursive;
+            font-size: 1.1rem; cursor: pointer; margin-bottom: 0.7rem;
+            box-shadow: 0 6px 20px rgba(3,155,229,0.35);
+            transition: transform 0.15s;
+        }
+        .btn-nombre-ok:hover { transform: translateY(-1px); }
+        .btn-sin-nombre {
+            background: none; border: none; color: #bbb; font-size: 0.85rem;
+            font-family: 'Nunito', sans-serif; cursor: pointer; text-decoration: underline;
+        }
+        .nombre-nota {
+            font-size: 0.72rem; color: #ccc; margin-top: 1rem;
+            border-top: 1px solid #f5f5f5; padding-top: 0.8rem; line-height: 1.5;
+        }
+
+        /* ===== PANTALLA INICIO ===== */
         #start-screen {
             position: fixed; inset: 0; z-index: 2000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            display: none; flex-direction: column;
+            justify-content: center; align-items: center;
             background: radial-gradient(circle, #ffffff 0%, #e3f2fd 100%);
+            overflow-y: auto; padding: 20px;
         }
 
         .floating-letter {
-            position: absolute; font-weight: bold; font-size: 2.5rem; opacity: 0.15; z-index: 1; animation: float 12s infinite linear;
+            position: absolute; font-weight: bold; font-size: 2.5rem;
+            opacity: 0.15; z-index: 1; animation: float 12s infinite linear;
         }
-
         @keyframes float {
             0% { transform: translateY(110vh) rotate(0deg); }
             100% { transform: translateY(-10vh) rotate(360deg); }
         }
 
         #start-content {
-            position: relative; z-index: 10; background: rgba(255, 255, 255, 0.95);
-            padding: 40px; border-radius: 50px; box-shadow: 0 20px 45px rgba(0,0,0,0.06);
-            border: 6px solid white; max-width: 85%;
+            position: relative; z-index: 10;
+            background: rgba(255,255,255,0.97);
+            padding: 40px; border-radius: 50px;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.06);
+            border: 6px solid white; max-width: 500px; width: 90%;
         }
 
         .btn-main {
@@ -54,8 +100,23 @@
             box-shadow: 0 6px 0 #66BB6A; transition: all 0.2s; font-family: inherit;
         }
         .btn-main:active { transform: translateY(3px); box-shadow: 0 3px 0 #66BB6A; }
+        .btn-main:hover { transform: translateY(-2px); }
 
-        /* Juego */
+        /* Botón volver */
+        .btn-volver {
+            display: inline-block; margin-top: 18px;
+            padding: 11px 28px; border-radius: 999px;
+            border: 2px solid #B3E5FC; background: white;
+            color: #039BE5; font-family: 'Nunito', sans-serif;
+            font-size: 0.95rem; font-weight: 700; text-decoration: none;
+            transition: all 0.2s; box-shadow: 0 2px 8px rgba(3,155,229,0.1);
+        }
+        .btn-volver:hover {
+            background: var(--pastel-azul); border-color: #039BE5;
+            box-shadow: 0 4px 16px rgba(3,155,229,0.25);
+        }
+
+        /* ===== JUEGO ===== */
         #game-container {
             display: none; flex: 1; flex-direction: column; padding: 10px;
             max-width: 1100px; margin: auto; width: 100%; box-sizing: border-box;
@@ -65,6 +126,7 @@
             display: flex; justify-content: space-between; align-items: center;
             background: white; padding: 10px 20px; border-radius: 25px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.04); margin-bottom: 10px;
+            flex-wrap: wrap; gap: 8px;
         }
 
         #grid {
@@ -74,104 +136,218 @@
 
         .card {
             background: white; border: 4px solid #fff; border-radius: 35px;
-            padding: 15px; cursor: pointer; transition: 0.3s; box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+            padding: 15px; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.03);
         }
         .card .emoji { font-size: 60px; display: block; }
         .card p { font-size: 1.4rem; margin: 5px 0; color: var(--text-color); }
+        .card:hover { transform: scale(1.03); box-shadow: 0 12px 28px rgba(0,0,0,0.08); }
         .card.correct { border-color: var(--verde); background: #E8F5E9; }
+        .card.wrong { border-color: var(--rojo); background: #FFEBEE; animation: shake 0.4s; }
+        @keyframes shake {
+            0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)}
+        }
 
-        /* Modales */
-        #parental-modal, #overlay {
+        /* ===== OVERLAY ERROR ===== */
+        #overlay {
             position: fixed; inset: 0; z-index: 5000; display: none;
             flex-direction: column; justify-content: center; align-items: center;
             background: rgba(255,255,255,0.98); padding: 20px; backdrop-filter: blur(8px);
         }
 
-        .exit-timer-btn {
-            width: 160px; height: 160px; border-radius: 50%; border: 8px solid #f5f5f5;
-            background: var(--rojo); color: white; cursor: pointer;
-            position: relative; overflow: hidden; margin-top: 15px;
+        /* ===== CONTROL PARENTAL ===== */
+        #parental-modal {
+            position: fixed; inset: 0; z-index: 6000; display: none;
+            flex-direction: column; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.92); padding: 20px;
         }
-        #progress-fill { position: absolute; bottom: 0; width: 100%; background: rgba(255,255,255,0.3); height: 0%; }
+        .parental-card {
+            background: white; border-radius: 28px; padding: 2.5rem 2rem;
+            max-width: 340px; width: 90%; text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .parental-card h2 {
+            font-family: 'Fredoka One', cursive; font-size: 1.4rem;
+            color: #039BE5; margin-bottom: 0.3rem;
+        }
+        .parental-card p { color: #666; font-size: 0.9rem; margin-bottom: 0.3rem; }
+        .parental-sum { font-size: 2.2rem; font-weight: 900; color: #FF9800; margin: 1rem 0; }
+        .parental-inp {
+            width: 100%; padding: 0.8rem; border: 3px solid #B3E5FC;
+            border-radius: 14px; font-size: 1.5rem; font-weight: 800;
+            text-align: center; font-family: 'Nunito', sans-serif;
+            outline: none; margin-bottom: 0.8rem;
+        }
+        .parental-inp:focus { border-color: #039BE5; }
+        .parental-err { color: #f44336; font-size: 0.9rem; min-height: 1.2rem; margin-bottom: 0.5rem; }
+        .btn-parental-ok {
+            width: 100%; padding: 0.9rem; border: none; border-radius: 14px;
+            background: linear-gradient(135deg, #4FC3F7, #039BE5);
+            color: white; font-family: 'Fredoka One', cursive;
+            font-size: 1.2rem; cursor: pointer; margin-bottom: 0.5rem;
+            transition: transform 0.15s;
+        }
+        .btn-parental-ok:hover { transform: translateY(-1px); }
+        .btn-parental-cancel {
+            background: none; border: none; color: #aaa;
+            font-size: 0.85rem; cursor: pointer; font-family: 'Nunito', sans-serif;
+        }
     </style>
 </head>
 <body class="case-mayus" id="main-body">
 
-<button id="btn-parental-access" onclick="showParental('settings')" style="position: fixed; top: 15px; right: 15px; background: white; border: 2px solid #eee; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; z-index: 3000;">⚙️</button>
-
-<div id="start-screen">
-    <div id="start-content">
-        <h1 style="color: var(--text-color); margin-bottom: 20px;">Letra Inicial vs Final</h1>
-        <div style="background: var(--pastel-azul); padding: 20px; border-radius: 35px; margin-bottom: 20px; border: 3px dashed #B3E5FC;">
-            <button class="btn-main" style="background: #4FC3F7; box-shadow: 0 5px 0 #039BE5;" id="toggleCase" onclick="switchCase()">MAYÚSCULAS</button>
-        </div>
-        <button class="btn-main" onclick="startGame()">¡EMPEZAR!</button>
+<!-- ===== ANTESALA NOMBRE ===== -->
+<div id="nombre-screen">
+    <div class="nombre-card">
+        <div style="font-size:3rem;margin-bottom:0.5rem;">🔤</div>
+        <h2>¿Quién va a jugar?</h2>
+        <p>Si quieres, escribe el nombre del niño o niña para que Inma pueda ver cómo ha ido la sesión.</p>
+        <input id="nombre-inp" class="nombre-inp" type="text"
+            placeholder="Nombre del niño/a…" maxlength="50"
+            onkeydown="if(event.key==='Enter')guardarNombre()">
+        <button class="btn-nombre-ok" onclick="guardarNombre()">Enviar informe a Inma ✓</button>
+        <button class="btn-sin-nombre" onclick="sinNombre()">Continuar sin enviar informe</button>
+        <p class="nombre-nota">
+            🔒 Si escribes el nombre, al terminar Inma recibirá un informe con los resultados.<br>
+            Es voluntario y los datos solo los verá ella para el seguimiento terapéutico.
+        </p>
     </div>
 </div>
 
+<!-- ===== PANTALLA INICIO ===== -->
+<div id="start-screen">
+    <div id="start-content">
+        <h1 style="color: var(--text-color); margin-bottom: 20px; font-family:'Fredoka One',cursive; font-size:2.8rem;">
+            Letra Inicial<br>vs Final
+        </h1>
+        <div style="background: var(--pastel-azul); padding: 20px; border-radius: 35px; margin-bottom: 20px; border: 3px dashed #B3E5FC;">
+            <p style="font-family:'Nunito',sans-serif; font-weight:700; color:#546E7A; font-size:0.9rem; margin-bottom:10px;">TIPO DE LETRA</p>
+            <button class="btn-main" style="background: #4FC3F7; box-shadow: 0 5px 0 #039BE5; font-size:1.1rem; padding:12px 30px;" id="toggleCase" onclick="switchCase()">MAYÚSCULAS</button>
+        </div>
+        <button class="btn-main" onclick="startGame()">¡EMPEZAR!</button>
+        <br>
+        <a href="https://manosconmuchoquecontar.github.io/" target="_blank" class="btn-volver">
+            🏠 Volver a los juegos
+        </a>
+    </div>
+</div>
+
+<!-- ===== JUEGO ===== -->
 <div id="game-container">
     <div class="header">
-        <button onclick="showParental('home')" style="background:none; border:none; font-size: 2rem; cursor:pointer;">🏠</button>
-        <div style="font-weight: bold; color: #78909C;">NIVEL: <span id="lvl">1</span></div>
-        <button class="btn-main" style="font-size: 0.8rem; padding: 8px 15px; background: #90A4AE; box-shadow: 0 3px 0 #546E7A;" onclick="downloadReport()">📥 INFORME</button>
-        <div style="font-weight: bold; color: #78909C;">PRUEBA: <span id="trial">1</span>/10</div>
+        <button onclick="abrirParental('home')" style="background:none; border:none; font-size:2rem; cursor:pointer;" title="Volver al inicio">🏠</button>
+        <div style="font-weight:bold; color:#78909C; font-family:'Nunito',sans-serif;">
+            NIVEL: <span id="lvl">1</span>
+        </div>
+        <button class="btn-main" style="font-size:0.8rem; padding:8px 15px; background:#90A4AE; box-shadow:0 3px 0 #546E7A;" onclick="downloadReport()">📥 INFORME</button>
+        <div style="font-weight:bold; color:#78909C; font-family:'Nunito',sans-serif;">
+            PRUEBA: <span id="trial">1</span>/10
+        </div>
     </div>
 
-    <div style="background: white; padding: 20px; border-radius: 30px; margin-bottom: 10px; border-bottom: 5px solid var(--azul);">
-        <div id="instruction-text" style="font-size: 1.6rem; color: #2C3E50;">...</div>
+    <div style="background:white; padding:20px; border-radius:30px; margin-bottom:10px; border-bottom:5px solid var(--azul);">
+        <div id="instruction-text" style="font-size:1.6rem; color:#2C3E50;">...</div>
         <button style="background:var(--azul); color:white; padding:10px 20px; border-radius:50px; border:none; cursor:pointer; margin-top:10px; font-family:inherit;" onclick="repetirAudio()">🔊 ESCUCHAR</button>
     </div>
 
     <div id="grid"></div>
 </div>
 
+<!-- ===== OVERLAY ERROR ===== -->
 <div id="overlay">
     <div style="text-align:center;">
-        <div style="font-size: 5rem;">✨</div>
-        <h2 style="color:#607D8B;">¡Sigue intentándolo!</h2>
+        <div style="font-size:5rem;">✨</div>
+        <h2 style="color:#607D8B; font-family:'Fredoka One',cursive;">¡Sigue intentándolo!</h2>
         <button class="btn-main" onclick="cerrarError()">CONTINUAR</button>
     </div>
 </div>
 
+<!-- ===== CONTROL PARENTAL ===== -->
 <div id="parental-modal">
-    <h2 style="font-family: sans-serif;">CONTROL PARENTAL</h2>
-    <p id="math-q" style="font-size: 1.5rem; font-weight: bold; color: var(--azul);"></p>
-    <input type="number" id="math-a" placeholder="?" style="font-size: 2rem; width: 120px; text-align: center; border: 4px solid var(--azul); border-radius: 15px; margin-bottom: 20px;">
-    
-    <div id="parental-actions">
-        <button id="exit-confirm-btn" class="btn-main" style="display:none;" onclick="checkHomeReturn()">VOLVER AL INICIO</button>
-        <button id="exit-hold-btn" class="exit-timer-btn" style="display:none;">
-            <div id="progress-fill"></div>
-            <span style="position:relative; z-index:2; font-family: sans-serif; font-weight: bold;">MANTÉN 3s<br>PARA SALIR</span>
-        </button>
+    <div class="parental-card">
+        <h2>🔒 Control parental</h2>
+        <p id="parental-desc">Resuelve la suma para continuar:</p>
+        <p class="parental-sum" id="parental-suma">3 + 4 = ?</p>
+        <input type="number" class="parental-inp" id="parental-inp" placeholder="?"
+            onkeydown="if(event.key==='Enter')verificarParental()">
+        <p class="parental-err" id="parental-err"></p>
+        <button class="btn-parental-ok" onclick="verificarParental()">✓ Comprobar</button>
+        <br>
+        <button class="btn-parental-cancel" onclick="cerrarParental()">Cancelar</button>
     </div>
-    <button onclick="hideParental()" style="margin-top:30px; color: #90A4AE; background:none; border:none; text-decoration:underline; cursor:pointer;">CANCELAR</button>
 </div>
 
 <script>
+    // ===== CONFIG =====
+    const SHEET_URL = "https://script.google.com/macros/s/AKfycbw4AKlcc8-09jA0uBl7EYDW_lorkazvEOwhZTthN6FD_BIhM1Q6o4HJdNSeUvqba2an/exec";
+    let nombreAlumno = "";
+    let enviarInforme = false;
+    let parentalAccion = '';
+    let parentalEsperado = 0;
+
+    // ===== DATOS =====
     const db = [
-        { n: "AVIÓN", i: "A", f: "N", e: "✈️" }, { n: "BOLA", i: "B", f: "A", e: "⚽" },
-        { n: "CASA", i: "C", f: "A", e: "🏠" }, { n: "DADO", i: "D", f: "O", e: "🎲" },
-        { n: "ELEFANTE", i: "E", f: "E", e: "🐘" }, { n: "FRESA", i: "F", f: "A", e: "🍓" },
-        { n: "GATO", i: "G", f: "O", e: "🐱" }, { n: "HELADO", i: "H", f: "O", e: "🍦" },
-        { n: "ISLA", i: "I", f: "A", e: "🏝️" }, { n: "LUNA", i: "L", f: "A", e: "🌙" },
-        { n: "MANO", i: "M", f: "O", e: "✋" }, { n: "NUBE", i: "N", f: "E", e: "☁️" },
-        { n: "OJO", i: "O", f: "O", e: "👁️" }, { n: "PATO", i: "P", f: "O", e: "🦆" },
-        { n: "QUESO", i: "Q", f: "O", e: "🧀" }, { n: "RATÓN", i: "R", f: "N", e: "🐭" },
-        { n: "SOL", i: "S", f: "L", e: "☀️" }, { n: "TREN", i: "T", f: "N", e: "🚂" },
-        { n: "UVA", i: "U", f: "A", e: "🍇" }
+        { n:"AVIÓN",    i:"A", f:"N", e:"✈️"  },
+        { n:"BOLA",     i:"B", f:"A", e:"⚽"  },
+        { n:"CASA",     i:"C", f:"A", e:"🏠"  },
+        { n:"DADO",     i:"D", f:"O", e:"🎲"  },
+        { n:"ELEFANTE", i:"E", f:"E", e:"🐘"  },
+        { n:"FRESA",    i:"F", f:"A", e:"🍓"  },
+        { n:"GATO",     i:"G", f:"O", e:"🐱"  },
+        { n:"HELADO",   i:"H", f:"O", e:"🍦"  },
+        { n:"ISLA",     i:"I", f:"A", e:"🏝️" },
+        { n:"LUNA",     i:"L", f:"A", e:"🌙"  },
+        { n:"MANO",     i:"M", f:"O", e:"✋"  },
+        { n:"NUBE",     i:"N", f:"E", e:"☁️" },
+        { n:"OJO",      i:"O", f:"O", e:"👁️" },
+        { n:"PATO",     i:"P", f:"O", e:"🦆"  },
+        { n:"QUESO",    i:"Q", f:"O", e:"🧀"  },
+        { n:"RATÓN",    i:"R", f:"N", e:"🐭"  },
+        { n:"SOL",      i:"S", f:"L", e:"☀️" },
+        { n:"TREN",     i:"T", f:"N", e:"🚂"  },
+        { n:"UVA",      i:"U", f:"A", e:"🍇"  },
+        { n:"VELA",     i:"V", f:"A", e:"🕯️" },
+        { n:"ZAPATO",   i:"Z", f:"O", e:"👟"  },
     ];
 
     let nivel = 1, prueba = 1, correcta = null, modo = "inicial", bloqueado = false;
     let logs = [];
-    let isMayus = true, mathRes = 0, exitProgress = 0, exitInterval;
+    let isMayus = true;
 
+    // ===== ANTESALA =====
+    function guardarNombre() {
+        const n = document.getElementById('nombre-inp').value.trim();
+        if (!n) {
+            document.getElementById('nombre-inp').style.borderColor = '#f44336';
+            return;
+        }
+        nombreAlumno = n;
+        enviarInforme = true;
+        document.getElementById('nombre-screen').style.display = 'none';
+        document.getElementById('start-screen').style.display = 'flex';
+        crearFondo();
+    }
+
+    function sinNombre() {
+        nombreAlumno = "Anónimo";
+        enviarInforme = false;
+        document.getElementById('nombre-screen').style.display = 'none';
+        document.getElementById('start-screen').style.display = 'flex';
+        crearFondo();
+    }
+
+    // ===== TIPO DE LETRA =====
     function switchCase() {
         isMayus = !isMayus;
         document.getElementById('toggleCase').innerText = isMayus ? "MAYÚSCULAS" : "minúsculas";
         document.getElementById('main-body').className = isMayus ? "case-mayus" : "case-minus";
     }
 
+    function fmtLetra(txt) {
+        return isMayus ? txt.toUpperCase() : txt.toLowerCase();
+    }
+
+    // ===== INICIO JUEGO =====
     function startGame() {
         document.documentElement.requestFullscreen().catch(() => {});
         document.getElementById('start-screen').style.display = 'none';
@@ -185,16 +361,17 @@
         grid.innerHTML = "";
         modo = Math.random() > 0.5 ? "inicial" : "final";
         correcta = db[Math.floor(Math.random() * db.length)];
-        
+
         const letraObjetivo = modo === "inicial" ? correcta.i : correcta.f;
         let distractores = db.filter(p => (modo === "inicial" ? p.i : p.f) !== letraObjetivo)
-                             .sort(() => 0.5 - Math.random()).slice(0, Math.min(nivel + 1, 6));
+                             .sort(() => 0.5 - Math.random())
+                             .slice(0, Math.min(nivel + 1, 6));
         let opciones = [...distractores, correcta].sort(() => 0.5 - Math.random());
 
         opciones.forEach(p => {
             const card = document.createElement('div');
             card.className = 'card';
-            card.innerHTML = `<span class="emoji">${p.e}</span><p>${p.n}</p>`;
+            card.innerHTML = `<span class="emoji">${p.e}</span><p>${fmtLetra(p.n)}</p>`;
             card.onclick = () => verificar(p, card);
             grid.appendChild(card);
         });
@@ -205,7 +382,7 @@
         const letra = modo === "inicial" ? correcta.i : correcta.f;
         const tipo = modo === "inicial" ? "EMPIEZA" : "TERMINA";
         const texto = `¿QUÉ PALABRA ${tipo} CON LA LETRA ${letra}?`;
-        document.getElementById('instruction-text').innerText = texto;
+        document.getElementById('instruction-text').innerText = fmtLetra(texto);
         document.getElementById('lvl').innerText = nivel;
         document.getElementById('trial').innerText = prueba;
         decir(texto);
@@ -221,22 +398,25 @@
     function repetirAudio() { actualizarInterfaz(); }
 
     function verificar(p, el) {
-        if(bloqueado) return;
+        if (bloqueado) return;
         const esCorrecta = p.n === correcta.n;
         const timestamp = new Date().toLocaleTimeString();
-        if(esCorrecta) {
-            bloqueado = true;
+        bloqueado = true;
+        if (esCorrecta) {
             el.classList.add('correct');
             logs.push({ h: timestamp, r: "ACIERTO", m: modo, obj: correcta.n, sel: p.n, l: nivel });
             setTimeout(() => {
                 prueba++;
-                if(prueba > 10) { nivel++; prueba = 1; }
+                if (prueba > 10) { nivel++; prueba = 1; }
                 iniciarPrueba();
             }, 1200);
         } else {
-            bloqueado = true;
+            el.classList.add('wrong');
             logs.push({ h: timestamp, r: "FALLO", m: modo, obj: correcta.n, sel: p.n, l: nivel });
-            document.getElementById('overlay').style.display = 'flex';
+            setTimeout(() => {
+                el.classList.remove('wrong');
+                document.getElementById('overlay').style.display = 'flex';
+            }, 500);
         }
     }
 
@@ -245,62 +425,147 @@
         bloqueado = false;
     }
 
-    // Parental Logic
-    function showParental(target) {
+    // ===== CONTROL PARENTAL =====
+    function abrirParental(accion) {
+        parentalAccion = accion;
         const n1 = Math.floor(Math.random() * 8) + 2;
-        const n2 = Math.floor(Math.random() * 7) + 1;
-        mathRes = n1 + n2;
-        document.getElementById('math-q').innerText = `¿Cuánto es ${n1} + ${n2}?`;
-        document.getElementById('math-a').value = "";
+        const n2 = Math.floor(Math.random() * 8) + 2;
+        parentalEsperado = n1 + n2;
+        const desc = accion === 'home'
+            ? 'Resuelve la suma para volver al inicio:'
+            : 'Resuelve la suma para salir de pantalla completa:';
+        document.getElementById('parental-desc').textContent = desc;
+        document.getElementById('parental-suma').textContent = `${n1} + ${n2} = ?`;
+        document.getElementById('parental-inp').value = '';
+        document.getElementById('parental-err').textContent = '';
         document.getElementById('parental-modal').style.display = 'flex';
-        document.getElementById('exit-confirm-btn').style.display = (target === 'home') ? 'block' : 'none';
-        document.getElementById('exit-hold-btn').style.display = (target === 'settings') ? 'block' : 'none';
+        setTimeout(() => document.getElementById('parental-inp').focus(), 120);
     }
 
-    function hideParental() { document.getElementById('parental-modal').style.display = 'none'; }
-
-    function checkHomeReturn() {
-        if(parseInt(document.getElementById('math-a').value) === mathRes) location.reload();
+    function verificarParental() {
+        const val = parseInt(document.getElementById('parental-inp').value, 10);
+        if (val === parentalEsperado) {
+            cerrarParental();
+            if (parentalAccion === 'home') {
+                enviarASheet('salida manual');
+                document.getElementById('game-container').style.display = 'none';
+                if (document.fullscreenElement) document.exitFullscreen();
+                document.getElementById('start-screen').style.display = 'flex';
+            } else if (parentalAccion === 'fs') {
+                if (document.fullscreenElement) document.exitFullscreen();
+                else document.documentElement.requestFullscreen().catch(() => {});
+            }
+        } else {
+            document.getElementById('parental-err').textContent = '❌ Incorrecto, inténtalo de nuevo.';
+            document.getElementById('parental-inp').value = '';
+            document.getElementById('parental-inp').focus();
+        }
     }
 
-    const holdBtn = document.getElementById('exit-hold-btn');
-    function startTimer() {
-        if(parseInt(document.getElementById('math-a').value) !== mathRes) return;
-        exitInterval = setInterval(() => {
-            exitProgress += 2;
-            document.getElementById('progress-fill').style.height = exitProgress + "%";
-            if(exitProgress >= 100) { clearInterval(exitInterval); location.reload(); }
-        }, 60);
+    function cerrarParental() {
+        document.getElementById('parental-modal').style.display = 'none';
     }
-    function stopTimer() { clearInterval(exitInterval); exitProgress = 0; document.getElementById('progress-fill').style.height = "0%"; }
 
-    holdBtn.addEventListener('mousedown', startTimer);
-    holdBtn.addEventListener('touchstart', startTimer);
-    window.addEventListener('mouseup', stopTimer);
-    window.addEventListener('touchend', stopTimer);
+    // Bloquear Escape cuando parental está abierto
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && document.getElementById('parental-modal').style.display === 'flex') {
+            e.preventDefault(); e.stopPropagation();
+        }
+    }, true);
 
+    // Reentrar en fullscreen si se sale sin parental
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement &&
+            document.getElementById('game-container').style.display === 'flex' &&
+            document.getElementById('parental-modal').style.display !== 'flex') {
+            setTimeout(() => document.documentElement.requestFullscreen().catch(() => {}), 400);
+        }
+    });
+
+    // ===== GOOGLE SHEET =====
+    function enviarASheet(motivo) {
+        if (!enviarInforme) return;
+        const aciertos = logs.filter(l => l.r === 'ACIERTO').length;
+        const errores  = logs.filter(l => l.r === 'FALLO').length;
+        const falladas = [...new Set(logs.filter(l => l.r === 'FALLO').map(l => l.obj))].join(', ') || 'Ninguna';
+        fetch(SHEET_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+                Nombre: nombreAlumno,
+                Actividad: `Letra Inicial vs Final - ${isMayus ? 'Mayúsculas' : 'Minúsculas'}`,
+                Aciertos: aciertos,
+                Errores: errores,
+                PalabrasFalladas: falladas + (motivo ? ` (${motivo})` : '')
+            }),
+            headers: { 'Content-Type': 'application/json' }
+        }).catch(e => console.log('Sheet error:', e));
+    }
+
+    // ===== INFORME =====
     function downloadReport() {
-        let html = `<html><head><meta charset="utf-8"></head><body><h1>Informe Fonológico</h1><table border="1">
-            <tr><th>Hora</th><th>Nivel</th><th>Modo</th><th>Objetivo</th><th>Seleccionado</th><th>Resultado</th></tr>
-            ${logs.map(l=>`<tr><td>${l.h}</td><td>${l.l}</td><td>${l.m}</td><td>${l.obj}</td><td>${l.sel}</td><td>${l.r}</td></tr>`).join('')}
-        </table></body></html>`;
-        const blob = new Blob([html], {type:'text/html'});
+        enviarASheet('descarga informe');
+        const aciertos = logs.filter(l => l.r === 'ACIERTO').length;
+        const errores  = logs.filter(l => l.r === 'FALLO').length;
+        const rows = logs.map(l =>
+            `<tr>
+                <td>${l.h}</td>
+                <td>${l.l}</td>
+                <td>${l.m === 'inicial' ? 'Inicial' : 'Final'}</td>
+                <td style="font-weight:700">${l.obj}</td>
+                <td>${l.sel}</td>
+                <td style="color:${l.r==='ACIERTO'?'#2b9348':'#d62828'};font-weight:700">${l.r}</td>
+            </tr>`
+        ).join('');
+        const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body{font-family:'Nunito',sans-serif;background:#F0F7F9;padding:30px;color:#34495E;}
+h1{color:#039BE5;font-family:'Fredoka One',cursive;margin-bottom:4px;}
+.chips{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0 24px;}
+.chip{background:white;border-radius:12px;padding:10px 18px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.chip span{color:#039BE5;}
+table{width:100%;border-collapse:collapse;background:white;border-radius:12px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.08);}
+th{background:linear-gradient(135deg,#4FC3F7,#039BE5);color:white;padding:10px 12px;text-align:left;}
+td{padding:9px 12px;border-bottom:1px solid #E1F5FE;font-size:.9rem;}
+tr:hover td{background:#E1F5FE;}
+</style>
+</head><body>
+<h1>🔤 Letra Inicial vs Final — Informe</h1>
+<p style="color:#888">Alumno/a: <strong>${nombreAlumno}</strong> · ${new Date().toLocaleDateString('es-ES',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</p>
+<div class="chips">
+  <div class="chip">Letra: <span>${isMayus ? 'ABC Mayúscula' : 'abc Minúscula'}</span></div>
+  <div class="chip">Nivel alcanzado: <span>${nivel}</span></div>
+  <div class="chip">Aciertos: <span>${aciertos}</span></div>
+  <div class="chip">Fallos: <span>${errores}</span></div>
+  <div class="chip">Total: <span>${logs.length}</span></div>
+</div>
+<table>
+<thead><tr><th>Hora</th><th>Nivel</th><th>Modo</th><th>Objetivo</th><th>Seleccionado</th><th>Resultado</th></tr></thead>
+<tbody>${rows || '<tr><td colspan="6" style="text-align:center;color:#999;padding:1rem;">Sin registros aún</td></tr>'}</tbody>
+</table>
+</body></html>`;
+        const blob = new Blob([html], { type: 'text/html' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = "informe_educativo.html";
+        a.download = `informe_letra_inicial_final_${nombreAlumno}_${new Date().toISOString().slice(0,10)}.html`;
         a.click();
     }
 
-    // Bg animation
-    const letters = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    for(let i=0; i<20; i++) {
-        const span = document.createElement('span');
-        span.className = 'floating-letter';
-        span.innerText = letters[Math.floor(Math.random() * letters.length)];
-        span.style.left = Math.random() * 100 + "vw";
-        span.style.animationDelay = Math.random() * 10 + "s";
-        span.style.color = `hsl(${Math.random() * 360}, 60%, 80%)`;
-        document.getElementById('start-screen').appendChild(span);
+    // ===== FONDO ANIMADO =====
+    function crearFondo() {
+        const letters = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+        const startScreen = document.getElementById('start-screen');
+        // Limpiar letras previas
+        startScreen.querySelectorAll('.floating-letter').forEach(el => el.remove());
+        for (let i = 0; i < 20; i++) {
+            const span = document.createElement('span');
+            span.className = 'floating-letter';
+            span.innerText = letters[Math.floor(Math.random() * letters.length)];
+            span.style.left = Math.random() * 100 + "vw";
+            span.style.animationDelay = Math.random() * 10 + "s";
+            span.style.color = `hsl(${Math.random() * 360}, 60%, 80%)`;
+            startScreen.appendChild(span);
+        }
     }
 </script>
 </body>

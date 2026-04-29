@@ -3,17 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>El Tren de los Sonidos - Intervención Pro</title>
+    <title>El Tren de los Sonidos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
-
         :root {
             --primary: #4CAF50;
             --secondary: #2196F3;
             --accent: #FFC107;
             --danger: #f44336;
-            --bg: #ffffff;
-            --text: #1a1a1a;
             --font-escolar: 'Varela Round', sans-serif;
         }
 
@@ -22,7 +19,7 @@
         body {
             font-family: var(--font-escolar);
             background-color: #e8f5e9;
-            color: var(--text);
+            color: #1a1a1a;
             height: 100vh;
             display: flex;
             align-items: center;
@@ -30,30 +27,93 @@
             overflow: hidden;
         }
 
-        /* Pantalla de Inicio */
+        /* ===== ANTESALA NOMBRE ===== */
+        #nombre-screen {
+            position: fixed; inset: 0; z-index: 9999;
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Nunito', sans-serif;
+        }
+        .nombre-card {
+            background: white; padding: 2.5rem 2rem; border-radius: 32px;
+            max-width: 420px; width: 90%; text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+            border: 3px solid #BBDEFB;
+        }
+        .nombre-card h2 {
+            font-family: 'Fredoka One', cursive; font-size: 1.6rem;
+            color: #2196F3; margin: 0 0 0.4rem;
+        }
+        .nombre-card p { color: #777; font-size: 0.9rem; margin-bottom: 1.2rem; line-height: 1.6; }
+        .nombre-inp {
+            width: 100%; padding: 0.8rem 1.2rem; border-radius: 100px;
+            border: 2px solid #BBDEFB; font-size: 1rem;
+            font-family: 'Nunito', sans-serif; text-align: center;
+            outline: none; box-sizing: border-box; margin-bottom: 1rem;
+            transition: border-color 0.2s;
+        }
+        .nombre-inp:focus { border-color: #2196F3; }
+        .btn-nombre-ok {
+            width: 100%; padding: 0.9rem; border: none; border-radius: 100px;
+            background: linear-gradient(135deg, #64B5F6, #2196F3);
+            color: white; font-family: 'Fredoka One', cursive;
+            font-size: 1.1rem; cursor: pointer; margin-bottom: 0.7rem;
+            box-shadow: 0 6px 20px rgba(33,150,243,0.35);
+            transition: transform 0.15s;
+        }
+        .btn-nombre-ok:hover { transform: translateY(-1px); }
+        .btn-sin-nombre {
+            background: none; border: none; color: #bbb; font-size: 0.85rem;
+            font-family: 'Nunito', sans-serif; cursor: pointer; text-decoration: underline;
+        }
+        .nombre-nota {
+            font-size: 0.72rem; color: #ccc; margin-top: 1rem;
+            border-top: 1px solid #f5f5f5; padding-top: 0.8rem; line-height: 1.5;
+        }
+
+        /* ===== SPLASH ===== */
         #splash-screen {
-            position: fixed;
-            inset: 0;
+            position: fixed; inset: 0;
             background: var(--secondary);
             z-index: 1000;
-            display: flex;
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             color: white;
             text-align: center;
             padding: 20px;
+            gap: 16px;
         }
 
-        /* Contenedor Principal */
+        .btn-splash {
+            padding: 18px 40px; border-radius: 50px; border: none;
+            color: #333; font-size: 1.6rem; font-weight: bold;
+            cursor: pointer; font-family: var(--font-escolar);
+            background: var(--accent); box-shadow: 0 6px 0 #f57f17;
+            transition: all 0.2s;
+        }
+        .btn-splash:hover { transform: translateY(-2px); }
+        .btn-splash:active { transform: translateY(4px); box-shadow: none; }
+
+        .btn-volver {
+            display: inline-block;
+            padding: 11px 28px; border-radius: 999px;
+            border: 2px solid rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.15);
+            color: white; font-family: 'Nunito', sans-serif;
+            font-size: 0.95rem; font-weight: 700; text-decoration: none;
+            transition: all 0.2s; backdrop-filter: blur(4px);
+        }
+        .btn-volver:hover { background: rgba(255,255,255,0.3); border-color: white; }
+
+        /* ===== JUEGO ===== */
         #game-container {
             background: white;
-            width: 98vw;
-            height: 96vh;
+            width: 98vw; height: 96vh;
             border-radius: 20px;
             border: 4px solid var(--secondary);
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column;
             padding: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             position: relative;
@@ -63,169 +123,236 @@
         h1 { font-size: clamp(1.5rem, 4vh, 2.5rem); color: var(--secondary); }
 
         .stats-grid {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            font-size: 1.2rem;
-            margin: 5px 0;
+            display: flex; justify-content: center;
+            gap: 20px; font-size: 1.2rem; margin: 5px 0;
         }
 
         .progress-container {
-            background: #eee;
-            border-radius: 10px;
-            height: 15px;
-            width: 50%;
-            margin: 5px auto;
-            overflow: hidden;
+            background: #eee; border-radius: 10px;
+            height: 15px; width: 50%; margin: 5px auto; overflow: hidden;
         }
-
-        #progress-bar {
-            background: var(--accent);
-            height: 100%;
-            width: 0%;
-            transition: width 0.4s;
-        }
+        #progress-bar { background: var(--accent); height: 100%; width: 0%; transition: width 0.4s; }
 
         #grid-items {
             flex: 1 1 auto;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
-            gap: 10px;
-            padding: 10px;
-            min-height: 0;
+            gap: 10px; padding: 10px; min-height: 0;
         }
 
         .item-card {
-            background: #fff;
-            border: 3px solid #ddd;
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
+            background: #fff; border: 3px solid #ddd;
+            border-radius: 15px; display: flex;
+            flex-direction: column; align-items: center;
+            justify-content: center; cursor: pointer;
             transition: transform 0.1s;
         }
-
         .item-emoji { font-size: clamp(2rem, 7vh, 4rem); }
         .item-label { font-size: clamp(1rem, 3vh, 1.8rem); font-weight: bold; }
-
         .item-card:active { transform: scale(0.95); background: #f0f0f0; }
         .flash-success { background-color: #c8e6c9 !important; border-color: #4caf50 !important; }
-        .flash-error { background-color: #ffcdd2 !important; border-color: #f44336 !important; }
+        .flash-error   { background-color: #ffcdd2 !important; border-color: #f44336 !important; }
 
-        /* Controles */
+        /* Controles laterales */
         .side-controls {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            position: absolute; top: 10px; right: 10px;
+            display: flex; flex-direction: column; gap: 10px;
         }
-
         .btn-circle {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 0 #bbb;
+            width: 50px; height: 50px; border-radius: 50%; border: none;
+            cursor: pointer; display: flex; align-items: center;
+            justify-content: center; font-size: 1.5rem;
+            box-shadow: 0 4px 0 #bbb; transition: transform 0.15s;
         }
-
-        #btn-report { background: #9c27b0; color: white; box-shadow: 0 4px 0 #7b1fa2; }
-        #btn-fullscreen { background: #607d8b; color: white; box-shadow: 0 4px 0 #455a64; }
+        .btn-circle:hover { transform: scale(1.1); }
+        #btn-report    { background: #9c27b0; color: white; box-shadow: 0 4px 0 #7b1fa2; }
+        #btn-home      { background: #ff5722; color: white; box-shadow: 0 4px 0 #bf360c; }
+        #btn-fullscreen{ background: #607d8b; color: white; box-shadow: 0 4px 0 #455a64; }
 
         footer {
             flex: 0 0 auto;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            padding: 10px;
+            display: flex; justify-content: center;
+            gap: 20px; padding: 10px;
         }
 
         .main-btn {
-            padding: 15px 30px;
-            border-radius: 50px;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            font-family: var(--font-escolar);
+            padding: 15px 30px; border-radius: 50px; border: none;
+            color: white; font-size: 1.5rem; font-weight: bold;
+            cursor: pointer; font-family: var(--font-escolar);
+            transition: transform 0.15s;
+        }
+        .main-btn:hover { transform: translateY(-2px); }
+        #btn-start  { background: var(--primary); box-shadow: 0 5px 0 #2e7d32; }
+        #btn-repeat { background: var(--accent); color: #333; box-shadow: 0 5px 0 #f57f17; }
+
+        /* ===== CONTROL PARENTAL ===== */
+        #parental-modal {
+            position: fixed; inset: 0; z-index: 8000;
+            display: none; flex-direction: column;
+            align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.92); padding: 20px;
+        }
+        #parental-modal.vis { display: flex; }
+        .parental-card {
+            background: white; border-radius: 28px; padding: 2.5rem 2rem;
+            max-width: 340px; width: 90%; text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .parental-card h2 {
+            font-family: 'Fredoka One', cursive; font-size: 1.4rem;
+            color: #2196F3; margin-bottom: 0.3rem;
+        }
+        .parental-card p { color: #666; font-size: 0.9rem; margin-bottom: 0.3rem; }
+        .parental-sum  { font-size: 2.2rem; font-weight: 900; color: #FF9800; margin: 1rem 0; }
+        .parental-inp  {
+            width: 100%; padding: 0.8rem; border: 3px solid #BBDEFB;
+            border-radius: 14px; font-size: 1.5rem; font-weight: 800;
+            text-align: center; font-family: 'Nunito', sans-serif;
+            outline: none; margin-bottom: 0.8rem;
+        }
+        .parental-inp:focus { border-color: #2196F3; }
+        .parental-err  { color: #f44336; font-size: 0.9rem; min-height: 1.2rem; margin-bottom: 0.5rem; }
+        .btn-parental-ok {
+            width: 100%; padding: 0.9rem; border: none; border-radius: 14px;
+            background: linear-gradient(135deg, #64B5F6, #2196F3);
+            color: white; font-family: 'Fredoka One', cursive;
+            font-size: 1.2rem; cursor: pointer; margin-bottom: 0.5rem;
+            transition: transform 0.15s;
+        }
+        .btn-parental-ok:hover { transform: translateY(-1px); }
+        .btn-parental-cancel {
+            background: none; border: none; color: #aaa;
+            font-size: 0.85rem; cursor: pointer; font-family: 'Nunito', sans-serif;
         }
 
-        #btn-start { background: var(--primary); box-shadow: 0 5px 0 #2e7d32; }
-        #btn-repeat { background: var(--accent); color: #333; box-shadow: 0 5px 0 #f57f17; }
-        
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div id="splash-screen">
-        <h1 style="color: white; font-size: 3rem;">🚂 El Tren de los Sonidos</h1>
-        <p style="font-size: 1.5rem; margin: 20px;">Entrenamiento de Memoria Auditiva</p>
-        <button class="main-btn" id="btn-begin" style="background: var(--accent); color: #333;" onclick="startApp()">¡EMPEZAR!</button>
-    </div>
-
-    <div id="game-container">
-        <div class="side-controls">
-            <button id="btn-fullscreen" class="btn-circle" title="Pantalla Completa" onclick="toggleFS()">⛶</button>
-            <button id="btn-report" class="btn-circle" title="Descargar Informe" onclick="generateReport()">📋</button>
-        </div>
-
-        <header>
-            <h1>El Tren de los Sonidos</h1>
-            <div class="stats-grid">
-                <div>Nivel: <span id="level-display">1</span></div>
-                <div>Aciertos: <span id="stars-display">0</span>/10</div>
-            </div>
-            <div class="progress-container">
-                <div id="progress-bar"></div>
-            </div>
-        </header>
-
-        <p id="status-text" style="text-align: center; font-size: 1.4rem; padding: 10px; background: #fff9c4; border-radius: 10px; margin: 5px 10px;">
-            Pulsa el botón verde para escuchar la serie.
+<!-- ===== ANTESALA NOMBRE ===== -->
+<div id="nombre-screen">
+    <div class="nombre-card">
+        <div style="font-size:3rem;margin-bottom:0.5rem;">🚂</div>
+        <h2>¿Quién va a jugar?</h2>
+        <p>Si quieres, escribe el nombre del niño o niña para que Inma pueda ver cómo ha ido la sesión.</p>
+        <input id="nombre-inp" class="nombre-inp" type="text"
+            placeholder="Nombre del niño/a…" maxlength="50"
+            onkeydown="if(event.key==='Enter')guardarNombre()">
+        <button class="btn-nombre-ok" onclick="guardarNombre()">Enviar informe a Inma ✓</button>
+        <button class="btn-sin-nombre" onclick="sinNombre()">Continuar sin enviar informe</button>
+        <p class="nombre-nota">
+            🔒 Si escribes el nombre, al terminar Inma recibirá un informe con los resultados.<br>
+            Es voluntario y los datos solo los verá ella para el seguimiento terapéutico.
         </p>
+    </div>
+</div>
 
-        <div id="grid-items"></div>
+<!-- ===== SPLASH ===== -->
+<div id="splash-screen">
+    <h1 style="color:white; font-size:3rem; font-family:'Fredoka One',cursive;">🚂 El Tren de los Sonidos</h1>
+    <p style="font-size:1.4rem; opacity:0.9;">Entrenamiento de Memoria Auditiva</p>
+    <button class="btn-splash" onclick="startApp()">¡EMPEZAR!</button>
+    <a href="https://manosconmuchoquecontar.github.io/" target="_blank" class="btn-volver">
+        🏠 Volver a los juegos
+    </a>
+</div>
 
-        <footer>
-            <button id="btn-start" class="main-btn" onclick="initChallenge()">🔊 Nueva Serie</button>
-            <button id="btn-repeat" class="main-btn hidden" onclick="playSequence()">🔄 Repetir</button>
-        </footer>
+<!-- ===== JUEGO ===== -->
+<div id="game-container">
+    <div class="side-controls">
+        <button id="btn-home"       class="btn-circle" title="Volver al inicio"    onclick="abrirParental('home')">🏠</button>
+        <button id="btn-fullscreen" class="btn-circle" title="Pantalla completa"   onclick="abrirParental('fs')">⛶</button>
+        <button id="btn-report"     class="btn-circle" title="Descargar informe"   onclick="generateReport()">📋</button>
     </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <header>
+        <h1>El Tren de los Sonidos</h1>
+        <div class="stats-grid">
+            <div>Nivel: <span id="level-display">1</span></div>
+            <div>Aciertos: <span id="stars-display">0</span>/10</div>
+        </div>
+        <div class="progress-container">
+            <div id="progress-bar"></div>
+        </div>
+    </header>
+
+    <p id="status-text" style="text-align:center; font-size:1.4rem; padding:10px; background:#fff9c4; border-radius:10px; margin:5px 10px;">
+        Pulsa el botón verde para escuchar la serie.
+    </p>
+
+    <div id="grid-items"></div>
+
+    <footer>
+        <button id="btn-start"  class="main-btn" onclick="initChallenge()">🔊 Nueva Serie</button>
+        <button id="btn-repeat" class="main-btn hidden" onclick="playSequence()">🔄 Repetir</button>
+    </footer>
+</div>
+
+<!-- ===== CONTROL PARENTAL ===== -->
+<div id="parental-modal">
+    <div class="parental-card">
+        <h2>🔒 Control parental</h2>
+        <p id="parental-desc">Resuelve la suma para continuar:</p>
+        <p class="parental-sum" id="parental-suma">3 + 4 = ?</p>
+        <input type="number" class="parental-inp" id="parental-inp" placeholder="?"
+            onkeydown="if(event.key==='Enter')verificarParental()">
+        <p class="parental-err" id="parental-err"></p>
+        <button class="btn-parental-ok" onclick="verificarParental()">✓ Comprobar</button>
+        <br>
+        <button class="btn-parental-cancel" onclick="cerrarParental()">Cancelar</button>
+    </div>
+</div>
+
 <script>
+    // ===== CONFIG =====
+    const SHEET_URL = "https://script.google.com/macros/s/AKfycbw4AKlcc8-09jA0uBl7EYDW_lorkazvEOwhZTthN6FD_BIhM1Q6o4HJdNSeUvqba2an/exec";
+    let nombreAlumno = "";
+    let enviarInforme = false;
+    let parentalAccion = '';
+    let parentalEsperado = 0;
+
     const synth = window.speechSynthesis;
+
     const items = [
-        { id: 'Perro', emoji: '🐶', nombre: 'Perro' },
-        { id: 'Gato', emoji: '🐱', nombre: 'Gato' },
-        { id: 'Manzana', emoji: '🍎', nombre: 'Manzana' },
-        { id: 'Uva', emoji: '🍇', nombre: 'Uva' },
-        { id: 'Pelota', emoji: '⚽', nombre: 'Pelota' },
-        { id: 'Tambor', emoji: '🥁', nombre: 'Tambor' },
-        { id: 'Pajaro', emoji: '🐦', nombre: 'Pájaro' },
-        { id: 'Pez', emoji: '🐟', nombre: 'Pez' },
-        { id: 'Casa', emoji: '🏠', nombre: 'Casa' }
+        { id:'Perro',    emoji:'🐶', nombre:'Perro'   },
+        { id:'Gato',     emoji:'🐱', nombre:'Gato'    },
+        { id:'Manzana',  emoji:'🍎', nombre:'Manzana' },
+        { id:'Uva',      emoji:'🍇', nombre:'Uva'     },
+        { id:'Pelota',   emoji:'⚽', nombre:'Pelota'  },
+        { id:'Tambor',   emoji:'🥁', nombre:'Tambor'  },
+        { id:'Pajaro',   emoji:'🐦', nombre:'Pájaro'  },
+        { id:'Pez',      emoji:'🐟', nombre:'Pez'     },
+        { id:'Casa',     emoji:'🏠', nombre:'Casa'    }
     ];
 
-    let currentLevel = 1;
+    let currentLevel  = 1;
     let totalSuccesses = 0;
     let targetSequence = [];
-    let userIndex = 0;
-    let isPlaying = false;
-    let canClick = false;
+    let userIndex  = 0;
+    let isPlaying  = false;
+    let canClick   = false;
     let sessionLog = [];
 
+    // ===== ANTESALA =====
+    function guardarNombre() {
+        const n = document.getElementById('nombre-inp').value.trim();
+        if (!n) { document.getElementById('nombre-inp').style.borderColor = '#f44336'; return; }
+        nombreAlumno   = n;
+        enviarInforme  = true;
+        document.getElementById('nombre-screen').style.display = 'none';
+        document.getElementById('splash-screen').style.display = 'flex';
+    }
+
+    function sinNombre() {
+        nombreAlumno  = "Anónimo";
+        enviarInforme = false;
+        document.getElementById('nombre-screen').style.display = 'none';
+        document.getElementById('splash-screen').style.display = 'flex';
+    }
+
+    // ===== INICIO JUEGO =====
     function startApp() {
         document.getElementById('splash-screen').classList.add('hidden');
         initBoard();
@@ -238,10 +365,8 @@
         items.forEach(item => {
             const div = document.createElement('div');
             div.className = 'item-card';
-            div.innerHTML = `
-                <span class="item-emoji">${item.emoji}</span>
-                <span class="item-label">${item.nombre}</span>
-            `;
+            div.innerHTML = `<span class="item-emoji">${item.emoji}</span>
+                             <span class="item-label">${item.nombre}</span>`;
             div.onclick = () => checkChoice(item, div);
             grid.appendChild(div);
         });
@@ -249,9 +374,9 @@
 
     async function initChallenge() {
         if (isPlaying) return;
-        const seqLength = currentLevel + 1; // Nivel 1 = 2 items, Nivel 2 = 3...
+        const seqLength = currentLevel + 1;
         targetSequence = [];
-        for(let i=0; i < seqLength; i++) {
+        for (let i = 0; i < seqLength; i++) {
             targetSequence.push(items[Math.floor(Math.random() * items.length)]);
         }
         await playSequence();
@@ -260,29 +385,27 @@
     async function playSequence() {
         if (isPlaying) return;
         isPlaying = true;
-        canClick = false;
+        canClick  = false;
         userIndex = 0;
         document.getElementById('btn-start').disabled = true;
         document.getElementById('btn-repeat').classList.add('hidden');
         resetStyles();
         updateStatus("👂 Escucha con atención...");
-        
+
         for (const item of targetSequence) {
             await speak(item.nombre);
             await new Promise(r => setTimeout(r, 600));
         }
-        
+
         updateStatus("👉 ¡Tu turno! Toca en orden");
         isPlaying = false;
-        canClick = true;
+        canClick  = true;
         document.getElementById('btn-repeat').classList.remove('hidden');
     }
 
     function checkChoice(item, element) {
         if (!canClick || isPlaying) return;
-        
         const expected = targetSequence[userIndex];
-        
         if (item.id === expected.id) {
             element.classList.add('flash-success');
             logAction('ACIERTO', item.nombre, expected.nombre);
@@ -294,7 +417,7 @@
         } else {
             element.classList.add('flash-error');
             logAction('ERROR', item.nombre, expected.nombre);
-            updateStatus("❌ ¡Casi! Inténtalo de nuevo");
+            updateStatus("❌ ¡Casi! Pulsa Nueva Serie para intentarlo de nuevo");
             canClick = false;
             setTimeout(() => {
                 element.classList.remove('flash-error');
@@ -319,88 +442,155 @@
         }, 1200);
     }
 
-    // --- SISTEMA DE CONTROL PARENTAL Y PANTALLA COMPLETA ---
+    // ===== CONTROL PARENTAL =====
+    function abrirParental(accion) {
+        parentalAccion = accion;
+        const n1 = Math.floor(Math.random() * 8) + 2;
+        const n2 = Math.floor(Math.random() * 8) + 2;
+        parentalEsperado = n1 + n2;
+        const desc = accion === 'home'
+            ? 'Resuelve la suma para volver al inicio:'
+            : accion === 'fs'
+            ? 'Resuelve la suma para cambiar pantalla completa:'
+            : 'Resuelve la suma para salir:';
+        document.getElementById('parental-desc').textContent = desc;
+        document.getElementById('parental-suma').textContent = `${n1} + ${n2} = ?`;
+        document.getElementById('parental-inp').value = '';
+        document.getElementById('parental-err').textContent = '';
+        document.getElementById('parental-modal').classList.add('vis');
+        setTimeout(() => document.getElementById('parental-inp').focus(), 120);
+    }
 
-    function toggleFS() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen();
-            document.getElementById('btn-fullscreen').innerText = '⇲';
-        } else {
-            const n1 = Math.floor(Math.random() * 10) + 1;
-            const n2 = Math.floor(Math.random() * 10) + 1;
-            const res = n1 + n2;
-
-            Swal.fire({
-                title: 'Control Parental',
-                text: `Para salir resuelve: ${n1} + ${n2}`,
-                input: 'number',
-                confirmButtonText: 'Verificar',
-                showCancelButton: true
-            }).then((result) => {
-                if (parseInt(result.value) === res) {
+    function verificarParental() {
+        const val = parseInt(document.getElementById('parental-inp').value, 10);
+        if (val === parentalEsperado) {
+            cerrarParental();
+            if (parentalAccion === 'home') {
+                enviarASheet('salida manual');
+                synth.cancel();
+                // Volver al splash
+                document.getElementById('game-container').style.display = 'none';
+                if (document.fullscreenElement) document.exitFullscreen();
+                document.getElementById('splash-screen').style.display = 'flex';
+                document.getElementById('splash-screen').classList.remove('hidden');
+            } else if (parentalAccion === 'fs') {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(() => {});
+                } else {
                     document.exitFullscreen();
-                    document.getElementById('btn-fullscreen').innerText = '⛶';
                 }
-            });
+            }
+        } else {
+            document.getElementById('parental-err').textContent = '❌ Incorrecto, inténtalo de nuevo.';
+            document.getElementById('parental-inp').value = '';
+            document.getElementById('parental-inp').focus();
         }
     }
 
-    // --- SISTEMA DE INFORMES ---
+    function cerrarParental() {
+        document.getElementById('parental-modal').classList.remove('vis');
+    }
 
+    // Bloquear Escape cuando parental está abierto
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && document.getElementById('parental-modal').classList.contains('vis')) {
+            e.preventDefault(); e.stopPropagation();
+        }
+    }, true);
+
+    // Reentrar en fullscreen si se sale sin parental
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement &&
+            !document.getElementById('game-container').classList.contains('hidden') &&
+            document.getElementById('game-container').style.display !== 'none' &&
+            !document.getElementById('parental-modal').classList.contains('vis')) {
+            setTimeout(() => document.documentElement.requestFullscreen().catch(() => {}), 400);
+        }
+    });
+
+    // ===== GOOGLE SHEET =====
+    function enviarASheet(motivo) {
+        if (!enviarInforme) return;
+        const aciertos = sessionLog.filter(l => l.resultado === 'ACIERTO').length;
+        const errores  = sessionLog.filter(l => l.resultado === 'ERROR').length;
+        const fallados = [...new Set(sessionLog.filter(l => l.resultado === 'ERROR').map(l => l.objetivo))].join(', ') || 'Ninguno';
+        fetch(SHEET_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+                Nombre:           nombreAlumno,
+                Actividad:        'El Tren de los Sonidos',
+                Aciertos:         aciertos,
+                Errores:          errores,
+                PalabrasFalladas: fallados + (motivo ? ` (${motivo})` : '')
+            }),
+            headers: { 'Content-Type': 'application/json' }
+        }).catch(e => console.log('Sheet error:', e));
+    }
+
+    // ===== INFORME =====
     function logAction(tipo, seleccionado, esperado) {
-        const entry = {
-            hora: new Date().toLocaleTimeString(),
-            nivel: currentLevel,
+        sessionLog.push({
+            hora:      new Date().toLocaleTimeString(),
+            nivel:     currentLevel,
             resultado: tipo,
-            pulsado: seleccionado,
-            objetivo: esperado
-        };
-        sessionLog.push(entry);
+            pulsado:   seleccionado,
+            objetivo:  esperado
+        });
     }
 
     function generateReport() {
-        let rows = sessionLog.map(l => `
-            <tr>
+        enviarASheet('descarga informe');
+        const aciertos = sessionLog.filter(l => l.resultado === 'ACIERTO').length;
+        const errores  = sessionLog.filter(l => l.resultado === 'ERROR').length;
+        const rows = sessionLog.map(l =>
+            `<tr>
                 <td>${l.hora}</td>
                 <td>${l.nivel}</td>
-                <td style="color: ${l.resultado === 'ACIERTO' ? 'green' : 'red'}">${l.resultado}</td>
+                <td style="color:${l.resultado==='ACIERTO'?'#2b9348':'#d62828'};font-weight:700">${l.resultado}</td>
                 <td>${l.pulsado}</td>
                 <td>${l.objetivo}</td>
-            </tr>
-        `).join('');
+            </tr>`
+        ).join('');
 
-        const htmlContent = `
-            <html>
-            <head><title>Informe de Sesión</title><style>
-                body { font-family: sans-serif; padding: 20px; }
-                table { width: 100%; border-collapse: collapse; }
-                th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                th { background-color: #2196F3; color: white; }
-            </style></head>
-            <body>
-                <h1>Informe de Intervención - El Tren de los Sonidos</h1>
-                <p>Fecha: ${new Date().toLocaleDateString()}</p>
-                <table>
-                    <thead><tr><th>Hora</th><th>Nivel</th><th>Resultado</th><th>Pulsado</th><th>Esperado</th></tr></thead>
-                    <tbody>${rows}</tbody>
-                </table>
-            </body>
-            </html>
-        `;
+        const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body{font-family:'Nunito',sans-serif;background:#E8F5E9;padding:30px;color:#1a1a1a;}
+h1{color:#2196F3;font-family:'Fredoka One',cursive;margin-bottom:4px;}
+.chips{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0 24px;}
+.chip{background:white;border-radius:12px;padding:10px 18px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.chip span{color:#2196F3;}
+table{width:100%;border-collapse:collapse;background:white;border-radius:12px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.08);}
+th{background:linear-gradient(135deg,#64B5F6,#2196F3);color:white;padding:10px 12px;text-align:left;}
+td{padding:9px 12px;border-bottom:1px solid #E3F2FD;font-size:.9rem;}
+tr:hover td{background:#E3F2FD;}
+</style>
+</head><body>
+<h1>🚂 El Tren de los Sonidos — Informe</h1>
+<p style="color:#888">Alumno/a: <strong>${nombreAlumno}</strong> · ${new Date().toLocaleDateString('es-ES',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</p>
+<div class="chips">
+  <div class="chip">Nivel alcanzado: <span>${currentLevel}</span></div>
+  <div class="chip">Aciertos: <span>${aciertos}</span></div>
+  <div class="chip">Errores: <span>${errores}</span></div>
+  <div class="chip">Total intentos: <span>${sessionLog.length}</span></div>
+</div>
+<table>
+<thead><tr><th>Hora</th><th>Nivel</th><th>Resultado</th><th>Pulsado</th><th>Esperado</th></tr></thead>
+<tbody>${rows || '<tr><td colspan="5" style="text-align:center;color:#999;padding:1rem;">Sin registros aún</td></tr>'}</tbody>
+</table>
+</body></html>`;
 
-        const blob = new Blob([htmlContent], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
+        const blob = new Blob([html], { type: 'text/html' });
         const a = document.createElement('a');
-        a.href = url;
-        a.download = `informe_sesion_${new Date().getTime()}.html`;
+        a.href = URL.createObjectURL(blob);
+        a.download = `informe_tren_sonidos_${nombreAlumno}_${new Date().toISOString().slice(0,10)}.html`;
         a.click();
     }
 
-    // --- UTILIDADES ---
-
+    // ===== UTILIDADES =====
     function updateUI() {
-        document.getElementById('level-display').innerText = currentLevel;
-        document.getElementById('stars-display').innerText = totalSuccesses;
+        document.getElementById('level-display').innerText  = currentLevel;
+        document.getElementById('stars-display').innerText  = totalSuccesses;
         document.getElementById('progress-bar').style.width = (totalSuccesses * 10) + "%";
     }
 
@@ -411,7 +601,8 @@
     }
 
     function speak(text) {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
+            synth.cancel();
             const msg = new SpeechSynthesisUtterance(text);
             msg.lang = 'es-ES';
             msg.rate = 0.8;
@@ -420,6 +611,5 @@
         });
     }
 </script>
-
 </body>
 </html>

@@ -21,7 +21,7 @@
     --card-bg: #FFFFFF; --border: rgba(26,58,56,0.10); --radius: 20px; --radius-sm: 12px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
+  body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; scroll-behavior: smooth; }
   
   /* ── NAV ── */
   nav { position: sticky; top: 0; z-index: 100; background: rgba(245,250,250,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 64px; }
@@ -33,11 +33,11 @@
   nav ul a { text-decoration: none; color: var(--ink2); font-size: 14px; font-weight: 500; transition: color .2s; }
   nav ul a:hover, nav ul a.active { color: var(--coral); }
 
-  /* ── ICONOS REDES ── */
+  /* ── ICONOS REDES CABECERA (Ocultos en móvil para limpiar) ── */
   .social-links { display: flex; align-items: center; gap: 8px; }
-  .social-links a { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; transition: opacity .2s, transform .15s; opacity: 0.75; }
-  .social-links a:hover { opacity: 1; transform: translateY(-1px); }
-  .social-links svg { width: 20px; height: 20px; }
+  .social-links a { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; transition: all .2s; opacity: 0.75; }
+  .social-links a:hover { opacity: 1; transform: translateY(-2px); color: var(--coral); }
+  .social-links svg { width: 19px; height: 19px; }
 
   /* ── HERO ── */
   .hero-wrapper { background: linear-gradient(160deg, #D4F0EC 0%, #E8F4F2 60%, #F0FAF8 100%); border-bottom: 1px solid var(--border); padding: 1px 0; }
@@ -45,8 +45,8 @@
   .hero h1 { font-family: 'Fraunces', serif; font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 900; line-height: 1.1; color: var(--ink); margin-bottom: 1.5rem; }
   .hero h1 em { font-style: italic; color: var(--coral); }
   .hero p { font-size: 1.15rem; color: var(--ink2); line-height: 1.7; max-width: 520px; margin: 0 auto 2.5rem; }
-  .btn-primary { display: inline-block; padding: 14px 32px; background: var(--coral); color: white; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 600; border-radius: 100px; text-decoration: none; transition: background .2s, transform .15s; }
-  .btn-primary:hover { background: #1A7A6E; transform: translateY(-1px); }
+  .btn-primary { display: inline-block; padding: 14px 32px; background: var(--coral); color: white; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 600; border-radius: 100px; text-decoration: none; transition: all .3s; box-shadow: 0 4px 12px rgba(42, 157, 143, 0.2); }
+  .btn-primary:hover { background: #1A7A6E; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(42, 157, 143, 0.3); }
   .btn-tutorial { display: inline-block; padding: 10px 24px; background: transparent; color: var(--coral); font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 600; border-radius: 100px; border: 1.5px solid var(--coral); text-decoration: none; transition: all .2s; cursor: pointer; margin-top: 12px; }
   .btn-tutorial:hover { background: var(--coral-light); transform: translateY(-1px); }
 
@@ -59,7 +59,6 @@
   .tutorial-box .video-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 12px; }
   .tutorial-placeholder { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--ink3); font-size: 14px; gap: 8px; }
   .tutorial-close { position: absolute; top: 1rem; right: 1rem; background: var(--bg2); border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 16px; color: var(--ink2); display: flex; align-items: center; justify-content: center; transition: background .2s; }
-  .tutorial-close:hover { background: var(--teal-light); }
 
   /* ── STATS ── */
   .stats { display: flex; justify-content: center; gap: 3rem; padding: 2rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: linear-gradient(135deg, #D4F0EC 0%, #E0F2F5 100%); margin: 0; }
@@ -67,68 +66,44 @@
   .stat strong { display: block; font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 700; color: var(--ink); }
   .stat span { font-size: 13px; color: var(--ink3); }
 
-  /* ── AREAS / FILTROS ── */
-  .section { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
-  .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
-  .section-header h2 { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 700; }
-  .filters { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
-  .filter-btn { padding: 8px 18px; border-radius: 100px; border: 1.5px solid var(--border); background: white; color: var(--ink2); font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all .2s; }
-  .filter-btn:hover { border-color: var(--coral); color: var(--coral); }
-  .filter-btn.active { background: var(--coral); color: white; border-color: var(--coral); }
-  
-  /* ── SEARCH ── */
-  .search-bar { display: flex; align-items: center; background: white; border: 1.5px solid var(--border); border-radius: 100px; padding: 0 1rem; width: 100%; max-width: 360px; gap: 8px; }
-  .search-bar input { border: none; outline: none; background: transparent; font-family: 'Nunito', sans-serif; font-size: 14px; color: var(--ink); padding: 10px 0; width: 100%; }
-
   /* ── GRID ── */
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
-  .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: transform .2s, box-shadow .2s; cursor: pointer; display: flex; flex-direction: column; }
-  .card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(28,28,26,0.10); }
-  .card-thumb { width: 100%; height: 190px; overflow: hidden; background: var(--bg2); display: flex; align-items: center; justify-content: center; position: relative; }
-  .card-thumb img { width: 100%; height: 100%; object-fit: cover; }
-  .card-thumb .area-badge { position: absolute; top: 12px; left: 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 12px; border-radius: 100px; }
-  .card-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
-  .card-body h3 { font-size: 1rem; font-weight: 600; line-height: 1.4; margin-bottom: 0.5rem; }
-  .card-body p { font-size: 13px; color: var(--ink2); line-height: 1.6; flex: 1; }
-  .card-footer { padding: 1rem 1.25rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-  .card-author { font-size: 12px; color: var(--ink3); }
-  .card-level { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px; background: var(--bg2); color: var(--ink2); }
+  .section { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; }
+  .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: all .3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; display: flex; flex-direction: column; }
+  .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(28,28,26,0.12); }
+  
+  .card-thumb { width: 100%; height: 200px; overflow: hidden; background: var(--bg2); position: relative; }
+  .card-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+  .card:hover .card-thumb img { transform: scale(1.1); }
+  .card-thumb .area-badge { position: absolute; top: 12px; left: 12px; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 12px; border-radius: 100px; z-index: 2; }
+  
+  .card-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; gap: 0.8rem; }
+  .card-body h3 { font-size: 1.1rem; font-weight: 700; line-height: 1.3; color: var(--ink); }
+  .card-body p { font-size: 14px; color: var(--ink2); line-height: 1.5; }
 
-  /* ── COLORES ÁREAS ── */
-  .area-fonologica { background: #D4F0EC; color: #1A7A6E; }
-  .area-discriminacion { background: #FEE8D6; color: #C4581A; }
-  .area-memoria { background: #E8E0F5; color: #6040A0; }
-  .area-atencion { background: #FDE8EE; color: #B03060; }
-  .area-lectoescritura { background: #EEF5D8; color: #4A7A20; }
-  .area-vocabulario { background: #FDE8D8; color: #C45E1A; }
+  .card-footer { padding: 1.2rem 1.5rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: #fafdfd; }
+  .card-author { font-size: 12px; color: var(--ink3); font-weight: 500; }
+  .card-level { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 100px; background: white; border: 1px solid var(--border); color: var(--ink2); }
 
   /* ── FOOTER ── */
-  footer { text-align: center; padding: 2rem; font-size: 13px; color: var(--ink3); border-top: 1px solid var(--border); }
-  footer a { color: var(--coral); text-decoration: none; }
-  .footer-inner { position: relative; padding: 2rem 0; }
-  .footer-social { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 1rem 0; }
-  .footer-social a { display: flex; align-items: center; gap: 6px; color: var(--ink3); text-decoration: none; font-size: 13px; font-weight: 500; padding: 6px 14px; border-radius: 100px; border: 1px solid var(--border); transition: all .2s; }
-  .footer-social a:hover { color: var(--coral); border-color: var(--coral); background: var(--coral-light); }
-  .footer-social svg { width: 16px; height: 16px; flex-shrink: 0; }
-  .empty { text-align: center; padding: 4rem 2rem; color: var(--ink3); }
+  .footer-inner { position: relative; padding: 3rem 1rem; border-top: 1px solid var(--border); text-align: center; background: white; }
+  .footer-social { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 1.5rem 0; }
+  .footer-social a { display: flex; align-items: center; gap: 8px; color: var(--ink3); text-decoration: none; font-size: 14px; font-weight: 600; padding: 8px 20px; border-radius: 100px; border: 1px solid var(--border); transition: all .2s; }
+  .footer-social a:hover { color: var(--coral); border-color: var(--coral); background: var(--coral-light); transform: translateY(-2px); }
+  .footer-social svg { width: 18px; height: 18px; }
 
   /* ── VISITAS ── */
-  .visits-badge { position: absolute; right: 0; bottom: 10px; background: #2A9D8F; border-radius: 50px; padding: 5px 15px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(42, 157, 143, 0.2); }
+  .visits-badge { position: absolute; right: 2rem; bottom: 2rem; background: #2A9D8F; border-radius: 50px; padding: 6px 18px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(42, 157, 143, 0.2); }
 
   /* ─── MÓVIL ─── */
   @media (max-width: 768px) {
     nav { padding: 0 1rem; }
+    .social-links { display: none; } /* Limpiamos la cabecera en móvil */
     .logo-text { font-size: 13px; }
-    .logo-text span { font-size: 9px; letter-spacing: 0.02em; }
-    nav ul { gap: 0.6rem; }
-    nav ul a { font-size: 13px; }
-    .social-links a { width: 28px; height: 28px; }
-    .social-links svg { width: 17px; height: 17px; }
+    nav ul { gap: 0.8rem; }
     .hero { padding: 4rem 1.5rem 3rem; }
-    .stats { gap: 1.5rem; padding: 1.5rem; }
-    .stat strong { font-size: 1.5rem; }
-    .section { padding: 2rem 1.5rem; }
-    .visits-badge { position: relative !important; right: auto !important; bottom: auto !important; margin: 1.5rem auto 0 !important; width: fit-content; }
+    .grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    .visits-badge { position: relative !important; right: auto !important; bottom: auto !important; margin: 2rem auto 0 !important; width: fit-content; }
   }
 </style>
 </head>
@@ -155,15 +130,14 @@
     <div class="logo-text">Manos con Mucho que Contar<span>by Inma Merino Rus · AL &amp; Logopedia</span></div>
   </a>
   <ul>
-    <li>
-      <div class="social-links">
+    <!-- Iconos solo visibles en Desktop -->
+    <li class="social-links">
         <a href="https://www.tiktok.com/@manosconmuchoquecontar" target="_blank" rel="noopener" title="TikTok">
-          <svg viewBox="0 0 24 24" fill="var(--ink2)"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
         </a>
         <a href="https://www.instagram.com/manosconmuchoquecontar/" target="_blank" rel="noopener" title="Instagram">
-          <svg viewBox="0 0 24 24" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
         </a>
-      </div>
     </li>
     <li><a href="#actividades" class="active">Actividades</a></li>
     <li><a href="contacto.html">Contacto</a></li>
@@ -174,7 +148,7 @@
 <div class="hero-wrapper">
   <div class="hero">
     <h1>Recursos para <em>comunicar</em><br>y aprender</h1>
-    <p>Actividades interactivas de conciencia fonológica, discriminación auditiva, memoria, atención vocabulario, conceptos básicos y lectoescritura. Creadas con cariño para trabajar la comunicación.</p>
+    <p>Actividades interactivas de conciencia fonológica, discriminación auditiva, memoria, atención vocabulario, conceptos básicos y lectoescritura.</p>
     <a href="#actividades" class="btn-primary">Explorar actividades</a>
     <br>
     <button class="btn-tutorial" onclick="openTutorial()">▶ Ver tutorial</button>
@@ -197,24 +171,24 @@
   </div>
   <div class="filters" id="filters">
     <button class="filter-btn active" data-area="todas">Todas</button>
-    <button class="filter-btn" data-area="fonologica">Conciencia fonológica</button>
-    <button class="filter-btn" data-area="discriminacion">Discriminación auditiva</button>
+    <button class="filter-btn" data-area="fonologica">Fonología</button>
+    <button class="filter-btn" data-area="discriminacion">Audición</button>
     <button class="filter-btn" data-area="memoria">Memoria</button>
     <button class="filter-btn" data-area="atencion">Atención</button>
-    <button class="filter-btn" data-area="lectoescritura">Lectoescritura</button>
-    <button class="filter-btn" data-area="vocabulario">Vocabulario y conceptos</button>
+    <button class="filter-btn" data-area="lectoescritura">Lectura</button>
+    <button class="filter-btn" data-area="vocabulario">Vocabulario</button>
   </div>
   <div class="grid" id="grid"></div>
   <div class="empty" id="empty" style="display:none">
     <p style="font-size:2rem">🔍</p>
-    <p>No se encontraron actividades con ese filtro.</p>
+    <p>No se encontraron actividades.</p>
   </div>
 </div>
 
 <footer>
   <div class="footer-inner">
-    Hecho con 🤲 por <a href="sobre-mi.html">Inma Merino Rus</a> · Maestra de Audición y Lenguaje &amp; Logopeda
-    <br><br>
+    Hecho con 🤲 por <a href="sobre-mi.html">Inma Merino Rus</a> · AL &amp; Logopeda
+    
     <div class="footer-social">
       <a href="https://www.tiktok.com/@manosconmuchoquecontar" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
@@ -225,20 +199,20 @@
         Instagram
       </a>
     </div>
-    <br>
+
     <a href="sobre-mi.html" style="color:var(--coral);font-weight:600;">Conoce a la autora →</a>
     &nbsp;·&nbsp;
-    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" style="color:var(--coral);">© 2025 · Licencia CC BY-NC-SA 4.0</a>
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" style="color:var(--coral);">© 2025 · CC BY-NC-SA 4.0</a>
 
     <div class="visits-badge">
-       <span style="color: white; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 800; text-transform: uppercase;">Visitas</span>
+       <span style="color: white; font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 800; text-transform: uppercase;">Visitas</span>
        <img src="https://hitscounter.dev/api/hit?url=https%3A%2F%2Fmanosconmuchoquecontar.github.io%2F&color=%23ffffff&style=flat-square&label=" alt="Contador" style="height: 18px;">
     </div>
   </div>
 </footer>
 
 <script>
-var YOUTUBE_ID = ""; // Pega aquí el ID del vídeo de YouTube cuando lo tengas
+var YOUTUBE_ID = ""; 
 
 function openTutorial() {
   var modal = document.getElementById("tutorial-modal");
@@ -247,23 +221,13 @@ function openTutorial() {
   if (YOUTUBE_ID) {
     wrap.innerHTML = '<iframe src="https://www.youtube.com/embed/' + YOUTUBE_ID + '?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
   }
-  localStorage.setItem("tutorial_visto", "1");
 }
 
 function closeTutorial() {
   var modal = document.getElementById("tutorial-modal");
   var wrap = document.getElementById("video-wrap");
   modal.classList.remove("open");
-  wrap.innerHTML = YOUTUBE_ID
-    ? '<iframe src="https://www.youtube.com/embed/' + YOUTUBE_ID + '" allow="encrypted-media" allowfullscreen></iframe>'
-    : '<div class="tutorial-placeholder"><span style="font-size:2.5rem">🎬</span><span>Tutorial próximamente disponible</span></div>';
-}
-
-// Mostrar automáticamente la primera vez
-if (!localStorage.getItem("tutorial_visto") && YOUTUBE_ID) {
-  window.addEventListener("load", function() {
-    setTimeout(openTutorial, 1200);
-  });
+  wrap.innerHTML = '<div class="tutorial-placeholder"><span style="font-size:2.5rem">🎬</span><span>Tutorial próximamente disponible</span></div>';
 }
 
 var actividades = [
@@ -280,18 +244,18 @@ var actividades = [
   { titulo: "Letra inicial vs letra final", descripcion: "Escucha el audio y encuentra la letra final o inicial.", area: "fonologica", nivel: "Infantil / Primaria", url: "actividades/letra_inicial.html", imagen: "https://i.postimg.cc/FHWyYjjY/letra-inicial.jpg" },
   { titulo: "La heladería mágica", descripcion: "Escucha el audio o mira la nota para entregar el helado perfecto.", area: "atencion", nivel: "Infantil / Primaria", url: "actividades/heladeria.html", imagen: "https://i.postimg.cc/65K12G7X/heladeria.jpg" },
   { titulo: "Aventuras de verano", descripcion: "Escucha bien dónde vas de viaje y decide lo que te hace falta.", area: "vocabulario", nivel: "Infantil / Primaria", url: "actividades/vacaciones.html", imagen: "https://i.postimg.cc/d39btxwK/verano.png" },
-  { titulo: "Cazador de palabras", descripcion: "Mira la foto y explota las burbujas en orden para formar la palabra correcta.", area: "fonologica", nivel: "Infantil / Primaria", url: "actividades/burbujas.html", imagen: "https://i.postimg.cc/59Xj2XKf/pez.jpg" },
+  { titulo: "Cazador de palabras", descripcion: "Explota las burbujas en orden para formar la palabra correcta.", area: "fonologica", nivel: "Infantil / Primaria", url: "actividades/burbujas.html", imagen: "https://i.postimg.cc/59Xj2XKf/pez.jpg" },
   { titulo: "¿Dónde vives?", descripcion: "Adivina cuál es el hábitat del animal que aparece.", area: "vocabulario", nivel: "Infantil / Primaria", url: "actividades/dondevives.html", imagen: "https://i.postimg.cc/0ykChzTZ/Screenshot-20260502-024536-Claude.png" },
-  { titulo: "La Edu-mascota", descripcion: "Pasa las pruebas para poder cuidar a Lobo", area: "lectoescritura", nivel: "Infantil / Primaria", url: "actividades/edu_mascota.html", imagen: "https://i.postimg.cc/BbmrCHWq/Gemini-Generated-Image-etfn18etfn18etfn.png" }
+  { titulo: "La Edu-mascota", descripcion: "Pasa las pruebas para poder cuidar a Lobo.", area: "lectoescritura", nivel: "Infantil / Primaria", url: "actividades/edu_mascota.html", imagen: "https://i.postimg.cc/BbmrCHWq/Gemini-Generated-Image-etfn18etfn18etfn.png" }
 ];
 
 var areaConfig = {
-  fonologica: { label: "Conciencia fonológica", emoji: "🎵", thumb: "thumb-fonologica", badge: "area-fonologica" },
-  discriminacion: { label: "Discriminación auditiva", emoji: "👂", thumb: "thumb-discriminacion", badge: "area-discriminacion" },
-  memoria: { label: "Memoria", emoji: "🧠", thumb: "thumb-memoria", badge: "area-memoria" },
-  atencion: { label: "Atención", emoji: "🎯", thumb: "thumb-atencion", badge: "area-atencion" },
-  lectoescritura: { label: "Lectoescritura", emoji: "✏️", thumb: "thumb-lectoescritura", badge: "area-lectoescritura" },
-  vocabulario: { label: "Vocabulario y conceptos", emoji: "📚", thumb: "thumb-vocabulario", badge: "area-vocabulario" }
+  fonologica: { label: "Fonología", emoji: "🎵", badge: "area-fonologica" },
+  discriminacion: { label: "Audición", emoji: "👂", badge: "area-discriminacion" },
+  memoria: { label: "Memoria", emoji: "🧠", badge: "area-memoria" },
+  atencion: { label: "Atención", emoji: "🎯", badge: "area-atencion" },
+  lectoescritura: { label: "Lectura", emoji: "✏️", badge: "area-lectoescritura" },
+  vocabulario: { label: "Vocabulario", emoji: "📚", badge: "area-vocabulario" }
 };
 
 var filtroActual = "todas";
@@ -310,8 +274,7 @@ function renderGrid() {
   empty.style.display = "none";
   grid.innerHTML = filtradas.map(function(a) {
     var cfg = areaConfig[a.area];
-    var imgHtml = a.imagen ? '<img src="' + a.imagen + '" alt="' + a.titulo + '">' : '<div class="placeholder">' + cfg.emoji + '</div>';
-    return '<div class="card" onclick="window.location.href=\''+ a.url +'\'"><div class="card-thumb ' + cfg.thumb + '">' + imgHtml + '<span class="area-badge ' + cfg.badge + '">' + cfg.label + '</span></div><div class="card-body"><h3>' + a.titulo + '</h3><p>' + a.descripcion + '</p></div><div class="card-footer"><span class="card-author">Inma Merino Rus</span><span class="card-level">' + a.nivel + '</span></div></div>';
+    return '<div class="card" onclick="window.location.href=\''+ a.url +'\'"><div class="card-thumb">' + (a.imagen ? '<img src="' + a.imagen + '">' : '<div class="placeholder">' + cfg.emoji + '</div>') + '<span class="area-badge ' + cfg.badge + '">' + cfg.label + '</span></div><div class="card-body"><h3>' + a.titulo + '</h3><p>' + a.descripcion + '</p></div><div class="card-footer"><span class="card-author">Inma Merino Rus</span><span class="card-level">' + a.nivel + '</span></div></div>';
   }).join("");
 }
 

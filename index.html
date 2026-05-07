@@ -143,7 +143,7 @@
 </div>
 
 <div class="stats">
-  <div class="stat"><strong>16</strong><span>actividades</span></div>
+  <div class="stat"><strong id="stat-total">0</strong><span>actividades</span></div>
   <div class="stat"><strong>6</strong><span>especialidades</span></div>
   <div class="stat"><strong>∞</strong><span>ilusión</span></div>
 </div>
@@ -228,6 +228,7 @@ var filtroActual = "todas";
 var busqueda = "";
 
 function renderGrid() {
+  document.getElementById("stat-total").textContent = actividades.length;
   var grid = document.getElementById("grid");
   var filtradas = actividades.filter(function(a) {
     var mArea = filtroActual === "todas" || a.area === filtroActual;

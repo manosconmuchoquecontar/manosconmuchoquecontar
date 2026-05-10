@@ -123,6 +123,22 @@ textarea::placeholder { color: #bfc8c5; }
 .badge-DISLEXIA   { background: #fef8e8; color: #a07000; }
 .badge-BAJAVISION { background: #f0ebfa; color: #6a1fa8; }
 
+/* PICTOGRAMA INLINE */
+.pic-inline {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: #e8f5f3;
+  border: 1.5px solid #c3e6e0;
+  border-radius: 8px;
+  padding: 4px 6px;
+  margin: 2px 4px;
+  vertical-align: middle;
+}
+.pic-inline img { width: 52px; height: 52px; object-fit: contain; }
+.pic-inline span { font-size: .6rem; font-weight: 700; color: #1a7a6e; text-transform: uppercase; }
+
 /* SPINNER */
 .spinner { width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,.35); border-top-color: white; border-radius: 50%; animation: spin .65s linear infinite; display: inline-block; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -448,120 +464,107 @@ async function mostrarPictogramas(texto) {
 //  PROMPTS PEDAGÓGICOS
 // ══════════════════════════════════════
 function getPrompt(perfil) {
+  const instrImagen = `CRÍTICO - formato de imágenes: cuando veas dibujos o imágenes en la ficha, escríbelos así: [pic:palabra] donde "palabra" es UNA SOLA PALABRA en español, el sustantivo del objeto (ejemplos: [pic:lupa] [pic:mesa] [pic:perro] [pic:gato] [pic:casa] [pic:sol] [pic:tomate] [pic:rana] [pic:mono] [pic:pelota] [pic:pala]). NUNCA escribas "dibujo de un" ni frases largas. SOLO la palabra del objeto.`;
+
   const perfiles = {
     TEA: `Eres experta en accesibilidad cognitiva para alumnos con TEA. Trabajas en España.
-Analiza esta ficha escolar. IGNORA elementos decorativos de fondo (puntos, bordes, cohetes, estrellas, adornos). Céntrate SOLO en el contenido pedagógico: instrucciones numeradas, palabras de ejercicios, textos y dibujos de los ejercicios.
+Analiza esta ficha escolar. IGNORA elementos decorativos (puntos, bordes, cohetes, estrellas). Céntrate SOLO en: instrucciones numeradas, palabras de ejercicios, textos y dibujos pedagógicos.
 
-ESTRUCTURA DE SALIDA para cada ejercicio:
-- Número del ejercicio en negrita
-- "→" + instrucción simplificada (verbo imperativo, máximo 6 palabras)
-- Contenido original del ejercicio (palabras, listas, frases) conservado tal cual
-- Si hay imágenes o dibujos, descríbelos brevemente entre corchetes: [Imagen: dibujo de un perro]
-- Línea en blanco entre ejercicios
+${instrImagen}
 
-EJEMPLO:
-**1.** → Mira los dibujos. → Escribe la letra que falta.
-_upa  _esa  _erro
-[Imagen: lupa, mesa, perro]
+FORMATO DE SALIDA — sigue exactamente este ejemplo:
 
-**2.** → Une cada palabra con su dibujo.
-Gato · Casa · Sol
+**1.** → Mira los dibujos. → Escribe la letra.
+_upa [pic:lupa]
+_esa [pic:mesa]
+_erro [pic:perro]
 
-REGLAS:
-• NO resuelvas los ejercicios. Solo adapta instrucciones.
-• Lenguaje literal. Sin metáforas.
-• Conserva todos los datos, palabras y contenidos originales.
+**2.** → Une la palabra con el dibujo.
+Gato [pic:gato]
+Casa [pic:casa]
+Sol [pic:sol]
+
+**3.** → Escribe el nombre.
+[pic:tomate] [pic:rana] [pic:mono]
+
+REGLAS: NO resuelvas. Lenguaje literal. Conserva todos los datos.
 Devuelve ÚNICAMENTE los ejercicios adaptados.`,
 
     DI: `Eres experta en accesibilidad cognitiva para alumnos con Discapacidad Intelectual. Trabajas en España.
-Analiza esta ficha escolar. IGNORA elementos decorativos de fondo (puntos, bordes, cohetes, estrellas, adornos). Céntrate SOLO en el contenido pedagógico: instrucciones numeradas, palabras de ejercicios, textos y dibujos de los ejercicios.
+Analiza esta ficha escolar. IGNORA elementos decorativos. Céntrate SOLO en el contenido pedagógico.
 
-ESTRUCTURA DE SALIDA para cada ejercicio:
-- Número + emoji + instrucción simple (máximo 5 palabras)
-- Contenido original conservado tal cual
-- Si hay imágenes, descríbelas entre corchetes: [Imagen: dibujo de un gato]
-- Línea en blanco entre ejercicios
+${instrImagen}
 
-EJEMPLO:
-**1.** 👀 Mira los dibujos. ✏️ Escribe la letra.
-_upa  _esa  _erro
-[Imagen: lupa, mesa, perro]
+FORMATO DE SALIDA — sigue exactamente este ejemplo:
+
+**1.** 👀 Mira. ✏️ Escribe la letra.
+_upa [pic:lupa]
+_esa [pic:mesa]
+_erro [pic:perro]
 
 **2.** ➡️ Une la palabra con el dibujo.
-Gato · Casa · Sol
+Gato [pic:gato]
+Casa [pic:casa]
+Sol [pic:sol]
 
-REGLAS:
-• NO des la respuesta. Solo simplifica instrucciones.
-• Conserva todos los datos originales.
-• Solo mayúscula al inicio de frase.
+REGLAS: NO des la respuesta. Conserva todos los datos. Solo mayúscula al inicio.
 Devuelve ÚNICAMENTE los ejercicios adaptados.`,
 
     TDAH: `Eres experta en accesibilidad cognitiva para alumnos con TDAH. Trabajas en España.
-Analiza esta ficha escolar. IGNORA elementos decorativos de fondo (puntos, bordes, cohetes, estrellas, adornos). Céntrate SOLO en el contenido pedagógico: instrucciones numeradas, palabras de ejercicios, textos y dibujos de los ejercicios.
+Analiza esta ficha escolar. IGNORA elementos decorativos. Céntrate SOLO en el contenido pedagógico.
 
-ESTRUCTURA DE SALIDA para cada ejercicio:
-- ✅ + verbo en **negrita** + instrucción corta (máximo 6 palabras)
-- Contenido original conservado tal cual
-- Si hay imágenes, descríbelas brevemente entre corchetes
-- Línea en blanco entre ejercicios
+${instrImagen}
 
-EJEMPLO:
+FORMATO DE SALIDA — sigue exactamente este ejemplo:
+
 **1.** ✅ **Escribe** la letra que falta.
-_upa  _esa  _erro
+_upa [pic:lupa]
+_esa [pic:mesa]
+_erro [pic:perro]
 
-**2.** ✅ **Une** palabras con dibujos.
-Gato · Casa · Sol
+**2.** ✅ **Une** cada palabra con su dibujo.
+Gato [pic:gato]  Casa [pic:casa]  Sol [pic:sol]
 
-REGLAS:
-• Máximo 2 líneas de instrucción por ejercicio.
-• Conserva todos los datos originales.
+REGLAS: Máximo 2 líneas instrucción. Conserva todos los datos.
 Devuelve ÚNICAMENTE los ejercicios adaptados.`,
 
     DISLEXIA: `Eres experta en accesibilidad cognitiva para alumnos con Dislexia. Trabajas en España.
-Analiza esta ficha escolar. IGNORA elementos decorativos de fondo (puntos, bordes, cohetes, estrellas, adornos). Céntrate SOLO en el contenido pedagógico: instrucciones numeradas, palabras de ejercicios, textos y dibujos de los ejercicios.
+Analiza esta ficha escolar. IGNORA elementos decorativos. Céntrate SOLO en el contenido pedagógico.
 
-ESTRUCTURA DE SALIDA para cada ejercicio:
-- Número + instrucción simplificada (máximo 8 palabras, palabras simples)
-- Contenido original conservado tal cual
-- Si hay imágenes, descríbelas brevemente entre corchetes
-- Línea en blanco entre ejercicios
+${instrImagen}
 
-EJEMPLO:
+FORMATO DE SALIDA — sigue exactamente este ejemplo:
+
 **1.** Mira los dibujos. Escribe la letra que falta.
-_upa  _esa  _erro
+_upa [pic:lupa]
+_esa [pic:mesa]
+_erro [pic:perro]
 
 **2.** Une cada palabra con su dibujo.
-Gato · Casa · Sol
+Gato [pic:gato]
+Casa [pic:casa]
 
-REGLAS:
-• Solo mayúscula al inicio. Palabras simples.
-• Conserva todos los datos originales.
+REGLAS: Palabras simples. Solo mayúscula al inicio. Conserva todos los datos.
 Devuelve ÚNICAMENTE los ejercicios adaptados.`,
 
     BAJAVISION: `Eres experta en accesibilidad visual para alumnos con baja visión. Trabajas en España.
-Analiza esta ficha escolar. IGNORA elementos decorativos de fondo (puntos, bordes, cohetes, estrellas, adornos). Céntrate SOLO en el contenido pedagógico: instrucciones numeradas, palabras de ejercicios, textos y dibujos de los ejercicios.
+Analiza esta ficha escolar. IGNORA elementos decorativos. Céntrate SOLO en el contenido pedagógico.
 
-ESTRUCTURA DE SALIDA para cada ejercicio:
-- Número + instrucción muy corta (máximo 6 palabras)
-- Contenido original conservado tal cual en líneas separadas
-- Si hay imágenes, descríbelas entre corchetes
-- Línea en blanco entre ejercicios
+${instrImagen}
 
-EJEMPLO:
+FORMATO DE SALIDA — sigue exactamente este ejemplo:
+
 **1.** Mira los dibujos.
 Escribe la letra.
-_upa
-_esa
-_erro
+_upa [pic:lupa]
+_esa [pic:mesa]
+_erro [pic:perro]
 
 **2.** Une la palabra con el dibujo.
-Gato
-Casa
-Sol
+Gato [pic:gato]
+Casa [pic:casa]
 
-REGLAS:
-• Solo mayúscula al inicio. Sin abreviaturas.
-• Conserva todos los datos originales.
+REGLAS: Máximo 6 palabras por frase. Sin abreviaturas. Conserva todos los datos.
 Devuelve ÚNICAMENTE los ejercicios adaptados.`
   };
   return perfiles[perfil];
@@ -668,23 +671,43 @@ async function renderizar(texto, perfil) {
   let html = '';
   const claseWrap = `out-${perfil} ejercicios-wrap`;
 
+  // Recoger todas las palabras [pic:x] únicas para buscarlas en lote
+  const todasPalabras = [...new Set([...texto.matchAll(/\[pic:([^\]]+)\]/gi)].map(m => m[1].trim().toLowerCase()))];
+  const pictoCache = {};
+  await Promise.all(todasPalabras.map(async p => {
+    const r = await buscarPictogramaInline(p);
+    if (r) pictoCache[p] = r.url;
+  }));
+
+  // Función que sustituye [pic:x] por img inline
+  function procesarLinea(linea, perfil) {
+    // Negrita
+    let proc = linea.replace(/\*\*(.*?)\*\*/g, (_, t) =>
+      perfil === 'TDAH'
+        ? `<strong style="color:#c85a00;background:#fff0e0;padding:1px 4px;border-radius:3px;">${t}</strong>`
+        : `<strong>${t}</strong>`
+    );
+    // [pic:palabra] → img pequeño inline
+    proc = proc.replace(/\[pic:([^\]]+)\]/gi, (_, p) => {
+      const key = p.trim().toLowerCase();
+      const url = pictoCache[key];
+      if (url) {
+        return `<span class="pic-inline"><img src="${url}" alt="${p}" onerror="this.parentElement.remove()"><span>${p}</span></span>`;
+      }
+      return `<em style="color:var(--teal-dark);font-size:.8rem;">[${p}]</em>`;
+    });
+    return proc;
+  }
+
   bloques.forEach(bloque => {
     const lineas = bloque.split('\n').filter(l => l.trim());
     html += `<div class="ejercicio-bloque">`;
     lineas.forEach(linea => {
-      const proc = linea.replace(/\*\*(.*?)\*\*/g, (_, t) =>
-        perfil === 'TDAH'
-          ? `<strong style="color:#c85a00;background:#fff0e0;padding:1px 4px;border-radius:3px;">${t}</strong>`
-          : `<strong>${t}</strong>`
-      );
-      if (/^\*\*\d+/.test(linea) || /^###/.test(linea)) {
+      const proc = procesarLinea(linea, perfil);
+      if (/^\*\*\d+/.test(linea)) {
         html += `<p class="ej-titulo">${proc}</p>`;
       } else if (linea.trim().startsWith('→')) {
-        html += `<div class="step-row"><span>→</span><span>${proc.replace(/^→\s*/,'')}</span></div>`;
-      } else if (linea.trim().startsWith('✅')) {
-        html += `<p class="ej-linea">${proc}</p>`;
-      } else if (/^\[Imagen:/i.test(linea.trim())) {
-        html += `<div class="picto-placeholder" data-palabras="${linea.replace(/^\[Imagen:\s*/i,'').replace(/\]$/,'').trim()}"></div>`;
+        html += `<div class="step-row"><span style="color:var(--teal);font-weight:700;">→</span><span>${proc.replace(/^→\s*/,'')}</span></div>`;
       } else {
         html += `<p class="ej-linea">${proc}</p>`;
       }
@@ -693,28 +716,6 @@ async function renderizar(texto, perfil) {
   });
 
   el.innerHTML = `<div class="${claseWrap}">${html}</div>`;
-
-  // Reemplazar placeholders con pictogramas ARASAAC
-  const placeholders = el.querySelectorAll('.picto-placeholder');
-  for (const ph of placeholders) {
-    const palabras = ph.dataset.palabras.split(',').map(p => p.trim()).filter(Boolean);
-    const resultados = await Promise.all(palabras.map(buscarPictogramaInline));
-    const validos = resultados.filter(Boolean);
-    if (validos.length > 0) {
-      let pictoHTML = `<div style="display:flex;flex-wrap:wrap;gap:10px;margin:.5rem 0 .75rem;">`;
-      validos.forEach(({ url, palabra }) => {
-        pictoHTML += `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:#e8f5f3;border:1.5px solid #c3e6e0;border-radius:10px;padding:6px 8px;">
-          <img src="${url}" alt="${palabra}" style="width:64px;height:64px;object-fit:contain;" onerror="this.closest('div').remove()">
-          <span style="font-size:.65rem;font-weight:700;color:#1a7a6e;text-transform:uppercase;">${palabra}</span>
-        </div>`;
-      });
-      pictoHTML += `</div>`;
-      ph.outerHTML = pictoHTML;
-    } else {
-      ph.outerHTML = `<p style="color:var(--teal-dark);font-style:italic;font-size:.82rem;margin:.3rem 0;">[${ph.dataset.palabras}]</p>`;
-    }
-  }
-
   document.getElementById('btn-ficha').style.display = 'flex';
   document.getElementById('salida-title').classList.remove('muted');
   document.getElementById('salida-title').style.color = 'var(--teal-dark)';

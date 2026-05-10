@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GeneraFicha · Manos con Mucho que Contar</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;500;600;700&family=OpenDyslexic&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.cdnfonts.com/css/opendyslexic" />
 <style>
 :root{--teal:#2a9d8f;--teal-d:#1a7a6e;--teal-l:#4db6a8;--teal-bg:#e8f5f3;--cream:#fdf8f0;--ink:#1c2127;--muted:#6b7280;--border:#e2e8e6;--radius:16px;--radius-s:10px}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -41,7 +42,7 @@ main{flex:1;max-width:1000px;width:100%;margin:0 auto;padding:1.75rem clamp(1rem
 .form-group select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(42,157,143,.1)}
 .textarea-wrap{border:1.5px solid var(--border);border-radius:var(--radius-s);padding:.75rem 1rem;transition:border-color .15s}
 .textarea-wrap:focus-within{border-color:var(--teal);box-shadow:0 0 0 3px rgba(42,157,143,.1)}
-textarea{border:none;outline:none;resize:none;font-family:'Nunito',sans-serif;font-size:.95rem;line-height:1.8;color:var(--ink);background:transparent;min-height:100px;width:100%}
+textarea{border:none;outline:none;resize:none;font-family:'Nunito',sans-serif;font-size:.95rem;line-height:1.8;color:var(--ink);background:transparent;min-height:90px;width:100%}
 textarea::placeholder{color:#bfc8c5}
 .btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,var(--teal),var(--teal-d));color:#fff;border:none;border-radius:var(--radius-s);font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;box-shadow:0 4px 15px rgba(42,157,143,.28)}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(42,157,143,.38)}
@@ -52,7 +53,6 @@ textarea::placeholder{color:#bfc8c5}
 .btn-download:hover{transform:translateY(-1px)}
 .btn-download.visible{display:flex}
 .output-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:260px;gap:8px;color:#c8d3d0;text-align:center}
-.output-placeholder p{font-size:.85rem}
 .badge{display:inline-flex;align-items:center;gap:4px;font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.05em}
 .badge-TEA{background:#e8f4f8;color:#1a6fa8}
 .badge-DI{background:#eef4e8;color:#3a7a1a}
@@ -64,58 +64,85 @@ textarea::placeholder{color:#bfc8c5}
 .info-box{background:#fff;border-radius:var(--radius);border:1.5px solid var(--border);padding:1.25rem 1.5rem}
 .info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.75rem;font-size:.82rem;margin-top:.75rem}
 
-/* === FICHA STYLES === */
-.ficha-preview{font-family:'Nunito',sans-serif;color:#1c2127;line-height:1.6}
-.ficha-preview .ej{margin-bottom:1.5rem;padding-bottom:1.2rem;border-bottom:1px solid #e2e8e6}
-.ficha-preview .ej:last-child{border-bottom:none}
-.ficha-preview .ej-num{font-weight:700;color:var(--teal-d);margin-bottom:.5rem;font-size:1rem}
-.ficha-preview .ej-inst{font-weight:700;margin-bottom:.75rem;font-size:.95rem;line-height:1.5}
-.ficha-preview .linea-resp{border:none;border-bottom:1.5px solid #aaa;display:block;width:100%;margin:.4rem 0;height:28px;background:transparent}
-.ficha-preview .caja-resp{border:1.5px solid #aaa;border-radius:4px;min-height:70px;width:100%;display:block;margin:.4rem 0}
-.ficha-preview .opciones{display:flex;flex-wrap:wrap;gap:.5rem .75rem;margin:.5rem 0}
-.ficha-preview .opcion{border:1.5px solid #aaa;border-radius:6px;padding:5px 14px;font-size:.9rem;display:inline-block;cursor:default}
-.ficha-preview .checkbox-row{display:flex;align-items:center;gap:.5rem;margin:.35rem 0}
-.ficha-preview .checkbox-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--teal);flex-shrink:0}
-.ficha-preview .columnas{display:grid;grid-template-columns:1fr 1fr;gap:.5rem 1.5rem;margin:.5rem 0}
-.ficha-preview .col-item{display:flex;align-items:center;gap:.5rem}
-.ficha-preview .col-item .linea-resp{flex:1}
-.ficha-preview table.ej-tabla{width:100%;border-collapse:collapse;margin:.5rem 0;font-size:.88rem}
-.ficha-preview table.ej-tabla th{background:var(--teal-bg);color:var(--teal-d);font-weight:700;padding:7px 10px;border:1.5px solid #c3e6e0;text-align:left}
-.ficha-preview table.ej-tabla td{padding:7px 10px;border:1.5px solid #ddd;vertical-align:top}
-.ficha-preview .unir-wrap{display:grid;grid-template-columns:1fr 1fr;gap:.5rem 2rem;margin:.5rem 0}
-.ficha-preview .unir-col{display:flex;flex-direction:column;gap:.4rem}
-.ficha-preview .unir-item{border:1.5px solid #aaa;border-radius:6px;padding:5px 12px;font-size:.88rem;background:#fff}
-.ficha-preview .texto-lectura{background:#f8fffe;border-left:4px solid var(--teal);padding:.75rem 1rem;border-radius:0 8px 8px 0;margin-bottom:.75rem;font-size:.9rem;line-height:1.8;font-style:italic}
-.ficha-preview .completar-frase{margin:.4rem 0;font-size:.95rem;line-height:2.2}
-.ficha-preview .hueco{display:inline-block;border-bottom:1.5px solid #aaa;min-width:80px;height:1.4em;vertical-align:bottom;margin:0 3px}
-.ficha-preview .ordenar-palabras{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0}
-.ficha-preview .palabra-recuadro{border:1.5px solid var(--teal-l);border-radius:6px;padding:4px 12px;font-size:.9rem;background:var(--teal-bg);color:var(--teal-d);font-weight:600}
-.ficha-preview .clasificar-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;margin:.5rem 0}
-.ficha-preview .clasificar-col{border:1.5px solid #ddd;border-radius:8px;overflow:hidden}
-.ficha-preview .clasificar-header{background:var(--teal-bg);color:var(--teal-d);font-weight:700;padding:6px 10px;font-size:.82rem;text-align:center}
-.ficha-preview .clasificar-body{padding:.5rem;display:flex;flex-direction:column;gap:.3rem;min-height:80px}
-.ficha-preview .nota{font-size:.78rem;color:var(--muted);font-style:italic;margin-top:.3rem}
+/* FICHA PREVIEW STYLES */
+.ficha-wrap{font-family:'Nunito',sans-serif;color:#1c2127}
+/* TEA */
+.ficha-wrap.p-TEA{font-family:'Nunito',sans-serif}
+.ficha-wrap.p-TEA .ej{background:#f0f8ff;border:2px solid #b3d9f0;border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.2rem}
+.ficha-wrap.p-TEA .ej-num{color:#1a6fa8;font-size:1.1rem;font-weight:800;margin-bottom:.3rem}
+.ficha-wrap.p-TEA .ej-inst{color:#0d3b5e;font-size:1rem;font-weight:700;margin-bottom:.6rem;padding:.5rem .75rem;background:#1a6fa815;border-left:4px solid #1a6fa8;border-radius:0 6px 6px 0}
+.ficha-wrap.p-TEA .pictos{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:.75rem}
+.ficha-wrap.p-TEA .picto-card{display:flex;flex-direction:column;align-items:center;gap:3px;background:#fff;border:1.5px solid #b3d9f0;border-radius:10px;padding:6px 10px;min-width:64px}
+.ficha-wrap.p-TEA .picto-card img{width:52px;height:52px;object-fit:contain}
+.ficha-wrap.p-TEA .picto-card span{font-size:.6rem;font-weight:700;color:#1a6fa8;text-align:center;text-transform:uppercase}
+/* DI */
+.ficha-wrap.p-DI .ej{background:#f0fff4;border:2px solid #b2dfcc;border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.2rem}
+.ficha-wrap.p-DI .ej-num{color:#276749;font-size:1.2rem;font-weight:800;margin-bottom:.3rem}
+.ficha-wrap.p-DI .ej-inst{color:#1a4731;font-size:1.05rem;font-weight:700;margin-bottom:.5rem}
+.ficha-wrap.p-DI .ejemplo-bloque{background:#fff;border:1.5px dashed #48bb78;border-radius:8px;padding:.5rem .75rem;margin-bottom:.6rem;font-size:.88rem;color:#276749}
+.ficha-wrap.p-DI .ejemplo-bloque::before{content:'👉 Ejemplo: ';font-weight:700}
+/* TDAH */
+.ficha-wrap.p-TDAH .ej{background:#fff;border:2px solid #f6ad55;border-radius:12px;padding:1rem 1.2rem;margin-bottom:1rem;position:relative}
+.ficha-wrap.p-TDAH .ej-num{color:#c85a00;font-size:1rem;font-weight:800;margin-bottom:.3rem}
+.ficha-wrap.p-TDAH .ej-inst{color:#7b341e;font-size:.95rem;font-weight:700;margin-bottom:.6rem;display:flex;align-items:flex-start;gap:.5rem}
+.ficha-wrap.p-TDAH .ej-inst::before{content:'✅';font-size:1rem;flex-shrink:0;margin-top:1px}
+/* DISLEXIA */
+.ficha-wrap.p-DISLEXIA{background:#fdf8f0;border-radius:12px;padding:1rem}
+.ficha-wrap.p-DISLEXIA .ej{background:#fff8ee;border:2px solid #e8c97a;border-radius:10px;padding:1rem 1.2rem;margin-bottom:1.2rem}
+.ficha-wrap.p-DISLEXIA .ej-num{color:#92610a;font-size:1.1rem;font-weight:800;margin-bottom:.4rem}
+.ficha-wrap.p-DISLEXIA .ej-inst{font-size:1.05rem;font-weight:700;color:#5c3d0a;margin-bottom:.75rem;line-height:1.9;letter-spacing:.02em}
+/* BAJA VISION */
+.ficha-wrap.p-BAJAVISION .ej{background:#fffde7;border:2.5px solid #f0c040;border-radius:12px;padding:1.2rem 1.5rem;margin-bottom:1.5rem}
+.ficha-wrap.p-BAJAVISION .ej-num{color:#5d4037;font-size:1.5rem;font-weight:900;margin-bottom:.4rem}
+.ficha-wrap.p-BAJAVISION .ej-inst{font-size:1.3rem;font-weight:800;color:#3e2723;margin-bottom:.8rem;line-height:1.6}
 
-/* TEA overrides */
-.perfil-TEA .ej-inst{color:#1a6fa8}
-.perfil-TEA .ej-num{color:#1a6fa8}
-/* DI overrides */
-.perfil-DI .ej-inst{font-size:1.05rem}
-.perfil-DI .linea-resp{height:36px}
-/* TDAH overrides */
-.perfil-TDAH .ej{background:#fffdf8;border-radius:8px;padding:.75rem 1rem;border:1px solid #f0e8a0}
-/* DISLEXIA overrides */
-.perfil-DISLEXIA{background:var(--cream)}
-.perfil-DISLEXIA .ej-inst{letter-spacing:.015em;line-height:1.9}
-.perfil-DISLEXIA .linea-resp{height:34px;margin:.5rem 0}
-/* BAJAVISION overrides */
-.perfil-BAJAVISION .ej-inst{font-size:1.2rem;font-weight:700}
-.perfil-BAJAVISION .linea-resp{height:40px;border-bottom-width:2px;margin:.6rem 0}
-.perfil-BAJAVISION .opcion{font-size:1.1rem;padding:7px 18px}
+/* COMMON COMPONENTS */
+.linea-resp{border:none;border-bottom:1.5px solid #999;display:block;width:100%;margin:.4rem 0;height:28px;background:transparent}
+.p-BAJAVISION .linea-resp{border-bottom-width:2.5px;height:40px;margin:.6rem 0}
+.p-DISLEXIA .linea-resp{height:34px;margin:.5rem 0}
+.caja-resp{border:1.5px solid #aaa;border-radius:6px;min-height:70px;width:100%;display:block;margin:.4rem 0;background:#fff}
+.p-BAJAVISION .caja-resp{min-height:100px;border-width:2.5px}
+.opciones{display:flex;flex-wrap:wrap;gap:.5rem .75rem;margin:.5rem 0}
+.opcion{border:2px solid #999;border-radius:8px;padding:6px 16px;font-size:.92rem;display:inline-block;cursor:default;background:#fff}
+.p-BAJAVISION .opcion{font-size:1.3rem;padding:10px 22px;border-width:2.5px}
+.p-DISLEXIA .opcion{font-size:1rem;padding:8px 18px;letter-spacing:.02em}
+.checkbox-row{display:flex;align-items:center;gap:.6rem;margin:.4rem 0;font-size:.92rem}
+.checkbox-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--teal);flex-shrink:0}
+.p-BAJAVISION .checkbox-row{font-size:1.2rem;gap:.8rem;margin:.6rem 0}
+.p-BAJAVISION .checkbox-row input[type=checkbox]{width:24px;height:24px}
+.columnas{display:grid;grid-template-columns:1fr 1fr;gap:.5rem 1.5rem;margin:.5rem 0}
+.col-item{display:flex;align-items:center;gap:.5rem;font-size:.9rem}
+.col-item .linea-resp{flex:1;margin:0}
+.completar-frase{margin:.5rem 0;font-size:.95rem;line-height:2.3}
+.p-BAJAVISION .completar-frase{font-size:1.2rem;line-height:2.8}
+.p-DISLEXIA .completar-frase{font-size:1rem;line-height:2.6;letter-spacing:.02em}
+.hueco{display:inline-block;border-bottom:2px solid #777;min-width:90px;height:1.5em;vertical-align:bottom;margin:0 4px}
+.p-BAJAVISION .hueco{min-width:120px;border-bottom-width:3px}
+.ordenar-palabras{display:flex;flex-wrap:wrap;gap:.5rem;margin:.6rem 0}
+.palabra-recuadro{border:2px solid var(--teal-l);border-radius:8px;padding:5px 14px;font-size:.9rem;background:var(--teal-bg);color:var(--teal-d);font-weight:700}
+.p-BAJAVISION .palabra-recuadro{font-size:1.2rem;padding:8px 20px;border-width:2.5px}
+.clasificar-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.8rem;margin:.6rem 0}
+.clasificar-col{border:1.5px solid #ddd;border-radius:10px;overflow:hidden}
+.p-BAJAVISION .clasificar-col{border-width:2.5px}
+.clasificar-header{background:var(--teal-bg);color:var(--teal-d);font-weight:800;padding:8px 12px;font-size:.85rem;text-align:center}
+.p-BAJAVISION .clasificar-header{font-size:1.1rem;padding:10px}
+.clasificar-body{padding:.6rem;display:flex;flex-direction:column;gap:.35rem;min-height:90px}
+.texto-lectura{background:#f0f8ff;border-left:4px solid var(--teal);padding:.75rem 1rem;border-radius:0 8px 8px 0;margin-bottom:.75rem;font-size:.9rem;line-height:1.9;font-style:italic}
+.p-BAJAVISION .texto-lectura{font-size:1.2rem;line-height:2.2;border-left-width:6px}
+.p-DISLEXIA .texto-lectura{font-size:1rem;line-height:2.2;background:#fff8ee;border-left-color:#e8c97a}
+.unir-wrap{display:grid;grid-template-columns:1fr 1fr;gap:.5rem 1rem;margin:.5rem 0}
+.unir-col{display:flex;flex-direction:column;gap:.4rem}
+.unir-item{border:1.5px solid #aaa;border-radius:8px;padding:6px 12px;font-size:.88rem;background:#fff}
+.p-BAJAVISION .unir-item{font-size:1.15rem;padding:10px 16px;border-width:2px}
+.nota{font-size:.8rem;color:#6b7280;font-style:italic;margin-top:.4rem;padding:.3rem .5rem;background:#f9fafb;border-radius:4px}
+.tabla-ej{width:100%;border-collapse:collapse;margin:.5rem 0;font-size:.88rem}
+.tabla-ej th{background:var(--teal-bg);color:var(--teal-d);font-weight:700;padding:7px 10px;border:1.5px solid #c3e6e0;text-align:left}
+.tabla-ej td{padding:7px 10px;border:1.5px solid #ddd;vertical-align:top}
+.tdah-check-final{background:#fff8e8;border:1.5px solid #f0d98a;border-radius:10px;padding:.75rem 1rem;margin-top:.75rem;display:flex;align-items:center;gap:.75rem;font-weight:700;color:#8a6800}
 
 footer{text-align:center;padding:1.5rem;font-size:.78rem;color:var(--muted);border-top:1px solid var(--border);background:#fff}
 footer a{color:var(--teal);text-decoration:none}
-@media print{nav,.hero,.config-panel,.btn-primary,.btn-download,.btn-icon,footer{display:none!important}body{background:#fff}}
+@media print{nav,.hero,.config-panel,.btn-primary,.btn-download,.btn-icon,footer,#panel-salida .panel-header{display:none!important}body{background:#fff}}
 </style>
 </head>
 <body>
@@ -133,8 +160,8 @@ footer a{color:var(--teal);text-decoration:none}
 
 <div class="hero">
   <div class="hero-badge">✨ Recurso para maestros</div>
-  <h1>Genera fichas <em>personalizadas</em><br>con IA en segundos</h1>
-  <p>Elige el perfil del alumno, el curso y la asignatura. Describe lo que quieres trabajar y obtén 5 ejercicios adaptados listos para imprimir.</p>
+  <h1>Genera fichas <em>profesionales</em><br>adaptadas con IA</h1>
+  <p>Diseñadas por criterios PT y neuroeducación. Elige perfil, curso y asignatura — obtén 5 ejercicios listos para imprimir.</p>
 </div>
 
 <main>
@@ -142,7 +169,6 @@ footer a{color:var(--teal);text-decoration:none}
     <div class="panel-header">
       <span class="panel-title">Configuración de la ficha</span>
     </div>
-
     <p class="section-label">Perfil del alumno</p>
     <div class="chips" id="chips-perfil">
       <button class="chip active" data-perfil="TEA">🧩 TEA</button>
@@ -151,7 +177,6 @@ footer a{color:var(--teal);text-decoration:none}
       <button class="chip" data-perfil="DISLEXIA">📖 Dislexia</button>
       <button class="chip" data-perfil="BAJAVISION">👁️ Baja Visión</button>
     </div>
-
     <div class="form-row" style="margin-top:.25rem">
       <div class="form-group">
         <label>Curso</label>
@@ -174,21 +199,18 @@ footer a{color:var(--teal);text-decoration:none}
         </select>
       </div>
     </div>
-
     <div class="form-group">
       <label>¿Qué quieres trabajar?</label>
       <div class="textarea-wrap">
-        <textarea id="descripcion" rows="3" placeholder="Describe concretamente el contenido. Ej: Los tipos de oraciones (afirmativa, negativa, interrogativa, exclamativa) para 5º Primaria."></textarea>
+        <textarea id="descripcion" rows="3" placeholder="Describe el contenido. Ej: Los signos de puntuación (punto, coma, signos de interrogación y exclamación) para 4º Primaria."></textarea>
       </div>
     </div>
-
     <button class="btn-primary" id="btn-generar">
       <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
       Generar ficha
     </button>
   </div>
 
-  <!-- RESULTADO -->
   <div class="panel" id="panel-salida">
     <div class="panel-header">
       <span class="panel-title muted" id="salida-title">Ficha generada</span>
@@ -213,13 +235,13 @@ footer a{color:var(--teal);text-decoration:none}
   </div>
 
   <div class="info-box">
-    <p class="section-label">¿Qué genera cada perfil?</p>
+    <p class="section-label">Adaptaciones por perfil</p>
     <div class="info-grid">
-      <div><strong style="color:#1a6fa8">🧩 TEA</strong><br><span style="color:var(--muted)">Instrucciones literales, pasos numerados, casillas para marcar.</span></div>
-      <div><strong style="color:#3a7a1a">🌟 DI</strong><br><span style="color:var(--muted)">Frases cortas, emojis, ejemplos resueltos, opciones limitadas.</span></div>
-      <div><strong style="color:#c85a00">⚡ TDAH</strong><br><span style="color:var(--muted)">Ejercicios variados y cortos, verbos en negrita, checklist.</span></div>
-      <div><strong style="color:#a07000">📖 Dislexia</strong><br><span style="color:var(--muted)">Fondo crema, interlineado amplio, fuente clara.</span></div>
-      <div><strong style="color:#6a1fa8">👁️ Baja Visión</strong><br><span style="color:var(--muted)">Texto grande, líneas gruesas, estructura muy clara.</span></div>
+      <div><strong style="color:#1a6fa8">🧩 TEA</strong><br><span style="color:var(--muted)">Pictogramas ARASAAC, instrucciones literales, pasos visuales claros.</span></div>
+      <div><strong style="color:#3a7a1a">🌟 DI</strong><br><span style="color:var(--muted)">Lectura Fácil, ejemplos sin revelar la respuesta, opciones limitadas.</span></div>
+      <div><strong style="color:#c85a00">⚡ TDAH</strong><br><span style="color:var(--muted)">Formatos variados, ejercicios cortos, verbos en negrita, checklist.</span></div>
+      <div><strong style="color:#a07000">📖 Dislexia</strong><br><span style="color:var(--muted)">Fuente OpenDyslexic, fondo crema, interlineado amplio, contraste alto.</span></div>
+      <div><strong style="color:#6a1fa8">👁️ Baja Visión</strong><br><span style="color:var(--muted)">Todo en grande, líneas gruesas, fondo amarillo, máximo contraste.</span></div>
     </div>
   </div>
 </main>
@@ -233,7 +255,6 @@ footer a{color:var(--teal);text-decoration:none}
 const GEMINI_KEY='AIzaSyC2zoebLg8S7Cv6Hsv9vny8dJ8yVJrlI1Q';
 const GEMINI_MODEL='gemini-2.5-flash-preview-04-17';
 const GROQ_KEY='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';
-
 let perfil='TEA';
 
 document.querySelectorAll('#chips-perfil .chip').forEach(c=>{
@@ -245,7 +266,13 @@ document.querySelectorAll('#chips-perfil .chip').forEach(c=>{
   });
 });
 
-const BADGES={TEA:{label:'🧩 TEA',cls:'badge-TEA'},DI:{label:'🌟 DI',cls:'badge-DI'},TDAH:{label:'⚡ TDAH',cls:'badge-TDAH'},DISLEXIA:{label:'📖 Dislexia',cls:'badge-DISLEXIA'},BAJAVISION:{label:'👁️ Baja Visión',cls:'badge-BAJAVISION'}};
+const BADGES={
+  TEA:{label:'🧩 TEA',cls:'badge-TEA'},
+  DI:{label:'🌟 DI',cls:'badge-DI'},
+  TDAH:{label:'⚡ TDAH',cls:'badge-TDAH'},
+  DISLEXIA:{label:'📖 Dislexia',cls:'badge-DISLEXIA'},
+  BAJAVISION:{label:'👁️ Baja Visión',cls:'badge-BAJAVISION'}
+};
 
 function actualizarBadge(){
   const b=document.getElementById('badge-perfil');
@@ -255,166 +282,188 @@ function actualizarBadge(){
 
 document.getElementById('btn-print').addEventListener('click',()=>window.print());
 
-function getPrompt(descripcion, perfil, curso, asignatura){
+async function fetchPicto(palabra){
+  try{
+    const r=await fetch('https://api.arasaac.org/api/pictograms/es/search/'+encodeURIComponent(palabra));
+    if(!r.ok)return null;
+    const d=await r.json();
+    if(!d||!d.length)return null;
+    const id=d[0]._id;
+    return{url:'https://static.arasaac.org/pictograms/'+id+'/'+id+'_300.png',palabra};
+  }catch{return null;}
+}
 
-  const perfilGuia = {
-    TEA: `
-PERFIL TEA — reglas de adaptación:
-- Instrucciones LITERALES, sin metáforas ni doble sentido. Directo al grano.
-- Pasos cortos: máximo 8 palabras por instrucción. Verbo imperativo al inicio.
-- Si hay varias acciones, sepáralas en sub-pasos numerados (1.1, 1.2...).
-- Usa casillas de verificación (checkbox) para listas de items.
-- Las opciones múltiples deben estar en recuadros visuales claros.
-- Nunca preguntas abiertas sin estructura. Siempre con guía visual.
-- Espacios de respuesta amplios con líneas reales.`,
+async function insertarPictogramas(container){
+  const ejDivs=container.querySelectorAll('.ej[data-verbos]');
+  for(const ej of ejDivs){
+    const verbos=ej.dataset.verbos.split(',').filter(Boolean);
+    const pictoWrap=ej.querySelector('.pictos');
+    if(!pictoWrap||!verbos.length)continue;
+    const results=await Promise.all(verbos.map(v=>fetchPicto(v.trim())));
+    results.filter(Boolean).forEach(({url,palabra})=>{
+      const card=document.createElement('div');
+      card.className='picto-card';
+      card.innerHTML='<img src="'+url+'" alt="'+palabra+'" onerror="this.closest(\'.picto-card\').remove()"><span>'+palabra+'</span>';
+      pictoWrap.appendChild(card);
+    });
+  }
+}
 
-    DI: `
-PERFIL Discapacidad Intelectual — Lectura Fácil:
-- Instrucciones MUY cortas: máximo 6 palabras. Un emoji al inicio.
-- Siempre un EJEMPLO RESUELTO visible antes del ejercicio.
-- Opciones limitadas: máximo 3 (a, b, c).
-- Frases del ejercicio en líneas separadas, no en párrafo.
-- Vocabulario muy sencillo. Nada de tecnicismos.
-- Muchas líneas de respuesta amplias.
-- Si hay items para clasificar, máximo 4 por categoría.`,
+function getPrompt(desc,perfil,curso,asignatura){
+  const componentesHTML=`
+COMPONENTES HTML DISPONIBLES (usa exactamente estas clases):
 
-    TDAH: `
-PERFIL TDAH:
-- Ejercicios CORTOS y variados. Nada de un solo formato repetido.
-- Verbos de acción en NEGRITA: <strong>Rodea</strong>, <strong>Escribe</strong>, <strong>Une</strong>.
-- Instrucción máximo 2 líneas. Sin rodeos.
-- Alterna formatos: rodear, completar, unir, ordenar — nunca dos iguales seguidos.
-- Checkbox al final: "📋 ¿Has hecho todos los ejercicios?"
-- Usa colores de instrucción para que destaquen visualmente.`,
+Linea para escribir (una por respuesta):
+<span class="linea-resp"></span>
 
-    DISLEXIA: `
-PERFIL Dislexia:
-- Frases cortas: máximo 10 palabras. Una idea por frase.
-- Interlineado generoso entre items (usa párrafos con margen).
-- Palabras simples. Sin tecnicismos ni palabras largas innecesarias.
-- Las opciones para elegir deben estar bien separadas visualmente.
-- Huecos de completar amplios y bien marcados.
-- Nunca bloques de texto denso. Todo muy espaciado.`,
+Caja de texto libre grande:
+<div class="caja-resp"></div>
 
-    BAJAVISION: `
-PERFIL Baja Visión:
-- Texto grande (usa font-size explícito en el HTML: 1.2rem mínimo en instrucciones).
-- Líneas de respuesta gruesas (border-bottom: 2px).
-- Instrucciones muy cortas: máximo 6 palabras por línea.
-- Alto contraste: nada de grises claros.
-- Opciones con recuadros grandes y bien separados.
-- Sin elementos decorativos que distraigan.`
-  };
+Opciones para rodear (visual, como recuadros):
+<div class="opciones"><span class="opcion">opción A</span><span class="opcion">opción B</span><span class="opcion">opción C</span></div>
 
-  const ejemplosHTML = `
-COMPONENTES HTML QUE PUEDES USAR (usa exactamente estas clases CSS):
+Checkboxes para marcar:
+<div class="checkbox-row"><input type="checkbox"><span>Texto del item</span></div>
 
-1. LÍNEAS DE RESPUESTA:
-<span class="linea-resp"></span>  → línea para escribir (usa varias para más espacio)
+Completar frases con huecos inline:
+<p class="completar-frase">El <span class="hueco"></span> sale por el este.</p>
 
-2. CAJA DE RESPUESTA LIBRE:
-<div class="caja-resp"></div>  → cuadro grande para respuesta larga
+Palabras en recuadros para ordenar (desordenadas, que el alumno ordene abajo):
+<div class="ordenar-palabras"><span class="palabra-recuadro">palabra1</span><span class="palabra-recuadro">palabra2</span></div>
 
-3. OPCIONES PARA RODEAR (opción múltiple visual):
-<div class="opciones">
-  <span class="opcion">afirmativa</span>
-  <span class="opcion">negativa</span>
-  <span class="opcion">interrogativa</span>
-</div>
-
-4. CHECKBOXES (para marcar items):
-<div class="checkbox-row"><input type="checkbox"><span>El gato maúlla.</span></div>
-<div class="checkbox-row"><input type="checkbox"><span>La pelota rueda.</span></div>
-
-5. COMPLETAR FRASES CON HUECOS:
-<p class="completar-frase">El sol sale por el <span class="hueco"></span> y se pone por el <span class="hueco"></span>.</p>
-
-6. COLUMNAS PARA COMPLETAR (dos columnas, izquierda texto, derecha línea):
-<div class="columnas">
-  <div class="col-item"><span>Sinónimo de feliz:</span><span class="linea-resp"></span></div>
-  <div class="col-item"><span>Antónimo de frío:</span><span class="linea-resp"></span></div>
-</div>
-
-7. TABLA:
-<table class="ej-tabla">
-  <tr><th>Palabra</th><th>Sílabas</th><th>Tipo</th></tr>
-  <tr><td>mariposa</td><td><span class="linea-resp"></span></td><td><span class="linea-resp"></span></td></tr>
-</table>
-
-8. PALABRAS PARA ORDENAR:
-<div class="ordenar-palabras">
-  <span class="palabra-recuadro">perro</span>
-  <span class="palabra-recuadro">El</span>
-  <span class="palabra-recuadro">corre</span>
-</div>
-(luego añade líneas de respuesta debajo para que escriban la oración ordenada)
-
-9. CLASIFICAR EN COLUMNAS:
+Columnas para clasificar con lineas dentro:
 <div class="clasificar-wrap">
-  <div class="clasificar-col">
-    <div class="clasificar-header">Sustantivos</div>
-    <div class="clasificar-body">
-      <span class="linea-resp"></span>
-      <span class="linea-resp"></span>
-    </div>
-  </div>
-  <div class="clasificar-col">
-    <div class="clasificar-header">Verbos</div>
-    <div class="clasificar-body">
-      <span class="linea-resp"></span>
-    </div>
-  </div>
+<div class="clasificar-col"><div class="clasificar-header">Categoria A</div><div class="clasificar-body"><span class="linea-resp"></span><span class="linea-resp"></span></div></div>
+<div class="clasificar-col"><div class="clasificar-header">Categoria B</div><div class="clasificar-body"><span class="linea-resp"></span><span class="linea-resp"></span></div></div>
 </div>
 
-10. TEXTO DE LECTURA:
-<div class="texto-lectura">
-  Aquí va el texto que el alumno debe leer antes de responder las preguntas.
+Texto de lectura previo:
+<div class="texto-lectura">Texto que el alumno lee antes de responder.</div>
+
+Tabla:
+<table class="tabla-ej"><tr><th>Col 1</th><th>Col 2</th></tr><tr><td>dato</td><td><span class="linea-resp"></span></td></tr></table>
+
+Columnas dos columnas para unir con linea:
+<div class="columnas"><div class="col-item"><span>Concepto:</span><span class="linea-resp"></span></div></div>
+
+Nota de ayuda:
+<p class="nota">Recuerda: texto de ayuda aqui.</p>`;
+
+  const estructuraEj=`
+ESTRUCTURA OBLIGATORIA DE CADA EJERCICIO:
+Para TEA incluye data-verbos con los verbos de accion separados por coma:
+<div class="ej" data-verbos="leer,escribir,colorear">
+  <p class="ej-num">1.</p>
+  <div class="pictos"></div>
+  <p class="ej-inst">Instruccion clara aqui.</p>
+  [contenido del ejercicio]
 </div>
 
-11. NOTA/AYUDA:
-<p class="nota">💡 Recuerda: las oraciones interrogativas llevan ¿ al principio.</p>
-
-ESTRUCTURA DE CADA EJERCICIO:
+Para otros perfiles sin data-verbos ni pictos:
 <div class="ej">
   <p class="ej-num">1.</p>
-  <p class="ej-inst">Instrucción del ejercicio en negrita aquí.</p>
-  [contenido del ejercicio usando los componentes anteriores]
+  <p class="ej-inst">Instruccion aqui.</p>
+  [contenido]
 </div>`;
 
-  return `Eres experta en adaptación curricular NEAE y diseño de materiales educativos. Trabajas con el currículo LOMLOE en España.
+  const reglasPerfil={
+    TEA:`
+PERFIL TEA - EXPERTA PT:
+Eres una PT experta en TEA con 15 anos de experiencia. Sabes que los alumnos TEA necesitan:
+- LITERALIDAD absoluta: cero metaforas, cero ambiguedad, cero doble sentido
+- PREDICTIBILIDAD: la estructura siempre igual, los pasos siempre numerados
+- APOYO VISUAL: los verbos de accion en data-verbos para generar pictogramas ARASAAC
+- CONCRECION: instrucciones de maximo 8 palabras, verbo imperativo al inicio
+- Sub-pasos si hay mas de una accion: usar checkbox-row para cada paso
+- Los espacios de respuesta siempre bien delimitados con linea-resp
+- NUNCA preguntas abiertas sin guia. SIEMPRE con estructura visual.
+- Los data-verbos deben contener los 2-3 verbos principales del ejercicio (en infinitivo, en espanol)
+- PROHIBIDO: "Piensa en...", "Imagina que...", "Explica con tus palabras..." sin guia concreta`,
 
-TAREA: Genera una ficha de trabajo con exactamente 5 ejercicios en formato HTML.
+    DI:`
+PERFIL DISCAPACIDAD INTELECTUAL - LECTURA FACIL - EXPERTA PT:
+Eres una PT experta en DI y Lectura Facil (normas FEAPS/Plena inclusion). Aplica:
+- Frases cortisimas: sujeto + verbo + complemento. Maximo 8 palabras.
+- UN emoji relevante al inicio de la instruccion (no decorativo, debe apoyar el significado)
+- EJEMPLO RESUELTO obligatorio: usa la clase ejemplo-bloque. CRITICO: el ejemplo NO puede ser la misma pregunta ni revelar la respuesta del ejercicio. Debe ser un caso diferente que ilustre el formato.
+- Maximo 3 opciones en ejercicios de eleccion multiple
+- Cada item del ejercicio en su propia linea
+- Vocabulario cotidiano. Cero tecnicismos.
+- NUNCA usar el ejemplo como respuesta del ejercicio. Si el ejercicio pregunta "cuanto es 3+3", el ejemplo debe ser "2+2=4", no "3+3=6"`,
 
-DATOS:
+    TDAH:`
+PERFIL TDAH - EXPERTA PT Y NEUROEDUCACION:
+Eres una PT especialista en TDAH. Sabes que estos alumnos necesitan:
+- Ejercicios CORTOS, concretos, con inicio y fin claro
+- Variedad de formatos: NUNCA dos ejercicios del mismo tipo seguidos
+- Verbos de accion en negrita con <strong>: <strong>Rodea</strong>, <strong>Escribe</strong>, <strong>Une</strong>
+- Instruccion en 1-2 lineas maximo, sin rodeos
+- Coloca el checklist final OBLIGATORIO al terminar el ejercicio 5:
+  <div class="tdah-check-final"><input type="checkbox" style="width:20px;height:20px"><span>Revisa: has hecho todos los ejercicios</span></div>
+- CRITICO: En ejercicios de ordenar, las palabras/elementos deben estar DESORDENADOS. Si el ejercicio es ordenar numeros del 1 al 5, ponlos como 3,1,5,2,4 - NUNCA en orden
+- En ejercicios de completar, NO des la respuesta ya escrita, deja el hueco en blanco
+- Alterna: completar huecos, rodear opcion, clasificar, escribir, marcar checkbox`,
+
+    DISLEXIA:`
+PERFIL DISLEXIA - EXPERTA EN DISLEXIA Y DISENO INCLUSIVO:
+Eres una PT experta en dislexia. Aplica rigurosamente:
+- Frases cortas: UNA idea por frase. Maximo 10 palabras.
+- Interlineado generoso: los componentes deben tener espacio entre ellos
+- Las linea-resp deben ser mas altas que lo normal (ya estan configuradas en CSS)
+- Vocabulario simple. Una sola instruccion por ejercicio.
+- En completar frases, los huecos deben ser amplios (la clase hueco ya los hace grandes)
+- Las opciones deben estar bien separadas visualmente (la clase opciones ya separa)
+- NUNCA bloques de texto denso. Todo muy espaciado.
+- Estructura de izquierda a derecha, top-down, muy predecible
+- NO uses listas de mas de 4 items
+- La fuente OpenDyslexic se aplica automaticamente por CSS al contenedor`,
+
+    BAJAVISION:`
+PERFIL BAJA VISION - EXPERTA EN BAJA VISION Y DISENO ACCESIBLE:
+Eres una PT experta en baja vision. Aplica:
+- TODO el texto debe ser grande (el CSS ya lo gestiona con font-size grandes)
+- Instrucciones cortisimas: maximo 6 palabras por linea
+- Lineas de respuesta GRUESAS y amplias (ya configuradas en CSS)
+- Opciones con recuadros muy grandes y bien separados
+- Maximo 3-4 items por ejercicio para no saturar
+- Sin informacion decorativa que distraiga
+- Alto contraste siempre: texto oscuro sobre fondo amarillo claro (ya configurado)
+- Estructura muy simple: 1 instruccion, luego el ejercicio, sin elementos extra
+- NO uses tablas complejas ni columnas multiples`
+  };
+
+  return `Eres una PT (Pedagogia Terapeutica) con 15 anos de experiencia y tambien disenadora de materiales educativos inclusivos. Combinas conocimiento pedagogico experto con criterios de diseno visual profesional.
+
+TAREA: Genera una ficha de trabajo con exactamente 5 ejercicios en HTML para este alumno:
 - Curso: ${curso}
 - Asignatura: ${asignatura}
-- Contenido a trabajar: ${descripcion}
-- Perfil del alumno: ${perfil}
+- Contenido: ${desc}
+- Perfil: ${perfil}
 
-${perfilGuia[perfil]}
+${reglasPerfil[perfil]}
 
-${ejemplosHTML}
+${componentesHTML}
 
-INSTRUCCIONES CRÍTICAS:
-1. Genera SOLO el HTML de los 5 ejercicios. Nada más. Sin bloques de codigo markdown ni explicaciones.
-2. Cada ejercicio debe usar componentes visuales REALES (no puntos de texto).
-3. Los 5 ejercicios deben ser de FORMATOS DIFERENTES (completar, rodear, clasificar, unir, ordenar, respuesta libre...).
-4. Ajusta el nivel de dificultad y vocabulario al curso indicado (${curso}).
-5. Los ejercicios deben ser sobre el contenido indicado: "${descripcion}".
-6. Usa los componentes HTML exactamente como se muestran en los ejemplos.
-7. Las instrucciones van dentro de <p class="ej-inst">...</p> y deben ser claras.
-8. NUNCA uses puntos suspensivos (....) para espacios. Usa siempre <span class="linea-resp"></span> o <span class="hueco"></span>.
-9. El contenido debe ser REALISTA y pedagógicamente correcto para el nivel.
-10. Al final del último ejercicio, si el perfil es TDAH, añade: <div class="checkbox-row" style="margin-top:1rem;background:#fff8e8;padding:.5rem .75rem;border-radius:8px;border:1.5px solid #f0d98a"><input type="checkbox"><span style="font-weight:700;color:#8a6800">📋 ¿Has hecho todos los ejercicios?</span></div>
+${estructuraEj}
 
-Devuelve ÚNICAMENTE el HTML de los ejercicios, listo para insertar en la página.`;
+REGLAS CRITICAS GLOBALES:
+1. Devuelve SOLO el HTML de los 5 ejercicios. Sin markdown, sin explicaciones, sin comentarios.
+2. Los 5 ejercicios deben usar formatos DISTINTOS entre si (no repitas el mismo tipo).
+3. Ajusta dificultad y vocabulario exactamente al nivel ${curso}.
+4. El contenido debe trabajar especificamente: "${desc}".
+5. NUNCA uses puntos suspensivos ........ para espacios. Usa siempre linea-resp o hueco.
+6. Los ejercicios deben ser PEDAGOGICAMENTE CORRECTOS y reales, no de relleno.
+7. En ejercicios de ordenar o clasificar, los elementos deben estar DESORDENADOS o mezclados.
+8. Los ejemplos en DI deben ilustrar el formato con datos DISTINTOS a los del ejercicio.
+9. El HTML debe ser valido y usar exactamente las clases especificadas.
+
+Genera los 5 ejercicios ahora:`;
 }
 
 async function llamarGemini(prompt){
   const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+GEMINI_MODEL+':generateContent?key='+GEMINI_KEY,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:3000,temperature:0.3}})
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:3500,temperature:0.35}})
   });
   if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error?.message||'Error Gemini '+res.status);}
   const d=await res.json();
@@ -423,9 +472,8 @@ async function llamarGemini(prompt){
 
 async function llamarGroq(prompt){
   const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{
-    method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':'Bearer '+GROQ_KEY},
-    body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:3000,temperature:0.3,messages:[{role:'user',content:prompt}]})
+    method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+GROQ_KEY},
+    body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:3500,temperature:0.35,messages:[{role:'user',content:prompt}]})
   });
   if(!res.ok)throw new Error('Error Groq '+res.status);
   const d=await res.json();
@@ -433,122 +481,139 @@ async function llamarGroq(prompt){
 }
 
 function limpiarHTML(html){
-  // Elimina posibles bloques de código markdown
   return html.replace(/```html\n?/gi,'').replace(/```\n?/gi,'').trim();
 }
 
-document.getElementById('btn-generar').addEventListener('click', async()=>{
-  const descripcion=document.getElementById('descripcion').value.trim();
-  if(!descripcion){
+document.getElementById('btn-generar').addEventListener('click',async()=>{
+  const desc=document.getElementById('descripcion').value.trim();
+  if(!desc){
     const ta=document.getElementById('descripcion');
-    ta.focus();
-    ta.style.outline='2px solid #ef4444';
+    ta.focus();ta.style.outline='2px solid #ef4444';
     setTimeout(()=>ta.style.outline='none',1500);
     return;
   }
   const curso=document.getElementById('select-curso').value;
-  const asignatura=document.getElementById('select-asignatura').value;
+  const asig=document.getElementById('select-asignatura').value;
   const btn=document.getElementById('btn-generar');
   const out=document.getElementById('output-content');
-
   btn.disabled=true;
-  btn.innerHTML='<span class="spinner"></span> Generando ficha…';
+  btn.innerHTML='<span class="spinner"></span> Generando ficha...';
   document.getElementById('btn-ficha').classList.remove('visible');
-
-  out.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:260px;gap:12px"><div style="width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .65s linear infinite"></div><span style="font-size:.85rem;color:var(--muted)">Generando ficha con IA…</span></div>';
-
+  out.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:260px;gap:12px"><div style="width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .65s linear infinite"></div><span style="font-size:.85rem;color:var(--muted)">Generando ficha profesional con IA...</span></div>';
   try{
-    const prompt=getPrompt(descripcion, perfil, curso, asignatura);
-    let resultado='';
-    try{resultado=await llamarGemini(prompt);}
-    catch{resultado=await llamarGroq(prompt);}
-
-    resultado=limpiarHTML(resultado);
-
-    out.innerHTML=`<div class="ficha-preview perfil-${perfil}">${resultado}</div>`;
+    const prompt=getPrompt(desc,perfil,curso,asig);
+    let res='';
+    try{res=await llamarGemini(prompt);}catch{res=await llamarGroq(prompt);}
+    res=limpiarHTML(res);
+    const wrap=document.createElement('div');
+    wrap.className='ficha-wrap p-'+perfil;
+    wrap.innerHTML=res;
+    out.innerHTML='';
+    out.appendChild(wrap);
+    if(perfil==='DISLEXIA'){
+      wrap.style.fontFamily="'OpenDyslexic', 'Comic Sans MS', cursive";
+    }
+    if(perfil==='TEA'){
+      insertarPictogramas(wrap);
+    }
     document.getElementById('btn-ficha').classList.add('visible');
     const t=document.getElementById('salida-title');
-    t.classList.remove('muted');
-    t.style.color='var(--teal-d)';
+    t.classList.remove('muted');t.style.color='var(--teal-d)';
     actualizarBadge();
-  } catch(err){
+  }catch(err){
     out.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:160px;gap:8px;text-align:center"><span style="font-size:1.8rem">⚠️</span><strong style="color:#dc2626;font-size:.9rem">Error al conectar con la IA</strong><span style="font-size:.78rem;color:var(--muted)">'+err.message+'</span></div>';
-  } finally{
+  }finally{
     btn.disabled=false;
     btn.innerHTML='<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> Generar ficha';
   }
 });
+
 document.getElementById('btn-ficha').addEventListener('click',()=>{
   const nombres={TEA:'TEA',DI:'Discapacidad Intelectual',TDAH:'TDAH',DISLEXIA:'Dislexia',BAJAVISION:'Baja Vision'};
-  const bgPerfil={TEA:'#fff',DI:'#fff',TDAH:'#fff',DISLEXIA:'#fdf8f0',BAJAVISION:'#fffde7'};
+  const bgColor={TEA:'#f0f8ff',DI:'#f0fff4',TDAH:'#fffdf5',DISLEXIA:'#fdf8f0',BAJAVISION:'#fffde7'};
   const curso=document.getElementById('select-curso').value;
-  const asignatura=document.getElementById('select-asignatura').value;
-  const fp=document.getElementById('output-content').querySelector('.ficha-preview');
+  const asig=document.getElementById('select-asignatura').value;
+  const fp=document.getElementById('output-content').querySelector('.ficha-wrap');
   const fichaHTML=fp?fp.innerHTML:'';
-  const overCSS=perfil==='DISLEXIA'?'.ej-inst{letter-spacing:.015em;line-height:1.9}.linea-resp{height:32px}':perfil==='BAJAVISION'?'.ej-inst{font-size:1.15rem;font-weight:700}.linea-resp{height:38px;border-bottom-width:2px}':'';
+  const dyslexicFont=perfil==='DISLEXIA'?"font-family:'OpenDyslexic','Comic Sans MS',cursive;font-size:1.05rem;line-height:2.2;letter-spacing:.02em;":'';
 
-  const css='*{box-sizing:border-box;margin:0;padding:0}'
-    +'body{font-family:Nunito,sans-serif;padding:1.8cm 2cm;color:#1c2127;background:'+bgPerfil[perfil]+';max-width:21cm;margin:0 auto}'
-    +'.cab{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;padding-bottom:12px;border-bottom:2.5px solid #2a9d8f}'
-    +'.cab-titulo{font-size:.95rem;font-weight:700;color:#1a7a6e}.cab-sub{font-size:.72rem;color:#6b7280;margin-top:2px}'
-    +'.badge{display:inline-block;background:#e8f5f3;color:#1a7a6e;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:20px;text-transform:uppercase}'
-    +'.meta{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap}'
-    +'.meta span{font-size:.75rem;font-weight:700;color:#6b7280;background:#f4f7f6;padding:2px 10px;border-radius:6px}'
-    +'.campos{display:flex;gap:2rem;margin-bottom:18px}'
-    +'.campo label{font-size:.68rem;font-weight:700;color:#6b7280;display:block;margin-bottom:2px;text-transform:uppercase}'
-    +'.campo .ld{border-bottom:1.5px solid #888;height:24px;display:inline-block;min-width:160px}'
-    +'.ficha-preview{font-family:Nunito,sans-serif;color:#1c2127}'
-    +'.ej{margin-bottom:1.4rem;padding-bottom:1.1rem;border-bottom:1px solid #e2e8e6;page-break-inside:avoid}'
+  const css=''
+    +'*{box-sizing:border-box;margin:0;padding:0}'
+    +'body{font-family:Nunito,sans-serif;padding:1.5cm 2cm;color:#1c2127;background:'+bgColor[perfil]+';max-width:21cm;margin:0 auto;'+dyslexicFont+'}'
+    +'.cab{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;padding-bottom:12px;border-bottom:2.5px solid #2a9d8f}'
+    +'.cab-titulo{font-size:.9rem;font-weight:700;color:#1a7a6e}.cab-sub{font-size:.7rem;color:#6b7280;margin-top:2px}'
+    +'.badge{display:inline-block;background:#e8f5f3;color:#1a7a6e;font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:20px;text-transform:uppercase}'
+    +'.meta{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}'
+    +'.meta span{font-size:.72rem;font-weight:700;color:#6b7280;background:#f4f7f6;padding:2px 10px;border-radius:6px}'
+    +'.campos{display:flex;gap:2rem;margin-bottom:16px}'
+    +'.campo label{font-size:.65rem;font-weight:700;color:#6b7280;display:block;margin-bottom:2px;text-transform:uppercase}'
+    +'.ld{border-bottom:1.5px solid #888;height:24px;display:inline-block;min-width:150px}'
+    +'.ej{margin-bottom:1.3rem;padding-bottom:1rem;border-bottom:1px solid #e2e8e6;page-break-inside:avoid}'
     +'.ej:last-child{border-bottom:none}'
-    +'.ej-num{font-weight:700;color:#1a7a6e;margin-bottom:.4rem;font-size:.95rem}'
-    +'.ej-inst{font-weight:700;margin-bottom:.6rem;font-size:.92rem;line-height:1.5}'
-    +'.linea-resp{border:none;border-bottom:1.5px solid #999;display:block;width:100%;margin:.35rem 0;height:26px;background:transparent}'
-    +'.caja-resp{border:1.5px solid #999;border-radius:4px;min-height:65px;width:100%;display:block;margin:.4rem 0}'
-    +'.opciones{display:flex;flex-wrap:wrap;gap:.4rem .65rem;margin:.45rem 0}'
-    +'.opcion{border:1.5px solid #999;border-radius:6px;padding:4px 13px;font-size:.88rem;display:inline-block}'
-    +'.checkbox-row{display:flex;align-items:center;gap:.5rem;margin:.3rem 0}'
-    +'.checkbox-row input{width:15px;height:15px;flex-shrink:0}'
+    +(perfil==='TEA'?'.ej{background:#f0f8ff;border:2px solid #b3d9f0;border-radius:12px;padding:.9rem 1.1rem;margin-bottom:1.1rem}':'')
+    +(perfil==='DI'?'.ej{background:#f0fff4;border:2px solid #b2dfcc;border-radius:12px;padding:.9rem 1.1rem;margin-bottom:1.1rem}':'')
+    +(perfil==='TDAH'?'.ej{background:#fff;border:2px solid #f6ad55;border-radius:12px;padding:.9rem 1.1rem;margin-bottom:1rem}':'')
+    +(perfil==='DISLEXIA'?'.ej{background:#fff8ee;border:2px solid #e8c97a;border-radius:10px;padding:.9rem 1.1rem;margin-bottom:1.1rem}':'')
+    +(perfil==='BAJAVISION'?'.ej{background:#fffde7;border:2.5px solid #f0c040;border-radius:12px;padding:1.1rem 1.4rem;margin-bottom:1.4rem}':'')
+    +'.ej-num{font-weight:800;color:'+(perfil==='TEA'?'#1a6fa8':perfil==='DI'?'#276749':perfil==='TDAH'?'#c85a00':perfil==='DISLEXIA'?'#92610a':'#5d4037')+';margin-bottom:.3rem;font-size:'+(perfil==='BAJAVISION'?'1.4rem':'1rem')+'}'
+    +'.ej-inst{font-weight:700;margin-bottom:.5rem;font-size:'+(perfil==='BAJAVISION'?'1.25rem':perfil==='DI'?'1rem':'0.9rem')+';line-height:1.5;'+(perfil==='TEA'?'padding:.4rem .7rem;background:#1a6fa815;border-left:4px solid #1a6fa8;border-radius:0 6px 6px 0;color:#0d3b5e':'')+'}'
+    +(perfil==='DISLEXIA'?'.ej-inst{letter-spacing:.02em;line-height:1.9;color:#5c3d0a}':'')
+    +'.linea-resp{border:none;border-bottom:'+(perfil==='BAJAVISION'?'2.5':'1.5')+'px solid #999;display:block;width:100%;margin:'+(perfil==='BAJAVISION'?'.55rem':'.35rem')+' 0;height:'+(perfil==='BAJAVISION'?'38':perfil==='DISLEXIA'?'32':'26')+'px;background:transparent}'
+    +'.caja-resp{border:'+(perfil==='BAJAVISION'?'2.5':'1.5')+'px solid #999;border-radius:6px;min-height:'+(perfil==='BAJAVISION'?'90':'65')+'px;width:100%;display:block;margin:.4rem 0}'
+    +'.opciones{display:flex;flex-wrap:wrap;gap:.45rem .7rem;margin:.45rem 0}'
+    +'.opcion{border:'+(perfil==='BAJAVISION'?'2.5':'2')+'px solid #999;border-radius:8px;padding:'+(perfil==='BAJAVISION'?'9px 20px':'5px 14px')+';font-size:'+(perfil==='BAJAVISION'?'1.25rem':'.88rem')+';display:inline-block}'
+    +'.checkbox-row{display:flex;align-items:center;gap:'+(perfil==='BAJAVISION'?'.7rem':'.5rem')+';margin:'+(perfil==='BAJAVISION'?'.55rem':'.35rem')+' 0;font-size:'+(perfil==='BAJAVISION'?'1.2rem':'.9rem')+'}'
+    +'.checkbox-row input{width:'+(perfil==='BAJAVISION'?'22':'16')+'px;height:'+(perfil==='BAJAVISION'?'22':'16')+'px;flex-shrink:0}'
     +'.columnas{display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1.2rem;margin:.45rem 0}'
     +'.col-item{display:flex;align-items:center;gap:.4rem;font-size:.88rem}'
     +'.col-item .linea-resp{flex:1;margin:0}'
-    +'table.ej-tabla{width:100%;border-collapse:collapse;margin:.45rem 0;font-size:.85rem}'
-    +'table.ej-tabla th{background:#e8f5f3;color:#1a7a6e;font-weight:700;padding:6px 9px;border:1.5px solid #c3e6e0;text-align:left}'
-    +'table.ej-tabla td{padding:6px 9px;border:1.5px solid #ddd;vertical-align:top}'
-    +'.texto-lectura{background:#f8fffe;border-left:4px solid #2a9d8f;padding:.6rem .9rem;margin-bottom:.65rem;font-size:.88rem;line-height:1.8;font-style:italic}'
-    +'.completar-frase{margin:.35rem 0;font-size:.92rem;line-height:2.1}'
-    +'.hueco{display:inline-block;border-bottom:1.5px solid #999;min-width:75px;height:1.4em;vertical-align:bottom;margin:0 2px}'
-    +'.ordenar-palabras{display:flex;flex-wrap:wrap;gap:.35rem;margin:.45rem 0}'
-    +'.palabra-recuadro{border:1.5px solid #4db6a8;border-radius:6px;padding:3px 11px;font-size:.88rem;background:#e8f5f3;color:#1a7a6e;font-weight:600}'
-    +'.clasificar-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.65rem;margin:.45rem 0}'
-    +'.clasificar-col{border:1.5px solid #ddd;border-radius:7px;overflow:hidden}'
-    +'.clasificar-header{background:#e8f5f3;color:#1a7a6e;font-weight:700;padding:5px 9px;font-size:.78rem;text-align:center}'
-    +'.clasificar-body{padding:.4rem;display:flex;flex-direction:column;gap:.25rem;min-height:70px}'
-    +'.unir-wrap{display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1.5rem;margin:.45rem 0}'
+    +'.completar-frase{margin:.45rem 0;font-size:'+(perfil==='BAJAVISION'?'1.2rem':'0.92rem')+';line-height:'+(perfil==='BAJAVISION'?'2.8':'2.2')+'}'
+    +'.hueco{display:inline-block;border-bottom:'+(perfil==='BAJAVISION'?'3':'2')+'px solid #777;min-width:'+(perfil==='BAJAVISION'?'110':'80')+'px;height:1.4em;vertical-align:bottom;margin:0 3px}'
+    +'.ordenar-palabras{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0}'
+    +'.palabra-recuadro{border:2px solid #4db6a8;border-radius:8px;padding:'+(perfil==='BAJAVISION'?'7px 18px':'4px 12px')+';font-size:'+(perfil==='BAJAVISION'?'1.2rem':'.88rem')+';background:#e8f5f3;color:#1a7a6e;font-weight:700}'
+    +'.clasificar-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.65rem;margin:.5rem 0}'
+    +'.clasificar-col{border:'+(perfil==='BAJAVISION'?'2.5':'1.5')+'px solid #ddd;border-radius:8px;overflow:hidden}'
+    +'.clasificar-header{background:#e8f5f3;color:#1a7a6e;font-weight:800;padding:'+(perfil==='BAJAVISION'?'9px 12px':'6px 10px')+';font-size:'+(perfil==='BAJAVISION'?'1.1rem':'.82rem')+';text-align:center}'
+    +'.clasificar-body{padding:.5rem;display:flex;flex-direction:column;gap:.3rem;min-height:80px}'
+    +'.texto-lectura{background:#f0f8ff;border-left:4px solid #2a9d8f;padding:.65rem .9rem;margin-bottom:.7rem;font-size:'+(perfil==='BAJAVISION'?'1.15rem':'.88rem')+';line-height:'+(perfil==='BAJAVISION'?'2.1':'1.8')+';font-style:italic}'
+    +'.unir-wrap{display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1.5rem;margin:.5rem 0}'
     +'.unir-col{display:flex;flex-direction:column;gap:.35rem}'
-    +'.unir-item{border:1.5px solid #999;border-radius:6px;padding:4px 11px;font-size:.85rem}'
-    +'.nota{font-size:.76rem;color:#6b7280;font-style:italic;margin-top:.25rem}'
-    +overCSS
-    +'.logo{font-size:.68rem;color:#9ca3af;text-align:center;margin-top:24px;padding-top:8px;border-top:1px solid #e2e8e6}'
-    +'.btn-imp{position:fixed;bottom:18px;right:18px;background:#2a9d8f;color:#fff;border:none;border-radius:10px;padding:11px 22px;font-size:.95rem;font-weight:700;cursor:pointer}'
+    +'.unir-item{border:1.5px solid #aaa;border-radius:8px;padding:'+(perfil==='BAJAVISION'?'9px 14px':'5px 11px')+';font-size:'+(perfil==='BAJAVISION'?'1.1rem':'.85rem')+'}'
+    +'.nota{font-size:'+(perfil==='BAJAVISION'?'1rem':'.78rem')+';color:#6b7280;font-style:italic;margin-top:.3rem}'
+    +'.tabla-ej{width:100%;border-collapse:collapse;margin:.45rem 0;font-size:'+(perfil==='BAJAVISION'?'1.1rem':'.85rem')+'}'
+    +'.tabla-ej th{background:#e8f5f3;color:#1a7a6e;font-weight:700;padding:6px 9px;border:1.5px solid #c3e6e0;text-align:left}'
+    +'.tabla-ej td{padding:6px 9px;border:1.5px solid #ddd;vertical-align:top}'
+    +'.ejemplo-bloque{background:#fff;border:1.5px dashed #48bb78;border-radius:8px;padding:.45rem .7rem;margin-bottom:.55rem;font-size:.85rem;color:#276749}'
+    +'.ejemplo-bloque::before{content:"Ejemplo: ";font-weight:700}'
+    +'.tdah-check-final{background:#fff8e8;border:1.5px solid #f0d98a;border-radius:10px;padding:.65rem .9rem;margin-top:.7rem;display:flex;align-items:center;gap:.7rem;font-weight:700;color:#8a6800}'
+    +'.pictos{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:.65rem}'
+    +'.picto-card{display:flex;flex-direction:column;align-items:center;gap:3px;background:#fff;border:1.5px solid #b3d9f0;border-radius:8px;padding:5px 8px;min-width:60px}'
+    +'.picto-card img{width:48px;height:48px;object-fit:contain}'
+    +'.picto-card span{font-size:.58rem;font-weight:700;color:#1a6fa8;text-align:center;text-transform:uppercase}'
+    +'.ej-inst::before{content:""}'
+    +(perfil==='TDAH'?'.ej-inst::before{content:"✅ "}':'')
+    +'.logo{font-size:.65rem;color:#9ca3af;text-align:center;margin-top:20px;padding-top:8px;border-top:1px solid #e2e8e6}'
+    +'.btn-imp{position:fixed;bottom:16px;right:16px;background:#2a9d8f;color:#fff;border:none;border-radius:10px;padding:10px 20px;font-size:.92rem;font-weight:700;cursor:pointer}'
     +'@media print{.btn-imp{display:none}body{padding:1cm 1.3cm}}';
 
-  const body='<div class="cab"><div><div class="cab-titulo">Manos con Mucho que Contar</div>'
-    +'<div class="cab-sub">manosconmuchoquecontar.github.io</div></div>'
-    +'<span class="badge">'+nombres[perfil]+'</span></div>'
-    +'<div class="meta"><span>'+asignatura+'</span><span>'+curso+'</span><span>'+nombres[perfil]+'</span></div>'
-    +'<div class="campos"><div class="campo"><label>Nombre</label><div class="ld"></div></div>'
-    +'<div class="campo"><label>Fecha</label><div class="ld" style="min-width:100px"></div></div></div>'
-    +'<div class="ficha-preview">'+fichaHTML+'</div>'
+  const bodyHTML=''
+    +'<div class="cab"><div><div class="cab-titulo">Manos con Mucho que Contar</div><div class="cab-sub">manosconmuchoquecontar.github.io</div></div><span class="badge">'+nombres[perfil]+'</span></div>'
+    +'<div class="meta"><span>'+asig+'</span><span>'+curso+'</span><span>'+nombres[perfil]+'</span></div>'
+    +'<div class="campos"><div class="campo"><label>Nombre</label><div class="ld"></div></div><div class="campo"><label>Fecha</label><div class="ld" style="min-width:100px"></div></div></div>'
+    +'<div>'+fichaHTML+'</div>'
     +'<div class="logo">Generado con GeneraFicha - manosconmuchoquecontar.github.io - Inma Merino Rus - CC BY-NC-SA 4.0</div>'
-    +'<button class="btn-imp" onclick="window.print()">Imprimir / Guardar PDF</button>';
+    +'<button class="btn-imp" onclick="window.print()">Imprimir / PDF</button>';
 
-  const html='<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">'
-    +'<title>'+asignatura+' - '+curso+'</title>'
-    +'<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">'
-    +'<style>'+css+'</style></head><body>'+body+'</body></html>';
+  const googleFonts='https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap';
+  const dyslexicLink=perfil==='DISLEXIA'?'<link rel="stylesheet" href="https://fonts.cdnfonts.com/css/opendyslexic">':'';
+
+  const fullHTML='<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">'
+    +'<title>'+asig+' - '+curso+'</title>'
+    +'<link href="'+googleFonts+'" rel="stylesheet">'+dyslexicLink
+    +'<style>'+css+'</style></head><body>'+bodyHTML+'</body></html>';
 
   const v=window.open('','_blank');
-  v.document.write(html);
+  v.document.write(fullHTML);
   v.document.close();
 });
 

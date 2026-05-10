@@ -29,30 +29,30 @@
   nav ul { list-style: none; display: flex; gap: 1.5rem; align-items: center; }
   nav ul a { text-decoration: none; color: var(--ink2); font-size: 14px; font-weight: 500; transition: color .2s; }
   nav ul a:hover, nav ul a.active { color: var(--coral); }
-
+ 
   .social-links { display: flex; align-items: center; gap: 8px; }
   .social-links a { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; transition: all .2s; opacity: 0.75; }
   .social-links a:hover { opacity: 1; transform: translateY(-2px); color: var(--coral); }
   .social-links svg { width: 19px; height: 19px; }
-
+ 
   .hero { padding: 6rem 2rem 5rem; max-width: 900px; margin: 0 auto; text-align: center; }
   .hero h1 { font-family: 'Fraunces', serif; font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; }
   .hero h1 em { font-style: italic; color: var(--coral); }
   .hero p { font-size: 1.1rem; color: var(--ink2); max-width: 550px; margin: 0 auto 2.5rem; line-height: 1.6; }
   .btn-primary { display: inline-block; padding: 14px 32px; background: var(--coral); color: white; font-weight: 700; border-radius: 100px; text-decoration: none; transition: all .3s; }
   .btn-tutorial { display: inline-block; padding: 10px 24px; background: transparent; color: var(--coral); font-size: 14px; font-weight: 600; border-radius: 100px; border: 1.5px solid var(--coral); text-decoration: none; transition: all .2s; cursor: pointer; margin-top: 12px; }
-
+ 
   #tutorial-modal { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(26,58,56,0.55); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 1rem; }
   #tutorial-modal.open { display: flex; }
   .tutorial-box { background: white; border-radius: 24px; padding: 2rem; max-width: 640px; width: 100%; box-shadow: 0 24px 60px rgba(0,0,0,0.18); position: relative; }
   .tutorial-close { position: absolute; top: 1rem; right: 1rem; background: var(--bg2); border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   .video-wrap { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; background: var(--bg2); }
   .video-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-
+ 
   .stats { display: flex; justify-content: center; gap: 4rem; padding: 2rem; background: white; border-bottom: 1px solid var(--border); }
   .stat strong { display: block; font-family: 'Fraunces', serif; font-size: 2.2rem; color: var(--ink); }
   .stat span { font-size: 13px; color: var(--ink3); font-weight: 700; text-transform: uppercase; }
-
+ 
   .section { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
   .search-bar { width: 100%; max-width: 500px; margin: 0 auto 2.5rem; display: block; padding: 14px 20px; border-radius: 100px; border: 1.5px solid var(--border); outline: none; transition: border-color .2s; font-family: 'Nunito', sans-serif; font-size: 14px; }
   .search-bar:focus { border-color: var(--coral); }
@@ -67,7 +67,7 @@
   .filter-btn[data-area="lectoescritura"].active { background: var(--c-lectoescritura); color: var(--t-lectoescritura); border-color: var(--t-lectoescritura); }
   .filter-btn[data-area="vocabulario"].active { background: var(--c-vocabulario); color: var(--t-vocabulario); border-color: var(--t-vocabulario); }
   .filter-btn[data-area="todas"].active { background: var(--ink); color: white; border-color: var(--ink); }
-
+ 
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; }
   .card { background: white; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: all .3s; cursor: pointer; display: flex; flex-direction: column; }
   .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
@@ -82,16 +82,16 @@
   .area-atencion { background: var(--c-atencion); color: var(--t-atencion); }
   .area-lectoescritura { background: var(--c-lectoescritura); color: var(--t-lectoescritura); }
   .area-vocabulario { background: var(--c-vocabulario); color: var(--t-vocabulario); }
-
+ 
   .card-body { padding: 1.5rem; flex-grow: 1; }
   .card-footer { padding: 1.2rem 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: var(--ink3); }
-
+ 
   .footer-inner { padding: 4rem 2rem; text-align: center; border-top: 1px solid var(--border); background: white; position: relative; }
   .footer-social { display: flex; justify-content: center; gap: 1.2rem; margin: 1.5rem 0; }
   .footer-social a { display: flex; align-items: center; gap: 8px; color: var(--ink2); text-decoration: none; font-weight: 600; padding: 8px 16px; border-radius: 100px; border: 1px solid var(--border); transition: all .2s; }
   .footer-social a:hover { color: var(--coral); border-color: var(--coral); background: var(--bg2); }
   .visits-badge { display: inline-flex; align-items: center; gap: 10px; background: var(--coral); color: white; padding: 8px 20px; border-radius: 100px; margin-top: 1.5rem; }
-
+ 
   /* ── MÓVIL ── */
   @media (max-width: 768px) {
     nav { padding: 0 1rem; }
@@ -107,7 +107,7 @@
 </style>
 </head>
 <body>
-
+ 
 <div id="tutorial-modal">
   <div class="tutorial-box">
     <button class="tutorial-close" onclick="closeTutorial()">✕</button>
@@ -115,7 +115,7 @@
     <div class="video-wrap" id="video-wrap"></div>
   </div>
 </div>
-
+ 
 <nav>
   <a href="#" class="logo">
     <div class="logo-icon">🤲</div>
@@ -127,27 +127,28 @@
       <a href="https://www.instagram.com/manosconmuchoquecontar/" target="_blank" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
     </li>
     <li><a href="#actividades">Actividades</a></li>
+    <li><a href="appmaestros.html">Para el aula</a></li>
     <li><a href="contacto.html">Contacto</a></li>
     <li><a href="sobre-mi.html">Sobre mí</a></li>
   </ul>
 </nav>
-
+ 
 <div style="background: linear-gradient(160deg, #D4F0EC 0%, #E8F4F2 60%, #F0FAF8 100%); border-bottom: 1px solid var(--border);">
   <div class="hero">
     <h1>Recursos para <em>comunicar</em> y aprender</h1>
-    <p>Materiales diseñados con rigor y cariño para profesionales y familias.</p>
+    <p>Actividades interactivas de conciencia fonológica, discriminación auditiva, memoria, atención vocabulario, conceptos básicos y lectoescritura. Creadas con cariño para trabajar la comunicación.</p>
     <a href="#actividades" class="btn-primary">Explorar actividades</a>
     <br>
     <button class="btn-tutorial" onclick="openTutorial()">▶ Ver tutorial</button>
   </div>
 </div>
-
+ 
 <div class="stats">
   <div class="stat"><strong id="stat-total">0</strong><span>actividades</span></div>
   <div class="stat"><strong>6</strong><span>especialidades</span></div>
   <div class="stat"><strong>∞</strong><span>ilusión</span></div>
 </div>
-
+ 
 <div class="section" id="actividades">
   <input type="text" id="search" class="search-bar" placeholder="Busca por título o descripción...">
   <div class="filters" id="filters">
@@ -161,7 +162,7 @@
   </div>
   <div class="grid" id="grid"></div>
 </div>
-
+ 
 <footer class="footer-inner">
   <p>Hecho con 🤲 por <strong>Inma Merino Rus</strong> · AL & Logopeda</p>
   <div class="footer-social">
@@ -179,22 +180,22 @@
     <img src="https://hitscounter.dev/api/hit?url=https%3A%2F%2Fmanosconmuchoquecontar.github.io%2F&color=%23ffffff&style=flat-square&label=" alt="Contador" style="height: 18px;">
   </div>
 </footer>
-
+ 
 <script>
 var YOUTUBE_ID = "mWzQr5ub6hE";
-
+ 
 function openTutorial() {
   var modal = document.getElementById("tutorial-modal");
   var wrap = document.getElementById("video-wrap");
   modal.classList.add("open");
   wrap.innerHTML = '<iframe src="https://www.youtube.com/embed/' + YOUTUBE_ID + '?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
 }
-
+ 
 function closeTutorial() {
   document.getElementById("tutorial-modal").classList.remove("open");
   document.getElementById("video-wrap").innerHTML = '';
 }
-
+ 
 var actividades = [
   { titulo: "Detective Animal", descripcion: "Inferencias y pistas auditivas sobre animales.", area: "atencion", nivel: "Infantil / Primaria", url: "actividades/inferencias_2.html", imagen: "https://i.postimg.cc/SKknQS0B/inferencias-img.jpg" },
   { titulo: "Isla de Sinfones", descripcion: "Discriminación de FL, CL y GL.", area: "discriminacion", nivel: "2 - 4 Primaria", url: "actividades/sinfones_fl_cl_gl.html", imagen:"https://i.postimg.cc/0ND689xd/sinfones.jpg" },
@@ -214,7 +215,7 @@ var actividades = [
   { titulo: "¿Dónde vives?", descripcion: "Hábitats de los animales.", area: "vocabulario", nivel: "Infantil / Primaria", url: "actividades/dondevives.html", imagen: "https://i.postimg.cc/0ykChzTZ/Screenshot-20260502-024536-Claude.png" },
   { titulo: "Aprendo a escribir", descripcion: "Selecciona la letra que quieres trabajar y completa 4 tareas para adquirirla", area: "lectoescritura", nivel: "Infantil / Primaria", url: "actividades/aprendoaescribir.html", imagen: "https://i.postimg.cc/T1VGmZM7/Screenshot-20260506-232356-Claude.jpg" }
 ];
-
+ 
 var areaConfig = {
   fonologica: { label: "Fonología", badge: "area-fonologica" },
   discriminacion: { label: "Audición", badge: "area-discriminacion" },
@@ -223,10 +224,10 @@ var areaConfig = {
   lectoescritura: { label: "Lectura", badge: "area-lectoescritura" },
   vocabulario: { label: "Vocabulario", badge: "area-vocabulario" }
 };
-
+ 
 var filtroActual = "todas";
 var busqueda = "";
-
+ 
 function renderGrid() {
   document.getElementById("stat-total").textContent = actividades.length;
   var grid = document.getElementById("grid");
@@ -244,7 +245,7 @@ function renderGrid() {
       '</div>';
   }).join("");
 }
-
+ 
 document.getElementById("filters").addEventListener("click", function(e) {
   if (!e.target.matches(".filter-btn")) return;
   document.querySelectorAll(".filter-btn").forEach(function(b) { b.classList.remove("active"); });
@@ -252,12 +253,12 @@ document.getElementById("filters").addEventListener("click", function(e) {
   filtroActual = e.target.dataset.area;
   renderGrid();
 });
-
+ 
 document.getElementById("search").addEventListener("input", function(e) {
   busqueda = e.target.value.toLowerCase().trim();
   renderGrid();
 });
-
+ 
 renderGrid();
 </script>
 </body>

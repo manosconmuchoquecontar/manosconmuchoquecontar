@@ -7,6 +7,8 @@
 
 <!-- Fuentes de tu web -->
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- PDF.js para extracción de texto -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
 <style>
 /* ── Variables idénticas a tu web ── */
@@ -396,6 +398,67 @@ textarea::placeholder { color: #bfc8c5; }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* ── TABS ENTRADA ── */
+.input-tabs {
+  display: flex;
+  gap: .4rem;
+  background: #f4f7f6;
+  border-radius: 10px;
+  padding: 4px;
+}
+.input-tab {
+  flex: 1;
+  padding: 7px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .15s;
+}
+.input-tab.active {
+  background: white;
+  color: var(--teal-dark);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+/* ── PDF DROP ── */
+.pdf-drop {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-sm);
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  cursor: pointer;
+  transition: all .2s;
+  color: var(--muted);
+  min-height: 200px;
+  justify-content: center;
+  text-align: center;
+}
+.pdf-drop:hover, .pdf-drop.over {
+  border-color: var(--teal);
+  background: var(--teal-bg);
+  color: var(--teal-dark);
+}
+.pdf-drop-title {
+  font-size: .95rem;
+  font-weight: 600;
+  margin-top: .25rem;
+}
+.pdf-drop-sub { font-size: .8rem; }
+.pdf-nombre {
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--teal-dark);
+  margin-top: .25rem;
+}
+
 /* ── CHAR COUNT ── */
 .char-count { font-size: 0.75rem; color: var(--muted); }
 
@@ -466,11 +529,34 @@ footer a { color: var(--teal); text-decoration: none; }
         <span class="panel-title">Texto original</span>
         <span class="char-count" id="char-count">0 car.</span>
       </div>
-      <textarea
-        id="texto-original"
-        placeholder="Escribe o pega aquí el enunciado del ejercicio...&#10;&#10;Ejemplo: Lee el texto y subraya las palabras difíciles. Después, escribe una oración con cada una de ellas."
-        rows="9"
-      ></textarea>
+
+      <!-- Tabs escribir / subir PDF -->
+      <div class="input-tabs">
+        <button class="input-tab active" id="tab-escribir">✏️ Escribir</button>
+        <button class="input-tab" id="tab-pdf">📄 Subir PDF</button>
+      </div>
+
+      <!-- Panel escribir -->
+      <div id="modo-escribir">
+        <textarea
+          id="texto-original"
+          placeholder="Escribe o pega aquí el enunciado del ejercicio...&#10;&#10;Ejemplo: Lee el texto y subraya las palabras difíciles. Después, escribe una oración con cada una de ellas."
+          rows="8"
+        ></textarea>
+      </div>
+
+      <!-- Panel subir PDF -->
+      <div id="modo-pdf" style="display:none;">
+        <div class="pdf-drop" id="pdf-drop">
+          <input type="file" id="pdf-input" accept=".pdf" style="display:none;">
+          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+          <p class="pdf-drop-title">Arrastra el PDF aquí</p>
+          <p class="pdf-drop-sub">o</p>
+          <button class="btn-secondary" id="btn-elegir-pdf" style="padding:8px 20px;font-size:0.85rem;">Elegir archivo</button>
+          <p class="pdf-nombre" id="pdf-nombre"></p>
+        </div>
+      </div>
+
       <button class="btn-adaptar" id="btn-adaptar">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
         Adaptar enunciado
@@ -536,6 +622,77 @@ const GEMINI_API_KEY = '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
 
 // ─── Estado ───────────────────────────────────────
 let perfilActivo = 'TEA';
+
+// ─── Tabs escribir / PDF ──────────────────────────
+document.getElementById('tab-escribir').addEventListener('click', () => {
+  document.getElementById('tab-escribir').classList.add('active');
+  document.getElementById('tab-pdf').classList.remove('active');
+  document.getElementById('modo-escribir').style.display = '';
+  document.getElementById('modo-pdf').style.display = 'none';
+});
+document.getElementById('tab-pdf').addEventListener('click', () => {
+  document.getElementById('tab-pdf').classList.add('active');
+  document.getElementById('tab-escribir').classList.remove('active');
+  document.getElementById('modo-pdf').style.display = '';
+  document.getElementById('modo-escribir').style.display = 'none';
+});
+
+// ─── Elegir archivo PDF ───────────────────────────
+document.getElementById('btn-elegir-pdf').addEventListener('click', e => {
+  e.stopPropagation();
+  document.getElementById('pdf-input').click();
+});
+document.getElementById('pdf-drop').addEventListener('click', () => {
+  document.getElementById('pdf-input').click();
+});
+document.getElementById('pdf-input').addEventListener('change', e => {
+  if (e.target.files[0]) procesarPDF(e.target.files[0]);
+});
+
+// ─── Drag & drop ──────────────────────────────────
+const dropZone = document.getElementById('pdf-drop');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('over'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('over');
+  const file = e.dataTransfer.files[0];
+  if (file?.type === 'application/pdf') procesarPDF(file);
+});
+
+// ─── Extraer texto del PDF con PDF.js ────────────
+async function procesarPDF(file) {
+  const nombre = document.getElementById('pdf-nombre');
+  nombre.textContent = '⏳ Extrayendo texto...';
+
+  try {
+    const pdfjsLib = window['pdfjs-dist/build/pdf'];
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+    let textoCompleto = '';
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      const pageText = content.items.map(item => item.str).join(' ');
+      textoCompleto += pageText + '\n';
+    }
+
+    textoCompleto = textoCompleto.trim();
+    if (!textoCompleto) throw new Error('No se pudo extraer texto. El PDF puede ser una imagen escaneada.');
+
+    // Cambiar a pestaña de escritura y rellenar el textarea
+    document.getElementById('tab-escribir').click();
+    document.getElementById('texto-original').value = textoCompleto;
+    document.getElementById('char-count').textContent = `${textoCompleto.length} car.`;
+    nombre.textContent = `✅ ${file.name}`;
+
+  } catch (err) {
+    nombre.textContent = `❌ ${err.message}`;
+  }
+}
 
 // ─── Selector de perfil ───────────────────────────
 document.querySelectorAll('.chip').forEach(chip => {
@@ -633,52 +790,58 @@ async function mostrarPictogramas(texto) {
 // ─── Prompts pedagógicos ──────────────────────────
 function getPrompt(texto, perfil) {
   const instrucciones = {
-    TEA: `Eres experta en accesibilidad cognitiva para alumnos con TEA.
-REGLAS (cumple TODAS):
-• Divide la tarea en pasos numerados: "Paso 1:", "Paso 2:", etc. Máximo 5 pasos.
-• Cada paso empieza con un verbo de acción en imperativo ("Lee", "Escribe", "Rodea"…).
-• Frases de máximo 8 palabras. Elimina toda ambigüedad, metáfora o doble sentido.
-• Sé literal y concreto. Sin introducciones ni explicaciones en tu respuesta.
+    TEA: `Eres experta en accesibilidad cognitiva para alumnos con TEA. Trabajas en España.
+REGLAS ESTRICTAS:
+• Divide en pasos numerados: "Paso 1:", "Paso 2:"… Máximo 5 pasos.
+• Cada paso: un solo verbo de acción en imperativo + objeto concreto. Máximo 6 palabras.
+• Lenguaje 100% literal. Sin metáforas, sin frases hechas, sin dobles sentidos.
+• No respondas la pregunta del enunciado. Solo indica qué tiene que hacer el alumno.
+• Sin introducciones ni explicaciones.
+Devuelve ÚNICAMENTE los pasos adaptados.`,
+
+    DI: `Eres experta en accesibilidad cognitiva para alumnos con Discapacidad Intelectual. Trabajas en España.
+REGLAS ESTRICTAS:
+• Estructura exacta: Sujeto + Verbo + Objeto. Máximo 5 palabras por frase.
+• Vocabulario del día a día. Nada abstracto.
+• Un emoji visual y relevante al inicio de cada frase (📖✏️✂️🔢👀…).
+• No des la respuesta al ejercicio. Formula la pregunta de forma simple al final.
+• Numera si hay más de una instrucción.
+• Mayúscula al inicio de cada frase. Punto al final.
+• Sin introducciones ni explicaciones.
 Devuelve ÚNICAMENTE el texto adaptado.`,
 
-    DI: `Eres experta en accesibilidad cognitiva para alumnos con Discapacidad Intelectual.
-REGLAS (cumple TODAS):
-• Estructura Sujeto + Verbo + Objeto en cada frase.
-• Máximo 6 palabras por frase. Solo vocabulario cotidiano y concreto.
-• Añade un emoji relevante al inicio de cada instrucción (🔍📝✂️🖍️…).
-• Si hay varios pasos, numéralos claramente.
-• Sin introducciones ni explicaciones en tu respuesta.
+    TDAH: `Eres experta en accesibilidad cognitiva para alumnos con TDAH. Trabajas en España.
+REGLAS ESTRICTAS:
+• Máximo 1 idea por línea. Máximo 8 palabras por línea.
+• Pon ✅ al inicio de cada tarea.
+• Marca en **negrita** (markdown) solo el verbo principal de cada tarea. Solo uno por línea.
+• Elimina todo lo que no sea imprescindible para hacer la tarea.
+• Tono directo y activo. Sin rodeos.
+• Mayúscula al inicio. Punto al final de cada línea.
+• Sin introducciones ni explicaciones.
 Devuelve ÚNICAMENTE el texto adaptado.`,
 
-    TDAH: `Eres experta en accesibilidad cognitiva para alumnos con TDAH.
-REGLAS (cumple TODAS):
-• Pon en **negrita** (markdown) todos los verbos de acción principales.
-• Añade ✅ al inicio de cada tarea distinta.
-• Frases cortas y directas. Elimina toda información superflua.
-• Cada tarea en una línea separada.
-• Tono directo y activo.
-• Sin introducciones ni explicaciones en tu respuesta.
+    DISLEXIA: `Eres experta en accesibilidad cognitiva para alumnos con Dislexia. Trabajas en España.
+REGLAS ESTRICTAS:
+• Frases cortas: máximo 8 palabras.
+• Una sola idea por frase. Punto y aparte entre cada idea.
+• Sustituye palabras largas o difíciles por palabras cortas y comunes.
+• Mantén la pregunta del enunciado al final, simplificada.
+• Mayúscula al inicio de cada frase. Punto al final.
+• No uses comas en exceso. Frases simples y directas.
+• Sin introducciones ni explicaciones.
 Devuelve ÚNICAMENTE el texto adaptado.`,
 
-    DISLEXIA: `Eres experta en accesibilidad cognitiva para alumnos con Dislexia.
-REGLAS (cumple TODAS):
-• Frases cortas: máximo 10 palabras cada una.
-• Una sola idea por frase.
-• Sustituye palabras largas o difíciles por sinónimos sencillos.
-• Separa las ideas con puntos y líneas en blanco entre párrafos.
-• Sin mayúsculas innecesarias, sin palabras rebuscadas.
-• Sin introducciones ni explicaciones en tu respuesta.
-Devuelve ÚNICAMENTE el texto adaptado.`,
-
-    BAJAVISION: `Eres experta en accesibilidad visual para alumnos con baja visión.
-REGLAS (cumple TODAS):
-• Frases muy cortas y directas: máximo 8 palabras.
-• Una sola instrucción por línea, separada por salto de línea.
-• Elimina toda información secundaria o decorativa. Solo lo esencial.
-• Usa vocabulario sencillo y cotidiano.
-• Evita abreviaturas, símbolos especiales o caracteres poco frecuentes.
-• Si hay pasos, numéralos claramente: "1.", "2.", etc.
-• Sin introducciones ni explicaciones en tu respuesta.
+    BAJAVISION: `Eres experta en accesibilidad visual para alumnos con baja visión. Trabajas en España.
+REGLAS ESTRICTAS:
+• Frases muy cortas: máximo 6 palabras cada una.
+• Una sola instrucción o idea por línea.
+• Sin abreviaturas, sin símbolos, sin paréntesis.
+• Numera las instrucciones si hay más de una: "1.", "2."…
+• Vocabulario sencillo y cotidiano.
+• Mayúscula al inicio de cada frase. Punto al final.
+• Mantén la pregunta del enunciado al final, en forma simple.
+• Sin introducciones ni explicaciones.
 Devuelve ÚNICAMENTE el texto adaptado.`
   };
 

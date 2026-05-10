@@ -4,14 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AdaptaTexto · Manos con Mucho que Contar</title>
-
-<!-- Fuentes de tu web -->
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
-<!-- PDF.js para extracción de texto -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
 <style>
-/* ── Variables idénticas a tu web ── */
 :root {
   --teal:       #2a9d8f;
   --teal-light: #4db6a8;
@@ -25,500 +20,128 @@
   --radius:     16px;
   --radius-sm:  10px;
 }
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', sans-serif; background: #f4f7f6; color: var(--ink); min-height: 100vh; display: flex; flex-direction: column; }
 
-body {
-  font-family: 'Nunito', sans-serif;
-  background: #f4f7f6;
-  color: var(--ink);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ── NAV ── */
-nav {
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  padding: 0 clamp(.75rem, 4vw, 2.5rem);
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: .5rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  overflow: hidden;
-}
-.nav-logo {
-  font-family: 'Nunito', sans-serif;
-  font-weight: 700;
-  font-size: 0.92rem;
-  color: var(--teal-dark);
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-  flex-shrink: 1;
-  min-width: 0;
-}
-.nav-logo .emoji { font-size: 1.1rem; flex-shrink: 0; }
-.nav-logo .logo-text {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-/* En móvil pequeño ocultamos el texto del logo, dejamos solo el emoji */
-@media (max-width: 480px) {
-  .nav-logo .logo-text { display: none; }
-}
-.nav-links {
-  display: flex;
-  gap: clamp(.6rem, 2vw, 1.5rem);
-  align-items: center;
-  flex-shrink: 0;
-}
-.nav-links a {
-  font-size: clamp(0.78rem, 2.5vw, 0.9rem);
-  font-weight: 600;
-  color: var(--muted);
-  text-decoration: none;
-  transition: color .15s;
-  white-space: nowrap;
-}
+/* NAV */
+nav { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 clamp(.75rem,4vw,2.5rem); height: 56px; display: flex; align-items: center; justify-content: space-between; gap: .5rem; position: sticky; top: 0; z-index: 100; overflow: hidden; }
+.nav-logo { font-family: 'Nunito',sans-serif; font-weight: 700; font-size: .92rem; color: var(--teal-dark); text-decoration: none; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 1; min-width: 0; }
+.nav-logo .logo-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width:480px) { .nav-logo .logo-text { display: none; } }
+.nav-links { display: flex; gap: clamp(.6rem,2vw,1.5rem); align-items: center; flex-shrink: 0; }
+.nav-links a { font-size: clamp(.78rem,2.5vw,.9rem); font-weight: 600; color: var(--muted); text-decoration: none; transition: color .15s; white-space: nowrap; }
 .nav-links a:hover { color: var(--teal); }
 .nav-links a.active { color: var(--teal-dark); }
 
-/* ── HERO ── */
-.hero {
-  background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 55%, var(--teal-light) 100%);
-  padding: 3rem clamp(1rem, 4vw, 2.5rem) 2.5rem;
-  text-align: center;
-  color: white;
-}
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(255,255,255,0.18);
-  border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 50px;
-  padding: 5px 14px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-}
-.hero h1 {
-  font-family: 'Fraunces', serif;
-  font-size: clamp(1.8rem, 5vw, 2.8rem);
-  font-weight: 700;
-  line-height: 1.15;
-  margin-bottom: .75rem;
-}
-.hero h1 em { font-style: italic; color: rgba(255,255,255,0.82); }
-.hero p {
-  font-size: 1rem;
-  color: rgba(255,255,255,0.82);
-  max-width: 520px;
-  margin: 0 auto;
-  line-height: 1.7;
-}
+/* HERO */
+.hero { background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 55%, var(--teal-light) 100%); padding: 2.5rem clamp(1rem,4vw,2.5rem) 2rem; text-align: center; color: white; }
+.hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.3); border-radius: 50px; padding: 5px 14px; font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: .75rem; }
+.hero h1 { font-family: 'Fraunces',serif; font-size: clamp(1.6rem,5vw,2.5rem); font-weight: 700; line-height: 1.15; margin-bottom: .6rem; }
+.hero h1 em { font-style: italic; color: rgba(255,255,255,.82); }
+.hero p { font-size: .95rem; color: rgba(255,255,255,.82); max-width: 520px; margin: 0 auto; line-height: 1.7; }
 
-/* ── MAIN ── */
-main {
-  flex: 1;
-  max-width: 960px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 2rem clamp(1rem, 4vw, 1.5rem) 3rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
+/* MAIN */
+main { flex: 1; max-width: 1000px; width: 100%; margin: 0 auto; padding: 1.75rem clamp(1rem,4vw,1.5rem) 3rem; display: flex; flex-direction: column; gap: 1.25rem; }
 
-/* ── PERFIL SELECTOR ── */
-.section-label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .1em;
-  color: var(--muted);
-  margin-bottom: .6rem;
-}
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .6rem;
-}
-.chip {
-  cursor: pointer;
-  border: 2px solid var(--border);
-  border-radius: 50px;
-  padding: 8px 20px;
-  font-family: 'Nunito', sans-serif;
-  font-size: 0.88rem;
-  font-weight: 600;
-  background: white;
-  color: var(--muted);
-  transition: all .15s;
-  user-select: none;
-}
+/* CHIPS */
+.section-label { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: .6rem; }
+.chips { display: flex; flex-wrap: wrap; gap: .6rem; }
+.chip { cursor: pointer; border: 2px solid var(--border); border-radius: 50px; padding: 8px 18px; font-family: 'Nunito',sans-serif; font-size: .85rem; font-weight: 600; background: white; color: var(--muted); transition: all .15s; user-select: none; }
 .chip:hover { border-color: var(--teal); color: var(--teal); }
-.chip.active {
-  background: var(--teal);
-  border-color: var(--teal);
-  color: white;
-  box-shadow: 0 3px 12px rgba(42,157,143,0.3);
-}
+.chip.active { background: var(--teal); border-color: var(--teal); color: white; box-shadow: 0 3px 12px rgba(42,157,143,.3); }
 
-/* ── PANELES ── */
-.panels {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-}
-@media (max-width: 680px) { .panels { grid-template-columns: 1fr; } }
-
-.panel {
-  background: white;
-  border-radius: var(--radius);
-  border: 1.5px solid var(--border);
-  padding: 1.25rem 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: .75rem;
-  transition: border-color .2s, box-shadow .2s;
-}
-.panel:focus-within { border-color: var(--teal-light); box-shadow: 0 0 0 3px rgba(42,157,143,0.1); }
-
-.panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.panel-title {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--teal-dark);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.panel-title::before {
-  content: '';
-  display: block;
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--teal);
-}
+/* PANELS */
+.panels { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+@media (max-width:680px) { .panels { grid-template-columns: 1fr; } }
+.panel { background: white; border-radius: var(--radius); border: 1.5px solid var(--border); padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: .75rem; transition: border-color .2s, box-shadow .2s; }
+.panel:focus-within { border-color: var(--teal-light); box-shadow: 0 0 0 3px rgba(42,157,143,.1); }
+.panel-header { display: flex; align-items: center; justify-content: space-between; }
+.panel-title { font-size: .82rem; font-weight: 700; color: var(--teal-dark); display: flex; align-items: center; gap: 6px; }
+.panel-title::before { content: ''; display: block; width: 8px; height: 8px; border-radius: 50%; background: var(--teal); }
 .panel-title.muted::before { background: #d1d5db; }
 .panel-title.muted { color: var(--muted); }
-
-textarea {
-  flex: 1;
-  border: none;
-  outline: none;
-  resize: none;
-  font-family: 'Nunito', sans-serif;
-  font-size: 0.95rem;
-  line-height: 1.75;
-  color: var(--ink);
-  background: transparent;
-  min-height: 180px;
-  width: 100%;
-}
+textarea { flex: 1; border: none; outline: none; resize: none; font-family: 'Nunito',sans-serif; font-size: .95rem; line-height: 1.75; color: var(--ink); background: transparent; min-height: 160px; width: 100%; }
 textarea::placeholder { color: #bfc8c5; }
 
-/* ── BTN ADAPTAR ── */
-.btn-adaptar {
-  width: 100%;
-  padding: 15px;
-  background: linear-gradient(135deg, var(--teal), var(--teal-dark));
-  color: white;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-family: 'Nunito', sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all .2s;
-  box-shadow: 0 4px 15px rgba(42,157,143,0.28);
-  letter-spacing: .01em;
-}
-.btn-adaptar:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(42,157,143,0.38); }
-.btn-adaptar:active { transform: none; }
+/* TABS */
+.input-tabs { display: flex; gap: .4rem; background: #f4f7f6; border-radius: 10px; padding: 4px; }
+.input-tab { flex: 1; padding: 7px 12px; border: none; border-radius: 8px; background: transparent; font-family: 'Nunito',sans-serif; font-size: .82rem; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .15s; }
+.input-tab.active { background: white; color: var(--teal-dark); box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+
+/* PDF DROP */
+.pdf-drop { border: 2px dashed var(--border); border-radius: var(--radius-sm); padding: 1.5rem 1rem; display: flex; flex-direction: column; align-items: center; gap: .5rem; cursor: pointer; transition: all .2s; color: var(--muted); min-height: 170px; justify-content: center; text-align: center; }
+.pdf-drop:hover, .pdf-drop.over { border-color: var(--teal); background: var(--teal-bg); color: var(--teal-dark); }
+.pdf-drop-title { font-size: .95rem; font-weight: 600; margin-top: .25rem; }
+.pdf-drop-sub { font-size: .8rem; }
+.pdf-nombre { font-size: .78rem; font-weight: 700; color: var(--teal-dark); margin-top: .25rem; }
+.pdf-pages-preview { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: .5rem; }
+.pdf-page-thumb { border-radius: 6px; border: 2px solid var(--teal-light); width: 70px; height: 90px; object-fit: cover; }
+
+/* BTNS */
+.btn-adaptar { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--teal), var(--teal-dark)); color: white; border: none; border-radius: var(--radius-sm); font-family: 'Nunito',sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all .2s; box-shadow: 0 4px 15px rgba(42,157,143,.28); }
+.btn-adaptar:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(42,157,143,.38); }
 .btn-adaptar:disabled { opacity: .55; cursor: not-allowed; transform: none; }
-
-/* ── BTN IMPRIMIR ── */
-.btn-print {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background: none;
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  padding: 6px 12px;
-  font-family: 'Nunito', sans-serif;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--muted);
-  cursor: pointer;
-  transition: all .15s;
-}
+.btn-print { display: flex; align-items: center; gap: 5px; background: none; border: 1.5px solid var(--border); border-radius: 8px; padding: 6px 12px; font-family: 'Nunito',sans-serif; font-size: .78rem; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .15s; }
 .btn-print:hover { border-color: var(--teal); color: var(--teal); }
+.btn-secondary { display: flex; align-items: center; gap: 5px; background: white; border: 1.5px solid var(--teal); border-radius: 8px; padding: 8px 16px; font-family: 'Nunito',sans-serif; font-size: .85rem; font-weight: 600; color: var(--teal-dark); cursor: pointer; transition: all .15s; }
+.btn-secondary:hover { background: var(--teal); color: white; }
+.btn-ficha { width: 100%; margin-top: .5rem; padding: 12px; background: linear-gradient(135deg, #1a7a6e, #2a9d8f); color: white; border: none; border-radius: var(--radius-sm); font-family: 'Nunito',sans-serif; font-size: .9rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all .2s; box-shadow: 0 3px 12px rgba(42,157,143,.25); }
+.btn-ficha:hover { transform: translateY(-1px); box-shadow: 0 5px 16px rgba(42,157,143,.35); }
 
-/* ── PICTOGRAMAS ── */
-.picto-section {
-  display: none;
-  flex-direction: column;
-  gap: .5rem;
-}
+/* PICTOS */
+.picto-section { display: none; flex-direction: column; gap: .5rem; }
 .picto-section.visible { display: flex; }
-.picto-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.picto-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  background: var(--teal-bg);
-  border: 1.5px solid #c3e6e0;
-  border-radius: 12px;
-  padding: 8px 10px;
-  min-width: 72px;
-  animation: popIn .25s ease;
-}
+.picto-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.picto-card { display: flex; flex-direction: column; align-items: center; gap: 5px; background: var(--teal-bg); border: 1.5px solid #c3e6e0; border-radius: 12px; padding: 8px 10px; min-width: 72px; animation: popIn .25s ease; }
 @keyframes popIn { from { opacity:0; transform:scale(.85); } to { opacity:1; transform:scale(1); } }
 .picto-card img { width: 64px; height: 64px; object-fit: contain; }
-.picto-card span {
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: var(--teal-dark);
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: .04em;
-}
+.picto-card span { font-size: .68rem; font-weight: 700; color: var(--teal-dark); text-align: center; text-transform: uppercase; letter-spacing: .04em; }
 
-/* ── OUTPUT CONTENT ── */
-.output-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 180px;
-  gap: 8px;
-  color: #c8d3d0;
-  text-align: center;
-}
-.output-placeholder p { font-size: 0.85rem; }
+/* OUTPUT */
+.output-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 180px; gap: 8px; color: #c8d3d0; text-align: center; }
+.output-placeholder p { font-size: .85rem; }
+.ejercicios-wrap { display: flex; flex-direction: column; gap: .25rem; }
+.ejercicio-bloque { padding: .75rem; border-radius: 10px; background: #f8fffe; border: 1px solid #ddf0ec; margin-bottom: .5rem; }
+.ej-titulo { font-weight: 700; color: var(--teal-dark); margin-bottom: .4rem; font-size: .9rem; }
+.ej-linea { margin-bottom: .3rem; }
+.espacio-respuesta { margin-top: .6rem; border-bottom: 1.5px dashed #c3d9d5; height: 28px; }
+.step-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: .5rem; }
+.step-num { display: inline-flex; align-items: center; justify-content: center; min-width: 26px; height: 26px; background: var(--teal); color: white; border-radius: 50%; font-size: .78rem; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
 
-/* Estilos por perfil */
+/* PERFIL OUTPUTS */
 .out-TEA { font-size: .95rem; line-height: 1.9; }
 .out-DI  { font-size: 1.05rem; line-height: 2.1; }
 .out-TDAH { font-size: .95rem; line-height: 1.85; }
-.out-DISLEXIA {
-  font-size: .98rem;
-  line-height: 2.3;
-  letter-spacing: .015em;
-  background: var(--cream);
-  border-radius: 10px;
-  padding: 1rem;
-}
+.out-DISLEXIA { font-size: .98rem; line-height: 2.3; letter-spacing: .015em; background: var(--cream); border-radius: 10px; padding: 1rem; }
+.out-BAJAVISION { font-size: 1.3rem; line-height: 2.2; font-weight: 700; color: #111; background: #fffde7; border-radius: 10px; padding: 1rem; }
 
-.step-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin-bottom: .6rem;
-}
-.step-num {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 26px; height: 26px;
-  background: var(--teal);
-  color: white;
-  border-radius: 50%;
-  font-size: 0.78rem;
-  font-weight: 700;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-/* ── BADGE PERFIL ── */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 20px;
-  text-transform: uppercase;
-  letter-spacing: .05em;
-}
+/* BADGES */
+.badge { display: inline-flex; align-items: center; gap: 4px; font-size: .72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: .05em; }
 .badge-TEA        { background: #e8f4f8; color: #1a6fa8; }
 .badge-DI         { background: #eef4e8; color: #3a7a1a; }
 .badge-TDAH       { background: #fef0e8; color: #c85a00; }
 .badge-DISLEXIA   { background: #fef8e8; color: #a07000; }
 .badge-BAJAVISION { background: #f0ebfa; color: #6a1fa8; }
 
-/* Baja visión: texto muy grande, alto contraste, interlineado generoso */
-.out-BAJAVISION {
-  font-size: 1.35rem;
-  line-height: 2.2;
-  font-weight: 700;
-  color: #111;
-  background: #fffde7;
-  border-radius: 10px;
-  padding: 1rem 1.25rem;
-  letter-spacing: .02em;
-}
-
-/* ── SPINNER ── */
-.spinner {
-  width: 18px; height: 18px;
-  border: 2.5px solid rgba(255,255,255,.35);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin .65s linear infinite;
-  display: inline-block;
-}
+/* SPINNER */
+.spinner { width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,.35); border-top-color: white; border-radius: 50%; animation: spin .65s linear infinite; display: inline-block; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── TABS ENTRADA ── */
-.input-tabs {
-  display: flex;
-  gap: .4rem;
-  background: #f4f7f6;
-  border-radius: 10px;
-  padding: 4px;
-}
-.input-tab {
-  flex: 1;
-  padding: 7px 12px;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  font-family: 'Nunito', sans-serif;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--muted);
-  cursor: pointer;
-  transition: all .15s;
-}
-.input-tab.active {
-  background: white;
-  color: var(--teal-dark);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-}
+/* MISC */
+.char-count { font-size: .75rem; color: var(--muted); }
+.info-grid { background: white; border-radius: var(--radius); border: 1.5px solid var(--border); padding: 1.25rem 1.5rem; }
+.info-grid-inner { display: grid; grid-template-columns: repeat(auto-fit,minmax(170px,1fr)); gap: .75rem; font-size: .82rem; }
 
-/* ── PDF DROP ── */
-.pdf-drop {
-  border: 2px dashed var(--border);
-  border-radius: var(--radius-sm);
-  padding: 2rem 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: .5rem;
-  cursor: pointer;
-  transition: all .2s;
-  color: var(--muted);
-  min-height: 200px;
-  justify-content: center;
-  text-align: center;
-}
-.pdf-drop:hover, .pdf-drop.over {
-  border-color: var(--teal);
-  background: var(--teal-bg);
-  color: var(--teal-dark);
-}
-.pdf-drop-title {
-  font-size: .95rem;
-  font-weight: 600;
-  margin-top: .25rem;
-}
-.pdf-drop-sub { font-size: .8rem; }
-.pdf-nombre {
-  font-size: .78rem;
-  font-weight: 700;
-  color: var(--teal-dark);
-  margin-top: .25rem;
-}
-
-/* ── BTN FICHA ── */
-.btn-ficha {
-  width: 100%;
-  margin-top: .75rem;
-  padding: 12px;
-  background: linear-gradient(135deg, #1a7a6e, #2a9d8f);
-  color: white;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-family: 'Nunito', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all .2s;
-  box-shadow: 0 3px 12px rgba(42,157,143,0.25);
-}
-.btn-ficha:hover { transform: translateY(-1px); box-shadow: 0 5px 16px rgba(42,157,143,0.35); }
-
-/* ── EJERCICIOS ── */
-.ejercicios-wrap { display: flex; flex-direction: column; gap: .25rem; }
-.ejercicio-bloque {
-  padding: .75rem;
-  border-radius: 10px;
-  background: #f8fffe;
-  border: 1px solid #ddf0ec;
-  margin-bottom: .5rem;
-}
-.ej-titulo { font-weight: 700; color: var(--teal-dark); margin-bottom: .4rem; font-size: .9rem; }
-.ej-linea { margin-bottom: .3rem; }
-.espacio-respuesta {
-  margin-top: .6rem;
-  border-bottom: 1.5px dashed #c3d9d5;
-  height: 28px;
-}
-
-/* ── CHAR COUNT ── */
-.char-count { font-size: 0.75rem; color: var(--muted); }
-
-/* ── FOOTER ── */
-footer {
-  text-align: center;
-  padding: 1.5rem;
-  font-size: 0.78rem;
-  color: var(--muted);
-  border-top: 1px solid var(--border);
-  background: white;
-}
+/* FOOTER */
+footer { text-align: center; padding: 1.5rem; font-size: .78rem; color: var(--muted); border-top: 1px solid var(--border); background: white; }
 footer a { color: var(--teal); text-decoration: none; }
 
-/* ── PRINT ── */
+/* PRINT */
 @media print {
-  nav, .hero, .controls, .btn-adaptar, .btn-print, .api-notice, footer { display: none !important; }
+  nav, .hero, .controls, .btn-adaptar, .btn-ficha, .btn-print, footer, .input-tabs, #panel-entrada, .info-grid { display: none !important; }
   body { background: white; }
-  .panel { border: 1px solid #ddd; box-shadow: none; }
   .panels { grid-template-columns: 1fr; }
-  #panel-entrada { display: none; }
+  .panel { border: none; box-shadow: none; }
 }
 </style>
 </head>
@@ -527,7 +150,7 @@ footer a { color: var(--teal); text-decoration: none; }
 <!-- NAV -->
 <nav>
   <a href="https://manosconmuchoquecontar.github.io/" class="nav-logo">
-    <span class="emoji">🤲</span>
+    <span>🤲</span>
     <span class="logo-text">Manos con Mucho que Contar</span>
   </a>
   <div class="nav-links">
@@ -540,14 +163,13 @@ footer a { color: var(--teal); text-decoration: none; }
 <!-- HERO -->
 <div class="hero">
   <div class="hero-badge">✨ Recurso para maestros</div>
-  <h1>Adapta cualquier <em>enunciado</em><br>en segundos</h1>
-  <p>Pega el texto, elige el perfil del alumno y obtén una versión accesible con pictogramas ARASAAC y apoyo visual.</p>
+  <h1>Adapta cualquier <em>ficha o enunciado</em><br>en segundos</h1>
+  <p>Escribe el texto o sube un PDF. La IA analiza la ficha completa, imágenes incluidas, y genera una versión accesible lista para imprimir.</p>
 </div>
 
-<!-- MAIN -->
 <main>
 
-  <!-- Selector de perfil -->
+  <!-- Perfil -->
   <div class="controls">
     <p class="section-label">Perfil del alumno</p>
     <div class="chips">
@@ -565,34 +187,30 @@ footer a { color: var(--teal); text-decoration: none; }
     <!-- Entrada -->
     <div class="panel" id="panel-entrada">
       <div class="panel-header">
-        <span class="panel-title">Texto original</span>
+        <span class="panel-title">Texto o documento original</span>
         <span class="char-count" id="char-count">0 car.</span>
       </div>
 
-      <!-- Tabs escribir / subir PDF -->
       <div class="input-tabs">
-        <button class="input-tab active" id="tab-escribir">✏️ Escribir</button>
+        <button class="input-tab active" id="tab-escribir">✏️ Escribir texto</button>
         <button class="input-tab" id="tab-pdf">📄 Subir PDF</button>
       </div>
 
-      <!-- Panel escribir -->
+      <!-- Modo texto -->
       <div id="modo-escribir">
-        <textarea
-          id="texto-original"
-          placeholder="Escribe o pega aquí el enunciado del ejercicio...&#10;&#10;Ejemplo: Lee el texto y subraya las palabras difíciles. Después, escribe una oración con cada una de ellas."
-          rows="8"
-        ></textarea>
+        <textarea id="texto-original" placeholder="Escribe o pega aquí el enunciado o ejercicio que quieres adaptar..." rows="8"></textarea>
       </div>
 
-      <!-- Panel subir PDF -->
+      <!-- Modo PDF -->
       <div id="modo-pdf" style="display:none;">
         <div class="pdf-drop" id="pdf-drop">
           <input type="file" id="pdf-input" accept=".pdf" style="display:none;">
           <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
           <p class="pdf-drop-title">Arrastra el PDF aquí</p>
           <p class="pdf-drop-sub">o</p>
-          <button class="btn-secondary" id="btn-elegir-pdf" style="padding:8px 20px;font-size:0.85rem;">Elegir archivo</button>
+          <button class="btn-secondary" id="btn-elegir-pdf" style="padding:8px 20px;font-size:.85rem;">Elegir archivo</button>
           <p class="pdf-nombre" id="pdf-nombre"></p>
+          <div class="pdf-pages-preview" id="pdf-pages-preview"></div>
         </div>
       </div>
 
@@ -608,67 +226,93 @@ footer a { color: var(--teal); text-decoration: none; }
         <span class="panel-title muted" id="salida-title">Texto adaptado</span>
         <div style="display:flex;align-items:center;gap:8px;">
           <span class="badge badge-TEA" id="badge-perfil">🧩 TEA</span>
-          <button class="btn-print" id="btn-print" title="Imprimir panel">
+          <button class="btn-print" id="btn-print">
             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
             Imprimir
           </button>
         </div>
       </div>
 
-      <!-- Pictogramas ARASAAC -->
       <div class="picto-section" id="picto-section">
         <p class="section-label" style="margin-bottom:0">Pictogramas de apoyo</p>
         <div class="picto-row" id="picto-row"></div>
       </div>
 
-      <!-- Contenido adaptado -->
       <div id="output-content">
         <div class="output-placeholder">
-          <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-          </svg>
+          <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
           <p>El enunciado adaptado aparecerá aquí</p>
         </div>
       </div>
 
-      <!-- Botón ficha imprimible -->
       <button class="btn-ficha" id="btn-ficha" style="display:none;">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-        Ver ficha imprimible
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+        Ver ficha imprimible completa
       </button>
     </div>
   </div>
 
-  <!-- Info pedagógica -->
-  <div style="background:white;border-radius:var(--radius);border:1.5px solid var(--border);padding:1.25rem 1.5rem;">
+  <!-- Info -->
+  <div class="info-grid">
     <p class="section-label" style="margin-bottom:.75rem;">¿Qué adapta cada perfil?</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.75rem;font-size:0.82rem;">
-      <div><strong style="color:#1a6fa8;">🧩 TEA</strong><br><span style="color:var(--muted);">Pasos numerados, lenguaje literal, sin ambigüedades + pictogramas ARASAAC</span></div>
-      <div><strong style="color:#3a7a1a;">🌟 DI</strong><br><span style="color:var(--muted);">Frases Sujeto+Verbo+Objeto, vocabulario sencillo + pictogramas ARASAAC</span></div>
-      <div><strong style="color:#c85a00;">⚡ TDAH</strong><br><span style="color:var(--muted);">Verbos de acción en negrita y color, checklist visual, frases cortas</span></div>
-      <div><strong style="color:#a07000;">📖 Dislexia</strong><br><span style="color:var(--muted);">Interlineado doble, fondo crema, frases simples, una idea por línea</span></div>
-      <div><strong style="color:#6a1fa8;">👁️ Baja Visión</strong><br><span style="color:var(--muted);">Texto grande y negrita, fondo amarillo suave, una instrucción por línea, sin información accesoria</span></div>
+    <div class="info-grid-inner">
+      <div><strong style="color:#1a6fa8;">🧩 TEA</strong><br><span style="color:var(--muted);">Pasos numerados, lenguaje literal + pictogramas ARASAAC</span></div>
+      <div><strong style="color:#3a7a1a;">🌟 DI</strong><br><span style="color:var(--muted);">Frases simples con emojis + pictogramas ARASAAC</span></div>
+      <div><strong style="color:#c85a00;">⚡ TDAH</strong><br><span style="color:var(--muted);">Verbos en negrita, checklist visual</span></div>
+      <div><strong style="color:#a07000;">📖 Dislexia</strong><br><span style="color:var(--muted);">Interlineado doble, fondo crema, frases simples</span></div>
+      <div><strong style="color:#6a1fa8;">👁️ Baja Visión</strong><br><span style="color:var(--muted);">Texto grande, fondo amarillo, frases muy cortas</span></div>
     </div>
   </div>
 
 </main>
 
-<!-- FOOTER -->
 <footer>
   Hecho con 🤲 por <a href="https://manosconmuchoquecontar.github.io/sobre-mi.html">Inma Merino Rus</a> · AL & Logopeda ·
-  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es">© CC BY-NC-SA 4.0</a>
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es">CC BY-NC-SA 4.0</a>
 </footer>
 
 <script>
-// ══════════════════════════════════════════════════
-//  API Groq (gratuito)
-// ══════════════════════════════════════════════════
-const GEMINI_API_KEY = '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';
+// ══════════════════════════════════════
+//  CONFIGURACIÓN
+// ══════════════════════════════════════
+const GEMINI_KEY = 'AIzaSyCx-h0JDf94a3_W9RXhSnC2TEzQAmwRERM';
+const GEMINI_MODEL = 'gemini-2.5-flash';
+const GROQ_KEY = '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';
 
-// ─── Estado ───────────────────────────────────────
+// ══════════════════════════════════════
+//  ESTADO
+// ══════════════════════════════════════
 let perfilActivo = 'TEA';
+let pdfPageImages = []; // base64 de cada página del PDF
 
-// ─── Tabs escribir / PDF ──────────────────────────
+// ══════════════════════════════════════
+//  CHIPS DE PERFIL
+// ══════════════════════════════════════
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    perfilActivo = chip.dataset.perfil;
+    actualizarBadge();
+  });
+});
+
+function actualizarBadge() {
+  const badge = document.getElementById('badge-perfil');
+  const data = {
+    TEA:        { label: '🧩 TEA',        cls: 'badge-TEA' },
+    DI:         { label: '🌟 DI',         cls: 'badge-DI' },
+    TDAH:       { label: '⚡ TDAH',       cls: 'badge-TDAH' },
+    DISLEXIA:   { label: '📖 Dislexia',   cls: 'badge-DISLEXIA' },
+    BAJAVISION: { label: '👁️ Baja Visión',cls: 'badge-BAJAVISION' },
+  };
+  badge.textContent = data[perfilActivo].label;
+  badge.className = `badge ${data[perfilActivo].cls}`;
+}
+
+// ══════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════
 document.getElementById('tab-escribir').addEventListener('click', () => {
   document.getElementById('tab-escribir').classList.add('active');
   document.getElementById('tab-pdf').classList.remove('active');
@@ -682,33 +326,31 @@ document.getElementById('tab-pdf').addEventListener('click', () => {
   document.getElementById('modo-escribir').style.display = 'none';
 });
 
-// ─── Elegir archivo PDF ───────────────────────────
-document.getElementById('btn-elegir-pdf').addEventListener('click', e => {
-  e.stopPropagation();
-  document.getElementById('pdf-input').click();
-});
-document.getElementById('pdf-drop').addEventListener('click', () => {
-  document.getElementById('pdf-input').click();
-});
-document.getElementById('pdf-input').addEventListener('change', e => {
-  if (e.target.files[0]) procesarPDF(e.target.files[0]);
-});
+// ══════════════════════════════════════
+//  PDF: DRAG & DROP + SELECCIÓN
+// ══════════════════════════════════════
+document.getElementById('btn-elegir-pdf').addEventListener('click', e => { e.stopPropagation(); document.getElementById('pdf-input').click(); });
+document.getElementById('pdf-drop').addEventListener('click', () => document.getElementById('pdf-input').click());
+document.getElementById('pdf-input').addEventListener('change', e => { if (e.target.files[0]) procesarPDF(e.target.files[0]); });
 
-// ─── Drag & drop ──────────────────────────────────
 const dropZone = document.getElementById('pdf-drop');
 dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('over'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('over'));
 dropZone.addEventListener('drop', e => {
-  e.preventDefault();
-  dropZone.classList.remove('over');
+  e.preventDefault(); dropZone.classList.remove('over');
   const file = e.dataTransfer.files[0];
   if (file?.type === 'application/pdf') procesarPDF(file);
 });
 
-// ─── Extraer texto del PDF con PDF.js ────────────
+// ══════════════════════════════════════
+//  PDF → IMÁGENES (una por página)
+// ══════════════════════════════════════
 async function procesarPDF(file) {
   const nombre = document.getElementById('pdf-nombre');
-  nombre.textContent = '⏳ Extrayendo texto...';
+  const preview = document.getElementById('pdf-pages-preview');
+  nombre.textContent = '⏳ Procesando PDF...';
+  preview.innerHTML = '';
+  pdfPageImages = [];
 
   try {
     const pdfjsLib = window['pdfjs-dist/build/pdf'];
@@ -717,73 +359,49 @@ async function procesarPDF(file) {
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
-    let textoCompleto = '';
     for (let i = 1; i <= pdf.numPages; i++) {
       const page = await pdf.getPage(i);
-      const content = await page.getTextContent();
-      const pageText = content.items.map(item => item.str).join(' ');
-      textoCompleto += pageText + '\n';
+      const viewport = page.getViewport({ scale: 2.0 }); // alta resolución
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+
+      const base64 = canvas.toDataURL('image/jpeg', 0.92).split(',')[1];
+      pdfPageImages.push(base64);
+
+      // Miniatura en preview
+      const thumb = document.createElement('img');
+      thumb.src = canvas.toDataURL('image/jpeg', 0.5);
+      thumb.className = 'pdf-page-thumb';
+      thumb.title = `Página ${i}`;
+      preview.appendChild(thumb);
     }
 
-    textoCompleto = textoCompleto.trim();
-    if (!textoCompleto) throw new Error('No se pudo extraer texto. El PDF puede ser una imagen escaneada.');
-
-    // Cambiar a pestaña de escritura y rellenar el textarea
-    document.getElementById('tab-escribir').click();
-    document.getElementById('texto-original').value = textoCompleto;
-    document.getElementById('char-count').textContent = `${textoCompleto.length} car.`;
-    nombre.textContent = `✅ ${file.name}`;
+    nombre.textContent = `✅ ${file.name} · ${pdf.numPages} página${pdf.numPages > 1 ? 's' : ''}`;
+    document.getElementById('char-count').textContent = `${pdf.numPages} pág.`;
 
   } catch (err) {
-    nombre.textContent = `❌ ${err.message}`;
+    nombre.textContent = `❌ Error: ${err.message}`;
   }
 }
 
-// ─── Selector de perfil ───────────────────────────
-document.querySelectorAll('.chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    perfilActivo = chip.dataset.perfil;
-    actualizarBadge();
-  });
+// ══════════════════════════════════════
+//  CONTADOR CARACTERES
+// ══════════════════════════════════════
+document.getElementById('texto-original').addEventListener('input', e => {
+  document.getElementById('char-count').textContent = `${e.target.value.length} car.`;
 });
 
-function actualizarBadge() {
-  const badge = document.getElementById('badge-perfil');
-  const data = {
-    TEA:          { label: '🧩 TEA',          cls: 'badge-TEA' },
-    DI:           { label: '🌟 DI',           cls: 'badge-DI' },
-    TDAH:         { label: '⚡ TDAH',         cls: 'badge-TDAH' },
-    DISLEXIA:     { label: '📖 Dislexia',     cls: 'badge-DISLEXIA' },
-    BAJAVISION:   { label: '👁️ Baja Visión',  cls: 'badge-BAJAVISION' },
-  };
-  badge.textContent = data[perfilActivo].label;
-  badge.className = `badge ${data[perfilActivo].cls}`;
-}
-
-// ─── Contador caracteres ──────────────────────────
-const textarea = document.getElementById('texto-original');
-textarea.addEventListener('input', () => {
-  document.getElementById('char-count').textContent = `${textarea.value.length} car.`;
-});
-
-// ─── Imprimir ─────────────────────────────────────
+// ══════════════════════════════════════
+//  IMPRIMIR
+// ══════════════════════════════════════
 document.getElementById('btn-print').addEventListener('click', () => window.print());
 
-// ─── ARASAAC ──────────────────────────────────────
-const VERBOS = [
-  'leer','lee','leed','escribir','escribe','escribid','recortar','recorta','recortad',
-  'dibujar','dibuja','dibujad','colorear','colorea','colead','unir','une','unid',
-  'rodear','rodea','rodead','marcar','marca','marcad','subrayar','subraya','subrayad',
-  'ordenar','ordena','ordenad','clasificar','clasifica','clasificad','contar','cuenta','contad',
-  'buscar','busca','buscad','pegar','pega','pegad','cortar','corta','cortad',
-  'completar','completa','completad','relacionar','relaciona','relacionad',
-  'observar','observa','observad','escuchar','escucha','escuchad','copiar','copia','copiad',
-  'pintar','pinta','pintad','trazar','traza','trazad','señalar','señala','señalad',
-  'nombrar','nombra','nombrad','repetir','repite','repetid','responder','responde','responded',
-  'calcular','calcula','calculad','recitar','recita','recitad','identificar','identifica'
-];
+// ══════════════════════════════════════
+//  ARASAAC
+// ══════════════════════════════════════
+const VERBOS = ['leer','lee','leed','escribir','escribe','escribid','recortar','recorta','dibujar','dibuja','colorear','colorea','unir','une','rodear','rodea','marcar','marca','subrayar','subraya','ordenar','ordena','clasificar','clasifica','contar','cuenta','buscar','busca','pegar','pega','cortar','corta','completar','completa','relacionar','relaciona','observar','observa','escuchar','escucha','copiar','copia','pintar','pinta','trazar','traza','señalar','señala','nombrar','nombra','repetir','repite','responder','responde','calcular','calcula','identificar','identifica','colorea','coloread'];
 
 function extraerVerbos(texto) {
   const encontrados = [];
@@ -811,377 +429,323 @@ async function mostrarPictogramas(texto) {
   const row = document.getElementById('picto-row');
   section.classList.remove('visible');
   row.innerHTML = '';
-
   if (perfilActivo !== 'TEA' && perfilActivo !== 'DI') return;
-
   const verbos = extraerVerbos(texto);
   if (!verbos.length) return;
-
   const resultados = await Promise.all(verbos.map(buscarPictograma));
   const validos = resultados.filter(Boolean);
   if (!validos.length) return;
-
   section.classList.add('visible');
   validos.forEach(({ url, palabra }) => {
     const card = document.createElement('div');
     card.className = 'picto-card';
-    card.innerHTML = `
-      <img src="${url}" alt="${palabra}" onerror="this.closest('.picto-card').remove()">
-      <span>${palabra}</span>`;
+    card.innerHTML = `<img src="${url}" alt="${palabra}" onerror="this.closest('.picto-card').remove()"><span>${palabra}</span>`;
     row.appendChild(card);
   });
 }
 
-// ─── Prompts pedagógicos ──────────────────────────
-function getPrompt(texto, perfil) {
-  const estilos = {
+// ══════════════════════════════════════
+//  PROMPTS PEDAGÓGICOS
+// ══════════════════════════════════════
+function getPrompt(perfil) {
+  const perfiles = {
     TEA: `Eres experta en accesibilidad cognitiva para alumnos con TEA. Trabajas en España.
-Adapta el siguiente documento escolar completo. Puede tener varios ejercicios numerados.
+Analiza esta ficha escolar completa (puede contener imágenes, dibujos, tablas y texto).
 
 ESTRUCTURA DE SALIDA para cada ejercicio:
-- Primera línea: número y flecha "→" + instrucción simplificada (verbo imperativo, máximo 6 palabras)
-- Siguientes líneas: el CONTENIDO ORIGINAL del ejercicio tal cual (palabras, frases, listas...)
+- Número del ejercicio en negrita
+- "→" + instrucción simplificada (verbo imperativo, máximo 6 palabras)
+- Contenido original del ejercicio (palabras, listas, frases) conservado tal cual
+- Si hay imágenes o dibujos, descríbelos brevemente entre corchetes: [Imagen: dibujo de un perro]
 - Línea en blanco entre ejercicios
 
 EJEMPLO:
-Texto original:
-"1. Observa las imágenes y completa con las letras que faltan.
-_upa  _esa  _erro"
-
-Texto adaptado:
-1. → Mira las imágenes.
-→ Escribe la letra que falta.
+**1.** → Mira los dibujos. → Escribe la letra que falta.
 _upa  _esa  _erro
+[Imagen: lupa, mesa, perro]
+
+**2.** → Une cada palabra con su dibujo.
+Gato · Casa · Sol
 
 REGLAS:
-• Mantén SIEMPRE el contenido original del ejercicio (palabras, listas, frases del texto).
-• Solo adapta la instrucción, no el contenido.
-• Sin metáforas. Lenguaje literal.
-• NO resuelvas los ejercicios.
-Devuelve ÚNICAMENTE los ejercicios adaptados, sin explicaciones.`,
+• NO resuelvas los ejercicios. Solo adapta instrucciones.
+• Lenguaje literal. Sin metáforas.
+• Conserva todos los datos, palabras y contenidos originales.
+Devuelve ÚNICAMENTE los ejercicios adaptados.`,
 
     DI: `Eres experta en accesibilidad cognitiva para alumnos con Discapacidad Intelectual. Trabajas en España.
-Adapta el siguiente documento escolar completo. Puede tener varios ejercicios numerados.
+Analiza esta ficha escolar completa (puede contener imágenes, dibujos y texto).
 
 ESTRUCTURA DE SALIDA para cada ejercicio:
-- Primera línea: número + emoji + instrucción simplificada (máximo 5 palabras)
-- Siguientes líneas: el CONTENIDO ORIGINAL del ejercicio tal cual
+- Número + emoji + instrucción simple (máximo 5 palabras)
+- Contenido original conservado tal cual
+- Si hay imágenes, descríbelas entre corchetes: [Imagen: dibujo de un gato]
 - Línea en blanco entre ejercicios
 
 EJEMPLO:
-Texto original:
-"1. Observa las imágenes y completa con las letras que faltan.
-_upa  _esa  _erro"
-
-Texto adaptado:
-1. 👀 Mira los dibujos.
-✏️ Escribe la letra.
+**1.** 👀 Mira los dibujos. ✏️ Escribe la letra.
 _upa  _esa  _erro
+[Imagen: lupa, mesa, perro]
+
+**2.** ➡️ Une la palabra con el dibujo.
+Gato · Casa · Sol
 
 REGLAS:
-• Mantén SIEMPRE el contenido original del ejercicio (palabras, listas, frases del texto).
-• Solo adapta la instrucción, no el contenido.
-• NUNCA des la respuesta.
+• NO des la respuesta. Solo simplifica instrucciones.
+• Conserva todos los datos originales.
 • Solo mayúscula al inicio de frase.
-Devuelve ÚNICAMENTE los ejercicios adaptados, sin explicaciones.`,
+Devuelve ÚNICAMENTE los ejercicios adaptados.`,
 
     TDAH: `Eres experta en accesibilidad cognitiva para alumnos con TDAH. Trabajas en España.
-Adapta el siguiente documento escolar completo. Puede tener varios ejercicios numerados.
+Analiza esta ficha escolar completa (puede contener imágenes, dibujos y texto).
 
 ESTRUCTURA DE SALIDA para cada ejercicio:
-- Primera línea: número + ✅ + verbo en **negrita** + instrucción corta (máximo 6 palabras)
-- Siguientes líneas: el CONTENIDO ORIGINAL del ejercicio tal cual
+- ✅ + verbo en **negrita** + instrucción corta (máximo 6 palabras)
+- Contenido original conservado tal cual
+- Si hay imágenes, descríbelas brevemente entre corchetes
 - Línea en blanco entre ejercicios
 
 EJEMPLO:
-Texto original:
-"1. Observa las imágenes y completa con las letras que faltan.
-_upa  _esa  _erro"
-
-Texto adaptado:
-1. ✅ **Escribe** la letra que falta.
+**1.** ✅ **Escribe** la letra que falta.
 _upa  _esa  _erro
 
+**2.** ✅ **Une** palabras con dibujos.
+Gato · Casa · Sol
+
 REGLAS:
-• Mantén SIEMPRE el contenido original del ejercicio (palabras, listas, frases del texto).
-• Solo adapta la instrucción, no el contenido.
 • Máximo 2 líneas de instrucción por ejercicio.
-• Solo mayúscula al inicio de frase.
-Devuelve ÚNICAMENTE los ejercicios adaptados, sin explicaciones.`,
+• Conserva todos los datos originales.
+Devuelve ÚNICAMENTE los ejercicios adaptados.`,
 
     DISLEXIA: `Eres experta en accesibilidad cognitiva para alumnos con Dislexia. Trabajas en España.
-Adapta el siguiente documento escolar completo. Puede tener varios ejercicios numerados.
+Analiza esta ficha escolar completa (puede contener imágenes, dibujos y texto).
 
 ESTRUCTURA DE SALIDA para cada ejercicio:
-- Primera línea: número + instrucción simplificada (máximo 8 palabras, palabras simples)
-- Siguientes líneas: el CONTENIDO ORIGINAL del ejercicio tal cual
+- Número + instrucción simplificada (máximo 8 palabras, palabras simples)
+- Contenido original conservado tal cual
+- Si hay imágenes, descríbelas brevemente entre corchetes
 - Línea en blanco entre ejercicios
 
 EJEMPLO:
-Texto original:
-"1. Observa las imágenes y completa con las letras que faltan.
-_upa  _esa  _erro"
-
-Texto adaptado:
-1. Mira los dibujos. Escribe la letra.
+**1.** Mira los dibujos. Escribe la letra que falta.
 _upa  _esa  _erro
 
+**2.** Une cada palabra con su dibujo.
+Gato · Casa · Sol
+
 REGLAS:
-• Mantén SIEMPRE el contenido original del ejercicio (palabras, listas, frases del texto).
-• Solo adapta la instrucción, no el contenido.
-• Palabras simples. Solo mayúscula al inicio.
-Devuelve ÚNICAMENTE los ejercicios adaptados, sin explicaciones.`,
+• Solo mayúscula al inicio. Palabras simples.
+• Conserva todos los datos originales.
+Devuelve ÚNICAMENTE los ejercicios adaptados.`,
 
     BAJAVISION: `Eres experta en accesibilidad visual para alumnos con baja visión. Trabajas en España.
-Adapta el siguiente documento escolar completo. Puede tener varios ejercicios numerados.
+Analiza esta ficha escolar completa (puede contener imágenes, dibujos y texto).
 
 ESTRUCTURA DE SALIDA para cada ejercicio:
-- Primera línea: número + instrucción muy corta (máximo 6 palabras)
-- Siguientes líneas: el CONTENIDO ORIGINAL del ejercicio tal cual
+- Número + instrucción muy corta (máximo 6 palabras)
+- Contenido original conservado tal cual en líneas separadas
+- Si hay imágenes, descríbelas entre corchetes
 - Línea en blanco entre ejercicios
 
 EJEMPLO:
-Texto original:
-"1. Observa las imágenes y completa con las letras que faltan.
-_upa  _esa  _erro"
-
-Texto adaptado:
-1. Mira los dibujos.
+**1.** Mira los dibujos.
 Escribe la letra.
-_upa  _esa  _erro
+_upa
+_esa
+_erro
+
+**2.** Une la palabra con el dibujo.
+Gato
+Casa
+Sol
 
 REGLAS:
-• Mantén SIEMPRE el contenido original del ejercicio (palabras, listas, frases del texto).
-• Solo adapta la instrucción, no el contenido.
-• Sin abreviaturas ni símbolos. Solo mayúscula al inicio.
-Devuelve ÚNICAMENTE los ejercicios adaptados, sin explicaciones.`
+• Solo mayúscula al inicio. Sin abreviaturas.
+• Conserva todos los datos originales.
+Devuelve ÚNICAMENTE los ejercicios adaptados.`
   };
-
-  return `${estilos[perfil]}\n\nDOCUMENTO ORIGINAL:\n"${texto}"`;
+  return perfiles[perfil];
 }
 
-// ─── Groq API ─────────────────────────────────────
-async function adaptarConClaude(texto, perfil) {
+// ══════════════════════════════════════
+//  LLAMADA A GEMINI (con o sin visión)
+// ══════════════════════════════════════
+async function llamarGemini(prompt, imagenesBase64 = []) {
+  const parts = [];
+
+  // Añadir imágenes si las hay
+  imagenesBase64.forEach((b64, i) => {
+    parts.push({ text: `--- Página ${i + 1} del documento ---` });
+    parts.push({ inline_data: { mime_type: 'image/jpeg', data: b64 } });
+  });
+
+  parts.push({ text: prompt });
+
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_KEY}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts }],
+        generationConfig: { maxOutputTokens: 3000, temperature: 0.1 }
+      })
+    }
+  );
+
+  if (!res.ok) {
+    const e = await res.json().catch(() => ({}));
+    throw new Error(e.error?.message || `Error Gemini ${res.status}`);
+  }
+  const d = await res.json();
+  return d.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
+}
+
+// Fallback a Groq si Gemini falla (solo texto)
+async function llamarGroq(prompt) {
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${GEMINI_API_KEY}`
-    },
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_KEY}` },
     body: JSON.stringify({
       model: 'llama-3.3-70b-versatile',
       max_tokens: 2000,
       temperature: 0.1,
-      messages: [{ role: 'user', content: getPrompt(texto, perfil) }]
+      messages: [{ role: 'user', content: prompt }]
     })
   });
-
-  if (!res.ok) {
-    const e = await res.json().catch(() => ({}));
-    throw new Error(e.error?.message || `Error ${res.status}`);
-  }
+  if (!res.ok) throw new Error(`Error Groq ${res.status}`);
   const d = await res.json();
   return d.choices?.[0]?.message?.content?.trim() || '';
 }
 
-// ─── Renderizar salida ────────────────────────────
-let textoAdaptadoGlobal = '';
-
+// ══════════════════════════════════════
+//  RENDERIZAR SALIDA
+// ══════════════════════════════════════
 function renderizar(texto, perfil) {
-  textoAdaptadoGlobal = texto;
   const el = document.getElementById('output-content');
-
-  // Parsear ejercicios: bloques separados por línea en blanco
   const bloques = texto.split(/\n{2,}/).filter(b => b.trim());
 
   let html = '';
+  const claseWrap = `out-${perfil} ejercicios-wrap`;
 
-  if (perfil === 'TDAH') {
-    bloques.forEach(bloque => {
-      const lineas = bloque.split('\n').filter(l => l.trim());
-      html += `<div class="ejercicio-bloque">`;
-      lineas.forEach(linea => {
-        const proc = linea.replace(/\*\*(.*?)\*\*/g, '<strong style="color:#c85a00;background:#fff0e0;padding:1px 5px;border-radius:4px;">$1</strong>');
+  bloques.forEach(bloque => {
+    const lineas = bloque.split('\n').filter(l => l.trim());
+    html += `<div class="ejercicio-bloque">`;
+
+    lineas.forEach(linea => {
+      // Negrita markdown **texto**
+      const proc = linea
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong style="color:#c85a00;background:#fff0e0;padding:1px 4px;border-radius:3px;">$1</strong>');
+
+      if (/^\*\*\d+/.test(linea) || /^###/.test(linea)) {
+        html += `<p class="ej-titulo">${proc}</p>`;
+      } else if (linea.trim().startsWith('→')) {
+        html += `<div class="step-row"><span>→</span><span>${proc.replace(/^→\s*/,'')}</span></div>`;
+      } else if (linea.trim().startsWith('✅')) {
         html += `<p class="ej-linea">${proc}</p>`;
-      });
-      html += `<div class="espacio-respuesta"></div></div>`;
-    });
-    el.innerHTML = `<div class="out-TDAH ejercicios-wrap">${html}</div>`;
-
-  } else if (perfil === 'TEA') {
-    bloques.forEach(bloque => {
-      const lineas = bloque.split('\n').filter(l => l.trim());
-      html += `<div class="ejercicio-bloque">`;
-      let num = 0;
-      lineas.forEach(linea => {
-        if (/^\d+\./.test(linea.trim())) {
-          html += `<p class="ej-titulo">${linea}</p>`;
-        } else if (linea.trim().startsWith('→')) {
-          num++;
-          const contenido = linea.replace(/^→\s*/, '');
-          html += `<div class="step-row"><span class="step-num">${num}</span><span>${contenido}</span></div>`;
-        } else {
-          html += `<p class="ej-linea">${linea}</p>`;
-        }
-      });
-      html += `<div class="espacio-respuesta"></div></div>`;
-    });
-    el.innerHTML = `<div class="out-TEA ejercicios-wrap">${html}</div>`;
-
-  } else if (perfil === 'DI') {
-    bloques.forEach(bloque => {
-      const lineas = bloque.split('\n').filter(l => l.trim());
-      html += `<div class="ejercicio-bloque">`;
-      lineas.forEach(linea => {
-        if (/^\d+\./.test(linea.trim())) {
-          html += `<p class="ej-titulo">${linea}</p>`;
-        } else {
-          html += `<p class="ej-linea">${linea}</p>`;
-        }
-      });
-      html += `<div class="espacio-respuesta"></div></div>`;
-    });
-    el.innerHTML = `<div class="out-DI ejercicios-wrap">${html}</div>`;
-
-  } else if (perfil === 'BAJAVISION') {
-    bloques.forEach(bloque => {
-      const lineas = bloque.split('\n').filter(l => l.trim());
-      html += `<div class="ejercicio-bloque">`;
-      lineas.forEach(linea => {
-        html += `<p class="ej-linea">${linea}</p>`;
-      });
-      html += `<div class="espacio-respuesta"></div></div>`;
-    });
-    el.innerHTML = `<div class="out-BAJAVISION ejercicios-wrap">${html}</div>`;
-
-  } else { // DISLEXIA
-    bloques.forEach(bloque => {
-      const lineas = bloque.split('\n').filter(l => l.trim());
-      html += `<div class="ejercicio-bloque">`;
-      lineas.forEach(linea => {
-        html += `<p class="ej-linea">${linea}</p>`;
-      });
-      html += `<div class="espacio-respuesta"></div></div>`;
-    });
-    el.innerHTML = `<div class="out-DISLEXIA ejercicios-wrap">${html}</div>`;
-  }
-
-  // Mostrar botón ficha
-  document.getElementById('btn-ficha').style.display = 'flex';
-
-  const t = document.getElementById('salida-title');
-  t.classList.remove('muted');
-  t.style.color = 'var(--teal-dark)';
-}
-
-// ─── Abrir ficha imprimible ───────────────────────
-document.getElementById('btn-ficha').addEventListener('click', () => {
-  const perfilNombres = {
-    TEA: 'TEA', DI: 'Discapacidad Intelectual',
-    TDAH: 'TDAH', DISLEXIA: 'Dislexia', BAJAVISION: 'Baja Visión'
-  };
-
-  // Obtener pictogramas del panel actual
-  const pictoCards = document.querySelectorAll('#picto-row .picto-card');
-  let pictosHTML = '';
-  if (pictoCards.length > 0) {
-    pictosHTML = `<div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:24px;">`;
-    pictoCards.forEach(card => {
-      const img = card.querySelector('img');
-      const label = card.querySelector('span');
-      if (img && label) {
-        pictosHTML += `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:#e8f5f3;border-radius:10px;padding:8px 10px;">
-          <img src="${img.src}" style="width:60px;height:60px;object-fit:contain;">
-          <span style="font-size:0.65rem;font-weight:700;color:#1a7a6e;text-transform:uppercase;">${label.textContent}</span>
-        </div>`;
+      } else if (/^\[Imagen:/i.test(linea.trim())) {
+        html += `<p style="color:var(--teal-dark);font-style:italic;font-size:.85rem;margin:.3rem 0;">${proc}</p>`;
+      } else {
+        html += `<p class="ej-linea">${proc}</p>`;
       }
     });
-    pictosHTML += `</div>`;
-  }
 
+    html += `<div class="espacio-respuesta"></div></div>`;
+  });
+
+  el.innerHTML = `<div class="${claseWrap}">${html}</div>`;
+  document.getElementById('btn-ficha').style.display = 'flex';
+  document.getElementById('salida-title').classList.remove('muted');
+  document.getElementById('salida-title').style.color = 'var(--teal-dark)';
+}
+
+// ══════════════════════════════════════
+//  FICHA IMPRIMIBLE
+// ══════════════════════════════════════
+document.getElementById('btn-ficha').addEventListener('click', () => {
+  const perfilNombres = { TEA:'TEA', DI:'Discapacidad Intelectual', TDAH:'TDAH', DISLEXIA:'Dislexia', BAJAVISION:'Baja Visión' };
   const estilosPerfil = {
     TEA:        'font-size:1rem;line-height:2;',
     DI:         'font-size:1.1rem;line-height:2.2;',
     TDAH:       'font-size:1rem;line-height:1.9;',
     DISLEXIA:   'font-size:1rem;line-height:2.3;letter-spacing:.015em;background:#fdf8f0;padding:1rem;border-radius:8px;',
-    BAJAVISION: 'font-size:1.3rem;line-height:2.2;font-weight:700;background:#fffde7;padding:1rem;border-radius:8px;'
+    BAJAVISION: 'font-size:1.35rem;line-height:2.2;font-weight:700;background:#fffde7;padding:1rem;border-radius:8px;'
   };
 
-  const contenidoAdaptado = document.getElementById('output-content').innerHTML;
+  let pictosHTML = '';
+  document.querySelectorAll('#picto-row .picto-card').forEach(card => {
+    const img = card.querySelector('img');
+    const label = card.querySelector('span');
+    if (img && label) {
+      pictosHTML += `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:#e8f5f3;border-radius:10px;padding:8px 10px;">
+        <img src="${img.src}" style="width:60px;height:60px;object-fit:contain;">
+        <span style="font-size:.65rem;font-weight:700;color:#1a7a6e;text-transform:uppercase;">${label.textContent}</span>
+      </div>`;
+    }
+  });
+  if (pictosHTML) pictosHTML = `<div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;">${pictosHTML}</div>`;
 
-  const ventana = window.open('', '_blank');
-  ventana.document.write(`<!DOCTYPE html>
-<html lang="es">
-<head>
+  const contenido = document.getElementById('output-content').innerHTML;
+
+  const v = window.open('', '_blank');
+  v.document.write(`<!DOCTYPE html>
+<html lang="es"><head>
 <meta charset="UTF-8">
 <title>Ficha adaptada – ${perfilNombres[perfilActivo]}</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Nunito', sans-serif; padding: 2cm; color: #1c2127; background: white; }
-  .cabecera { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #2a9d8f; }
-  .cabecera-titulo { font-size: 1.1rem; font-weight: 700; color: #1a7a6e; }
-  .cabecera-sub { font-size: 0.8rem; color: #6b7280; margin-top: 2px; }
-  .badge { display:inline-block; background:#e8f5f3; color:#1a7a6e; font-size:0.75rem; font-weight:700; padding:3px 10px; border-radius:20px; text-transform:uppercase; }
-  .campo { margin-bottom: 16px; }
-  .campo label { font-size: 0.8rem; font-weight: 700; color: #6b7280; display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .05em; }
-  .linea-campo { border-bottom: 1.5px solid #ccc; height: 28px; width: 60%; display: inline-block; }
-  .contenido { margin-top: 20px; ${estilosPerfil[perfilActivo]} }
-  .ejercicio-bloque { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #e2e8e6; }
-  .ej-titulo { font-weight: 700; color: #1a7a6e; margin-bottom: 6px; }
-  .ej-linea { margin-bottom: 4px; }
-  .step-row { display:flex; align-items:flex-start; gap:8px; margin-bottom:6px; }
-  .step-num { display:inline-flex; align-items:center; justify-content:center; min-width:24px; height:24px; background:#2a9d8f; color:white; border-radius:50%; font-size:0.75rem; font-weight:700; flex-shrink:0; }
-  .espacio-respuesta { margin-top: 10px; border-bottom: 1px dashed #ccc; height: 36px; }
-  .logo { font-size: 0.78rem; color: #9ca3af; text-align: center; margin-top: 32px; padding-top: 12px; border-top: 1px solid #e2e8e6; }
-  @media print {
-    body { padding: 1.5cm; }
-    .no-print { display: none; }
-    .ejercicio-bloque { page-break-inside: avoid; }
-  }
-</style>
-</head>
-<body>
-  <div class="cabecera">
-    <div>
-      <div class="cabecera-titulo">🤲 Manos con Mucho que Contar</div>
-      <div class="cabecera-sub">Ficha adaptada · manosconmuchoquecontar.github.io</div>
-    </div>
-    <span class="badge">${perfilNombres[perfilActivo]}</span>
-  </div>
-
-  <div style="display:flex;gap:32px;margin-bottom:20px;">
-    <div class="campo"><label>Nombre</label><span class="linea-campo"></span></div>
-    <div class="campo"><label>Fecha</label><span class="linea-campo" style="width:120px;"></span></div>
-  </div>
-
-  ${pictosHTML}
-
-  <div class="contenido">${contenidoAdaptado}</div>
-
-  <div class="logo">Generado con AdaptaTexto · manosconmuchoquecontar.github.io/herramientas/adaptador.html</div>
-
-  <div class="no-print" style="position:fixed;bottom:20px;right:20px;">
-    <button onclick="window.print()" style="background:#2a9d8f;color:white;border:none;border-radius:10px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;">🖨️ Imprimir / Guardar PDF</button>
-  </div>
-</body>
-</html>`);
-  ventana.document.close();
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Nunito',sans-serif; padding:1.8cm; color:#1c2127; background:white; }
+.cabecera { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; padding-bottom:14px; border-bottom:2px solid #2a9d8f; }
+.cabecera-titulo { font-size:1rem; font-weight:700; color:#1a7a6e; }
+.cabecera-sub { font-size:.75rem; color:#6b7280; margin-top:2px; }
+.badge { display:inline-block; background:#e8f5f3; color:#1a7a6e; font-size:.72rem; font-weight:700; padding:3px 10px; border-radius:20px; text-transform:uppercase; }
+.campos { display:flex; gap:24px; margin-bottom:18px; }
+.campo label { font-size:.72rem; font-weight:700; color:#6b7280; display:block; margin-bottom:3px; text-transform:uppercase; }
+.linea { border-bottom:1.5px solid #ccc; height:26px; display:inline-block; }
+.contenido { margin-top:16px; ${estilosPerfil[perfilActivo]} }
+.ejercicio-bloque { margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid #e2e8e6; page-break-inside:avoid; }
+.ej-titulo { font-weight:700; color:#1a7a6e; margin-bottom:5px; }
+.ej-linea { margin-bottom:3px; }
+.step-row { display:flex; align-items:flex-start; gap:8px; margin-bottom:5px; }
+.espacio-respuesta { margin-top:8px; border-bottom:1px dashed #ccc; height:32px; }
+.logo { font-size:.72rem; color:#9ca3af; text-align:center; margin-top:28px; padding-top:10px; border-top:1px solid #e2e8e6; }
+.btn-imprimir { position:fixed; bottom:20px; right:20px; background:#2a9d8f; color:white; border:none; border-radius:10px; padding:12px 24px; font-family:'Nunito',sans-serif; font-size:1rem; font-weight:700; cursor:pointer; box-shadow:0 4px 15px rgba(42,157,143,.4); }
+@media print { .btn-imprimir { display:none; } body { padding:1cm; } }
+</style></head><body>
+<div class="cabecera">
+  <div><div class="cabecera-titulo">🤲 Manos con Mucho que Contar</div><div class="cabecera-sub">Ficha adaptada · manosconmuchoquecontar.github.io</div></div>
+  <span class="badge">${perfilNombres[perfilActivo]}</span>
+</div>
+<div class="campos">
+  <div class="campo"><label>Nombre</label><span class="linea" style="width:220px;"></span></div>
+  <div class="campo"><label>Fecha</label><span class="linea" style="width:100px;"></span></div>
+</div>
+${pictosHTML}
+<div class="contenido">${contenido}</div>
+<div class="logo">Generado con AdaptaTexto · manosconmuchoquecontar.github.io/herramientas/adaptador.html</div>
+<button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+</body></html>`);
+  v.document.close();
 });
 
-// ─── Botón principal ──────────────────────────────
+// ══════════════════════════════════════
+//  BOTÓN PRINCIPAL
+// ══════════════════════════════════════
 document.getElementById('btn-adaptar').addEventListener('click', async () => {
-  const texto = textarea.value.trim();
+  const modoTexto = document.getElementById('tab-escribir').classList.contains('active');
+  const texto = document.getElementById('texto-original').value.trim();
 
-  if (!texto) {
-    textarea.focus();
-    textarea.style.outline = '2px solid #ef4444';
-    setTimeout(() => { textarea.style.outline = 'none'; }, 1500);
+  // Validar
+  if (modoTexto && !texto) {
+    const ta = document.getElementById('texto-original');
+    ta.focus(); ta.style.outline = '2px solid #ef4444';
+    setTimeout(() => ta.style.outline = 'none', 1500);
     return;
   }
-
-  if (!GEMINI_API_KEY) {
-    alert('API key no configurada.');
+  if (!modoTexto && pdfPageImages.length === 0) {
+    document.getElementById('pdf-nombre').textContent = '⚠️ Primero sube un PDF';
     return;
   }
 
@@ -1189,34 +753,45 @@ document.getElementById('btn-adaptar').addEventListener('click', async () => {
   const output = document.getElementById('output-content');
 
   btn.disabled = true;
-  btn.innerHTML = `<span class="spinner"></span> Adaptando con IA…`;
+  btn.innerHTML = `<span class="spinner"></span> Analizando con IA…`;
   document.getElementById('btn-ficha').style.display = 'none';
-
-  output.innerHTML = `
-    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:160px;gap:10px;">
-      <div style="width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .65s linear infinite;"></div>
-      <span style="font-size:0.82rem;color:var(--muted);">Generando adaptación…</span>
-    </div>`;
-
   document.getElementById('picto-section').classList.remove('visible');
   document.getElementById('picto-row').innerHTML = '';
 
+  output.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;gap:12px;">
+    <div style="width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .65s linear infinite;"></div>
+    <span style="font-size:.85rem;color:var(--muted);">${modoTexto ? 'Adaptando texto…' : 'Analizando PDF con visión IA…'}</span>
+  </div>`;
+
   try {
-    const [textoAdaptado] = await Promise.all([
-      adaptarConClaude(texto, perfilActivo),
-      mostrarPictogramas(texto)
-    ]);
+    const prompt = getPrompt(perfilActivo);
+    let textoAdaptado = '';
+
+    if (modoTexto) {
+      // Modo texto: Gemini sin visión (o Groq como fallback)
+      const promptCompleto = prompt + `\n\nDOCUMENTO ORIGINAL:\n"${texto}"`;
+      try {
+        textoAdaptado = await llamarGemini(promptCompleto);
+      } catch {
+        textoAdaptado = await llamarGroq(promptCompleto);
+      }
+      mostrarPictogramas(texto);
+    } else {
+      // Modo PDF: Gemini Vision con las imágenes de las páginas
+      const promptCompleto = prompt + '\n\nAnaliza el documento completo que aparece en las imágenes adjuntas y adapta todos los ejercicios que encuentres.';
+      textoAdaptado = await llamarGemini(promptCompleto, pdfPageImages);
+      mostrarPictogramas(textoAdaptado);
+    }
 
     renderizar(textoAdaptado, perfilActivo);
     actualizarBadge();
 
   } catch (err) {
-    output.innerHTML = `
-      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:140px;gap:8px;text-align:center;">
-        <span style="font-size:1.8rem;">⚠️</span>
-        <strong style="color:#dc2626;font-size:0.88rem;">Error al conectar con la API</strong>
-        <span style="font-size:0.78rem;color:var(--muted);">${err.message}</span>
-      </div>`;
+    output.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:140px;gap:8px;text-align:center;">
+      <span style="font-size:1.8rem;">⚠️</span>
+      <strong style="color:#dc2626;font-size:.88rem;">Error al conectar con la IA</strong>
+      <span style="font-size:.78rem;color:var(--muted);">${err.message}</span>
+    </div>`;
   } finally {
     btn.disabled = false;
     btn.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> Adaptar enunciado`;
@@ -1224,7 +799,7 @@ document.getElementById('btn-adaptar').addEventListener('click', async () => {
 });
 
 // Ctrl+Enter
-textarea.addEventListener('keydown', e => {
+document.getElementById('texto-original').addEventListener('keydown', e => {
   if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') document.getElementById('btn-adaptar').click();
 });
 </script>

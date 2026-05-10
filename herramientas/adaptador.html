@@ -619,25 +619,64 @@ async function llamarGroq(prompt) {
 }
 
 // ══════════════════════════════════════
-//  RENDERIZAR SALIDA
+//  ARASAAC INLINE (para [Imagen: ...])
 // ══════════════════════════════════════
-function renderizar(texto, perfil) {
+async function buscarPictogramaInline(palabra) {
+  try {
+    const r = await fetch(`https://api.arasaac.org/api/pictograms/es/search/${encodeURIComponent(palabra.trim())}`);
+    if (!r.ok) return null;
+    const d = await r.json();
+    if (!d?.length) return null;
+    const id = d[0]._id;
+    return { url: `https://static.arasaac.org/pictograms/${id}/${id}_300.png`, palabra: palabra.trim() };
+  } catch { return null; }
+}
+
+async function reemplazarImagenesConPictos(html) {
+  // Busca todos los [Imagen: word1, word2, ...] en el HTML
+  const regex = /\[Imagen:\s*([^\]]+)\]/gi;
+  const matches = [...html.matchAll(regex)];
+  if (!matches.length) return html;
+
+  for (const match of matches) {
+    const palabras = match[1].split(',').map(p => p.trim()).filter(Boolean);
+    const resultados = await Promise.all(palabras.map(buscarPictogramaInline));
+    const validos = resultados.filter(Boolean);
+
+    let pictoHTML = '';
+    if (validos.length > 0) {
+      pictoHTML = `<div style="display:flex;flex-wrap:wrap;gap:10px;margin:.5rem 0;">`;
+      validos.forEach(({ url, palabra }) => {
+        pictoHTML += `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:#e8f5f3;border:1.5px solid #c3e6e0;border-radius:10px;padding:6px 8px;">
+          <img src="${url}" alt="${palabra}" style="width:60px;height:60px;object-fit:contain;" onerror="this.closest('div').remove()">
+          <span style="font-size:.65rem;font-weight:700;color:#1a7a6e;text-transform:uppercase;">${palabra}</span>
+        </div>`;
+      });
+      pictoHTML += `</div>`;
+    } else {
+      // Si no hay pictos, dejar el texto en cursiva
+      pictoHTML = `<p style="color:var(--teal-dark);font-style:italic;font-size:.85rem;margin:.3rem 0;">${match[0]}</p>`;
+    }
+
+    html = html.replace(match[0], pictoHTML);
+  }
+  return html;
+}
+async function renderizar(texto, perfil) {
   const el = document.getElementById('output-content');
   const bloques = texto.split(/\n{2,}/).filter(b => b.trim());
-
   let html = '';
   const claseWrap = `out-${perfil} ejercicios-wrap`;
 
   bloques.forEach(bloque => {
     const lineas = bloque.split('\n').filter(l => l.trim());
     html += `<div class="ejercicio-bloque">`;
-
     lineas.forEach(linea => {
-      // Negrita markdown **texto**
-      const proc = linea
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*\*(.*?)\*\*/g, '<strong style="color:#c85a00;background:#fff0e0;padding:1px 4px;border-radius:3px;">$1</strong>');
-
+      const proc = linea.replace(/\*\*(.*?)\*\*/g, (_, t) =>
+        perfil === 'TDAH'
+          ? `<strong style="color:#c85a00;background:#fff0e0;padding:1px 4px;border-radius:3px;">${t}</strong>`
+          : `<strong>${t}</strong>`
+      );
       if (/^\*\*\d+/.test(linea) || /^###/.test(linea)) {
         html += `<p class="ej-titulo">${proc}</p>`;
       } else if (linea.trim().startsWith('→')) {
@@ -645,16 +684,37 @@ function renderizar(texto, perfil) {
       } else if (linea.trim().startsWith('✅')) {
         html += `<p class="ej-linea">${proc}</p>`;
       } else if (/^\[Imagen:/i.test(linea.trim())) {
-        html += `<p style="color:var(--teal-dark);font-style:italic;font-size:.85rem;margin:.3rem 0;">${proc}</p>`;
+        html += `<div class="picto-placeholder" data-palabras="${linea.replace(/^\[Imagen:\s*/i,'').replace(/\]$/,'').trim()}"></div>`;
       } else {
         html += `<p class="ej-linea">${proc}</p>`;
       }
     });
-
     html += `<div class="espacio-respuesta"></div></div>`;
   });
 
   el.innerHTML = `<div class="${claseWrap}">${html}</div>`;
+
+  // Reemplazar placeholders con pictogramas ARASAAC
+  const placeholders = el.querySelectorAll('.picto-placeholder');
+  for (const ph of placeholders) {
+    const palabras = ph.dataset.palabras.split(',').map(p => p.trim()).filter(Boolean);
+    const resultados = await Promise.all(palabras.map(buscarPictogramaInline));
+    const validos = resultados.filter(Boolean);
+    if (validos.length > 0) {
+      let pictoHTML = `<div style="display:flex;flex-wrap:wrap;gap:10px;margin:.5rem 0 .75rem;">`;
+      validos.forEach(({ url, palabra }) => {
+        pictoHTML += `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:#e8f5f3;border:1.5px solid #c3e6e0;border-radius:10px;padding:6px 8px;">
+          <img src="${url}" alt="${palabra}" style="width:64px;height:64px;object-fit:contain;" onerror="this.closest('div').remove()">
+          <span style="font-size:.65rem;font-weight:700;color:#1a7a6e;text-transform:uppercase;">${palabra}</span>
+        </div>`;
+      });
+      pictoHTML += `</div>`;
+      ph.outerHTML = pictoHTML;
+    } else {
+      ph.outerHTML = `<p style="color:var(--teal-dark);font-style:italic;font-size:.82rem;margin:.3rem 0;">[${ph.dataset.palabras}]</p>`;
+    }
+  }
+
   document.getElementById('btn-ficha').style.display = 'flex';
   document.getElementById('salida-title').classList.remove('muted');
   document.getElementById('salida-title').style.color = 'var(--teal-dark)';

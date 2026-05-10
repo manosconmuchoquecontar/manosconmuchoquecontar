@@ -140,6 +140,10 @@ textarea::placeholder{color:#bfc8c5}
 .tabla-ej td{padding:7px 10px;border:1.5px solid #ddd;vertical-align:top}
 .tdah-check-final{background:#fff8e8;border:1.5px solid #f0d98a;border-radius:10px;padding:.75rem 1rem;margin-top:.75rem;display:flex;align-items:center;gap:.75rem;font-weight:700;color:#8a6800}
 
+
+.svg-ej{display:block;margin:.5rem 0;max-width:100%}
+.p-BAJAVISION .svg-ej text{font-size:18px!important}
+
 footer{text-align:center;padding:1.5rem;font-size:.78rem;color:var(--muted);border-top:1px solid var(--border);background:#fff}
 footer a{color:var(--teal);text-decoration:none}
 @media print{nav,.hero,.config-panel,.btn-primary,.btn-download,.btn-icon,footer,#panel-salida .panel-header{display:none!important}body{background:#fff}}
@@ -310,131 +314,113 @@ async function insertarPictogramas(container){
 }
 
 function getPrompt(desc,perfil,curso,asignatura){
-  const componentesHTML=`
-COMPONENTES HTML DISPONIBLES (usa exactamente estas clases):
+const componentesHTML=`
+COMPONENTES HTML Y SVG DISPONIBLES (usa exactamente estas clases):
 
-Linea para escribir (una por respuesta):
-<span class="linea-resp"></span>
+1. Linea respuesta: <span class="linea-resp"></span>
+2. Caja libre: <div class="caja-resp"></div>
+3. Opciones rodear: <div class="opciones"><span class="opcion">A</span><span class="opcion">B</span><span class="opcion">C</span></div>
+4. Checkbox: <div class="checkbox-row"><input type="checkbox"><span>Texto completo del item aqui</span></div>
+5. Completar frase: <p class="completar-frase">Frase con <span class="hueco"></span> para completar.</p>
+6. Palabras desordenadas: <div class="ordenar-palabras"><span class="palabra-recuadro">pal1</span><span class="palabra-recuadro">pal2</span></div>
+7. Clasificar: <div class="clasificar-wrap"><div class="clasificar-col"><div class="clasificar-header">Cat A</div><div class="clasificar-body"><span class="linea-resp"></span><span class="linea-resp"></span></div></div><div class="clasificar-col"><div class="clasificar-header">Cat B</div><div class="clasificar-body"><span class="linea-resp"></span><span class="linea-resp"></span></div></div></div>
+8. Tabla: <table class="tabla-ej"><tr><th>Col1</th><th>Col2</th></tr><tr><td>dato</td><td><span class="linea-resp"></span></td></tr></table>
+9. Unir columnas: <div class="unir-wrap"><div class="unir-col"><div class="unir-item">Izq 1</div><div class="unir-item">Izq 2</div></div><div class="unir-col"><div class="unir-item">Der 1</div><div class="unir-item">Der 2</div></div></div>
+10. Nota ayuda: <p class="nota">Texto de ayuda</p>
+11. Ejemplo DI (OBLIGATORIO en perfil DI): <div class="ejemplo-bloque">caso diferente al ejercicio que explica el formato</div>
 
-Caja de texto libre grande:
-<div class="caja-resp"></div>
+SVG ESPECIALES - usa cuando el tema lo requiera. Dibuja SVG COMPLETO con los valores reales:
 
-Opciones para rodear (visual, como recuadros):
-<div class="opciones"><span class="opcion">opción A</span><span class="opcion">opción B</span><span class="opcion">opción C</span></div>
+RECTA NUMERICA (ajusta numeros y posiciones x segun rango del ejercicio):
+<svg class="svg-ej" viewBox="0 0 520 85" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:520px;margin:.5rem 0;display:block">
+  <line x1="20" y1="42" x2="495" y2="42" stroke="#2a9d8f" stroke-width="2.5"/>
+  <polygon points="495,36 510,42 495,48" fill="#2a9d8f"/>
+  <line x1="20" y1="34" x2="20" y2="50" stroke="#1a7a6e" stroke-width="2"/>
+  <text x="20" y="65" text-anchor="middle" font-size="13" fill="#1c2127" font-family="Nunito,sans-serif">0</text>
+  <line x1="66" y1="34" x2="66" y2="50" stroke="#1a7a6e" stroke-width="2"/>
+  <text x="66" y="65" text-anchor="middle" font-size="13" fill="#1c2127" font-family="Nunito,sans-serif">1</text>
+  <line x1="112" y1="34" x2="112" y2="50" stroke="#1a7a6e" stroke-width="2"/>
+  <text x="112" y="65" text-anchor="middle" font-size="13" fill="#1c2127" font-family="Nunito,sans-serif">2</text>
+  <line x1="158" y1="34" x2="158" y2="50" stroke="#2a9d8f" stroke-width="3"/>
+  <text x="158" y="65" text-anchor="middle" font-size="14" font-weight="bold" fill="#2a9d8f" font-family="Nunito,sans-serif">?</text>
+  <line x1="204" y1="34" x2="204" y2="50" stroke="#1a7a6e" stroke-width="2"/>
+  <text x="204" y="65" text-anchor="middle" font-size="13" fill="#1c2127" font-family="Nunito,sans-serif">4</text>
+  <line x1="250" y1="34" x2="250" y2="50" stroke="#1a7a6e" stroke-width="2"/>
+  <text x="250" y="65" text-anchor="middle" font-size="13" fill="#1c2127" font-family="Nunito,sans-serif">5</text>
+</svg>
 
-Checkboxes para marcar:
-<div class="checkbox-row"><input type="checkbox"><span>Texto del item</span></div>
+RELOJ (ajusta agujas a la hora del ejercicio):
+<svg class="svg-ej" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" style="width:140px;height:140px;margin:.5rem 0">
+  <circle cx="80" cy="80" r="72" fill="white" stroke="#2a9d8f" stroke-width="3"/>
+  <circle cx="80" cy="80" r="68" fill="white" stroke="#e8f5f3" stroke-width="1"/>
+  <text x="80" y="24" text-anchor="middle" font-size="14" font-family="Nunito,sans-serif" fill="#1c2127" font-weight="bold">12</text>
+  <text x="80" y="148" text-anchor="middle" font-size="14" font-family="Nunito,sans-serif" fill="#1c2127" font-weight="bold">6</text>
+  <text x="138" y="85" text-anchor="middle" font-size="14" font-family="Nunito,sans-serif" fill="#1c2127" font-weight="bold">3</text>
+  <text x="22" y="85" text-anchor="middle" font-size="14" font-family="Nunito,sans-serif" fill="#1c2127" font-weight="bold">9</text>
+  <line x1="80" y1="80" x2="80" y2="35" stroke="#1c2127" stroke-width="5" stroke-linecap="round"/>
+  <line x1="80" y1="80" x2="115" y2="80" stroke="#2a9d8f" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="80" cy="80" r="5" fill="#1c2127"/>
+</svg>
 
-Completar frases con huecos inline:
-<p class="completar-frase">El <span class="hueco"></span> sale por el este.</p>
+FIGURA GEOMETRICA:
+<svg class="svg-ej" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" style="width:180px;height:140px;margin:.5rem 0">
+  <rect x="40" y="30" width="120" height="100" fill="#e8f5f3" stroke="#2a9d8f" stroke-width="2.5" rx="2"/>
+  <text x="100" y="90" text-anchor="middle" font-size="13" fill="#1a7a6e" font-family="Nunito,sans-serif">Rectangulo</text>
+</svg>
 
-Palabras en recuadros para ordenar (desordenadas, que el alumno ordene abajo):
-<div class="ordenar-palabras"><span class="palabra-recuadro">palabra1</span><span class="palabra-recuadro">palabra2</span></div>
-
-Columnas para clasificar con lineas dentro:
-<div class="clasificar-wrap">
-<div class="clasificar-col"><div class="clasificar-header">Categoria A</div><div class="clasificar-body"><span class="linea-resp"></span><span class="linea-resp"></span></div></div>
-<div class="clasificar-col"><div class="clasificar-header">Categoria B</div><div class="clasificar-body"><span class="linea-resp"></span><span class="linea-resp"></span></div></div>
-</div>
-
-Texto de lectura previo:
-<div class="texto-lectura">Texto que el alumno lee antes de responder.</div>
-
-Tabla:
-<table class="tabla-ej"><tr><th>Col 1</th><th>Col 2</th></tr><tr><td>dato</td><td><span class="linea-resp"></span></td></tr></table>
-
-Columnas dos columnas para unir con linea:
-<div class="columnas"><div class="col-item"><span>Concepto:</span><span class="linea-resp"></span></div></div>
-
-Nota de ayuda:
-<p class="nota">Recuerda: texto de ayuda aqui.</p>`;
-
-  const estructuraEj=`
-ESTRUCTURA OBLIGATORIA DE CADA EJERCICIO:
-Para TEA incluye data-verbos con los verbos de accion separados por coma:
-<div class="ej" data-verbos="leer,escribir,colorear">
-  <p class="ej-num">1.</p>
-  <div class="pictos"></div>
-  <p class="ej-inst">Instruccion clara aqui.</p>
-  [contenido del ejercicio]
-</div>
-
-Para otros perfiles sin data-verbos ni pictos:
-<div class="ej">
-  <p class="ej-num">1.</p>
-  <p class="ej-inst">Instruccion aqui.</p>
-  [contenido]
+RECUADRO NUMERICO para calculos:
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:.5rem 0;max-width:280px">
+  <div style="border:1.5px solid #2a9d8f;border-radius:6px;padding:8px;text-align:center;font-weight:700;color:#1a7a6e;background:#e8f5f3">1</div>
+  <div style="border:1.5px solid #2a9d8f;border-radius:6px;padding:8px;text-align:center;font-weight:700;color:#1a7a6e;background:#e8f5f3">2</div>
+  <div style="border:2px solid #e74c3c;border-radius:6px;padding:8px;text-align:center;font-weight:700;color:#e74c3c;background:#fef2f2">?</div>
 </div>`;
 
   const reglasPerfil={
-    TEA:`
-PERFIL TEA - EXPERTA PT:
-Eres una PT experta en TEA con 15 anos de experiencia. Sabes que los alumnos TEA necesitan:
-- LITERALIDAD absoluta: cero metaforas, cero ambiguedad, cero doble sentido
-- PREDICTIBILIDAD: la estructura siempre igual, los pasos siempre numerados
-- APOYO VISUAL: los verbos de accion en data-verbos para generar pictogramas ARASAAC
-- CONCRECION: instrucciones de maximo 8 palabras, verbo imperativo al inicio
-- Sub-pasos si hay mas de una accion: usar checkbox-row para cada paso
-- Los espacios de respuesta siempre bien delimitados con linea-resp
-- NUNCA preguntas abiertas sin guia. SIEMPRE con estructura visual.
-- Los data-verbos deben contener los 2-3 verbos principales del ejercicio (en infinitivo, en espanol)
-- PROHIBIDO: "Piensa en...", "Imagina que...", "Explica con tus palabras..." sin guia concreta`,
+    TEA:`PERFIL TEA - PT EXPERTA:
+- data-verbos con 2-3 verbos en infinitivo para pictogramas ARASAAC
+- Instruccion COMPLETA y LITERAL: "Escribe los numeros del 1 al 5 en orden" NO "Escribe numeros"
+- Maximo 8 palabras por instruccion, verbo imperativo al inicio
+- Si hay varias acciones: checkbox-row para cada sub-paso
+- Si el tema requiere recta, reloj o figura: DIBUJAR en SVG con valores reales del ejercicio
+- PROHIBIDO: metaforas, doble sentido, instrucciones sin datos concretos`,
 
-    DI:`
-PERFIL DISCAPACIDAD INTELECTUAL - LECTURA FACIL - EXPERTA PT:
-Eres una PT experta en DI y Lectura Facil (normas FEAPS/Plena inclusion). Aplica:
-- Frases cortisimas: sujeto + verbo + complemento. Maximo 8 palabras.
-- UN emoji relevante al inicio de la instruccion (no decorativo, debe apoyar el significado)
-- EJEMPLO RESUELTO obligatorio: usa la clase ejemplo-bloque. CRITICO: el ejemplo NO puede ser la misma pregunta ni revelar la respuesta del ejercicio. Debe ser un caso diferente que ilustre el formato.
-- Maximo 3 opciones en ejercicios de eleccion multiple
-- Cada item del ejercicio en su propia linea
-- Vocabulario cotidiano. Cero tecnicismos.
-- NUNCA usar el ejemplo como respuesta del ejercicio. Si el ejercicio pregunta "cuanto es 3+3", el ejemplo debe ser "2+2=4", no "3+3=6"`,
+    DI:`PERFIL DI - LECTURA FACIL - PT EXPERTA:
+- Instruccion COMPLETA con los datos: "Rodea el numero mayor: 5, 8, 3" NO "Elige opcion"
+- Emoji relevante al inicio de la instruccion
+- ejemplo-bloque OBLIGATORIO con caso DIFERENTE al del ejercicio
+  Si el ejercicio es ordenar 3,1,2 -> ejemplo: "Los numeros 6,4,5 se ordenan: 4,5,6"
+  Si el ejercicio pregunta 5+3 -> ejemplo: "2+2=4"
+  El ejemplo NUNCA puede revelar la respuesta del ejercicio
+- Maximo 3 opciones en eleccion multiple
+- Si el tema requiere SVG: DIBUJAR con valores reales`,
 
-    TDAH:`
-PERFIL TDAH - EXPERTA PT Y NEUROEDUCACION:
-Eres una PT especialista en TDAH. Sabes que estos alumnos necesitan:
-- Ejercicios CORTOS, concretos, con inicio y fin claro
-- Variedad de formatos: NUNCA dos ejercicios del mismo tipo seguidos
-- Verbos de accion en negrita con <strong>: <strong>Rodea</strong>, <strong>Escribe</strong>, <strong>Une</strong>
-- Instruccion en 1-2 lineas maximo, sin rodeos
-- Coloca el checklist final OBLIGATORIO al terminar el ejercicio 5:
-  <div class="tdah-check-final"><input type="checkbox" style="width:20px;height:20px"><span>Revisa: has hecho todos los ejercicios</span></div>
-- CRITICO: En ejercicios de ordenar, las palabras/elementos deben estar DESORDENADOS. Si el ejercicio es ordenar numeros del 1 al 5, ponlos como 3,1,5,2,4 - NUNCA en orden
-- En ejercicios de completar, NO des la respuesta ya escrita, deja el hueco en blanco
-- Alterna: completar huecos, rodear opcion, clasificar, escribir, marcar checkbox`,
+    TDAH:`PERFIL TDAH - PT EXPERTA EN NEUROEDUCACION:
+- Instruccion con <strong> en el verbo y la palabra clave
+- Instruccion COMPLETA: "Ordena de menor a mayor: 7, 2, 5, 1" NO "Ordena los numeros"
+- Formatos DISTINTOS entre los 5 ejercicios: NUNCA dos iguales seguidos
+- En ordenar: los elementos DESORDENADOS en la pagina
+- En completar: el hueco VACIO, nunca con la respuesta
+- Si el tema requiere SVG: DIBUJAR con valores reales
+- Al final del ejercicio 5: <div class="tdah-check-final"><input type="checkbox" style="width:20px;height:20px"><span>Revisa: has terminado todos los ejercicios</span></div>`,
 
-    DISLEXIA:`
-PERFIL DISLEXIA - EXPERTA EN DISLEXIA Y DISENO INCLUSIVO:
-Eres una PT experta en dislexia. Aplica rigurosamente:
-- Frases cortas: UNA idea por frase. Maximo 10 palabras.
-- Interlineado generoso: los componentes deben tener espacio entre ellos
-- Las linea-resp deben ser mas altas que lo normal (ya estan configuradas en CSS)
-- Vocabulario simple. Una sola instruccion por ejercicio.
-- En completar frases, los huecos deben ser amplios (la clase hueco ya los hace grandes)
-- Las opciones deben estar bien separadas visualmente (la clase opciones ya separa)
-- NUNCA bloques de texto denso. Todo muy espaciado.
-- Estructura de izquierda a derecha, top-down, muy predecible
-- NO uses listas de mas de 4 items
-- La fuente OpenDyslexic se aplica automaticamente por CSS al contenedor`,
+    DISLEXIA:`PERFIL DISLEXIA - PT EXPERTA:
+- Instruccion COMPLETA y concreta: "Escribe el antonimo de: frio, alto, rapido" NO "Escribe antonimos"
+- Frases cortas: una idea por frase, maximo 10 palabras
+- Mucho espacio entre elementos
+- Si el tema requiere SVG: DIBUJAR con valores reales
+- La fuente OpenDyslexic se aplica por CSS automaticamente`,
 
-    BAJAVISION:`
-PERFIL BAJA VISION - EXPERTA EN BAJA VISION Y DISENO ACCESIBLE:
-Eres una PT experta en baja vision. Aplica:
-- TODO el texto debe ser grande (el CSS ya lo gestiona con font-size grandes)
-- Instrucciones cortisimas: maximo 6 palabras por linea
-- Lineas de respuesta GRUESAS y amplias (ya configuradas en CSS)
-- Opciones con recuadros muy grandes y bien separados
-- Maximo 3-4 items por ejercicio para no saturar
-- Sin informacion decorativa que distraiga
-- Alto contraste siempre: texto oscuro sobre fondo amarillo claro (ya configurado)
-- Estructura muy simple: 1 instruccion, luego el ejercicio, sin elementos extra
-- NO uses tablas complejas ni columnas multiples`
+    BAJAVISION:`PERFIL BAJA VISION - PT EXPERTA:
+- Instruccion COMPLETA: "Escribe el numero que viene despues del 15" NO "Escribe numero"
+- Maximo 3-4 items por ejercicio
+- Si el tema requiere SVG: DIBUJARLO GRANDE (viewBox amplio, texto minimo font-size 16)
+- Opciones con texto completo, pocas (maximo 3)
+- TODO visible y completo en el HTML`
   };
 
-  return `Eres una PT (Pedagogia Terapeutica) con 15 anos de experiencia y tambien disenadora de materiales educativos inclusivos. Combinas conocimiento pedagogico experto con criterios de diseno visual profesional.
+  return `Eres una PT con 15 anos de experiencia y disenadora de materiales inclusivos. Creas fichas pedagogicamente impecables y visualmente profesionales.
 
-TAREA: Genera una ficha de trabajo con exactamente 5 ejercicios en HTML para este alumno:
+TAREA: 5 ejercicios en HTML puro para:
 - Curso: ${curso}
 - Asignatura: ${asignatura}
 - Contenido: ${desc}
@@ -444,20 +430,21 @@ ${reglasPerfil[perfil]}
 
 ${componentesHTML}
 
-${estructuraEj}
+ESTRUCTURA de cada ejercicio:
+${perfil==='TEA'?'<div class="ej" data-verbos="verbo1,verbo2"><p class="ej-num">N.</p><div class="pictos"></div><p class="ej-inst">Instruccion completa aqui.</p>[contenido]</div>':'<div class="ej"><p class="ej-num">N.</p><p class="ej-inst">Instruccion completa aqui.</p>[contenido]</div>'}
 
-REGLAS CRITICAS GLOBALES:
-1. Devuelve SOLO el HTML de los 5 ejercicios. Sin markdown, sin explicaciones, sin comentarios.
-2. Los 5 ejercicios deben usar formatos DISTINTOS entre si (no repitas el mismo tipo).
-3. Ajusta dificultad y vocabulario exactamente al nivel ${curso}.
-4. El contenido debe trabajar especificamente: "${desc}".
-5. NUNCA uses puntos suspensivos ........ para espacios. Usa siempre linea-resp o hueco.
-6. Los ejercicios deben ser PEDAGOGICAMENTE CORRECTOS y reales, no de relleno.
-7. En ejercicios de ordenar o clasificar, los elementos deben estar DESORDENADOS o mezclados.
-8. Los ejemplos en DI deben ilustrar el formato con datos DISTINTOS a los del ejercicio.
-9. El HTML debe ser valido y usar exactamente las clases especificadas.
+REGLAS ABSOLUTAS:
+1. Devuelve SOLO HTML de los 5 ejercicios. Nada mas. Sin markdown.
+2. CADA instruccion incluye los datos concretos. NUNCA instrucciones vagas o sin datos.
+3. Los 5 ejercicios con formatos DISTINTOS.
+4. Si el contenido "${desc}" requiere recta numerica, reloj o figura: DIBUJALA en SVG con valores reales.
+5. Dificultad ajustada exactamente a ${curso}.
+6. En ordenar/clasificar: elementos DESORDENADOS.
+7. NUNCA puntos suspensivos para espacios. Usa linea-resp o hueco.
+8. SVG completamente dibujado con los valores correctos para el ejercicio concreto.
+9. El contenido debe ser especifico para "${desc}", no generico.
 
-Genera los 5 ejercicios ahora:`;
+Genera los 5 ejercicios:`;
 }
 
 async function llamarGemini(prompt){

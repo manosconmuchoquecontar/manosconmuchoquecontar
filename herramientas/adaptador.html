@@ -272,109 +272,123 @@ async function mostrarPictogramas(txt){
 }
 
 function getPrompt(texto,p){
-  const base='Eres experta en accesibilidad cognitiva y adaptación curricular. Trabajas en España con alumnos de educación primaria y secundaria.\nEl maestro te da enunciados de una ficha o examen.\nTu trabajo es ADAPTAR esos enunciados siguiendo criterios pedagógicos especializados.\nNO resuelvas los ejercicios. Solo adapta cómo están escritos.\nConserva la numeración original de cada enunciado.';
+  const base=`Eres experta en accesibilidad cognitiva y adaptación curricular. Trabajas en España.
+El maestro te da enunciados de una ficha o examen.
+Tu trabajo es ADAPTAR la INSTRUCCIÓN de cada enunciado. 
+CRÍTICO: Conserva SIEMPRE el contenido original del ejercicio (frases, palabras, ejemplos, opciones). Solo cambia cómo está escrita la instrucción.
+NO resuelvas los ejercicios. NO elimines frases ni palabras del ejercicio.
+Conserva la numeración original.`;
 
   const perfiles={
     TEA:base+`
 
-PERFIL: Alumno con Trastorno del Espectro Autista (TEA).
-PAUTAS PEDAGÓGICAS OBLIGATORIAS:
-• CLARIDAD LITERAL: Elimina metáforas, dobles sentidos, ironías y frases hechas. El lenguaje debe ser 100% directo y concreto. Ejemplo: cambia "pon las pilas" por "trabaja con atención".
-• SEGMENTACIÓN: Si un enunciado pide varias acciones, sepáralas en sub-ítems numerados (1.1, 1.2...). Nunca juntes dos acciones en un mismo paso.
-• ESTRUCTURA FIJA: Usa siempre el mismo formato: número en negrita + flecha → + acción concreta con verbo imperativo al inicio.
-• PASOS BREVES: Máximo 7 palabras por paso.
-• ANTICIPACIÓN: Si hay varios tipos de ejercicio, indica claramente cuántos pasos tiene cada uno.
+PERFIL: Alumno con TEA.
+REGLAS DE ADAPTACIÓN:
+• CLARIDAD LITERAL: Sin metáforas ni frases hechas. Todo directo y concreto.
+• SEGMENTACIÓN: Si la instrucción pide varias acciones, crea sub-pasos 1.1, 1.2... con →
+• VERBO IMPERATIVO al inicio de cada paso: "Lee", "Escribe", "Coloca"...
+• MÁXIMO 7 palabras por paso.
+• CONSERVA el texto del ejercicio tal cual debajo de la instrucción adaptada.
 
-FORMATO EXACTO:
+EJEMPLO DE ENTRADA:
+"Lee el siguiente texto y coloca los puntos donde corresponda. Recuerda empezar con mayúscula después de cada punto.
+El perro corría por el parque __ Le gustaba perseguir la pelota __"
+
+EJEMPLO DE SALIDA:
 **1.**
 → 1.1. Lee el texto.
-→ 1.2. Dibuja el proceso.
+→ 1.2. Coloca un punto en cada __.
+→ 1.3. Escribe mayúscula después del punto.
 
-**2.**
-→ Escribe tres causas de la guerra.
-
-RECUERDA: Nunca uses expresiones figuradas. Todo debe poder interpretarse al pie de la letra.`,
+El perro corría por el parque __ Le gustaba perseguir la pelota __`,
 
     DI:base+`
 
-PERFIL: Alumno con Discapacidad Intelectual (DI) — Lectura Fácil.
-PAUTAS PEDAGÓGICAS OBLIGATORIAS:
-• VOCABULARIO SENCILLO: Sustituye términos abstractos o técnicos por palabras de uso frecuente y cotidiano.
-• ENUNCIADOS CORTOS: Estructura sujeto + verbo + complemento. Máximo 6 palabras por frase. Sin oraciones subordinadas.
-• EJEMPLO GUÍA: Al inicio de cada tipo de ejercicio, añade un ejemplo resuelto breve entre paréntesis para que el alumno entienda la mecánica. Ejemplo: (Ejemplo: La capital de Francia es París).
-• OPCIONES LIMITADAS: Si el enunciado es de opción múltiple o selección, limita las alternativas a 3 opciones máximo y ponlas en líneas separadas con letras: a) b) c)
-• EMOJI DE APOYO: Añade un emoji relevante al inicio de cada instrucción para apoyo visual.
-• LÍNEAS SEPARADAS: Cada acción en su propia línea.
+PERFIL: Alumno con Discapacidad Intelectual — Lectura Fácil.
+REGLAS DE ADAPTACIÓN:
+• INSTRUCCIÓN MUY CORTA: Máximo 6 palabras. Verbo + qué hacer.
+• EMOJI al inicio de la instrucción.
+• EJEMPLO RESUELTO: Añade un ejemplo breve entre paréntesis justo después de la instrucción.
+• CONSERVA el contenido del ejercicio (frases, palabras, listas) tal cual, debajo.
+• Si hay opciones múltiples, limítalas a 3 con a) b) c).
+• Cada elemento del ejercicio en su propia línea.
 
-FORMATO EXACTO:
-**1.** 👀 Mira la imagen.
-✏️ Escribe la palabra.
-(Ejemplo: Si ves un perro → escribe "perro")
+EJEMPLO DE ENTRADA:
+"Escribe la coma donde sea necesario: En mi estuche tengo lápices goma sacapuntas y colores."
 
-**2.** ➡️ Elige la respuesta correcta.
-a) Madrid
-b) Barcelona
-c) Sevilla`,
+EJEMPLO DE SALIDA:
+**1.** ✏️ Pon las comas.
+(Ejemplo: tengo lápices, goma y colores)
+
+En mi estuche tengo lápices goma sacapuntas y colores.
+Compramos manzanas peras plátanos y uvas.`,
 
     TDAH:base+`
 
-PERFIL: Alumno con TDAH (Trastorno por Déficit de Atención e Hiperactividad).
-PAUTAS PEDAGÓGICAS OBLIGATORIAS:
-• DESTACADO VISUAL: Pon en **negrita** las palabras clave de acción de cada enunciado (el verbo principal y el concepto clave). Ejemplo: "**Señala** la opción **falsa**".
-• INSTRUCCIÓN ÚNICA: Si hay varios pasos, sepáralos con ✅ al inicio de cada uno. Nunca juntes dos instrucciones en una frase.
-• BREVEDAD MÁXIMA: Máximo 2 líneas por enunciado. Elimina toda información accesoria.
-• RECORDATORIO: Al final del último enunciado añade siempre esta nota: "📋 ¿Has contestado todas las preguntas?"
-• ESPACIO VISUAL: Separa bien cada enunciado con una línea en blanco.
+PERFIL: Alumno con TDAH.
+REGLAS DE ADAPTACIÓN:
+• **Negrita** en el verbo de acción principal y la palabra clave.
+• ✅ al inicio de cada paso distinto.
+• Máximo 2 líneas de instrucción. Sin rodeos.
+• CONSERVA el contenido del ejercicio debajo, en líneas separadas.
+• Al final de TODO el examen añade: "📋 ¿Has contestado todas las preguntas?"
 
-FORMATO EXACTO:
-**1.** ✅ **Lee** el texto con atención.
-✅ **Subraya** las palabras que no conozcas.
+EJEMPLO DE ENTRADA:
+"Lee el siguiente texto y coloca los puntos donde corresponda.
+El perro corría por el parque __ Le gustaba perseguir la pelota __"
 
-**2.** ✅ **Escribe** una frase con cada palabra subrayada.
+EJEMPLO DE SALIDA:
+**1.** ✅ **Lee** el texto. ✅ **Coloca** los puntos en __.
 
-📋 ¿Has contestado todas las preguntas?`,
+El perro corría por el parque __
+Le gustaba perseguir la pelota __`,
 
     DISLEXIA:base+`
 
 PERFIL: Alumno con Dislexia.
-PAUTAS PEDAGÓGICAS OBLIGATORIAS:
-• FRASES CORTAS: Máximo 10 palabras por frase. Una sola idea por frase.
-• SIN BLOQUES DE TEXTO: Usa listas con guiones o líneas separadas en lugar de párrafos. Nunca escribas más de 2 frases seguidas sin salto de línea.
-• VOCABULARIO SIMPLE: Sustituye palabras largas o difíciles por sinónimos cortos y frecuentes. Ejemplo: "denomina" → "llama"; "enumera" → "escribe".
-• ESTRUCTURA CLARA: Empieza siempre con el verbo de acción. Luego el objeto. Sin subordinadas.
-• MAYÚSCULAS: Solo al inicio de frase. Nada más.
-• TONO: Natural, amigable y directo. Sin tecnicismos.
+REGLAS DE ADAPTACIÓN:
+• Frases cortas: máximo 10 palabras. Una idea por frase.
+• Usa guiones para separar pasos, no párrafos.
+• Palabras simples. Sin tecnicismos.
+• CONSERVA el contenido del ejercicio debajo de la instrucción.
+• Solo mayúscula al inicio de frase.
 
-FORMATO EXACTO:
+EJEMPLO DE ENTRADA:
+"Lee el siguiente texto y coloca los puntos donde corresponda.
+El perro corría por el parque __ Le gustaba perseguir la pelota __"
+
+EJEMPLO DE SALIDA:
 **1.** Lee el texto.
-- Busca las palabras difíciles.
-- Subráyalas.
+- Busca los huecos __.
+- Escribe un punto en cada hueco.
 
-**2.** Escribe una frase.
-- Usa cada palabra que subrayaste.`,
+El perro corría por el parque __
+Le gustaba perseguir la pelota __`,
 
     BAJAVISION:base+`
 
 PERFIL: Alumno con Baja Visión.
-PAUTAS PEDAGÓGICAS OBLIGATORIAS:
-• FRASES MUY CORTAS: Máximo 6 palabras por línea. Una sola instrucción por línea.
-• NUMERACIÓN MUY VISIBLE: El número de cada pregunta debe ir en negrita y destacado: **1.** **2.** etc. Si hay subpasos, usa **1.1.** **1.2.**
-• SIN ABREVIATURAS: Escribe todo con palabras completas. Sin símbolos raros ni caracteres especiales.
-• ESTRUCTURA VERTICAL: Cada parte del enunciado en su propia línea. Nunca en horizontal.
-• VOCABULARIO DIRECTO: Palabras cortas y conocidas. Sin tecnicismos.
-• CONTRASTE: Evita poner información entre paréntesis o en letra pequeña. Todo al mismo nivel.
+REGLAS DE ADAPTACIÓN:
+• Frases muy cortas: máximo 6 palabras por línea.
+• Una instrucción por línea. Estructura vertical.
+• Numeración muy visible en negrita: **1.** **2.**
+• CONSERVA el contenido del ejercicio debajo, cada frase en su propia línea.
+• Sin abreviaturas ni símbolos raros.
 
-FORMATO EXACTO:
+EJEMPLO DE ENTRADA:
+"Lee el siguiente texto y coloca los puntos donde corresponda.
+El perro corría por el parque __ Le gustaba perseguir la pelota __"
+
+EJEMPLO DE SALIDA:
 **1.** Lee el texto.
-Busca las palabras difíciles.
-Subráyalas con el lápiz.
+Coloca un punto en cada __.
+Escribe mayúscula después.
 
-**2.** Escribe una frase.
-Usa cada palabra subrayada.
-Escribe con letra clara.`
+El perro corría por el parque __
+Le gustaba perseguir la pelota __`
   };
 
-  return perfiles[p]+'\n\n---\nENUNCIADOS ORIGINALES DEL MAESTRO:\n'+texto+'\n---\nDevuelve ÚNICAMENTE los enunciados adaptados. Sin explicaciones, sin comentarios, sin introducción ni cierre.';
+  return perfiles[p]+'\n\n---\nENUNCIADOS DEL MAESTRO:\n'+texto+'\n---\nDevuelve ÚNICAMENTE los enunciados adaptados. Sin explicaciones ni comentarios.';
 }
 
 async function llamarGemini(prompt){
@@ -460,4 +474,5 @@ document.getElementById('btn-adaptar').addEventListener('click',async()=>{
 document.getElementById('texto-input').addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter')document.getElementById('btn-adaptar').click();});
 </script>
 </body>
+</html>
 </html>

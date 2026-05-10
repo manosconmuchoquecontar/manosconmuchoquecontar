@@ -747,20 +747,20 @@ function renderizar(texto, perfil) {
     });
     el.innerHTML = html + '</div>';
 
+  } else if (perfil === 'BAJAVISION') {
+    const lineas = texto.split('\n').filter(l => l.trim());
+    let html = '<div class="out-BAJAVISION">';
+    lineas.forEach(linea => {
+      html += `<p style="margin-bottom:.9rem;">${linea}</p>`;
+    });
+    el.innerHTML = html + '</div>';
+
   } else { // DISLEXIA
     const parrafos = texto.split(/\n\n+/).filter(p => p.trim());
     let html = '<div class="out-DISLEXIA">';
     parrafos.forEach(p => {
       const lineas = p.split('\n').filter(l => l.trim()).join('<br>');
       html += `<p style="margin-bottom:1rem;">${lineas}</p>`;
-    });
-    el.innerHTML = html + '</div>';
-
-  } else if (perfil === 'BAJAVISION') {
-    const lineas = texto.split('\n').filter(l => l.trim());
-    let html = '<div class="out-BAJAVISION">';
-    lineas.forEach(linea => {
-      html += `<p style="margin-bottom:.9rem;">${linea}</p>`;
     });
     el.innerHTML = html + '</div>';
   }

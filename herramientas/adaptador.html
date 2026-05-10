@@ -530,10 +530,9 @@ footer a { color: var(--teal); text-decoration: none; }
 
 <script>
 // ══════════════════════════════════════════════════
-//  ⚠️  PON AQUÍ TU API KEY ANTES DE SUBIR A GITHUB
-//  Instrucciones: https://console.anthropic.com
+//  API Gemini (Google AI Studio — gratuito)
 // ══════════════════════════════════════════════════
-const ANTHROPIC_API_KEY = '';   // ← pega tu sk-ant-api03-... aquí
+const GEMINI_API_KEY = 'AIzaSyB9eZARCZYTLq39HAiu6LGaqkh2ctfl6so';
 
 // ─── Estado ───────────────────────────────────────
 let perfilActivo = 'TEA';
@@ -686,28 +685,26 @@ Devuelve ÚNICAMENTE el texto adaptado.`
   return `${instrucciones[perfil]}\n\nTEXTO ORIGINAL:\n"${texto}"`;
 }
 
-// ─── Claude API ───────────────────────────────────
+// ─── Gemini API ───────────────────────────────────
 async function adaptarConClaude(texto, perfil) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': ANTHROPIC_API_KEY,
-      'anthropic-version': '2023-06-01'
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1000,
-      messages: [{ role: 'user', content: getPrompt(texto, perfil) }]
-    })
-  });
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: getPrompt(texto, perfil) }] }],
+        generationConfig: { maxOutputTokens: 1000, temperature: 0.3 }
+      })
+    }
+  );
 
   if (!res.ok) {
     const e = await res.json().catch(() => ({}));
     throw new Error(e.error?.message || `Error ${res.status}`);
   }
   const d = await res.json();
-  return d.content?.[0]?.text?.trim() || '';
+  return d.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
 }
 
 // ─── Renderizar salida ────────────────────────────
@@ -783,8 +780,8 @@ document.getElementById('btn-adaptar').addEventListener('click', async () => {
     return;
   }
 
-  if (!ANTHROPIC_API_KEY) {
-    alert('API key no configurada. Añádela en el código antes de subir a GitHub.');
+  if (!GEMINI_API_KEY) {
+    alert('API key no configurada.');
     return;
   }
 

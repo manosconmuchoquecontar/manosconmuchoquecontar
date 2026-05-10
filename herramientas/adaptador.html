@@ -361,7 +361,7 @@ async function procesarPDF(file) {
 
     for (let i = 1; i <= pdf.numPages; i++) {
       const page = await pdf.getPage(i);
-      const viewport = page.getViewport({ scale: 2.0 }); // alta resolución
+      const viewport = page.getViewport({ scale: 1.5 }); // resolución equilibrada
       const canvas = document.createElement('canvas');
       canvas.width = viewport.width;
       canvas.height = viewport.height;
@@ -450,7 +450,7 @@ async function mostrarPictogramas(texto) {
 function getPrompt(perfil) {
   const perfiles = {
     TEA: `Eres experta en accesibilidad cognitiva para alumnos con TEA. Trabajas en España.
-Analiza esta ficha escolar completa (puede contener imágenes, dibujos, tablas y texto).
+Analiza esta ficha escolar. IGNORA elementos decorativos de fondo (puntos, bordes, cohetes, estrellas, adornos). Céntrate SOLO en el contenido pedagógico: instrucciones numeradas, palabras de ejercicios, textos y dibujos de los ejercicios.
 
 ESTRUCTURA DE SALIDA para cada ejercicio:
 - Número del ejercicio en negrita
@@ -474,7 +474,7 @@ REGLAS:
 Devuelve ÚNICAMENTE los ejercicios adaptados.`,
 
     DI: `Eres experta en accesibilidad cognitiva para alumnos con Discapacidad Intelectual. Trabajas en España.
-Analiza esta ficha escolar completa (puede contener imágenes, dibujos y texto).
+Analiza esta ficha escolar. IGNORA elementos decorativos de fondo (puntos, bordes, cohetes, estrellas, adornos). Céntrate SOLO en el contenido pedagógico: instrucciones numeradas, palabras de ejercicios, textos y dibujos de los ejercicios.
 
 ESTRUCTURA DE SALIDA para cada ejercicio:
 - Número + emoji + instrucción simple (máximo 5 palabras)
@@ -497,7 +497,7 @@ REGLAS:
 Devuelve ÚNICAMENTE los ejercicios adaptados.`,
 
     TDAH: `Eres experta en accesibilidad cognitiva para alumnos con TDAH. Trabajas en España.
-Analiza esta ficha escolar completa (puede contener imágenes, dibujos y texto).
+Analiza esta ficha escolar. IGNORA elementos decorativos de fondo (puntos, bordes, cohetes, estrellas, adornos). Céntrate SOLO en el contenido pedagógico: instrucciones numeradas, palabras de ejercicios, textos y dibujos de los ejercicios.
 
 ESTRUCTURA DE SALIDA para cada ejercicio:
 - ✅ + verbo en **negrita** + instrucción corta (máximo 6 palabras)
@@ -518,7 +518,7 @@ REGLAS:
 Devuelve ÚNICAMENTE los ejercicios adaptados.`,
 
     DISLEXIA: `Eres experta en accesibilidad cognitiva para alumnos con Dislexia. Trabajas en España.
-Analiza esta ficha escolar completa (puede contener imágenes, dibujos y texto).
+Analiza esta ficha escolar. IGNORA elementos decorativos de fondo (puntos, bordes, cohetes, estrellas, adornos). Céntrate SOLO en el contenido pedagógico: instrucciones numeradas, palabras de ejercicios, textos y dibujos de los ejercicios.
 
 ESTRUCTURA DE SALIDA para cada ejercicio:
 - Número + instrucción simplificada (máximo 8 palabras, palabras simples)
@@ -539,7 +539,7 @@ REGLAS:
 Devuelve ÚNICAMENTE los ejercicios adaptados.`,
 
     BAJAVISION: `Eres experta en accesibilidad visual para alumnos con baja visión. Trabajas en España.
-Analiza esta ficha escolar completa (puede contener imágenes, dibujos y texto).
+Analiza esta ficha escolar. IGNORA elementos decorativos de fondo (puntos, bordes, cohetes, estrellas, adornos). Céntrate SOLO en el contenido pedagógico: instrucciones numeradas, palabras de ejercicios, textos y dibujos de los ejercicios.
 
 ESTRUCTURA DE SALIDA para cada ejercicio:
 - Número + instrucción muy corta (máximo 6 palabras)
@@ -778,7 +778,7 @@ document.getElementById('btn-adaptar').addEventListener('click', async () => {
       mostrarPictogramas(texto);
     } else {
       // Modo PDF: Gemini Vision con las imágenes de las páginas
-      const promptCompleto = prompt + '\n\nAnaliza el documento completo que aparece en las imágenes adjuntas y adapta todos los ejercicios que encuentres.';
+    const promptCompleto = prompt + '\n\nAnaliza el documento completo que aparece en las imágenes adjuntas. IGNORA completamente los elementos decorativos de fondo (bordes, puntos, estrellas, cohetes, adornos). Céntrate SOLO en el contenido pedagógico real: títulos, instrucciones numeradas, palabras de ejercicios, textos para leer, y dibujos relacionados con los ejercicios. Adapta todos los ejercicios que encuentres.';
       textoAdaptado = await llamarGemini(promptCompleto, pdfPageImages);
       mostrarPictogramas(textoAdaptado);
     }

@@ -376,10 +376,6 @@ Escribe con letra clara.`
 
   return perfiles[p]+'\n\n---\nENUNCIADOS ORIGINALES DEL MAESTRO:\n'+texto+'\n---\nDevuelve ÚNICAMENTE los enunciados adaptados. Sin explicaciones, sin comentarios, sin introducción ni cierre.';
 }
-    BAJAVISION:base+'\n\nPERFIL: Alumno con Baja Visión.\nCÓMO ADAPTAR:\n• Frases muy cortas: máximo 6 palabras.\n• Una instrucción por línea.\n• Sin abreviaturas ni símbolos raros.\n• Numera cada paso claramente.\n• Solo mayúscula al inicio.\n\nFORMATO:\n**1.** Lee el texto.\nSubraya palabras difíciles.\n\n**2.** Escribe una frase.\nUsa cada palabra subrayada.'
-  };
-  return perfiles[p]+'\n\n---\nENUNCIADOS ORIGINALES DEL MAESTRO:\n'+texto+'\n---\nDevuelve ÚNICAMENTE los enunciados adaptados. Sin explicaciones, sin comentarios, sin introducción ni cierre.';
-}
 
 async function llamarGemini(prompt){
   const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+GEMINI_MODEL+':generateContent?key='+GEMINI_KEY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:2000,temperature:0.2}})});

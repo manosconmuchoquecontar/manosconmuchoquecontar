@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AdaptaTexto · Manos con Mucho que Contar</title>
+
+<!-- Fuentes de tu web -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ── Variables idénticas a tu web ── */
+:root {
+  --teal:       #2a9d8f;
+  --teal-light: #4db6a8;
+  --teal-dark:  #1a7a6e;
+  --teal-bg:    #e8f5f3;
+  --cream:      #fdf8f0;
+  --ink:        #1c2127;
+  --muted:      #6b7280;
+  --border:     #e2e8e6;
+  --white:      #ffffff;
+  --radius:     16px;
+  --radius-sm:  10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: #f4f7f6;
+  color: var(--ink);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── NAV ── */
+nav {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 clamp(.75rem, 4vw, 2.5rem);
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  overflow: hidden;
+}
+.nav-logo {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--teal-dark);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  flex-shrink: 1;
+  min-width: 0;
+}
+.nav-logo .emoji { font-size: 1.1rem; flex-shrink: 0; }
+.nav-logo .logo-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* En móvil pequeño ocultamos el texto del logo, dejamos solo el emoji */
+@media (max-width: 480px) {
+  .nav-logo .logo-text { display: none; }
+}
+.nav-links {
+  display: flex;
+  gap: clamp(.6rem, 2vw, 1.5rem);
+  align-items: center;
+  flex-shrink: 0;
+}
+.nav-links a {
+  font-size: clamp(0.78rem, 2.5vw, 0.9rem);
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color .15s;
+  white-space: nowrap;
+}
+.nav-links a:hover { color: var(--teal); }
+.nav-links a.active { color: var(--teal-dark); }
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 55%, var(--teal-light) 100%);
+  padding: 3rem clamp(1rem, 4vw, 2.5rem) 2.5rem;
+  text-align: center;
+  color: white;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 50px;
+  padding: 5px 14px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.hero h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: .75rem;
+}
+.hero h1 em { font-style: italic; color: rgba(255,255,255,0.82); }
+.hero p {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.82);
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* ── MAIN ── */
+main {
+  flex: 1;
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem clamp(1rem, 4vw, 1.5rem) 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ── PERFIL SELECTOR ── */
+.section-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--muted);
+  margin-bottom: .6rem;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+}
+.chip {
+  cursor: pointer;
+  border: 2px solid var(--border);
+  border-radius: 50px;
+  padding: 8px 20px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  background: white;
+  color: var(--muted);
+  transition: all .15s;
+  user-select: none;
+}
+.chip:hover { border-color: var(--teal); color: var(--teal); }
+.chip.active {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: white;
+  box-shadow: 0 3px 12px rgba(42,157,143,0.3);
+}
+
+/* ── PANELES ── */
+.panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+@media (max-width: 680px) { .panels { grid-template-columns: 1fr; } }
+
+.panel {
+  background: white;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  transition: border-color .2s, box-shadow .2s;
+}
+.panel:focus-within { border-color: var(--teal-light); box-shadow: 0 0 0 3px rgba(42,157,143,0.1); }
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.panel-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--teal-dark);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.panel-title::before {
+  content: '';
+  display: block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--teal);
+}
+.panel-title.muted::before { background: #d1d5db; }
+.panel-title.muted { color: var(--muted); }
+
+textarea {
+  flex: 1;
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--ink);
+  background: transparent;
+  min-height: 180px;
+  width: 100%;
+}
+textarea::placeholder { color: #bfc8c5; }
+
+/* ── BTN ADAPTAR ── */
+.btn-adaptar {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all .2s;
+  box-shadow: 0 4px 15px rgba(42,157,143,0.28);
+  letter-spacing: .01em;
+}
+.btn-adaptar:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(42,157,143,0.38); }
+.btn-adaptar:active { transform: none; }
+.btn-adaptar:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+
+/* ── BTN IMPRIMIR ── */
+.btn-print {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .15s;
+}
+.btn-print:hover { border-color: var(--teal); color: var(--teal); }
+
+/* ── PICTOGRAMAS ── */
+.picto-section {
+  display: none;
+  flex-direction: column;
+  gap: .5rem;
+}
+.picto-section.visible { display: flex; }
+.picto-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.picto-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: var(--teal-bg);
+  border: 1.5px solid #c3e6e0;
+  border-radius: 12px;
+  padding: 8px 10px;
+  min-width: 72px;
+  animation: popIn .25s ease;
+}
+@keyframes popIn { from { opacity:0; transform:scale(.85); } to { opacity:1; transform:scale(1); } }
+.picto-card img { width: 64px; height: 64px; object-fit: contain; }
+.picto-card span {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--teal-dark);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+/* ── OUTPUT CONTENT ── */
+.output-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  gap: 8px;
+  color: #c8d3d0;
+  text-align: center;
+}
+.output-placeholder p { font-size: 0.85rem; }
+
+/* Estilos por perfil */
+.out-TEA { font-size: .95rem; line-height: 1.9; }
+.out-DI  { font-size: 1.05rem; line-height: 2.1; }
+.out-TDAH { font-size: .95rem; line-height: 1.85; }
+.out-DISLEXIA {
+  font-size: .98rem;
+  line-height: 2.3;
+  letter-spacing: .015em;
+  background: var(--cream);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.step-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: .6rem;
+}
+.step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px; height: 26px;
+  background: var(--teal);
+  color: white;
+  border-radius: 50%;
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ── BADGE PERFIL ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.badge-TEA        { background: #e8f4f8; color: #1a6fa8; }
+.badge-DI         { background: #eef4e8; color: #3a7a1a; }
+.badge-TDAH       { background: #fef0e8; color: #c85a00; }
+.badge-DISLEXIA   { background: #fef8e8; color: #a07000; }
+.badge-BAJAVISION { background: #f0ebfa; color: #6a1fa8; }
+
+/* Baja visión: texto muy grande, alto contraste, interlineado generoso */
+.out-BAJAVISION {
+  font-size: 1.35rem;
+  line-height: 2.2;
+  font-weight: 700;
+  color: #111;
+  background: #fffde7;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  letter-spacing: .02em;
+}
+
+/* ── SPINNER ── */
+.spinner {
+  width: 18px; height: 18px;
+  border: 2.5px solid rgba(255,255,255,.35);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin .65s linear infinite;
+  display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── CHAR COUNT ── */
+.char-count { font-size: 0.75rem; color: var(--muted); }
+
+/* ── FOOTER ── */
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  background: white;
+}
+footer a { color: var(--teal); text-decoration: none; }
+
+/* ── PRINT ── */
+@media print {
+  nav, .hero, .controls, .btn-adaptar, .btn-print, .api-notice, footer { display: none !important; }
+  body { background: white; }
+  .panel { border: 1px solid #ddd; box-shadow: none; }
+  .panels { grid-template-columns: 1fr; }
+  #panel-entrada { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="https://manosconmuchoquecontar.github.io/" class="nav-logo">
+    <span class="emoji">🤲</span>
+    <span class="logo-text">Manos con Mucho que Contar</span>
+  </a>
+  <div class="nav-links">
+    <a href="https://manosconmuchoquecontar.github.io/#actividades">Actividades</a>
+    <a href="#" class="active">AdaptaTexto</a>
+    <a href="https://manosconmuchoquecontar.github.io/sobre-mi.html">Sobre mí</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">✨ Recurso para maestros</div>
+  <h1>Adapta cualquier <em>enunciado</em><br>en segundos</h1>
+  <p>Pega el texto, elige el perfil del alumno y obtén una versión accesible con pictogramas ARASAAC y apoyo visual.</p>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <!-- Selector de perfil -->
+  <div class="controls">
+    <p class="section-label">Perfil del alumno</p>
+    <div class="chips">
+      <button class="chip active" data-perfil="TEA">🧩 TEA</button>
+      <button class="chip" data-perfil="DI">🌟 Discapacidad Intelectual</button>
+      <button class="chip" data-perfil="TDAH">⚡ TDAH</button>
+      <button class="chip" data-perfil="DISLEXIA">📖 Dislexia</button>
+      <button class="chip" data-perfil="BAJAVISION">👁️ Baja Visión</button>
+    </div>
+  </div>
+
+  <!-- Paneles -->
+  <div class="panels">
+
+    <!-- Entrada -->
+    <div class="panel" id="panel-entrada">
+      <div class="panel-header">
+        <span class="panel-title">Texto original</span>
+        <span class="char-count" id="char-count">0 car.</span>
+      </div>
+      <textarea
+        id="texto-original"
+        placeholder="Escribe o pega aquí el enunciado del ejercicio...&#10;&#10;Ejemplo: Lee el texto y subraya las palabras difíciles. Después, escribe una oración con cada una de ellas."
+        rows="9"
+      ></textarea>
+      <button class="btn-adaptar" id="btn-adaptar">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        Adaptar enunciado
+      </button>
+    </div>
+
+    <!-- Salida -->
+    <div class="panel" id="panel-salida">
+      <div class="panel-header">
+        <span class="panel-title muted" id="salida-title">Texto adaptado</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="badge badge-TEA" id="badge-perfil">🧩 TEA</span>
+          <button class="btn-print" id="btn-print" title="Imprimir / Guardar PDF">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            Imprimir
+          </button>
+        </div>
+      </div>
+
+      <!-- Pictogramas ARASAAC -->
+      <div class="picto-section" id="picto-section">
+        <p class="section-label" style="margin-bottom:0">Pictogramas de apoyo</p>
+        <div class="picto-row" id="picto-row"></div>
+      </div>
+
+      <!-- Contenido adaptado -->
+      <div id="output-content">
+        <div class="output-placeholder">
+          <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          <p>El enunciado adaptado aparecerá aquí</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info pedagógica -->
+  <div style="background:white;border-radius:var(--radius);border:1.5px solid var(--border);padding:1.25rem 1.5rem;">
+    <p class="section-label" style="margin-bottom:.75rem;">¿Qué adapta cada perfil?</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.75rem;font-size:0.82rem;">
+      <div><strong style="color:#1a6fa8;">🧩 TEA</strong><br><span style="color:var(--muted);">Pasos numerados, lenguaje literal, sin ambigüedades + pictogramas ARASAAC</span></div>
+      <div><strong style="color:#3a7a1a;">🌟 DI</strong><br><span style="color:var(--muted);">Frases Sujeto+Verbo+Objeto, vocabulario sencillo + pictogramas ARASAAC</span></div>
+      <div><strong style="color:#c85a00;">⚡ TDAH</strong><br><span style="color:var(--muted);">Verbos de acción en negrita y color, checklist visual, frases cortas</span></div>
+      <div><strong style="color:#a07000;">📖 Dislexia</strong><br><span style="color:var(--muted);">Interlineado doble, fondo crema, frases simples, una idea por línea</span></div>
+      <div><strong style="color:#6a1fa8;">👁️ Baja Visión</strong><br><span style="color:var(--muted);">Texto grande y negrita, fondo amarillo suave, una instrucción por línea, sin información accesoria</span></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  Hecho con 🤲 por <a href="https://manosconmuchoquecontar.github.io/sobre-mi.html">Inma Merino Rus</a> · AL & Logopeda ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es">© CC BY-NC-SA 4.0</a>
+</footer>
+
+<script>
+// ══════════════════════════════════════════════════
+//  ⚠️  PON AQUÍ TU API KEY ANTES DE SUBIR A GITHUB
+//  Instrucciones: https://console.anthropic.com
+// ══════════════════════════════════════════════════
+const ANTHROPIC_API_KEY = '';   // ← pega tu sk-ant-api03-... aquí
+
+// ─── Estado ───────────────────────────────────────
+let perfilActivo = 'TEA';
+
+// ─── Selector de perfil ───────────────────────────
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    perfilActivo = chip.dataset.perfil;
+    actualizarBadge();
+  });
+});
+
+function actualizarBadge() {
+  const badge = document.getElementById('badge-perfil');
+  const data = {
+    TEA:          { label: '🧩 TEA',          cls: 'badge-TEA' },
+    DI:           { label: '🌟 DI',           cls: 'badge-DI' },
+    TDAH:         { label: '⚡ TDAH',         cls: 'badge-TDAH' },
+    DISLEXIA:     { label: '📖 Dislexia',     cls: 'badge-DISLEXIA' },
+    BAJAVISION:   { label: '👁️ Baja Visión',  cls: 'badge-BAJAVISION' },
+  };
+  badge.textContent = data[perfilActivo].label;
+  badge.className = `badge ${data[perfilActivo].cls}`;
+}
+
+// ─── Contador caracteres ──────────────────────────
+const textarea = document.getElementById('texto-original');
+textarea.addEventListener('input', () => {
+  document.getElementById('char-count').textContent = `${textarea.value.length} car.`;
+});
+
+// ─── Imprimir ─────────────────────────────────────
+document.getElementById('btn-print').addEventListener('click', () => window.print());
+
+// ─── ARASAAC ──────────────────────────────────────
+const VERBOS = [
+  'leer','lee','leed','escribir','escribe','escribid','recortar','recorta','recortad',
+  'dibujar','dibuja','dibujad','colorear','colorea','colead','unir','une','unid',
+  'rodear','rodea','rodead','marcar','marca','marcad','subrayar','subraya','subrayad',
+  'ordenar','ordena','ordenad','clasificar','clasifica','clasificad','contar','cuenta','contad',
+  'buscar','busca','buscad','pegar','pega','pegad','cortar','corta','cortad',
+  'completar','completa','completad','relacionar','relaciona','relacionad',
+  'observar','observa','observad','escuchar','escucha','escuchad','copiar','copia','copiad',
+  'pintar','pinta','pintad','trazar','traza','trazad','señalar','señala','señalad',
+  'nombrar','nombra','nombrad','repetir','repite','repetid','responder','responde','responded',
+  'calcular','calcula','calculad','recitar','recita','recitad','identificar','identifica'
+];
+
+function extraerVerbos(texto) {
+  const encontrados = [];
+  const tokens = texto.toLowerCase().split(/[\s,\.;:!?()«»""]+/);
+  tokens.forEach(t => {
+    const limpio = t.replace(/[^a-záéíóúüñ]/gi,'');
+    if (VERBOS.includes(limpio) && !encontrados.includes(limpio)) encontrados.push(limpio);
+  });
+  return encontrados.slice(0, 6);
+}
+
+async function buscarPictograma(palabra) {
+  try {
+    const r = await fetch(`https://api.arasaac.org/api/pictograms/es/search/${encodeURIComponent(palabra)}`);
+    if (!r.ok) return null;
+    const d = await r.json();
+    if (!d?.length) return null;
+    const id = d[0]._id;
+    return { url: `https://static.arasaac.org/pictograms/${id}/${id}_300.png`, palabra };
+  } catch { return null; }
+}
+
+async function mostrarPictogramas(texto) {
+  const section = document.getElementById('picto-section');
+  const row = document.getElementById('picto-row');
+  section.classList.remove('visible');
+  row.innerHTML = '';
+
+  if (perfilActivo !== 'TEA' && perfilActivo !== 'DI') return;
+
+  const verbos = extraerVerbos(texto);
+  if (!verbos.length) return;
+
+  const resultados = await Promise.all(verbos.map(buscarPictograma));
+  const validos = resultados.filter(Boolean);
+  if (!validos.length) return;
+
+  section.classList.add('visible');
+  validos.forEach(({ url, palabra }) => {
+    const card = document.createElement('div');
+    card.className = 'picto-card';
+    card.innerHTML = `
+      <img src="${url}" alt="${palabra}" onerror="this.closest('.picto-card').remove()">
+      <span>${palabra}</span>`;
+    row.appendChild(card);
+  });
+}
+
+// ─── Prompts pedagógicos ──────────────────────────
+function getPrompt(texto, perfil) {
+  const instrucciones = {
+    TEA: `Eres experta en accesibilidad cognitiva para alumnos con TEA.
+REGLAS (cumple TODAS):
+• Divide la tarea en pasos numerados: "Paso 1:", "Paso 2:", etc. Máximo 5 pasos.
+• Cada paso empieza con un verbo de acción en imperativo ("Lee", "Escribe", "Rodea"…).
+• Frases de máximo 8 palabras. Elimina toda ambigüedad, metáfora o doble sentido.
+• Sé literal y concreto. Sin introducciones ni explicaciones en tu respuesta.
+Devuelve ÚNICAMENTE el texto adaptado.`,
+
+    DI: `Eres experta en accesibilidad cognitiva para alumnos con Discapacidad Intelectual.
+REGLAS (cumple TODAS):
+• Estructura Sujeto + Verbo + Objeto en cada frase.
+• Máximo 6 palabras por frase. Solo vocabulario cotidiano y concreto.
+• Añade un emoji relevante al inicio de cada instrucción (🔍📝✂️🖍️…).
+• Si hay varios pasos, numéralos claramente.
+• Sin introducciones ni explicaciones en tu respuesta.
+Devuelve ÚNICAMENTE el texto adaptado.`,
+
+    TDAH: `Eres experta en accesibilidad cognitiva para alumnos con TDAH.
+REGLAS (cumple TODAS):
+• Pon en **negrita** (markdown) todos los verbos de acción principales.
+• Añade ✅ al inicio de cada tarea distinta.
+• Frases cortas y directas. Elimina toda información superflua.
+• Cada tarea en una línea separada.
+• Tono directo y activo.
+• Sin introducciones ni explicaciones en tu respuesta.
+Devuelve ÚNICAMENTE el texto adaptado.`,
+
+    DISLEXIA: `Eres experta en accesibilidad cognitiva para alumnos con Dislexia.
+REGLAS (cumple TODAS):
+• Frases cortas: máximo 10 palabras cada una.
+• Una sola idea por frase.
+• Sustituye palabras largas o difíciles por sinónimos sencillos.
+• Separa las ideas con puntos y líneas en blanco entre párrafos.
+• Sin mayúsculas innecesarias, sin palabras rebuscadas.
+• Sin introducciones ni explicaciones en tu respuesta.
+Devuelve ÚNICAMENTE el texto adaptado.`,
+
+    BAJAVISION: `Eres experta en accesibilidad visual para alumnos con baja visión.
+REGLAS (cumple TODAS):
+• Frases muy cortas y directas: máximo 8 palabras.
+• Una sola instrucción por línea, separada por salto de línea.
+• Elimina toda información secundaria o decorativa. Solo lo esencial.
+• Usa vocabulario sencillo y cotidiano.
+• Evita abreviaturas, símbolos especiales o caracteres poco frecuentes.
+• Si hay pasos, numéralos claramente: "1.", "2.", etc.
+• Sin introducciones ni explicaciones en tu respuesta.
+Devuelve ÚNICAMENTE el texto adaptado.`
+  };
+
+  return `${instrucciones[perfil]}\n\nTEXTO ORIGINAL:\n"${texto}"`;
+}
+
+// ─── Claude API ───────────────────────────────────
+async function adaptarConClaude(texto, perfil) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      messages: [{ role: 'user', content: getPrompt(texto, perfil) }]
+    })
+  });
+
+  if (!res.ok) {
+    const e = await res.json().catch(() => ({}));
+    throw new Error(e.error?.message || `Error ${res.status}`);
+  }
+  const d = await res.json();
+  return d.content?.[0]?.text?.trim() || '';
+}
+
+// ─── Renderizar salida ────────────────────────────
+function renderizar(texto, perfil) {
+  const el = document.getElementById('output-content');
+
+  if (perfil === 'TDAH') {
+    const procesado = texto
+      .replace(/\*\*(.*?)\*\*/g, '<strong style="color:#c85a00;background:#fff0e0;padding:1px 5px;border-radius:4px;">$1</strong>')
+      .split('\n').map(l => l.trim() ? `<p style="margin-bottom:.5rem;">${l}</p>` : '').join('');
+    el.innerHTML = `<div class="out-TDAH">${procesado}</div>`;
+
+  } else if (perfil === 'TEA') {
+    const lineas = texto.split('\n').filter(l => l.trim());
+    let html = '<div class="out-TEA">';
+    let num = 0;
+    lineas.forEach(linea => {
+      if (/^paso\s*\d+/i.test(linea.trim())) {
+        num++;
+        const contenido = linea.replace(/^paso\s*\d+[:\.\-]?\s*/i, '');
+        html += `<div class="step-row"><span class="step-num">${num}</span><span>${contenido}</span></div>`;
+      } else if (/^\d+[\.\)]\s/.test(linea.trim())) {
+        num++;
+        const contenido = linea.replace(/^\d+[\.\)]\s*/, '');
+        html += `<div class="step-row"><span class="step-num">${num}</span><span>${contenido}</span></div>`;
+      } else {
+        html += `<p style="margin-bottom:.5rem;">${linea}</p>`;
+      }
+    });
+    el.innerHTML = html + '</div>';
+
+  } else if (perfil === 'DI') {
+    const lineas = texto.split('\n').filter(l => l.trim());
+    let html = '<div class="out-DI">';
+    lineas.forEach(linea => {
+      html += `<p style="margin-bottom:.6rem;">${linea}</p>`;
+    });
+    el.innerHTML = html + '</div>';
+
+  } else { // DISLEXIA
+    const parrafos = texto.split(/\n\n+/).filter(p => p.trim());
+    let html = '<div class="out-DISLEXIA">';
+    parrafos.forEach(p => {
+      const lineas = p.split('\n').filter(l => l.trim()).join('<br>');
+      html += `<p style="margin-bottom:1rem;">${lineas}</p>`;
+    });
+    el.innerHTML = html + '</div>';
+
+  } else if (perfil === 'BAJAVISION') {
+    const lineas = texto.split('\n').filter(l => l.trim());
+    let html = '<div class="out-BAJAVISION">';
+    lineas.forEach(linea => {
+      html += `<p style="margin-bottom:.9rem;">${linea}</p>`;
+    });
+    el.innerHTML = html + '</div>';
+  }
+
+  // Actualizar título del panel
+  const t = document.getElementById('salida-title');
+  t.classList.remove('muted');
+  t.style.color = 'var(--teal-dark)';
+  t.querySelector ? null : null;
+}
+
+// ─── Botón principal ──────────────────────────────
+document.getElementById('btn-adaptar').addEventListener('click', async () => {
+  const texto = textarea.value.trim();
+
+  if (!texto) {
+    textarea.focus();
+    textarea.style.outline = '2px solid #ef4444';
+    setTimeout(() => { textarea.style.outline = 'none'; }, 1500);
+    return;
+  }
+
+  if (!ANTHROPIC_API_KEY) {
+    alert('API key no configurada. Añádela en el código antes de subir a GitHub.');
+    return;
+  }
+
+  const btn = document.getElementById('btn-adaptar');
+  const output = document.getElementById('output-content');
+
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spinner"></span> Adaptando con IA…`;
+
+  output.innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:160px;gap:10px;">
+      <div style="width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .65s linear infinite;"></div>
+      <span style="font-size:0.82rem;color:var(--muted);">Generando adaptación…</span>
+    </div>`;
+
+  document.getElementById('picto-section').classList.remove('visible');
+  document.getElementById('picto-row').innerHTML = '';
+
+  try {
+    const [textoAdaptado] = await Promise.all([
+      adaptarConClaude(texto, perfilActivo),
+      mostrarPictogramas(texto)
+    ]);
+
+    renderizar(textoAdaptado, perfilActivo);
+    actualizarBadge();
+
+  } catch (err) {
+    output.innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:140px;gap:8px;text-align:center;">
+        <span style="font-size:1.8rem;">⚠️</span>
+        <strong style="color:#dc2626;font-size:0.88rem;">Error al conectar con la API</strong>
+        <span style="font-size:0.78rem;color:var(--muted);">${err.message}</span>
+      </div>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> Adaptar enunciado`;
+  }
+});
+
+// Ctrl+Enter
+textarea.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') document.getElementById('btn-adaptar').click();
+});
+</script>
+</body>
+</html>

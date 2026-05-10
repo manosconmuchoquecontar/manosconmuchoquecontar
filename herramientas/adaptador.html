@@ -459,6 +459,45 @@ textarea::placeholder { color: #bfc8c5; }
   margin-top: .25rem;
 }
 
+/* ── BTN FICHA ── */
+.btn-ficha {
+  width: 100%;
+  margin-top: .75rem;
+  padding: 12px;
+  background: linear-gradient(135deg, #1a7a6e, #2a9d8f);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all .2s;
+  box-shadow: 0 3px 12px rgba(42,157,143,0.25);
+}
+.btn-ficha:hover { transform: translateY(-1px); box-shadow: 0 5px 16px rgba(42,157,143,0.35); }
+
+/* ── EJERCICIOS ── */
+.ejercicios-wrap { display: flex; flex-direction: column; gap: .25rem; }
+.ejercicio-bloque {
+  padding: .75rem;
+  border-radius: 10px;
+  background: #f8fffe;
+  border: 1px solid #ddf0ec;
+  margin-bottom: .5rem;
+}
+.ej-titulo { font-weight: 700; color: var(--teal-dark); margin-bottom: .4rem; font-size: .9rem; }
+.ej-linea { margin-bottom: .3rem; }
+.espacio-respuesta {
+  margin-top: .6rem;
+  border-bottom: 1.5px dashed #c3d9d5;
+  height: 28px;
+}
+
 /* ── CHAR COUNT ── */
 .char-count { font-size: 0.75rem; color: var(--muted); }
 
@@ -569,7 +608,7 @@ footer a { color: var(--teal); text-decoration: none; }
         <span class="panel-title muted" id="salida-title">Texto adaptado</span>
         <div style="display:flex;align-items:center;gap:8px;">
           <span class="badge badge-TEA" id="badge-perfil">🧩 TEA</span>
-          <button class="btn-print" id="btn-print" title="Imprimir / Guardar PDF">
+          <button class="btn-print" id="btn-print" title="Imprimir panel">
             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
             Imprimir
           </button>
@@ -591,6 +630,12 @@ footer a { color: var(--teal); text-decoration: none; }
           <p>El enunciado adaptado aparecerá aquí</p>
         </div>
       </div>
+
+      <!-- Botón ficha imprimible -->
+      <button class="btn-ficha" id="btn-ficha" style="display:none;">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        Ver ficha imprimible
+      </button>
     </div>
   </div>
 
@@ -789,103 +834,101 @@ async function mostrarPictogramas(texto) {
 
 // ─── Prompts pedagógicos ──────────────────────────
 function getPrompt(texto, perfil) {
-  const instrucciones = {
+  const estilos = {
     TEA: `Eres experta en accesibilidad cognitiva para alumnos con TEA. Trabajas en España.
-Tu tarea es adaptar enunciados escolares. NO resuelvas el ejercicio. Solo simplifica las instrucciones.
-
-EJEMPLO:
-Texto original: "Lee el siguiente texto y subraya todas las palabras que no conozcas. Después búscalas en el diccionario."
-Texto adaptado:
-Paso 1: Lee el texto.
-Paso 2: Subraya las palabras difíciles.
-Paso 3: Busca esas palabras en el diccionario.
+Adapta el siguiente documento escolar. Puede tener varios ejercicios numerados.
 
 REGLAS:
-• Pasos numerados: "Paso 1:", "Paso 2:"… Máximo 5 pasos.
-• Cada paso: verbo en imperativo + objeto. Máximo 7 palabras.
-• Sin metáforas. Sin dobles sentidos. Todo literal.
-• NO resuelvas ni respondas la pregunta del enunciado.
-Devuelve ÚNICAMENTE los pasos, sin explicaciones.`,
+• Mantén la numeración original de cada ejercicio (1., 2., 3.…).
+• Cada ejercicio: instrucción en pasos cortos con "→" al inicio. Máximo 6 palabras por paso.
+• Verbo en imperativo. Lenguaje literal. Sin metáforas.
+• NO resuelvas los ejercicios. Solo adapta las instrucciones.
+• Separa cada ejercicio con una línea en blanco.
+
+EJEMPLO DE SALIDA:
+1. → Mira las imágenes.
+→ Escribe la letra que falta.
+
+2. → Une cada palabra con su imagen.
+→ Traza una línea.
+
+Devuelve ÚNICAMENTE los ejercicios adaptados, sin explicaciones ni títulos extra.`,
 
     DI: `Eres experta en accesibilidad cognitiva para alumnos con Discapacidad Intelectual. Trabajas en España.
-Tu tarea es simplificar enunciados escolares. NO resuelvas el ejercicio. Solo simplifica.
-
-EJEMPLO:
-Texto original: "Alejandro tenía una estantería con 47 coches de juguete y hemos quitado 23. ¿Cuántos coches han quedado?"
-Texto adaptado:
-📚 Alejandro tiene coches de juguete.
-🔢 Tiene 47 coches.
-✂️ Quitamos 23 coches.
-❓ ¿Cuántos coches quedan?
+Adapta el siguiente documento escolar. Puede tener varios ejercicios numerados.
 
 REGLAS:
-• Máximo 5 palabras por frase.
-• Un emoji relevante al inicio de cada frase.
-• La última frase es siempre la pregunta simplificada con ❓
-• NUNCA escribas la respuesta. NUNCA pongas el resultado del cálculo.
-• Solo mayúscula al inicio de frase.
-Devuelve ÚNICAMENTE el texto adaptado, sin explicaciones.`,
+• Mantén la numeración original de cada ejercicio.
+• Cada ejercicio: 1-2 frases simples con emoji al inicio.
+• Máximo 5 palabras por frase. Vocabulario del día a día.
+• NO resuelvas los ejercicios. Solo adapta las instrucciones.
+• Separa cada ejercicio con línea en blanco.
+
+EJEMPLO DE SALIDA:
+1. 👀 Mira los dibujos.
+✏️ Escribe la letra.
+
+2. ➡️ Une la palabra con el dibujo.
+
+Devuelve ÚNICAMENTE los ejercicios adaptados, sin explicaciones ni títulos extra.`,
 
     TDAH: `Eres experta en accesibilidad cognitiva para alumnos con TDAH. Trabajas en España.
-Tu tarea es simplificar enunciados escolares en pasos muy concretos.
-
-EJEMPLO:
-Texto original: "Alejandro tenía una estantería con 47 coches de juguete y hemos quitado 23. ¿Cuántos coches han quedado?"
-Texto adaptado:
-✅ **Lee** los números: 47 y 23.
-✅ **Resta** 23 de 47.
-¿Cuántos quedan?
+Adapta el siguiente documento escolar. Puede tener varios ejercicios numerados.
 
 REGLAS:
-• Máximo 3 líneas con ✅. Solo las acciones imprescindibles.
-• Verbo principal en **negrita** (markdown). Máximo 6 palabras por línea.
-• La última línea es la pregunta, sin ✅.
-• Sin pasos redundantes ni contradictorios.
-• Solo mayúscula al inicio de frase.
-Devuelve ÚNICAMENTE el texto adaptado, sin explicaciones.`,
+• Mantén la numeración original de cada ejercicio.
+• Cada ejercicio: máximo 2 líneas con ✅. Verbo principal en **negrita**.
+• Máximo 6 palabras por línea. Solo lo imprescindible.
+• NO resuelvas los ejercicios.
+• Separa cada ejercicio con línea en blanco.
+
+EJEMPLO DE SALIDA:
+1. ✅ **Mira** los dibujos.
+✅ **Escribe** la letra que falta.
+
+2. ✅ **Une** cada palabra con su dibujo.
+
+Devuelve ÚNICAMENTE los ejercicios adaptados, sin explicaciones ni títulos extra.`,
 
     DISLEXIA: `Eres experta en accesibilidad cognitiva para alumnos con Dislexia. Trabajas en España.
-Tu tarea es simplificar enunciados escolares.
-
-EJEMPLO:
-Texto original: "Alejandro tenía una estantería con 47 coches de juguete y hemos quitado 23. ¿Cuántos coches han quedado?"
-Texto adaptado:
-Alejandro tiene 47 coches.
-
-Le quitan 23 coches.
-
-¿Cuántos coches quedan?
+Adapta el siguiente documento escolar. Puede tener varios ejercicios numerados.
 
 REGLAS:
-• Frases cortas: máximo 8 palabras.
-• Una idea por frase. Línea en blanco entre frases.
-• Palabras simples y comunes.
-• Termina con la pregunta simplificada.
-• Solo mayúscula al inicio de frase.
-Devuelve ÚNICAMENTE el texto adaptado, sin explicaciones.`,
+• Mantén la numeración original de cada ejercicio.
+• Frases cortas: máximo 8 palabras. Una idea por frase.
+• Palabras simples. Solo mayúscula al inicio de frase.
+• NO resuelvas los ejercicios.
+• Separa cada ejercicio con línea en blanco.
+
+EJEMPLO DE SALIDA:
+1. Mira los dibujos.
+Escribe la letra que falta.
+
+2. Une cada palabra con su dibujo.
+Traza una línea.
+
+Devuelve ÚNICAMENTE los ejercicios adaptados, sin explicaciones ni títulos extra.`,
 
     BAJAVISION: `Eres experta en accesibilidad visual para alumnos con baja visión. Trabajas en España.
-Tu tarea es simplificar enunciados escolares con frases muy cortas.
-
-EJEMPLO:
-Texto original: "Alejandro tenía una estantería con 47 coches de juguete y hemos quitado 23. ¿Cuántos coches han quedado?"
-Texto adaptado:
-Alejandro tiene 47 coches.
-
-Quitamos 23 coches.
-
-¿Cuántos quedan?
+Adapta el siguiente documento escolar. Puede tener varios ejercicios numerados.
 
 REGLAS:
-• Máximo 6 palabras por frase.
-• Una sola idea por línea. Línea en blanco entre frases.
-• Sin abreviaturas ni símbolos.
-• NUNCA escribas la respuesta ni el resultado.
-• Solo mayúscula al inicio de frase. NUNCA mayúscula en cada palabra.
-Devuelve ÚNICAMENTE el texto adaptado, sin explicaciones.`
+• Mantén la numeración original de cada ejercicio.
+• Frases muy cortas: máximo 6 palabras. Una idea por línea.
+• Sin abreviaturas ni símbolos raros. Solo mayúscula al inicio.
+• NO resuelvas los ejercicios.
+• Separa cada ejercicio con línea en blanco.
+
+EJEMPLO DE SALIDA:
+1. Mira los dibujos.
+Escribe la letra.
+
+2. Une la palabra con el dibujo.
+
+Devuelve ÚNICAMENTE los ejercicios adaptados, sin explicaciones ni títulos extra.`
   };
 
-  return `${instrucciones[perfil]}\n\nTEXTO ORIGINAL:\n"${texto}"`;
+  return `${estilos[perfil]}\n\nDOCUMENTO ORIGINAL:\n"${texto}"`;
 }
 
 // ─── Groq API ─────────────────────────────────────
@@ -898,7 +941,7 @@ async function adaptarConClaude(texto, perfil) {
     },
     body: JSON.stringify({
       model: 'llama-3.3-70b-versatile',
-      max_tokens: 1000,
+      max_tokens: 2000,
       temperature: 0.1,
       messages: [{ role: 'user', content: getPrompt(texto, perfil) }]
     })
@@ -913,66 +956,189 @@ async function adaptarConClaude(texto, perfil) {
 }
 
 // ─── Renderizar salida ────────────────────────────
+let textoAdaptadoGlobal = '';
+
 function renderizar(texto, perfil) {
+  textoAdaptadoGlobal = texto;
   const el = document.getElementById('output-content');
 
+  // Parsear ejercicios: bloques separados por línea en blanco
+  const bloques = texto.split(/\n{2,}/).filter(b => b.trim());
+
+  let html = '';
+
   if (perfil === 'TDAH') {
-    const procesado = texto
-      .replace(/\*\*(.*?)\*\*/g, '<strong style="color:#c85a00;background:#fff0e0;padding:1px 5px;border-radius:4px;">$1</strong>')
-      .split('\n').map(l => l.trim() ? `<p style="margin-bottom:.5rem;">${l}</p>` : '').join('');
-    el.innerHTML = `<div class="out-TDAH">${procesado}</div>`;
+    bloques.forEach(bloque => {
+      const lineas = bloque.split('\n').filter(l => l.trim());
+      html += `<div class="ejercicio-bloque">`;
+      lineas.forEach(linea => {
+        const proc = linea.replace(/\*\*(.*?)\*\*/g, '<strong style="color:#c85a00;background:#fff0e0;padding:1px 5px;border-radius:4px;">$1</strong>');
+        html += `<p class="ej-linea">${proc}</p>`;
+      });
+      html += `<div class="espacio-respuesta"></div></div>`;
+    });
+    el.innerHTML = `<div class="out-TDAH ejercicios-wrap">${html}</div>`;
 
   } else if (perfil === 'TEA') {
-    const lineas = texto.split('\n').filter(l => l.trim());
-    let html = '<div class="out-TEA">';
-    let num = 0;
-    lineas.forEach(linea => {
-      if (/^paso\s*\d+/i.test(linea.trim())) {
-        num++;
-        const contenido = linea.replace(/^paso\s*\d+[:\.\-]?\s*/i, '');
-        html += `<div class="step-row"><span class="step-num">${num}</span><span>${contenido}</span></div>`;
-      } else if (/^\d+[\.\)]\s/.test(linea.trim())) {
-        num++;
-        const contenido = linea.replace(/^\d+[\.\)]\s*/, '');
-        html += `<div class="step-row"><span class="step-num">${num}</span><span>${contenido}</span></div>`;
-      } else {
-        html += `<p style="margin-bottom:.5rem;">${linea}</p>`;
-      }
+    bloques.forEach(bloque => {
+      const lineas = bloque.split('\n').filter(l => l.trim());
+      html += `<div class="ejercicio-bloque">`;
+      let num = 0;
+      lineas.forEach(linea => {
+        if (/^\d+\./.test(linea.trim())) {
+          html += `<p class="ej-titulo">${linea}</p>`;
+        } else if (linea.trim().startsWith('→')) {
+          num++;
+          const contenido = linea.replace(/^→\s*/, '');
+          html += `<div class="step-row"><span class="step-num">${num}</span><span>${contenido}</span></div>`;
+        } else {
+          html += `<p class="ej-linea">${linea}</p>`;
+        }
+      });
+      html += `<div class="espacio-respuesta"></div></div>`;
     });
-    el.innerHTML = html + '</div>';
+    el.innerHTML = `<div class="out-TEA ejercicios-wrap">${html}</div>`;
 
   } else if (perfil === 'DI') {
-    const lineas = texto.split('\n').filter(l => l.trim());
-    let html = '<div class="out-DI">';
-    lineas.forEach(linea => {
-      html += `<p style="margin-bottom:.6rem;">${linea}</p>`;
+    bloques.forEach(bloque => {
+      const lineas = bloque.split('\n').filter(l => l.trim());
+      html += `<div class="ejercicio-bloque">`;
+      lineas.forEach(linea => {
+        if (/^\d+\./.test(linea.trim())) {
+          html += `<p class="ej-titulo">${linea}</p>`;
+        } else {
+          html += `<p class="ej-linea">${linea}</p>`;
+        }
+      });
+      html += `<div class="espacio-respuesta"></div></div>`;
     });
-    el.innerHTML = html + '</div>';
+    el.innerHTML = `<div class="out-DI ejercicios-wrap">${html}</div>`;
 
   } else if (perfil === 'BAJAVISION') {
-    const lineas = texto.split('\n').filter(l => l.trim());
-    let html = '<div class="out-BAJAVISION">';
-    lineas.forEach(linea => {
-      html += `<p style="margin-bottom:.9rem;">${linea}</p>`;
+    bloques.forEach(bloque => {
+      const lineas = bloque.split('\n').filter(l => l.trim());
+      html += `<div class="ejercicio-bloque">`;
+      lineas.forEach(linea => {
+        html += `<p class="ej-linea">${linea}</p>`;
+      });
+      html += `<div class="espacio-respuesta"></div></div>`;
     });
-    el.innerHTML = html + '</div>';
+    el.innerHTML = `<div class="out-BAJAVISION ejercicios-wrap">${html}</div>`;
 
   } else { // DISLEXIA
-    const parrafos = texto.split(/\n\n+/).filter(p => p.trim());
-    let html = '<div class="out-DISLEXIA">';
-    parrafos.forEach(p => {
-      const lineas = p.split('\n').filter(l => l.trim()).join('<br>');
-      html += `<p style="margin-bottom:1rem;">${lineas}</p>`;
+    bloques.forEach(bloque => {
+      const lineas = bloque.split('\n').filter(l => l.trim());
+      html += `<div class="ejercicio-bloque">`;
+      lineas.forEach(linea => {
+        html += `<p class="ej-linea">${linea}</p>`;
+      });
+      html += `<div class="espacio-respuesta"></div></div>`;
     });
-    el.innerHTML = html + '</div>';
+    el.innerHTML = `<div class="out-DISLEXIA ejercicios-wrap">${html}</div>`;
   }
 
-  // Actualizar título del panel
+  // Mostrar botón ficha
+  document.getElementById('btn-ficha').style.display = 'flex';
+
   const t = document.getElementById('salida-title');
   t.classList.remove('muted');
   t.style.color = 'var(--teal-dark)';
-  t.querySelector ? null : null;
 }
+
+// ─── Abrir ficha imprimible ───────────────────────
+document.getElementById('btn-ficha').addEventListener('click', () => {
+  const perfilNombres = {
+    TEA: 'TEA', DI: 'Discapacidad Intelectual',
+    TDAH: 'TDAH', DISLEXIA: 'Dislexia', BAJAVISION: 'Baja Visión'
+  };
+
+  // Obtener pictogramas del panel actual
+  const pictoCards = document.querySelectorAll('#picto-row .picto-card');
+  let pictosHTML = '';
+  if (pictoCards.length > 0) {
+    pictosHTML = `<div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:24px;">`;
+    pictoCards.forEach(card => {
+      const img = card.querySelector('img');
+      const label = card.querySelector('span');
+      if (img && label) {
+        pictosHTML += `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:#e8f5f3;border-radius:10px;padding:8px 10px;">
+          <img src="${img.src}" style="width:60px;height:60px;object-fit:contain;">
+          <span style="font-size:0.65rem;font-weight:700;color:#1a7a6e;text-transform:uppercase;">${label.textContent}</span>
+        </div>`;
+      }
+    });
+    pictosHTML += `</div>`;
+  }
+
+  const estilosPerfil = {
+    TEA:        'font-size:1rem;line-height:2;',
+    DI:         'font-size:1.1rem;line-height:2.2;',
+    TDAH:       'font-size:1rem;line-height:1.9;',
+    DISLEXIA:   'font-size:1rem;line-height:2.3;letter-spacing:.015em;background:#fdf8f0;padding:1rem;border-radius:8px;',
+    BAJAVISION: 'font-size:1.3rem;line-height:2.2;font-weight:700;background:#fffde7;padding:1rem;border-radius:8px;'
+  };
+
+  const contenidoAdaptado = document.getElementById('output-content').innerHTML;
+
+  const ventana = window.open('', '_blank');
+  ventana.document.write(`<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Ficha adaptada – ${perfilNombres[perfilActivo]}</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; padding: 2cm; color: #1c2127; background: white; }
+  .cabecera { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #2a9d8f; }
+  .cabecera-titulo { font-size: 1.1rem; font-weight: 700; color: #1a7a6e; }
+  .cabecera-sub { font-size: 0.8rem; color: #6b7280; margin-top: 2px; }
+  .badge { display:inline-block; background:#e8f5f3; color:#1a7a6e; font-size:0.75rem; font-weight:700; padding:3px 10px; border-radius:20px; text-transform:uppercase; }
+  .campo { margin-bottom: 16px; }
+  .campo label { font-size: 0.8rem; font-weight: 700; color: #6b7280; display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .05em; }
+  .linea-campo { border-bottom: 1.5px solid #ccc; height: 28px; width: 60%; display: inline-block; }
+  .contenido { margin-top: 20px; ${estilosPerfil[perfilActivo]} }
+  .ejercicio-bloque { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #e2e8e6; }
+  .ej-titulo { font-weight: 700; color: #1a7a6e; margin-bottom: 6px; }
+  .ej-linea { margin-bottom: 4px; }
+  .step-row { display:flex; align-items:flex-start; gap:8px; margin-bottom:6px; }
+  .step-num { display:inline-flex; align-items:center; justify-content:center; min-width:24px; height:24px; background:#2a9d8f; color:white; border-radius:50%; font-size:0.75rem; font-weight:700; flex-shrink:0; }
+  .espacio-respuesta { margin-top: 10px; border-bottom: 1px dashed #ccc; height: 36px; }
+  .logo { font-size: 0.78rem; color: #9ca3af; text-align: center; margin-top: 32px; padding-top: 12px; border-top: 1px solid #e2e8e6; }
+  @media print {
+    body { padding: 1.5cm; }
+    .no-print { display: none; }
+    .ejercicio-bloque { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+  <div class="cabecera">
+    <div>
+      <div class="cabecera-titulo">🤲 Manos con Mucho que Contar</div>
+      <div class="cabecera-sub">Ficha adaptada · manosconmuchoquecontar.github.io</div>
+    </div>
+    <span class="badge">${perfilNombres[perfilActivo]}</span>
+  </div>
+
+  <div style="display:flex;gap:32px;margin-bottom:20px;">
+    <div class="campo"><label>Nombre</label><span class="linea-campo"></span></div>
+    <div class="campo"><label>Fecha</label><span class="linea-campo" style="width:120px;"></span></div>
+  </div>
+
+  ${pictosHTML}
+
+  <div class="contenido">${contenidoAdaptado}</div>
+
+  <div class="logo">Generado con AdaptaTexto · manosconmuchoquecontar.github.io/herramientas/adaptador.html</div>
+
+  <div class="no-print" style="position:fixed;bottom:20px;right:20px;">
+    <button onclick="window.print()" style="background:#2a9d8f;color:white;border:none;border-radius:10px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;">🖨️ Imprimir / Guardar PDF</button>
+  </div>
+</body>
+</html>`);
+  ventana.document.close();
+});
 
 // ─── Botón principal ──────────────────────────────
 document.getElementById('btn-adaptar').addEventListener('click', async () => {
@@ -995,6 +1161,7 @@ document.getElementById('btn-adaptar').addEventListener('click', async () => {
 
   btn.disabled = true;
   btn.innerHTML = `<span class="spinner"></span> Adaptando con IA…`;
+  document.getElementById('btn-ficha').style.display = 'none';
 
   output.innerHTML = `
     <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:160px;gap:10px;">

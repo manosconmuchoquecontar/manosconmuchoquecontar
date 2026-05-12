@@ -33,7 +33,7 @@ body{background:var(--sp);font-family:'Nunito',sans-serif;color:white;min-height
 .p-inp::placeholder{color:rgba(255,255,255,.25);}
 .btn-launch{width:100%;padding:1rem;border:none;border-radius:16px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a0a00;font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;letter-spacing:1px;}
 /* GAME */
-#s-game{background:var(--sp);padding:0;justify-content:flex-start;}
+#s-game{background:var(--sp);padding:0;justify-content:flex-start;overflow:hidden;height:100%;}
 .g-hdr{background:rgba(0,0,0,.5);padding:7px 14px;width:100%;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0;}
 .g-htit{font-family:'Orbitron',sans-serif;font-size:.7rem;color:var(--gold);font-weight:700;letter-spacing:1px;}
 .g-hsp{flex:1;}
@@ -54,9 +54,9 @@ body{background:var(--sp);font-family:'Nunito',sans-serif;color:white;min-height
 .tb-sp{flex:1;}
 .tb-dc{font-family:'Orbitron',sans-serif;font-size:.85rem;color:var(--gold);}
 /* BOARD */
-.bwrap{padding:4px 10px;width:100%;flex-shrink:0;}
-.board{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;background:rgba(255,255,255,.03);border-radius:16px;padding:7px;border:1px solid rgba(255,255,255,.07);}
-.sq{border-radius:8px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;position:relative;flex-direction:column;border:1.5px solid transparent;transition:box-shadow .2s;}
+.bwrap{padding:4px 10px;width:100%;flex:1;display:flex;align-items:stretch;min-height:0;}
+.board{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;background:rgba(255,255,255,.03);border-radius:16px;padding:7px;border:1px solid rgba(255,255,255,.07);width:100%;align-content:stretch;}
+.sq{border-radius:8px;display:flex;align-items:center;justify-content:center;position:relative;flex-direction:column;border:1.5px solid transparent;transition:box-shadow .2s;}
 .sq.sinonimos{background:rgba(21,101,192,.3);border-color:rgba(30,136,229,.35);}
 .sq.antonimos{background:rgba(183,28,28,.3);border-color:rgba(229,57,53,.35);}
 .sq.frases{background:rgba(46,125,50,.3);border-color:rgba(67,160,71,.35);}
@@ -75,7 +75,7 @@ body{background:var(--sp);font-family:'Nunito',sans-serif;color:white;min-height
 .li{display:flex;align-items:center;gap:3px;font-size:.58rem;opacity:.65;}
 .ld{width:7px;height:7px;border-radius:50%;}
 /* ACTIONS */
-.aarea{padding:5px 10px 10px;width:100%;}
+.aarea{display:none;}
 .dice-btn{width:100%;padding:.7rem;border-radius:14px;border:2px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:white;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;margin-bottom:6px;}
 .dice-btn:disabled{opacity:.35;cursor:default;}
 .dface{font-size:1.8rem;}
@@ -212,6 +212,23 @@ body{background:var(--sp);font-family:'Nunito',sans-serif;color:white;min-height
 .intruso-btn.correct{background:rgba(76,175,80,.3)!important;border-color:#43A047!important;}
 .intruso-btn.wrong{background:rgba(244,67,54,.25)!important;border-color:#E53935!important;}
 .intruso-btn.disabled{opacity:.5;pointer-events:none;}
+
+/* ── CARD OVERLAY ── */
+.card-ov{position:fixed;inset:0;z-index:100;
+  background:rgba(0,0,0,.75);backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;padding:16px;}
+.card-ov.show{display:flex;}
+.card-ov-inner{width:100%;max-width:480px;max-height:90vh;overflow-y:auto;
+  border-radius:22px;animation:cdin .3s cubic-bezier(.34,1.4,.64,1);}
+.dice-bar{padding:6px 10px;width:100%;flex-shrink:0;display:flex;align-items:center;gap:8px;}
+.dice-mini{font-size:1.4rem;cursor:pointer;padding:4px 10px;border-radius:10px;
+  border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);
+  display:flex;align-items:center;gap:6px;font-family:'Nunito',sans-serif;
+  font-size:.85rem;font-weight:700;color:white;transition:all .2s;}
+.dice-mini:disabled{opacity:.35;cursor:default;}
+.dice-mini-face{font-size:1.4rem;}
+.dice-mini-result{font-family:'Orbitron',sans-serif;font-size:.82rem;
+  color:var(--gold);margin-left:4px;}
 </style>
 </head>
 <body>
@@ -303,12 +320,14 @@ body{background:var(--sp);font-family:'Nunito',sans-serif;color:white;min-height
     <div class="li"><div class="ld" style="background:#FF6400"></div>Atajo+2</div>
     <div class="li"><div class="ld" style="background:#888"></div>Pierde turno</div>
   </div>
-  <div class="aarea" id="aarea">
-    <button class="dice-btn" id="dice-btn" onclick="rollDice()">
-      <span class="dface" id="dface">&#127922;</span>
+  <div class="dice-bar">
+    <button class="dice-mini" id="dice-btn" onclick="rollDice()">
+      <span class="dice-mini-face" id="dface">&#127922;</span>
       <span id="dlbl">Tirar dado</span>
+      <span class="dice-mini-result" id="dice-result"></span>
     </button>
   </div>
+  <div class="aarea" id="aarea" style="display:none"></div>
 </div>
 
 <div class="mov" id="m-fin">
@@ -319,6 +338,12 @@ body{background:var(--sp);font-family:'Nunito',sans-serif;color:white;min-height
   <div class="podium" id="podium"></div>
   <button class="btn-restart" onclick="restartSetup()">&#128260; NUEVA MIS&#211;N</button>
 </div>
+</div>
+
+
+<!-- CARD OVERLAY -->
+<div class="card-ov" id="card-ov">
+  <div class="card-ov-inner" id="card-ov-inner"></div>
 </div>
 
 <div class="lov" id="lov">
@@ -464,7 +489,7 @@ function updateUI(){
   var db=document.getElementById('dice-btn');
   if(db){db.disabled=diceRolled||cardActive;}
   var df=document.getElementById('dface');if(df)df.textContent='\uD83C\uDFB2';
-  var dl=document.getElementById('dlbl');if(dl)dl.textContent='Tirar dado';
+  var dl=document.getElementById('dlbl');if(dl)dl.textContent='Tirar dado';var dr2=document.getElementById('dice-result');if(dr2)dr2.textContent='';
   hl(p.pos);
 }
 
@@ -491,8 +516,12 @@ function movePlayer(steps){
     notify('\uD83D\uDE80 \u00A1Atajo! Avanzas 2 casillas extra');
     setTimeout(()=>{const np2=Math.min(p.pos+2,29);p.pos=np2;renderPieces();hl(np2);if(np2===29){endGame();}else{cardActive=true;launchCard(SQ[np2]);}},900);
   }else if(t==='estacion'){
-    p.skip=true;notify('\uD83D\uDCE1 Estaci\u00F3n Espacial \u2014 Pierdes el pr\u00F3ximo turno');cardActive=true;showNextBtn();
-  }else if(t==='inicio'||t==='meta'){cardActive=true;showNextBtn();}
+    p.skip=true;notify('\uD83D\uDCE1 Estaci\u00F3n Espacial \u2014 Pierdes el pr\u00F3ximo turno');cardActive=true;
+    showCardOverlay({bg:'#1a1a1a',bc:'#888',badge:'#555',emo:'\uD83D\uDCE1',lbl:'ESTACI\u00D3N ESPACIAL'},'<p style="color:white;font-size:.9rem;padding:.5rem 0">Pierdes el pr\u00F3ximo turno.</p>');
+    showNextBtn();
+  }else if(t==='inicio'||t==='meta'){cardActive=true;
+    showCardOverlay({bg:'#1a1a00',bc:'#FFD600',badge:'#FF8F00',emo:t==='meta'?'\uD83C\uDFC6':'\uD83C\uDFC1',lbl:t==='meta'?'META':'INICIO'},'');
+    showNextBtn();}
   else{cardActive=true;launchCard(t);}
 }
 
@@ -512,7 +541,7 @@ function launchCard(type){
     _cd={type:'nebulosa',ch};
     body=`<div class="gprompt">${ch}</div><p style="font-size:.7rem;opacity:.45;font-style:italic;margin-bottom:10px">\uD83D\uDDE3 Prueba oral</p><div class="nebbtn"><button class="nok" onclick="nebRes(true)">\u2705 Lo hizo bien</button><button class="nno" onclick="nebRes(false)">\u274C Sin punto</button></div>`;
   }
-  document.getElementById('aarea').innerHTML=`<div class="gcard" style="background:${cfg.bg};border-color:${cfg.bc}"><div class="ghdr"><span style="font-size:1rem">${cfg.emo}</span><span class="gbadge" style="background:${cfg.badge}">${cfg.lbl}</span></div>${body}</div>`;
+  showCardOverlay(cfg, body);
   setTimeout(()=>{const i=document.getElementById('gc-inp');if(i)i.focus();},250);
 }
 
@@ -551,23 +580,37 @@ function showRes(ok,fb){
   showNextBtn();
 }
 
+
+function showCardOverlay(cfg, body){
+  var inner = document.getElementById('card-ov-inner');
+  inner.innerHTML = '<div class="gcard" style="background:'+cfg.bg+';border-color:'+cfg.bc+'">'
+    +'<div class="ghdr">'
+    +'<span style="font-size:1rem">'+cfg.emo+'</span>'
+    +'<span class="gbadge" style="background:'+cfg.badge+'">'+cfg.lbl+'</span>'
+    +'</div>'+body+'</div>';
+  document.getElementById('card-ov').classList.add('show');
+  setTimeout(function(){var i=document.getElementById('gc-inp');if(i)i.focus();},300);
+}
+
+function closeCardOverlay(){
+  document.getElementById('card-ov').classList.remove('show');
+  document.getElementById('card-ov-inner').innerHTML='';
+}
 function showNextBtn(){
-  const a=document.getElementById('aarea');
+  const a=document.getElementById('card-ov-inner');
   if(!a||a.querySelector('.btn-next'))return;
   const card=a.querySelector('.gcard');
   const btn=document.createElement('button');
   btn.className='btn-next';
   btn.innerHTML='\u27A4 Turno siguiente';
-  btn.onclick=nextTurn;
+  btn.onclick=function(){closeCardOverlay();nextTurn();};
   if(card)card.appendChild(btn);else a.appendChild(btn);
-  // scroll into view
-  setTimeout(()=>btn.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
 }
 
 function nextTurn(){
+  closeCardOverlay();
   diceRolled=false;cardActive=false;
   cur=(cur+1)%players.length;
-  document.getElementById('aarea').innerHTML=`<button class="dice-btn" id="dice-btn" onclick="rollDice()"><span class="dface" id="dface">\uD83C\uDFB2</span><span id="dlbl">Tirar dado</span></button>`;
   updateUI();
 }
 
@@ -662,13 +705,7 @@ function launchCardInicial(type){
       <div id="gres"></div>`;
   }
 
-  document.getElementById('aarea').innerHTML=`
-    <div class="gcard" style="background:${cfg.bg};border-color:${cfg.bc}">
-      <div class="ghdr">
-        <span style="font-size:1rem">${cfg.emo}</span>
-        <span class="gbadge" style="background:${cfg.badge}">${cfg.lbl}</span>
-      </div>${body}
-    </div>`;
+  showCardOverlay(cfg, body);
 }
 
 function checkIni(btn, chosen, correct){

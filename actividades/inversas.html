@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Salto de la Sílaba - 40 Retos</title>
+    <!-- Fuentes Google Fonts solicitadas -->
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund&family=Playwrite+HR+Lijeva&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root { 
+            --accent: #ff4081; 
+            --bg: #fdf2f8; 
+            --success: #4caf50;
+            --font-mayus: 'Playwrite DE Grund', sans-serif;
+            --font-minus: 'Playwrite HR Lijeva', sans-serif;
+        }
+
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            overflow: hidden; background: var(--bg); user-select: none;
+            transition: font-family 0.3s ease;
+        }
+
+        #app { width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        
+        /* Fondo letras de colores */
+        .bg-letters { position: fixed; inset: 0; z-index: -1; opacity: 0.15; pointer-events: none; }
+        .bg-char { position: absolute; font-size: 4rem; font-weight: bold; animation: float 15s infinite linear; }
+        @keyframes float { from { transform: translateY(110vh) rotate(0deg); } to { transform: translateY(-10vh) rotate(360deg); } }
+
+        /* UI NAV */
+        .nav { position: absolute; top: 20px; width: 92%; display: flex; justify-content: space-between; z-index: 100; }
+        .btn-ui { width: 60px; height: 60px; border-radius: 15px; border: 3px solid white; background: white; cursor: pointer; font-size: 25px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+        /* MENU */
+        #menu { position: fixed; inset: 0; background: white; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .card { padding: 40px; border-radius: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); text-align: center; max-width: 550px; }
+        .btn-case { padding: 15px 25px; margin: 10px; border: 2px solid #ddd; border-radius: 20px; cursor: pointer; font-family: inherit; font-size: 1.1rem; }
+        .btn-case.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+        /* GAME AREA */
+        #emoji { font-size: 100px; margin-bottom: 10px; }
+        .word-ui { font-size: 3.5rem; display: flex; align-items: center; gap: 15px; margin-bottom: 40px; }
+        .gap { color: var(--accent); border-bottom: 5px solid var(--accent); min-width: 110px; text-align: center; height: 1.2em; }
+        .options { display: flex; gap: 30px; margin-bottom: 30px; }
+        .btn-syl { background: white; border: 4px solid var(--accent); padding: 20px 40px; border-radius: 25px; font-size: 3rem; cursor: pointer; transition: 0.2s; font-family: inherit; min-width: 170px; }
+        
+        #btn-next { display: none; padding: 15px 45px; font-size: 1.5rem; background: var(--success); color: white; border: none; border-radius: 50px; cursor: pointer; font-family: inherit; }
+        #fs-timer { position: fixed; bottom: 20px; background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 20px; display: none; }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div class="bg-letters" id="bg"></div>
+    
+    <div class="nav">
+        <button class="btn-ui" onclick="parentalControl('home')">🏠</button>
+        <button class="btn-ui" onmousedown="startFSTimer()" onmouseup="stopFSTimer()">⛶</button>
+        <button class="btn-ui" onclick="downloadSessionReport()">📋</button>
+    </div>
+
+    <div id="menu">
+        <div class="card">
+            <h1 id="menu-title" style="color:var(--accent)">Salto Silábico: 40 Retos</h1>
+            <p>Elige el tipo de letra:</p>
+            <button id="b-may" class="btn-case active" onclick="updateLetterCase('MAY')">MAYÚSCULAS</button>
+            <button id="b-min" class="btn-case" onclick="updateLetterCase('MIN')">minúsculas</button>
+            <br><br>
+            <button class="btn-case active" style="background:var(--success); color:white; border:none; font-weight: bold;" onclick="startGame()">¡EMPEZAR!</button>
+        </div>
+    </div>
+
+    <div id="emoji"></div>
+    <div class="word-ui" id="word-box"></div>
+    <div class="options" id="opt-box"></div>
+    <button id="btn-next" onclick="loadNextChallenge()">SIGUIENTE ➔</button>
+    
+    <div id="fs-timer">Mantén 3 segundos para salir...</div>
+</div>
+
+<script>
+    const CHALLENGES = [
+        // NIVEL 1: 20 RETOS
+        { e: '🏰', c: 'as', o: ['as','sa'], w: 'C__TILLO', f: 'CASTILLO' },
+        { e: '🐍', c: 'se', o: ['es','se'], w: '__RPIENTE', f: 'SERPIENTE' },
+        { e: '🎒', c: 'mo', o: ['om','mo'], w: '__CHILA', f: 'MOCHILA' },
+        { e: '🪜', c: 'es', o: ['es','se'], w: '__CALERA', f: 'ESCALERA' },
+        { e: '🍊', c: 'na', o: ['an','na'], w: '__RANJA', f: 'NARANJA' },
+        { e: '🦒', c: 'la', o: ['ar','ra'], w: 'JI__FA', f: 'JIRAFA' },
+        { e: '🐜', c: 'an', o: ['an','na'], w: '__TENA', f: 'ANTENA' },
+        { e: '🌴', c: 'al', o: ['al','la'], w: 'P__MA', f: 'PALMA' },
+        { e: '🧤', c: 'gu', o: ['ug','gu'], w: '__ANTE', f: 'GUANTE' },
+        { e: '🐀', c: 'ra', o: ['ar','ra'], w: '__TÓN', f: 'RATÓN' },
+        { e: '🌲', c: 'ar', o: ['ar','ra'], w: '__BOL', f: 'ÁRBOL' },
+        { e: '🍕', c: 'pi', o: ['ip','pi'], w: '__ZZA', f: 'PIZZA' },
+        { e: '🧜‍♀️', c: 'si', o: ['is','si'], w: '__RENA', f: 'SIRENA' },
+        { e: '🏝️', c: 'is', o: ['is','si'], w: '__LA', f: 'ISLA' },
+        { e: '🌙', c: 'lu', o: ['ul','lu'], w: '__NA', f: 'LUNA' },
+        { e: '🎯', c: 'ul', o: ['ul','lu'], w: '__TIMO', f: 'ÚLTIMO' },
+        { e: '👂', c: 'or', o: ['or','ro'], w: '__EJA', f: 'OREJA' },
+        { e: '🌹', c: 'ro', o: ['or','ro'], w: '__SA', f: 'ROSA' },
+        { e: '🐘', c: 'el', o: ['el','le'], w: '__EFANTE', f: 'ELEFANTE' },
+        { e: '🦁', c: 'le', o: ['el','le'], w: '__ÓN', f: 'LEÓN' },
+        // NIVEL 2: 20 RETOS
+        { e: '👻', c: 'fa', o: ['af','fa'], w: '__NTASMA', f: 'FANTASMA' },
+        { e: '🎂', c: 'pa', o: ['as','sa'], w: 'P__TEL', f: 'PASTEL' },
+        { e: '🌂', c: 'pa', o: ['ap','pa'], w: '__RAGUAS', f: 'PARAGUAS' },
+        { e: '🥣', c: 'as', o: ['as','sa'], w: 'P__TA', f: 'PASTA' },
+        { e: '🚢', c: 'ba', o: ['ab','ba'], w: '__RCO', f: 'BARCO' },
+        { e: '🪣', c: 'cu', o: ['uc','cu'], w: '__BO', f: 'CUBO' },
+        { e: '🦟', c: 'mo', o: ['om','mo'], w: '__SQUITO', f: 'MOSQUITO' },
+        { e: '🧥', c: 'ab', o: ['ab','ba'], w: '__RIGO', f: 'ABRIGO' },
+        { e: '🚪', c: 'pu', o: ['up','pu'], w: '__ERTA', f: 'PUERTA' },
+        { e: '🦴', c: 'ue', o: ['eu','ue'], w: 'H__SO', f: 'HUESO' },
+        { e: '🦷', c: 'di', o: ['id','di'], w: '__ENTE', f: 'DIENTE' },
+        { e: '🚿', c: 'du', o: ['ud','du'], w: '__CHA', f: 'DUCHA' },
+        { e: '🧸', c: 'os', o: ['os','so'], w: '__O', f: 'OSO' },
+        { e: '🍲', c: 'so', o: ['os','so'], w: '__PA', f: 'SOPA' },
+        { e: '🔔', c: 'ca', o: ['ac','ca'], w: '__MPANA', f: 'CAMPANA' },
+        { e: '👨‍🍳', c: 'co', o: ['oc','co'], w: '__CINA', f: 'COCINA' },
+        { e: '👓', c: 'ga', o: ['ag','ga'], w: '__FAS', f: 'GAFAS' },
+        { e: '🐱', c: 'ga', o: ['ag','ga'], w: '__TO', f: 'GATO' },
+        { e: '🐆', c: 'ti', o: ['it','ti'], w: '__GRE', f: 'TIGRE' },
+        { e: '👟', c: 'te', o: ['et','te'], w: '__NIS', f: 'TENIS' }
+    ];
+
+    let currentCase = 'MAY', currentIndex = 0, sessionStats = [], fsHoldTimer;
+
+    function updateLetterCase(type) {
+        currentCase = type;
+        document.getElementById('b-may').classList.toggle('active', type === 'MAY');
+        document.getElementById('b-min').classList.toggle('active', type === 'MIN');
+        
+        // Aplicación estricta de fuentes por tipo
+        const appElement = document.body;
+        if (type === 'MAY') {
+            appElement.style.fontFamily = "var(--font-mayus)";
+            document.getElementById('menu-title').style.fontFamily = "var(--font-mayus)";
+        } else {
+            appElement.style.fontFamily = "var(--font-minus)";
+            document.getElementById('menu-title').style.fontFamily = "var(--font-minus)";
+        }
+    }
+
+    function startGame() {
+        document.getElementById('menu').style.display = 'none';
+        renderChallenge();
+    }
+
+    function renderChallenge() {
+        const item = CHALLENGES[currentIndex];
+        document.getElementById('emoji').innerText = item.e;
+        document.getElementById('btn-next').style.display = 'none';
+        
+        const wordBox = document.getElementById('word-box');
+        wordBox.innerHTML = "";
+        const parts = item.w.split("__");
+        
+        wordBox.innerHTML = `
+            <span>${format(parts[0])}</span>
+            <span class="gap" id="gap-target">_ _</span>
+            <span>${format(parts[1] || "")}</span>
+        `;
+        
+        const optBox = document.getElementById('opt-box');
+        optBox.innerHTML = "";
+        item.o.forEach(o => {
+            const btn = document.createElement('button');
+            btn.className = 'btn-syl';
+            btn.innerText = format(o);
+            btn.onclick = () => verify(o, btn);
+            optBox.appendChild(btn);
+        });
+
+        speak(`Completa la palabra ${item.f}`);
+    }
+
+    function format(text) {
+        return currentCase === 'MAY' ? text.toUpperCase() : text.toLowerCase();
+    }
+
+    function verify(selected, btnElement) {
+        const item = CHALLENGES[currentIndex];
+        if (selected === item.c) {
+            document.getElementById('gap-target').innerText = format(selected);
+            document.getElementById('gap-target').style.border = "none";
+            document.getElementById('gap-target').style.color = "var(--success)";
+            
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            speak("¡Excelente!");
+            
+            document.getElementById('opt-box').innerHTML = "";
+            document.getElementById('btn-next').style.display = 'block';
+            sessionStats.push({ palabra: item.f, resultado: 'Acierto' });
+        } else {
+            speak("Esa no es, prueba otra");
+            btnElement.style.borderColor = "red";
+            sessionStats.push({ palabra: item.f, resultado: 'Fallo' });
+            setTimeout(() => btnElement.style.borderColor = "var(--accent)", 600);
+        }
+    }
+
+    function loadNextChallenge() {
+        currentIndex = (currentIndex + 1) % CHALLENGES.length;
+        renderChallenge();
+    }
+
+    function speak(text) {
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'es-ES';
+        window.speechSynthesis.speak(msg);
+    }
+
+    // --- CONTROLES PARENTALES ---
+    function parentalControl(action) {
+        const num1 = Math.floor(Math.random() * 8) + 1;
+        const num2 = Math.floor(Math.random() * 5);
+        Swal.fire({
+            title: 'Control Parental',
+            text: `Resuelve esta suma: ${num1} + ${num2}`,
+            input: 'number',
+            confirmButtonText: 'Verificar'
+        }).then(result => {
+            if (parseInt(result.value) === (num1 + num2)) {
+                if (action === 'home') location.reload();
+            } else if (result.isConfirmed) {
+                Swal.fire('Error', 'Suma incorrecta', 'error');
+            }
+        });
+    }
+
+    function startFSTimer() {
+        document.getElementById('fs-timer').style.display = 'block';
+        fsHoldTimer = setTimeout(() => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }, 3000);
+    }
+
+    function stopFSTimer() {
+        clearTimeout(fsHoldTimer);
+        document.getElementById('fs-timer').style.display = 'none';
+    }
+
+    function downloadSessionReport() {
+        let content = `
+            <html>
+            <head>
+                <title>Informe El Salto de la Sílaba</title>
+                <style>
+                    body { font-family: sans-serif; padding: 20px; }
+                    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+                    th { background-color: #f2f2f2; }
+                    .acierto { color: green; font-weight: bold; }
+                    .fallo { color: red; font-weight: bold; }
+                </style>
+            </head>
+            <body>
+                <h1>Resultados de la Sesión</h1>
+                <table>
+                    <thead><tr><th>Reto</th><th>Resultado</th></tr></thead>
+                    <tbody>
+                        ${sessionStats.map(s => `<tr><td>${s.palabra}</td><td class="${s.resultado.toLowerCase()}">${s.resultado}</td></tr>`).join('')}
+                    </tbody>
+                </table>
+            </body>
+            </html>
+        `;
+        const blob = new Blob([content], { type: 'text/html' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `informe_silabas_${new Date().toLocaleDateString()}.html`;
+        link.click();
+    }
+
+    // Fondo decorativo
+    function initBackground() {
+        const container = document.getElementById('bg');
+        const chars = "A B C D E L P S N M T O R".split(" ");
+        for(let i=0; i<25; i++) {
+            const span = document.createElement('span');
+            span.className = 'bg-char';
+            span.innerText = chars[Math.floor(Math.random() * chars.length)];
+            span.style.left = Math.random() * 95 + 'vw';
+            span.style.animationDelay = Math.random() * 10 + 's';
+            span.style.color = `hsl(${Math.random() * 360}, 70%, 85%)`;
+            container.appendChild(span);
+        }
+    }
+    
+    initBackground();
+    // Forzar fuente inicial
+    updateLetterCase('MAY');
+</script>
+</body>
+</html>

@@ -1,1048 +1,269 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Detective Animal</title>
-<link href="https://fonts.googleapis.com/css2?family=Playwrite+HR+Lijeva:wght@100..400&family=Playwrite+DE+Grund:wght@100..400&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --ink: #1a1208;
-    --paper: #faf6ee;
-    --aged: #e8dfc8;
-    --stamp-red: #8b1a1a;
-    --gold: #b8860b;
-  }
-
-  body {
-    background: linear-gradient(135deg, #e8f4f0 0%, #dde8f5 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 20px;
-    font-family: 'Playwrite HR Lijeva', cursive;
-  }
-
-  #game-wrapper { width: 100%; max-width: 680px; }
-
-  #game {
-    font-family: 'Playwrite HR Lijeva', cursive;
-    background: var(--paper);
-    color: var(--ink);
-    min-height: 560px;
-    position: relative;
-    overflow: hidden;
-    border-radius: 12px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-  }
-
-  /* ===== ANTESALA ===== */
-  #antesala {
-    text-align: center;
-    background: #1a1208;
-    color: #e8dfc8;
-    min-height: 560px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-    padding: 3rem 2rem;
-  }
-
-  .classified-stamp {
-    border: 3px solid var(--stamp-red);
-    color: var(--stamp-red);
-    font-family: 'Playfair Display', serif;
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 4px;
-    padding: 6px 18px;
-    display: inline-block;
-    transform: rotate(-8deg);
-    margin-bottom: 2rem;
-    opacity: 0;
-    animation: fadeStamp 0.8s 0.3s forwards;
-  }
-
-  @keyframes fadeStamp {
-    from { opacity: 0; transform: rotate(-8deg) scale(1.4); }
-    to   { opacity: 1; transform: rotate(-8deg) scale(1); }
-  }
-
-  .briefcase-icon {
-    font-size: 64px;
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    animation: dropIn 0.6s 0.8s cubic-bezier(0.34,1.56,0.64,1) forwards;
-  }
-
-  @keyframes dropIn {
-    from { opacity: 0; transform: translateY(-30px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .antesala-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 36px;
-    font-weight: 900;
-    color: #e8dfc8;
-    line-height: 1.1;
-    margin-bottom: 0.5rem;
-    opacity: 0;
-    animation: fadeIn 0.6s 1.2s forwards;
-  }
-
-  .antesala-subtitle {
-    font-size: 12px;
-    letter-spacing: 4px;
-    color: var(--gold);
-    margin-bottom: 2rem;
-    opacity: 0;
-    animation: fadeIn 0.6s 1.4s forwards;
-  }
-
-  .mission-box {
-    background: rgba(232,223,200,0.06);
-    border: 0.5px solid rgba(232,223,200,0.15);
-    border-radius: 8px;
-    padding: 1.25rem 2rem;
-    max-width: 440px;
-    font-size: 15px;
-    line-height: 1.8;
-    color: #c8bfa8;
-    margin-bottom: 2rem;
-    opacity: 0;
-    animation: fadeIn 0.6s 1.7s forwards;
-  }
-
-  .mission-box strong { color: #e8dfc8; }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .start-btn {
-    background: var(--stamp-red);
-    color: #e8dfc8;
-    border: none;
-    padding: 14px 44px;
-    border-radius: 4px;
-    font-family: 'Playfair Display', serif;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    cursor: pointer;
-    transition: all 0.2s;
-    opacity: 0;
-    animation: fadeIn 0.6s 2.2s forwards;
-  }
-
-  .start-btn:hover { background: #a82020; transform: translateY(-2px); }
-  .start-btn:active { transform: scale(0.98); }
-
-  /* Indicador de voz */
-  #voice-indicator {
-    font-size: 11px;
-    color: #555;
-    margin-top: 14px;
-    letter-spacing: 1px;
-    opacity: 0;
-    animation: fadeIn 0.6s 2.5s forwards;
-    min-height: 1.2em;
-  }
-
-  /* ===== JUEGO ===== */
-  #juego-screen {
-    background: var(--paper);
-    min-height: 560px;
-    display: none;
-  }
-
-  .game-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 1.5rem;
-    border-bottom: 0.5px solid #d4c9a8;
-    background: #1a1208;
-  }
-
-  .case-badge {
-    font-family: 'Playfair Display', serif;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--gold);
-    letter-spacing: 3px;
-  }
-
-  .rank-display {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 13px;
-    color: #a09070;
-  }
-
-  .seals-row { display: flex; gap: 6px; }
-
-  .seal {
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    border: 1.5px solid #444;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px;
-    color: transparent;
-    transition: all 0.4s;
-  }
-
-  .seal.filled {
-    background: var(--stamp-red);
-    border-color: var(--stamp-red);
-    color: #e8dfc8;
-  }
-
-  /* Área central del juego */
-  .game-body {
-    padding: 2rem 1.5rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-  }
-
-  .instruction-label {
-    font-family: 'Playfair Display', serif;
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: #88785a;
-    text-transform: uppercase;
-  }
-
-  .animal-emoji-display {
-    font-size: 80px;
-    line-height: 1;
-    min-height: 90px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .listen-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: transparent;
-    border: 0.5px solid rgba(26,18,8,0.25);
-    border-radius: 40px;
-    padding: 10px 22px;
-    cursor: pointer;
-    font-family: 'Playwrite HR Lijeva', cursive;
-    font-size: 14px;
-    color: var(--ink);
-    transition: all 0.2s;
-  }
-
-  .listen-btn:hover { border-color: var(--stamp-red); color: var(--stamp-red); }
-  .listen-btn:active { transform: scale(0.97); }
-
-  .options-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    width: 100%;
-    max-width: 460px;
-  }
-
-  .option-btn {
-    background: #fff;
-    border: 0.5px solid #d4c9a8;
-    border-radius: 8px;
-    padding: 18px 12px;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Playwrite HR Lijeva', cursive;
-    font-size: 14px;
-    color: var(--ink);
-    transition: all 0.15s;
-  }
-
-  .option-btn:hover:not(:disabled) {
-    border-color: #b0a080;
-    background: #f5f0e8;
-    transform: translateY(-2px);
-  }
-
-  .option-btn.correct {
-    background: #e8fde8 !important;
-    border-color: #1a5c2a !important;
-    color: #1a5c2a !important;
-  }
-
-  .option-btn.wrong {
-    background: #fde8e8 !important;
-    border-color: var(--stamp-red) !important;
-    color: var(--stamp-red) !important;
-  }
-
-  .option-btn:disabled { cursor: default; }
-  .option-emoji { font-size: 44px; line-height: 1; }
-
-  /* Barra de progreso */
-  .case-progress {
-    padding: 0 1.5rem 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .progress-bar-wrap {
-    flex: 1;
-    height: 4px;
-    background: #d4c9a8;
-    border-radius: 2px;
-    overflow: hidden;
-  }
-
-  .progress-bar-fill {
-    height: 100%;
-    background: var(--stamp-red);
-    border-radius: 2px;
-    transition: width 0.4s ease;
-  }
-
-  .progress-text {
-    font-size: 12px;
-    color: #88785a;
-    white-space: nowrap;
-    letter-spacing: 1px;
-  }
-
-  /* ===== CIERRE ===== */
-  #cierre-screen {
-    background: #1a1208;
-    color: #e8dfc8;
-    min-height: 560px;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    border-radius: 12px;
-    padding: 3rem 2rem;
-  }
-
-  .cierre-sello {
-    border: 4px solid var(--gold);
-    color: var(--gold);
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    font-weight: 900;
-    letter-spacing: 4px;
-    padding: 10px 30px;
-    display: inline-block;
-    transform: rotate(-5deg);
-    margin-bottom: 2rem;
-    animation: stampPop 0.5s cubic-bezier(0.34,1.56,0.64,1);
-  }
-
-  @keyframes stampPop {
-    from { transform: rotate(-5deg) scale(2.2); opacity: 0; }
-    to   { transform: rotate(-5deg) scale(1); opacity: 1; }
-  }
-
-  .cierre-rank {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px;
-    font-weight: 900;
-    color: #e8dfc8;
-    margin-bottom: 0.5rem;
-  }
-
-  .cierre-score {
-    font-size: 52px;
-    font-weight: 700;
-    color: var(--gold);
-    margin-bottom: 1rem;
-    font-family: 'Playfair Display', serif;
-  }
-
-  .cierre-detail {
-    font-size: 15px;
-    color: #a09070;
-    margin-bottom: 2.5rem;
-    line-height: 1.8;
-    max-width: 380px;
-  }
-
-  .cierre-btns {
-    display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .cierre-btn {
-    padding: 12px 32px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: 'Playfair Display', serif;
-    font-size: 14px;
-    letter-spacing: 2px;
-    transition: all 0.2s;
-    border: none;
-  }
-
-  .cierre-btn.primary {
-    background: var(--stamp-red);
-    color: #e8dfc8;
-  }
-
-  .cierre-btn.primary:hover { background: #a82020; transform: translateY(-2px); }
-
-  /* Botones admin (abajo a la derecha) */
-  .admin-controls {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    display: flex;
-    gap: 8px;
-  }
-
-  .admin-btn {
-    background: rgba(26,18,8,0.7);
-    border: 0.5px solid rgba(184,134,11,0.3);
-    color: #a09070;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 0.7rem;
-    cursor: pointer;
-    font-family: 'Playwrite HR Lijeva', cursive;
-    transition: all 0.15s;
-  }
-
-  .admin-btn:hover { color: var(--gold); border-color: var(--gold); }
-
-  /* ===== PANTALLA NOMBRE ===== */
-  #nombre-screen {
-    position: fixed; inset: 0;
-    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 99999;
-  }
-
-  .nombre-card {
-    background: white;
-    padding: 40px;
-    border-radius: 40px;
-    max-width: 440px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-  }
-
-  .nombre-card h2 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #2196F3;
-    margin: 0 0 10px;
-  }
-
-  .nombre-card p {
-    font-size: 0.9rem;
-    color: #636e72;
-    margin-bottom: 20px;
-    line-height: 1.6;
-  }
-
-  .nombre-card input {
-    width: 100%;
-    padding: 13px 18px;
-    border-radius: 100px;
-    border: 2px solid #e0e0e0;
-    font-size: 1rem;
-    text-align: center;
-    outline: none;
-    box-sizing: border-box;
-    margin-bottom: 15px;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-  }
-
-  .nombre-card .btn-primary {
-    width: 100%;
-    padding: 14px;
-    background: #2196F3;
-    color: white;
-    border: none;
-    border-radius: 100px;
-    font-size: 0.95rem;
-    cursor: pointer;
-    margin-bottom: 10px;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-  }
-
-  .nombre-card .btn-skip {
-    background: none;
-    border: none;
-    color: #aaa;
-    font-size: 0.82rem;
-    cursor: pointer;
-    text-decoration: underline;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-  }
-
-  .nombre-card .disclaimer {
-    font-size: 0.75rem;
-    color: #b2bec3;
-    margin-top: 18px;
-    border-top: 1px solid #f0f0f0;
-    padding-top: 12px;
-    line-height: 1.5;
-  }
-
-  /* ===== SELECTOR TIPO DE LETRA ===== */
-  .tipo-section {
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    animation: fadeIn 0.6s 2.0s forwards;
-  }
-
-  .tipo-label {
-    font-size: 11px;
-    letter-spacing: 3px;
-    color: #666;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-  }
-
-  .tipo-selector {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-  }
-
-  .tipo-btn {
-    background: transparent;
-    border: 0.5px solid rgba(232,223,200,0.25);
-    color: #a09070;
-    padding: 10px 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: center;
-    line-height: 1.4;
-  }
-
-  .tipo-btn .preview-text {
-    display: block;
-    font-size: 17px;
-    margin-bottom: 3px;
-  }
-
-  .tipo-btn.active, .tipo-btn:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-    background: rgba(184,134,11,0.08);
-  }
-
-  /* ===== MODO MINÚSCULAS (por defecto) ===== */
-  .option-btn,
-  .listen-btn {
-    text-transform: lowercase;
-  }
-
-  /* ===== MODO MAYÚSCULAS ===== */
-  .font-mayus .option-btn,
-  .font-mayus .listen-btn,
-  .font-mayus .progress-text,
-  .font-mayus .instruction-label {
-    font-family: 'Playwrite DE Grund', cursive !important;
-    text-transform: uppercase !important;
-  }
-
-  @media (max-width: 500px) {
-    .options-grid { grid-template-columns: repeat(2, 1fr); }
-    .antesala-title { font-size: 28px; }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Salto de la Sílaba - 20 Retos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund&family=Playwrite+HR+Lijeva&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root { 
+            --accent: #ff4081; 
+            --bg: #f0f4f8; 
+            --success: #4caf50; 
+            --font-mayus: 'Playwrite DE Grund', sans-serif;
+            --font-minus: 'Playwrite HR Lijeva', sans-serif;
+        }
+        
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            overflow: hidden; background: var(--bg); user-select: none; 
+            font-family: var(--font-mayus);
+        }
+        
+        #app { width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        
+        /* Fondo letras colores flotantes */
+        .bg-letters { position: fixed; inset: 0; z-index: 1; opacity: 0.18; pointer-events: none; }
+        .bg-char { position: absolute; font-size: 4rem; font-weight: bold; animation: float 15s infinite linear; }
+        @keyframes float { from { transform: translateY(110vh) rotate(0deg); } to { transform: translateY(-10vh) rotate(360deg); } }
+
+        /* Capas de contenido sobre el fondo */
+        #menu, #game-content { position: relative; z-index: 10; }
+
+        /* UI */
+        .nav { position: absolute; top: 20px; width: 92%; display: flex; justify-content: space-between; z-index: 100; }
+        .btn-ui { width: 60px; height: 60px; border-radius: 15px; border: 3px solid white; background: white; cursor: pointer; font-size: 25px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+        /* MENU */
+        #menu { position: fixed; inset: 0; background: rgba(240, 244, 248, 0.95); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .card { background: white; padding: 40px; border-radius: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); text-align: center; max-width: 500px; }
+        .btn-case { padding: 15px 25px; margin: 10px; border: 2px solid #ddd; border-radius: 20px; cursor: pointer; font-family: inherit; font-size: 1.1rem; transition: 0.3s; }
+        .btn-case.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+        /* GAME AREA */
+        #game-content { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #emoji { font-size: 100px; margin-bottom: 10px; }
+        .word-ui { font-size: 4rem; display: flex; align-items: center; gap: 10px; margin-bottom: 40px; }
+        .gap { color: var(--accent); border-bottom: 5px solid var(--accent); min-width: 100px; text-align: center; }
+        .options { display: flex; gap: 30px; margin-bottom: 30px; }
+        .btn-syl { background: white; border: 4px solid var(--accent); padding: 20px 40px; border-radius: 25px; font-size: 3.5rem; cursor: pointer; transition: 0.2s; font-family: inherit; min-width: 160px; }
+        
+        #btn-next { display: none; padding: 15px 45px; font-size: 1.5rem; background: var(--success); color: white; border: none; border-radius: 50px; cursor: pointer; font-family: inherit; }
+        #fs-timer { position: fixed; bottom: 20px; background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 20px; display: none; z-index: 2000; }
+    </style>
 </head>
 <body>
 
-<!-- PANTALLA NOMBRE -->
-<div id="nombre-screen">
-  <div class="nombre-card">
-    <div style="font-size:3.5rem;margin-bottom:15px;">👦👧</div>
-    <h2>¿Quién va a jugar?</h2>
-    <p>Si quieres, escribe el nombre del niño o niña para guardar sus resultados.</p>
-    <input id="nombre-input" type="text" placeholder="Nombre del niño/a..." maxlength="50">
-    <button class="btn-primary" onclick="guardarNombreYContinuar()">Enviar informe a Inma ✓</button>
-    <button class="btn-skip" onclick="continuarSinNombre()">Continuar sin enviar informe</button>
-    <p class="disclaimer">🔒 Solo Inma verá los resultados para el seguimiento.</p>
-  </div>
-</div>
+<div id="app">
+    <div class="bg-letters" id="bg"></div>
 
-<div id="game-wrapper">
-<div id="game">
-
-  <!-- ANTESALA -->
-  <div id="antesala">
-    <div class="classified-stamp">✦ EXPEDIENTE CLASIFICADO ✦</div>
-    <div class="briefcase-icon">🦁</div>
-    <div class="antesala-title">El Detective<br>Animal</div>
-    <div class="antesala-subtitle">AGENCIA DE CASOS DEL REINO ANIMAL</div>
-    <div class="mission-box">
-      Han llegado informes confusos desde la granja. Los testigos no recuerdan qué animales vieron.<br><br>
-      Solo un detective capaz de <strong>escuchar las pistas</strong> y reconocer al animal sospechoso podrá cerrar cada caso.<br><br>
-      ¿Estás listo para ponerte la lupa?
+    <div class="nav">
+        <button class="btn-ui" onclick="parental('home')">🏠</button>
+        <button class="btn-ui" onmousedown="fsStart()" onmouseup="fsEnd()" ontouchstart="fsStart()" ontouchend="fsEnd()">⛶</button>
+        <button class="btn-ui" onclick="getReport()">📋</button>
     </div>
-    <div class="tipo-section">
-      <div class="tipo-label">Tipo de letra</div>
-      <div class="tipo-selector">
-        <button class="tipo-btn active" id="tipo-minus" onclick="setTipo('minus', this)">
-          <span class="preview-text" style="font-family:'Playwrite HR Lijeva',cursive;">minúscula</span>
-        </button>
-        <button class="tipo-btn" id="tipo-mayus" onclick="setTipo('mayus', this)">
-          <span class="preview-text" style="font-family:'Playwrite DE Grund',cursive;">Mayúscula</span>
-        </button>
-      </div>
-    </div>
-    <button class="start-btn" onclick="startGame()">▶ ABRIR EXPEDIENTE</button>
-    <div id="voice-indicator">Cargando voz...</div>
-  </div>
 
-  <!-- JUEGO -->
-  <div id="juego-screen">
-    <div class="game-header">
-      <span class="case-badge" id="case-badge">CASO 1 / 4</span>
-      <div class="rank-display">
-        <span id="rank-name">Aprendiz</span>
-        <div class="seals-row">
-          <div class="seal" id="seal-0"></div>
-          <div class="seal" id="seal-1"></div>
-          <div class="seal" id="seal-2"></div>
-          <div class="seal" id="seal-3"></div>
-          <div class="seal" id="seal-4"></div>
+    <div id="menu">
+        <div class="card">
+            <h1 id="main-title" style="color:var(--accent)">Salto Silábico</h1>
+            <p>Selecciona letra:</p>
+            <button id="b-may" class="btn-case active" onclick="setL('MAY')">MAYÚSCULAS</button>
+            <button id="b-min" class="btn-case" onclick="setL('MIN')">minúsculas</button>
+            <br><br>
+            <button class="btn-case active" style="background:var(--success); color:white; border:none;" onclick="start()">¡EMPEZAR!</button>
         </div>
-      </div>
     </div>
 
-    <div class="game-body">
-      <div class="instruction-label">⬢ Escucha la pista y adivina el animal</div>
-      <div class="animal-emoji-display" id="animal-display">🎧</div>
-      <button class="listen-btn" onclick="repeatRiddle()">🔊 Escuchar pista</button>
-      <div class="options-grid" id="options-container"></div>
+    <div id="game-content">
+        <div id="emoji"></div>
+        <div class="word-ui" id="word-box"></div>
+        <div class="options" id="opt-box"></div>
+        <button id="btn-next" onclick="next()">SIGUIENTE ➔</button>
     </div>
 
-    <div class="case-progress">
-      <div class="progress-bar-wrap">
-        <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
-      </div>
-      <span class="progress-text" id="progress-text">Caso 1 de 4</span>
-    </div>
-  </div>
-
-  <!-- CIERRE -->
-  <div id="cierre-screen"></div>
-
-</div>
-</div>
-
-<!-- CONTROLES ADMIN -->
-<div class="admin-controls">
-  <button class="admin-btn" onclick="downloadReport()">📄 Reporte</button>
-  <button class="admin-btn" onclick="location.reload()">↺ Reiniciar</button>
+    <div id="fs-timer">Mantén pulsado (3s)... <span id="fs-count">0</span>%</div>
 </div>
 
 <script>
-// ============================================================
-// VARIABLES GLOBALES
-// ============================================================
-var tipoLetra = 'minus';
+    const WORDS = [
+        // NIVEL 1 (20)
+        { e: '🏰', c: 'as', o: ['as','sa'], w: 'C__TILLO', f: 'CASTILLO' },
+        { e: '🐍', c: 'se', o: ['es','se'], w: '__RPIENTE', f: 'SERPIENTE' },
+        { e: '🎒', c: 'mo', o: ['om','mo'], w: '__CHILA', f: 'MOCHILA' },
+        { e: '🪜', c: 'es', o: ['es','se'], w: '__CALERA', f: 'ESCALERA' },
+        { e: '🍊', c: 'na', o: ['an','na'], w: '__RANJA', f: 'NARANJA' },
+        { e: '🦒', c: 'ra', o: ['ar','ra'], w: 'JI__FA', f: 'JIRAFA' },
+        { e: '🐜', c: 'an', o: ['an','na'], w: '__TENA', f: 'ANTENA' },
+        { e: '🌴', c: 'al', o: ['al','la'], w: 'P__MA', f: 'PALMA' },
+        { e: '🧤', c: 'gu', o: ['ug','gu'], w: '__ANTE', f: 'GUANTE' },
+        { e: '🐀', c: 'ra', o: ['ar','ra'], w: '__TÓN', f: 'RATÓN' },
+        { e: '🌲', c: 'ar', o: ['ar','ra'], w: '__BOL', f: 'ÁRBOL' },
+        { e: '🍕', c: 'pi', o: ['ip','pi'], w: '__ZZA', f: 'PIZZA' },
+        { e: '🧜‍♀️', c: 'si', o: ['is','si'], w: '__RENA', f: 'SIRENA' },
+        { e: '🏝️', c: 'is', o: ['is','si'], w: '__LA', f: 'ISLA' },
+        { e: '🌙', c: 'lu', o: ['ul','lu'], w: '__NA', f: 'LUNA' },
+        { e: '🎯', c: 'ul', o: ['ul','lu'], w: '__TIMO', f: 'ÚLTIMO' },
+        { e: '👂', c: 'or', o: ['or','ro'], w: '__EJA', f: 'OREJA' },
+        { e: '🌹', c: 'ro', o: ['or','ro'], w: '__SA', f: 'ROSA' },
+        { e: '🐘', c: 'el', o: ['el','le'], w: '__EFANTE', f: 'ELEFANTE' },
+        { e: '🦁', c: 'le', o: ['el','le'], w: '__ÓN', f: 'LEÓN' },
+        // NIVEL 2 (20)
+        { e: '👻', c: 'fa', o: ['af','fa'], w: '__NTASMA', f: 'FANTASMA' },
+        { e: '🎂', c: 'as', o: ['as','sa'], w: 'P__TEL', f: 'PASTEL' },
+        { e: '🌂', c: 'pa', o: ['ap','pa'], w: '__RAGUAS', f: 'PARAGUAS' },
+        { e: '🥣', c: 'as', o: ['as','sa'], w: 'P__TA', f: 'PASTA' },
+        { e: '🚢', c: 'ba', o: ['ab','ba'], w: '__RCO', f: 'BARCO' },
+        { e: '🪣', c: 'cu', o: ['uc','cu'], w: '__BO', f: 'CUBO' },
+        { e: '🦟', c: 'mo', o: ['om','mo'], w: '__SQUITO', f: 'MOSQUITO' },
+        { e: '🧥', c: 'ab', o: ['ab','ba'], w: '__RIGO', f: 'ABRIGO' },
+        { e: '🚪', c: 'pu', o: ['up','pu'], w: '__ERTA', f: 'PUERTA' },
+        { e: '🦴', c: 'ue', o: ['eu','ue'], w: 'H__SO', f: 'HUESO' },
+        { e: '🦷', c: 'di', o: ['id','di'], w: '__ENTE', f: 'DIENTE' },
+        { e: '🚿', c: 'du', o: ['ud','du'], w: '__CHA', f: 'DUCHA' },
+        { e: '🧸', c: 'os', o: ['os','so'], w: '__O', f: 'OSO' },
+        { e: '🍲', c: 'so', o: ['os','so'], w: '__PA', f: 'SOPA' },
+        { e: '🔔', c: 'ca', o: ['ac','ca'], w: '__MPANA', f: 'CAMPANA' },
+        { e: '👨‍🍳', c: 'co', o: ['oc','co'], w: '__CINA', f: 'COCINA' },
+        { e: '👓', c: 'ga', o: ['ag','ga'], w: '__FAS', f: 'GAFAS' },
+        { e: '🐱', c: 'ga', o: ['ag','ga'], w: '__TO', f: 'GATO' },
+        { e: '🐆', c: 'ti', o: ['it','ti'], w: '__GRE', f: 'TIGRE' },
+        { e: '👟', c: 'te', o: ['et','te'], w: '__NIS', f: 'TENIS' }
+    ];
 
-function setTipo(tipo, btn) {
-  tipoLetra = tipo;
-  document.querySelectorAll('.tipo-btn').forEach(function(b) { b.classList.remove('active'); });
-  btn.classList.add('active');
-  applyFont();
-}
+    let currentL = 'MAY', idx = 0, log = [], fsHoldInterval, fsProgress = 0;
 
-function applyFont() {
-  var game = document.getElementById('game');
-  if (tipoLetra === 'mayus') {
-    game.classList.add('font-mayus');
-  } else {
-    game.classList.remove('font-mayus');
-  }
-}
-
-var NOMBRE_ALUMNO = "";
-var ENVIAR_INFORME = false;
-var synth = window.speechSynthesis;
-var selectedVoice = null;
-var index = 0;
-var sellos = 0;
-var logs = [];
-var currentData = null;
-
-var rangos = ['Aprendiz', 'Detective Novato', 'Investigador', 'Inspector Jefe', 'Comisario Animal'];
-
-// ============================================================
-// PANTALLA DE NOMBRE
-// ============================================================
-function guardarNombreYContinuar() {
-  var nombre = document.getElementById('nombre-input').value.trim();
-  if (nombre === "") {
-    document.getElementById('nombre-input').style.borderColor = "#ff7675";
-    return;
-  }
-  NOMBRE_ALUMNO = nombre;
-  ENVIAR_INFORME = true;
-  document.getElementById('nombre-screen').style.display = 'none';
-}
-
-function continuarSinNombre() {
-  NOMBRE_ALUMNO = "Anonimo";
-  ENVIAR_INFORME = false;
-  document.getElementById('nombre-screen').style.display = 'none';
-}
-
-// ============================================================
-// MOTOR DE VOZ — MEJORADO PARA TABLETS Y ANDROID
-// ============================================================
-
-/**
- * Prepara el texto para síntesis de voz.
- * Problema principal: motores TTS de Android leen MAYÚSCULAS
- * como siglas (S-O-Y) aunque el JS haga toLowerCase().
- * La solución es enviar siempre texto en minúsculas, limpio
- * y con pausas naturales marcadas.
- */
-function prepararTexto(texto) {
-  return texto
-    .toLowerCase()               // todo en minúsculas — clave para Android
-    .replace(/\s+/g, ' ')        // espacios múltiples → uno
-    .replace(/([.!?])\s*/g, '$1 ') // pausa tras puntuación
-    .replace(/,\s*/g, ', ')      // pausa natural en comas
-    .trim();
-}
-
-/**
- * Selecciona la mejor voz española disponible.
- * Orden de prioridad:
- *   1. Google español (mejor calidad en Android)
- *   2. Microsoft español (buena en Windows/Edge)
- *   3. es-ES exacto
- *   4. Cualquier voz que empiece por 'es'
- */
-function seleccionarVoz() {
-  var voices = synth.getVoices();
-  if (!voices || voices.length === 0) return;
-
-  // 1. Google español
-  selectedVoice = voices.find(function(v) {
-    return v.lang.startsWith('es') && v.name.toLowerCase().includes('google');
-  });
-
-  // 2. Microsoft español
-  if (!selectedVoice) {
-    selectedVoice = voices.find(function(v) {
-      return v.lang.startsWith('es') && v.name.toLowerCase().includes('microsoft');
-    });
-  }
-
-  // 3. es-ES exacto
-  if (!selectedVoice) {
-    selectedVoice = voices.find(function(v) { return v.lang === 'es-ES'; });
-  }
-
-  // 4. Cualquier español
-  if (!selectedVoice) {
-    selectedVoice = voices.find(function(v) { return v.lang.startsWith('es'); });
-  }
-
-  // Actualizar indicador visual
-  var indicator = document.getElementById('voice-indicator');
-  if (indicator) {
-    indicator.textContent = selectedVoice
-      ? '🔊 ' + selectedVoice.name
-      : '⚠️ Voz básica del dispositivo';
-  }
-}
-
-// Las voces en Android se cargan de forma asíncrona.
-// Necesitamos escuchar onvoiceschanged Y reintentar con delays.
-synth.onvoiceschanged = seleccionarVoz;
-seleccionarVoz();                       // Intento inmediato (funciona en iOS/PC)
-setTimeout(seleccionarVoz, 500);        // Android necesita este delay
-setTimeout(seleccionarVoz, 1500);       // Segundo reintento por si acaso
-
-/**
- * Función principal de habla.
- * Incluye workarounds para bugs de Chrome Android:
- * - Delay de 100ms tras cancel() para evitar audio distorsionado
- * - Ping periódico para evitar que Chrome pause la síntesis sola
- */
-function speak(texto) {
-  if (!texto) return;
-  synth.cancel();
-
-  var cleanText = prepararTexto(texto);
-
-  // Delay necesario tras cancel() en Chrome Android
-  setTimeout(function() {
-    var utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.lang = 'es-ES';
-    utterance.rate = 0.82;   // Más lento = más claro para niños
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
-
-    if (selectedVoice) {
-      utterance.voice = selectedVoice;
+    function setL(c) {
+        currentL = c;
+        document.getElementById('b-may').classList.toggle('active', c==='MAY');
+        document.getElementById('b-min').classList.toggle('active', c==='MIN');
+        
+        const targetFont = c === 'MAY' ? "var(--font-mayus)" : "var(--font-minus)";
+        document.body.style.fontFamily = targetFont;
+        document.getElementById('main-title').style.fontFamily = targetFont;
     }
 
-    // Workaround bug Android: Chrome pausa la síntesis en frases largas.
-    // Hacemos ping cada 10s para mantenerla activa.
-    var keepAlive = setInterval(function() {
-      if (!synth.speaking) {
-        clearInterval(keepAlive);
-      } else {
-        synth.pause();
-        synth.resume();
-      }
-    }, 10000);
-
-    utterance.onend = function() { clearInterval(keepAlive); };
-    utterance.onerror = function() { clearInterval(keepAlive); };
-
-    synth.speak(utterance);
-  }, 100);
-}
-
-// ============================================================
-// DATOS DEL JUEGO
-// Importante: los textos "pista" están en minúsculas directamente
-// para evitar que cualquier motor TTS los lea como siglas.
-// ============================================================
-var gameData = [
-  { pista: "digo muuu. doy leche. vivo en la granja.", correcto: "VACA", emoji: "🐄",
-    opciones: [{texto:"VACA",emoji:"🐄"},{texto:"GATO",emoji:"🐈"},{texto:"PERRO",emoji:"🐕"},{texto:"POLLO",emoji:"🐥"}] },
-  { pista: "tengo bigotes. digo miau. cazo ratones.", correcto: "GATO", emoji: "🐈",
-    opciones: [{texto:"GATO",emoji:"🐈"},{texto:"LEON",emoji:"🦁"},{texto:"CONEJO",emoji:"🐇"},{texto:"PEZ",emoji:"🐟"}] },
-  { pista: "ladro muy fuerte. soy el mejor amigo del hombre.", correcto: "PERRO", emoji: "🐕",
-    opciones: [{texto:"PERRO",emoji:"🐕"},{texto:"LOBO",emoji:"🐺"},{texto:"VACA",emoji:"🐄"},{texto:"PATO",emoji:"🦆"}] },
-  { pista: "soy verde. digo croac. salto en el agua.", correcto: "RANA", emoji: "🐸",
-    opciones: [{texto:"RANA",emoji:"🐸"},{texto:"PAJARO",emoji:"🐦"},{texto:"SERPIENTE",emoji:"🐍"},{texto:"PEZ",emoji:"🐟"}] },
-  { pista: "tengo orejas largas. como zanahorias.", correcto: "CONEJO", emoji: "🐇",
-    opciones: [{texto:"CONEJO",emoji:"🐇"},{texto:"RATON",emoji:"🐭"},{texto:"OSO",emoji:"🐻"},{texto:"OVEJA",emoji:"🐑"}] },
-  { pista: "digo cua cua. nado en el estanque.", correcto: "PATO", emoji: "🦆",
-    opciones: [{texto:"PATO",emoji:"🦆"},{texto:"POLLO",emoji:"🐥"},{texto:"CERDO",emoji:"🐷"},{texto:"CISNE",emoji:"🦢"}] },
-  { pista: "digo beee. tengo mucha lana blanca.", correcto: "OVEJA", emoji: "🐑",
-    opciones: [{texto:"OVEJA",emoji:"🐑"},{texto:"CABRA",emoji:"🐐"},{texto:"VACA",emoji:"🐄"},{texto:"PERRO",emoji:"🐕"}] },
-  { pista: "tengo nariz de enchufe. digo oink oink.", correcto: "CERDO", emoji: "🐷",
-    opciones: [{texto:"CERDO",emoji:"🐷"},{texto:"VACA",emoji:"🐄"},{texto:"CABALLO",emoji:"🐎"},{texto:"CONEJO",emoji:"🐇"}] },
-  { pista: "tengo el cuello largo. como hojas altas. tengo manchas.", correcto: "JIRAFA", emoji: "🦒",
-    opciones: [{texto:"JIRAFA",emoji:"🦒"},{texto:"CEBRA",emoji:"🦓"},{texto:"ELEFANTE",emoji:"🐘"},{texto:"LAGARTO",emoji:"🦎"}] },
-  { pista: "soy gris. tengo orejas gigantes. trompa larga.", correcto: "ELEFANTE", emoji: "🐘",
-    opciones: [{texto:"ELEFANTE",emoji:"🐘"},{texto:"HIPOPOTAMO",emoji:"🦛"},{texto:"RINOCERONTE",emoji:"🦏"},{texto:"OSO",emoji:"🐻"}] },
-  { pista: "parezco un caballo. tengo rayas blancas y negras.", correcto: "CEBRA", emoji: "🦓",
-    opciones: [{texto:"CEBRA",emoji:"🦓"},{texto:"TIGRE",emoji:"🐅"},{texto:"BURRO",emoji:"🫏"},{texto:"VACA",emoji:"🐄"}] },
-  { pista: "tengo una bolsa en mi barriga. salto mucho.", correcto: "CANGURO", emoji: "🦘",
-    opciones: [{texto:"CANGURO",emoji:"🦘"},{texto:"CONEJO",emoji:"🐇"},{texto:"MONO",emoji:"🐒"},{texto:"KOALA",emoji:"🐨"}] },
-  { pista: "me gusta colgarme de las ramas. como plátanos.", correcto: "MONO", emoji: "🐒",
-    opciones: [{texto:"MONO",emoji:"🐒"},{texto:"GATO",emoji:"🐈"},{texto:"ARDILLA",emoji:"🐿️"},{texto:"PERRO",emoji:"🐕"}] },
-  { pista: "vivo en el frío. soy blanco. muy peludo.", correcto: "OSO POLAR", emoji: "🐻‍❄️",
-    opciones: [{texto:"OSO POLAR",emoji:"🐻‍❄️"},{texto:"PINGUINO",emoji:"🐧"},{texto:"FOCA",emoji:"🦭"},{texto:"ZORRO",emoji:"🦊"}] },
-  { pista: "no tengo patas. me arrastro. tengo lengua larga.", correcto: "SERPIENTE", emoji: "🐍",
-    opciones: [{texto:"SERPIENTE",emoji:"🐍"},{texto:"GUSANO",emoji:"🐛"},{texto:"LAGARTO",emoji:"🦎"},{texto:"PEZ",emoji:"🐟"}] },
-  { pista: "tengo una corona de plumas. canto al sol.", correcto: "GALLO", emoji: "🐓",
-    opciones: [{texto:"GALLO",emoji:"🐓"},{texto:"PATO",emoji:"🦆"},{texto:"BUHO",emoji:"🦉"},{texto:"LORO",emoji:"🦜"}] },
-  { pista: "soy el rey de la selva. tengo melena grande.", correcto: "LEON", emoji: "🦁",
-    opciones: [{texto:"LEON",emoji:"🦁"},{texto:"TIGRE",emoji:"🐅"},{texto:"GORILA",emoji:"🦍"},{texto:"LOBO",emoji:"🐺"}] },
-  { pista: "llevo mi casa encima. camino muy lento.", correcto: "CARACOL", emoji: "🐌",
-    opciones: [{texto:"CARACOL",emoji:"🐌"},{texto:"TORTUGA",emoji:"🐢"},{texto:"CANGREJO",emoji:"🦀"},{texto:"GUSANO",emoji:"🐛"}] },
-  { pista: "soy un ave que no vuela. vivo en el hielo.", correcto: "PINGUINO", emoji: "🐧",
-    opciones: [{texto:"PINGUINO",emoji:"🐧"},{texto:"PATO",emoji:"🦆"},{texto:"PAJARO",emoji:"🐦"},{texto:"FOCA",emoji:"🦭"}] },
-  { pista: "vivo en el mar. soy inteligente. salto en las olas.", correcto: "DELFIN", emoji: "🐬",
-    opciones: [{texto:"DELFIN",emoji:"🐬"},{texto:"TIBURON",emoji:"🦈"},{texto:"BALLENA",emoji:"🐳"},{texto:"PULPO",emoji:"🐙"}] },
-  { pista: "tengo ocho patas. tejo redes.", correcto: "ARANA", emoji: "🕷️",
-    opciones: [{texto:"ARANA",emoji:"🕷️"},{texto:"HORMIGA",emoji:"🐜"},{texto:"ABEJA",emoji:"🐝"},{texto:"CANGREJO",emoji:"🦀"}] },
-  { pista: "cambio el color de mi piel para esconderme.", correcto: "CAMALEON", emoji: "🦎",
-    opciones: [{texto:"CAMALEON",emoji:"🦎"},{texto:"SERPIENTE",emoji:"🐍"},{texto:"RANA",emoji:"🐸"},{texto:"TORTUGA",emoji:"🐢"}] },
-  { pista: "soy nocturno. giro la cabeza por completo.", correcto: "BUHO", emoji: "🦉",
-    opciones: [{texto:"BUHO",emoji:"🦉"},{texto:"MURCIELAGO",emoji:"🦇"},{texto:"AGUILA",emoji:"🦅"},{texto:"GATO",emoji:"🐈"}] },
-  { pista: "antes fui una oruga. tengo alas muy bonitas.", correcto: "MARIPOSA", emoji: "🦋",
-    opciones: [{texto:"MARIPOSA",emoji:"🦋"},{texto:"ABEJA",emoji:"🐝"},{texto:"LIBELULA",emoji:"🪲"},{texto:"MOSCA",emoji:"🪰"}] }
-];
-
-// ============================================================
-// LÓGICA DEL JUEGO
-// ============================================================
-function startGame() {
-  document.getElementById('antesala').style.display = 'none';
-  document.getElementById('juego-screen').style.display = 'block';
-  index = 0;
-  sellos = 0;
-  logs = [];
-  updateSellos();
-  loadCase();
-}
-
-function loadCase() {
-  currentData = gameData[index];
-
-  // Cabecera
-  document.getElementById('case-badge').textContent =
-    'ANIMAL ' + (index + 1) + ' / ' + gameData.length;
-  document.getElementById('progress-text').textContent =
-    'Animal ' + (index + 1) + ' de ' + gameData.length;
-  document.getElementById('progress-fill').style.width =
-    (index / gameData.length * 100) + '%';
-
-  // Emoji central (muestra signo de pregunta hasta responder)
-  document.getElementById('animal-display').textContent = '❓';
-
-  // Opciones
-  var container = document.getElementById('options-container');
-  container.innerHTML = '';
-
-  currentData.opciones.forEach(function(opt) {
-    var btn = document.createElement('button');
-    btn.className = 'option-btn';
-    btn.innerHTML = '<span class="option-emoji">' + opt.emoji + '</span>' + opt.texto;
-    btn.onclick = function() { check(opt.texto, btn); };
-    container.appendChild(btn);
-  });
-
-  // Leer la pista con pequeño delay
-  setTimeout(function() { speak(currentData.pista); }, 700);
-}
-
-function check(guess, clickedBtn) {
-  // Deshabilitar todos los botones
-  var btns = document.querySelectorAll('.option-btn');
-  btns.forEach(function(b) {
-    b.disabled = true;
-    if (b.innerHTML.includes(currentData.correcto)) b.classList.add('correct');
-  });
-
-  var correct = (guess === currentData.correcto);
-
-  if (correct) {
-    clickedBtn.classList.add('correct');
-    document.getElementById('animal-display').textContent = currentData.emoji;
-    sellos++;
-    logs.push({ n: index + 1, animal: currentData.correcto, ok: true });
-    updateSellos();
-    // Avanzar automáticamente después de un momento
-    setTimeout(function() { avanzar(); }, 1400);
-  } else {
-    clickedBtn.classList.add('wrong');
-    document.getElementById('animal-display').textContent = currentData.emoji;
-    logs.push({ n: index + 1, animal: currentData.correcto, ok: false });
-    // Esperar más para que vean la respuesta correcta
-    setTimeout(function() { avanzar(); }, 2000);
-  }
-}
-
-function avanzar() {
-  index++;
-  if (index < gameData.length) {
-    loadCase();
-  } else {
-    showCierre();
-  }
-}
-
-function repeatRiddle() {
-  if (currentData) speak(currentData.pista);
-}
-
-// ============================================================
-// SELLOS Y RANGO
-// ============================================================
-function updateSellos() {
-  for (var i = 0; i < 5; i++) {
-    var s = document.getElementById('seal-' + i);
-    if (!s) continue;
-    if (i < sellos) {
-      s.classList.add('filled');
-      s.textContent = '★';
-    } else {
-      s.classList.remove('filled');
-      s.textContent = '';
+    function start() { 
+        document.getElementById('menu').style.display='none'; 
+        load(); 
     }
-  }
-  var rango = sellos >= 24 ? rangos[4] : sellos >= 18 ? rangos[3] : sellos >= 12 ? rangos[2] : sellos >= 6 ? rangos[1] : rangos[0];
-  var rankEl = document.getElementById('rank-name');
-  if (rankEl) rankEl.textContent = rango;
-}
 
-// ============================================================
-// PANTALLA FINAL
-// ============================================================
-function showCierre() {
-  document.getElementById('juego-screen').style.display = 'none';
-  var cierre = document.getElementById('cierre-screen');
-  cierre.style.display = 'flex';
+    function load() {
+        const item = WORDS[idx];
+        document.getElementById('emoji').innerText = item.e;
+        document.getElementById('btn-next').style.display = 'none';
+        const box = document.getElementById('word-box');
+        box.innerHTML = "";
+        const p = item.w.split("__");
+        box.innerHTML = `<span>${fmt(p[0])}</span><span class="gap" id="gap">_ _</span><span>${fmt(p[1]||"")}</span>`;
+        
+        const opts = document.getElementById('opt-box');
+        opts.innerHTML = "";
+        item.o.forEach(o => {
+            const b = document.createElement('button');
+            b.className = 'btn-syl';
+            b.innerText = fmt(o);
+            b.onclick = () => check(o, b);
+            opts.appendChild(b);
+        });
+        speak(`Completa la palabra ${item.f}`);
+    }
 
-  var rango = sellos >= 24 ? rangos[4] : sellos >= 18 ? rangos[3] : sellos >= 12 ? rangos[2] : sellos >= 6 ? rangos[1] : rangos[0];
+    function fmt(t) { return currentL==='MAY' ? t.toUpperCase() : t.toLowerCase(); }
 
-  var mensaje = '';
-  if (sellos === gameData.length) {
-    mensaje = '¡Rendimiento perfecto! Eres un auténtico Comisario Animal. Ningún animal se te resiste.';
-  } else if (sellos >= 18) {
-    mensaje = '¡Muy bien! Has identificado casi todos los animales. Sigue practicando para alcanzar el rango máximo.';
-  } else if (sellos >= 12) {
-    mensaje = 'Buen intento. Cada animal es una nueva oportunidad. ¡Vuelve a intentarlo!';
-  } else {
-    mensaje = 'Los animales siguen sueltos. ¡Escucha bien las pistas y vuelve a intentarlo!';
-  }
+    function check(val, btn) {
+        const item = WORDS[idx];
+        if(val === item.c) {
+            document.getElementById('gap').innerText = fmt(val);
+            document.getElementById('gap').style.border = "none";
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            speak("¡Genial!");
+            document.getElementById('opt-box').innerHTML = "";
+            document.getElementById('btn-next').style.display = 'block';
+            log.push({ w: item.f, r: 'Acierto' });
+        } else {
+            speak("Intenta otra vez");
+            btn.style.borderColor = "red";
+            log.push({ w: item.f, r: 'Fallo' });
+        }
+    }
 
-  cierre.innerHTML =
-    '<div class="cierre-sello">CASO CERRADO</div>' +
-    '<div class="cierre-rank">' + rango + '</div>' +
-    '<div class="cierre-score">' + sellos + ' / ' + gameData.length + ' sellos</div>' +
-    '<div class="cierre-detail">' + mensaje + '</div>' +
-    '<div class="cierre-btns">' +
-      '<button class="cierre-btn primary" onclick="resetGame()">▶ NUEVO EXPEDIENTE</button>' +
-    '</div>';
-}
+    function next() { idx = (idx + 1) % WORDS.length; load(); }
 
-function resetGame() {
-  document.getElementById('cierre-screen').style.display = 'none';
-  document.getElementById('cierre-screen').innerHTML = '';
-  document.getElementById('antesala').style.display = 'flex';
-  index = 0;
-  sellos = 0;
-  logs = [];
-  updateSellos();
-}
+    function speak(t) { 
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const m = new SpeechSynthesisUtterance(t); 
+            m.lang='es-ES'; 
+            window.speechSynthesis.speak(m); 
+        }
+    }
 
-// ============================================================
-// REPORTE
-// ============================================================
-function downloadReport() {
-  var t = "REPORTE — DETECTIVE ANIMAL\n";
-  t += "==========================\n";
-  logs.forEach(function(l) {
-    t += 'Caso ' + l.n + ' (' + l.animal + '): ' + (l.ok ? '✓ CORRECTO' : '✗ FALLO') + '\n';
-  });
-  var correctos = logs.filter(function(l) { return l.ok; }).length;
-  t += '\nTotal: ' + correctos + '/' + logs.length + ' correctos';
-  var b = new Blob([t], { type: 'text/plain' });
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(b);
-  a.download = 'reporte-detective-animal.txt';
-  a.click();
-}
+    function parental(a) {
+        const n1 = Math.floor(Math.random()*8)+1, n2 = Math.floor(Math.random()*5);
+        Swal.fire({ title: 'Control Parental', text: `¿Cuánto es ${n1} + ${n2}?`, input: 'number' }).then(r => {
+            if(parseInt(r.value) === (n1+n2) && a === 'home') {
+                window.location.reload();
+            }
+        });
+    }
+
+    /* --- SISTEMA ROBUSTO DE PANTALLA COMPLETA --- */
+    function toggleFullscreenNatively() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.log(`Error al activar pantalla completa: ${err.message}`);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
+    function fsStart() {
+        fsProgress = 0;
+        document.getElementById('fs-count').innerText = "0";
+        document.getElementById('fs-timer').style.display = 'block';
+        
+        clearInterval(fsHoldInterval);
+        fsHoldInterval = setInterval(() => {
+            fsProgress += 10;
+            document.getElementById('fs-count').innerText = fsProgress;
+            
+            if (fsProgress >= 100) {
+                clearInterval(fsHoldInterval);
+                document.getElementById('fs-timer').style.display = 'none';
+                toggleFullscreenNatively();
+            }
+        }, 300); // 10 iteraciones de 300ms = 3 segundos
+    }
+
+    function fsEnd() {
+        clearInterval(fsHoldInterval);
+        document.getElementById('fs-timer').style.display = 'none';
+    }
+
+    function getReport() {
+        let h = "<h2>Informe de Progreso - Salto Silábico</h2><table border='1' cellpadding='8' style='border-collapse:collapse;'><tr><th>Palabra</th><th>Resultado</th></tr>";
+        log.forEach(l => h += `<tr><td>${l.w}</td><td style="color:${l.r === 'Acierto' ? 'green':'red'}">${l.r}</td></tr>`);
+        const b = new Blob([h+"</table>"], {type:'text/html'});
+        const a = document.createElement('a'); a.href=URL.createObjectURL(b); a.download="informe_silabas.html"; a.click();
+    }
+
+    function bg() {
+        const b = document.getElementById('bg'), ch = "A B C D E L P S N M T O R I U".split(" ");
+        b.innerHTML = "";
+        for(let i=0; i<25; i++) {
+            const s = document.createElement('span'); s.className='bg-char';
+            s.innerText = ch[Math.floor(Math.random()*ch.length)];
+            s.style.left = Math.random()*90+'vw'; s.style.animationDelay = Math.random()*10+'s';
+            s.style.color = `hsl(${Math.random()*360}, 75%, 75%)`; b.appendChild(s);
+        }
+    }
+    
+    // Inicialización del entorno
+    bg();
+    setL('MAY');
 </script>
 </body>
 </html>

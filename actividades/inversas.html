@@ -1,303 +1,976 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Salto de la Sílaba - 40 Retos</title>
-    <!-- Fuentes Google Fonts solicitadas -->
-    <link href="https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund&family=Playwrite+HR+Lijeva&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <style>
-        :root { 
-            --accent: #ff4081; 
-            --bg: #fdf2f8; 
-            --success: #4caf50;
-            --font-mayus: 'Playwrite DE Grund', sans-serif;
-            --font-minus: 'Playwrite HR Lijeva', sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Salto de la Sílaba</title>
+<link href="https://fonts.googleapis.com/css2?family=Playwrite+HR+Lijeva:wght@100..400&family=Playwrite+DE+Grund:wght@100..400&family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --rosa:    #FF6B9D;
+  --rosa-c:  #FFB3D1;
+  --lila:    #C77DFF;
+  --lila-c:  #E8C4FF;
+  --turq:    #4ECDC4;
+  --turq-c:  #A8EDEA;
+  --naranja: #FF8E53;
+  --naranja-c:#FFD0B0;
+  --verde:   #6BCB77;
+  --verde-c: #B8F0BC;
+  --azul:    #4D96FF;
+  --amarillo:#FFD93D;
+  --fondo:   #FFF5F9;
+  --texto:   #2D1B33;
+  --sec:     #7A5C8A;
+  --card:    #FFFFFF;
+  --sombra:  0 8px 32px rgba(199,125,255,.15);
+}
 
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            overflow: hidden; background: var(--bg); user-select: none;
-            transition: font-family 0.3s ease;
-        }
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        #app { width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-        
-        /* Fondo letras de colores */
-        .bg-letters { position: fixed; inset: 0; z-index: -1; opacity: 0.15; pointer-events: none; }
-        .bg-char { position: absolute; font-size: 4rem; font-weight: bold; animation: float 15s infinite linear; }
-        @keyframes float { from { transform: translateY(110vh) rotate(0deg); } to { transform: translateY(-10vh) rotate(360deg); } }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--fondo);
+  color: var(--texto);
+  min-height: 100vh;
+  overflow-x: hidden;
+  user-select: none;
+}
 
-        /* UI NAV */
-        .nav { position: absolute; top: 20px; width: 92%; display: flex; justify-content: space-between; z-index: 100; }
-        .btn-ui { width: 60px; height: 60px; border-radius: 15px; border: 3px solid white; background: white; cursor: pointer; font-size: 25px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+/* ── FUENTES DE JUEGO ── */
+.fj { font-family: 'Playwrite HR Lijeva', cursive; font-weight: 300; }
+body.may .fj { font-family: 'Playwrite DE Grund', cursive; font-weight: 300; }
 
-        /* MENU */
-        #menu { position: fixed; inset: 0; background: white; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .card { padding: 40px; border-radius: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); text-align: center; max-width: 550px; }
-        .btn-case { padding: 15px 25px; margin: 10px; border: 2px solid #ddd; border-radius: 20px; cursor: pointer; font-family: inherit; font-size: 1.1rem; }
-        .btn-case.active { background: var(--accent); color: white; border-color: var(--accent); }
+/* ── PANTALLAS ── */
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-        /* GAME AREA */
-        #emoji { font-size: 100px; margin-bottom: 10px; }
-        .word-ui { font-size: 3.5rem; display: flex; align-items: center; gap: 15px; margin-bottom: 40px; }
-        .gap { color: var(--accent); border-bottom: 5px solid var(--accent); min-width: 110px; text-align: center; height: 1.2em; }
-        .options { display: flex; gap: 30px; margin-bottom: 30px; }
-        .btn-syl { background: white; border: 4px solid var(--accent); padding: 20px 40px; border-radius: 25px; font-size: 3rem; cursor: pointer; transition: 0.2s; font-family: inherit; min-width: 170px; }
-        
-        #btn-next { display: none; padding: 15px 45px; font-size: 1.5rem; background: var(--success); color: white; border: none; border-radius: 50px; cursor: pointer; font-family: inherit; }
-        #fs-timer { position: fixed; bottom: 20px; background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 20px; display: none; }
-    </style>
+/* ── BURBUJAS DE FONDO ── */
+.bubbles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.bubble { position: absolute; border-radius: 50%; opacity: .10; animation: rise linear infinite; }
+@keyframes rise { 0% { transform: translateY(110vh) rotate(0deg); } 100% { transform: translateY(-20vh) rotate(360deg); } }
+
+/* ══════════════════════════════════
+   PANTALLA NOMBRE
+══════════════════════════════════ */
+#s-nombre {
+  background: linear-gradient(135deg, #FFE0F0 0%, #F0E0FF 50%, #E0F0FF 100%);
+  padding: 2rem; text-align: center; position: relative;
+}
+.nombre-card {
+  background: white; border-radius: 32px; padding: 2.5rem 2rem;
+  max-width: 420px; width: 90%;
+  box-shadow: 0 20px 50px rgba(199,125,255,.22);
+  border: 3px solid #F0E0FF;
+  position: relative; z-index: 1;
+}
+.nombre-logo { font-size: 3.5rem; display: inline-block; animation: balancear 2s ease-in-out infinite; }
+@keyframes balancear { 0%,100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+.nombre-titulo {
+  font-family: 'Fredoka One', cursive; font-size: 1.6rem;
+  background: linear-gradient(135deg, var(--rosa), var(--lila));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin: .3rem 0;
+}
+.nombre-sub { color: var(--sec); font-size: .9rem; font-weight: 600; margin-bottom: 1.2rem; line-height: 1.5; }
+.nombre-inp {
+  width: 100%; padding: .8rem 1.2rem; border-radius: 100px;
+  border: 2px solid #E8E0F0; font-size: 1rem; font-family: 'Nunito', sans-serif;
+  text-align: center; outline: none; margin-bottom: 1rem; color: var(--texto);
+  transition: border-color .2s;
+}
+.nombre-inp:focus { border-color: var(--lila); }
+.btn-grad {
+  width: 100%; padding: .9rem; border: none; border-radius: 100px;
+  background: linear-gradient(135deg, var(--rosa), var(--lila)); color: white;
+  font-family: 'Fredoka One', cursive; font-size: 1.1rem; cursor: pointer;
+  margin-bottom: .7rem; box-shadow: 0 6px 20px rgba(199,125,255,.35);
+  transition: transform .15s;
+}
+.btn-grad:hover { transform: translateY(-2px); }
+.btn-skip { background: none; border: none; color: #B0A0C0; font-size: .85rem; font-family: 'Nunito', sans-serif; cursor: pointer; text-decoration: underline; }
+.nombre-nota { font-size: .75rem; color: #C0B0D0; margin-top: 1rem; border-top: 1px solid #F0E8F8; padding-top: .8rem; line-height: 1.5; }
+
+/* ══════════════════════════════════
+   PANTALLA CONFIG
+══════════════════════════════════ */
+#s-config {
+  background: linear-gradient(135deg, #FFE0F0 0%, #F0E0FF 50%, #E0F0FF 100%);
+  padding: 2rem; text-align: center; position: relative;
+}
+.cfg-card {
+  background: white; border-radius: 28px; padding: 2rem;
+  max-width: 520px; width: 90%;
+  box-shadow: var(--sombra);
+  position: relative; z-index: 1;
+}
+.cfg-titulo {
+  font-family: 'Fredoka One', cursive; font-size: 2.2rem;
+  background: linear-gradient(135deg, var(--rosa), var(--lila), var(--azul));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: .3rem;
+}
+.cfg-sub { color: var(--sec); font-weight: 600; font-size: .95rem; margin-bottom: 1.5rem; }
+.cfg-sec { margin-bottom: 1.2rem; text-align: left; }
+.cfg-sec h3 { font-family: 'Fredoka One', cursive; font-size: 1.1rem; color: var(--lila); margin-bottom: .6rem; }
+.opt-row { display: flex; gap: .8rem; flex-wrap: wrap; }
+.opt-btn {
+  flex: 1; min-width: 110px; padding: .7rem .8rem;
+  border: 3px solid #E8E0F0; border-radius: 14px;
+  background: white; cursor: pointer; font-family: 'Nunito', sans-serif;
+  font-size: .9rem; font-weight: 700; color: var(--sec);
+  transition: all .2s; display: flex; flex-direction: column; align-items: center; gap: .25rem;
+}
+.opt-btn .ico { font-size: 1.5rem; }
+.opt-btn:hover { border-color: var(--lila); color: var(--lila); background: #F5EEFF; }
+.opt-btn.sel { border-color: var(--lila); background: #F0E0FF; color: var(--lila); }
+.btn-start {
+  width: 100%; padding: 1rem; border: none; border-radius: 20px; margin-top: 1.2rem;
+  background: linear-gradient(135deg, var(--rosa), var(--lila)); color: white;
+  font-family: 'Fredoka One', cursive; font-size: 1.4rem; cursor: pointer;
+  box-shadow: 0 6px 20px rgba(199,125,255,.4); transition: transform .15s;
+}
+.btn-start:hover { transform: translateY(-2px); }
+
+/* ══════════════════════════════════
+   PANTALLA JUEGO
+══════════════════════════════════ */
+#s-juego {
+  background: linear-gradient(160deg, #FFF5F9 0%, #F5F0FF 100%);
+  padding: 1rem; min-height: 100vh; align-items: stretch;
+}
+.game-wrap {
+  max-width: 760px; width: 100%; margin: 0 auto;
+  display: flex; flex-direction: column; gap: .6rem;
+  min-height: 100vh;
+}
+
+/* barra superior */
+.topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  background: white; border-radius: 16px; padding: .6rem 1rem;
+  box-shadow: var(--sombra); flex-wrap: wrap; gap: .4rem;
+  flex-shrink: 0;
+}
+.t-chip {
+  font-family: 'Fredoka One', cursive; font-size: .88rem;
+  color: var(--lila); background: var(--lila-c);
+  padding: .2rem .8rem; border-radius: 20px;
+}
+.t-chip.verde { background: var(--verde-c); color: #2E7D32; }
+.t-chip.rosa  { background: #FFE0EC; color: var(--rosa); }
+.t-btn {
+  padding: .28rem .65rem; border-radius: 9px; border: 2px solid #E0D0F0;
+  background: white; font-size: .78rem; font-weight: 700; color: var(--sec);
+  cursor: pointer; transition: all .15s; white-space: nowrap;
+}
+.t-btn:hover { border-color: var(--lila); color: var(--lila); }
+.t-btn.fs  { border-color: var(--turq); color: var(--turq); }
+.t-btn.rep { border-color: var(--naranja); color: var(--naranja); }
+
+/* barra de progreso */
+.prog-wrap { flex-shrink: 0; }
+.prog-bar { width: 100%; height: 8px; background: #E8E0F0; border-radius: 4px; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg, var(--rosa), var(--lila)); border-radius: 4px; transition: width .5s ease; }
+.prog-label { font-family: 'Fredoka One', cursive; font-size: .8rem; color: var(--sec); text-align: right; margin-top: .2rem; }
+
+/* tarjeta de reto */
+.reto-card {
+  background: white; border-radius: 24px; padding: 2rem 1.8rem;
+  box-shadow: var(--sombra); text-align: center; flex: 1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: .8rem; position: relative; overflow: hidden;
+}
+/* franja de color superior */
+.reto-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 6px;
+  background: linear-gradient(90deg, var(--rosa), var(--lila), var(--azul));
+}
+
+.reto-emoji {
+  font-size: 6rem; line-height: 1;
+  animation: emojibounce 2.5s ease-in-out infinite;
+}
+@keyframes emojibounce { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-8px) scale(1.06); } }
+
+.reto-hint {
+  font-family: 'Fredoka One', cursive; font-size: 1rem; color: var(--sec);
+  background: var(--lila-c); padding: .3rem 1rem; border-radius: 20px;
+}
+
+/* palabra con hueco */
+.palabra-display {
+  display: flex; align-items: center; justify-content: center;
+  gap: 4px; flex-wrap: wrap;
+}
+.palabra-letra {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  line-height: 1;
+}
+.palabra-hueco {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: clamp(60px, 12vw, 100px); height: clamp(42px, 8vw, 60px);
+  border-bottom: 4px solid var(--lila);
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  color: var(--lila); font-weight: 800;
+  transition: all .3s;
+}
+.palabra-hueco.ok { border-bottom-color: var(--verde); color: var(--verde); animation: huecoOk .4s cubic-bezier(.34,1.56,.64,1); }
+@keyframes huecoOk { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* opciones */
+.opciones {
+  display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+  margin-top: .5rem;
+}
+.op-btn {
+  padding: clamp(.7rem,2vw,1rem) clamp(1.2rem,4vw,2.2rem);
+  border: 4px solid var(--lila-c); border-radius: 20px;
+  background: white; cursor: pointer;
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  font-weight: 700; color: var(--texto);
+  transition: all .18s;
+  box-shadow: 0 4px 14px rgba(199,125,255,.12);
+  min-width: clamp(80px, 15vw, 140px);
+}
+.op-btn:hover { transform: translateY(-3px) scale(1.04); border-color: var(--lila); box-shadow: 0 8px 24px rgba(199,125,255,.25); }
+.op-btn:active { transform: scale(.96); }
+.op-btn.wrong { border-color: var(--rosa) !important; background: #FFF0F5 !important; animation: shake .35s ease; }
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+.op-btn.correct { border-color: var(--verde) !important; background: var(--verde-c) !important; pointer-events: none; }
+
+/* botón siguiente */
+.btn-sig {
+  padding: .85rem 2.5rem; border: none; border-radius: 16px;
+  background: linear-gradient(135deg, var(--verde), var(--turq)); color: white;
+  font-family: 'Fredoka One', cursive; font-size: 1.2rem; cursor: pointer;
+  box-shadow: 0 6px 18px rgba(78,205,196,.4); transition: transform .15s;
+  display: none; margin-top: .4rem;
+}
+.btn-sig:hover { transform: translateY(-2px); }
+.btn-sig.visible { display: inline-flex; align-items: center; gap: .5rem; animation: entrar .3s cubic-bezier(.34,1.56,.64,1); }
+@keyframes entrar { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* ── OVERLAY MATEMÁTICO ── */
+.ov-mat {
+  position: fixed; inset: 0; background: rgba(45,27,51,.88);
+  display: none; align-items: center; justify-content: center; z-index: 500;
+  backdrop-filter: blur(6px);
+}
+.ov-mat.vis { display: flex; }
+.mat-card {
+  background: white; border-radius: 28px; padding: 2.5rem 2rem;
+  text-align: center; max-width: 340px; width: 90%;
+  box-shadow: 0 20px 60px rgba(0,0,0,.3);
+  animation: entrar .4s cubic-bezier(.34,1.56,.64,1);
+}
+.mat-tit { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--lila); margin-bottom: .3rem; }
+.mat-q   { font-size: 2.2rem; font-weight: 800; color: var(--texto); margin: 1rem 0; }
+.mat-inp {
+  width: 100%; padding: .8rem; border: 3px solid #E0D0F0; border-radius: 14px;
+  font-size: 1.5rem; font-weight: 800; text-align: center;
+  font-family: 'Nunito', sans-serif; outline: none; margin-bottom: .8rem;
+}
+.mat-inp:focus { border-color: var(--lila); }
+.mat-err { color: var(--rosa); font-weight: 700; font-size: .9rem; min-height: 1.2rem; margin-bottom: .5rem; }
+.mat-btn {
+  width: 100%; padding: .9rem; border: none; border-radius: 14px;
+  background: linear-gradient(135deg, var(--rosa), var(--lila)); color: white;
+  font-family: 'Fredoka One', cursive; font-size: 1.2rem; cursor: pointer;
+}
+
+/* ── OVERLAY RESULTADO ── */
+.ov-res {
+  position: fixed; inset: 0; background: rgba(45,27,51,.6);
+  display: none; align-items: center; justify-content: center; z-index: 200;
+  backdrop-filter: blur(4px);
+}
+.ov-res.vis { display: flex; }
+.res-card {
+  background: white; border-radius: 28px; padding: 2.2rem;
+  text-align: center; max-width: 360px; width: 90%;
+  box-shadow: 0 20px 60px rgba(0,0,0,.2);
+  animation: entrar .4s cubic-bezier(.34,1.56,.64,1);
+}
+.res-ico  { font-size: 4rem; display: block; margin-bottom: .5rem; }
+.res-tit  { font-family: 'Fredoka One', cursive; font-size: 1.8rem; margin-bottom: .4rem; }
+.res-msg  { color: var(--sec); font-size: .95rem; font-weight: 600; margin-bottom: 1.4rem; }
+.res-ok  .res-tit { color: var(--verde); }
+.res-err .res-tit { color: var(--rosa); }
+.res-btn {
+  width: 100%; padding: .8rem; border: none; border-radius: 14px;
+  background: linear-gradient(135deg, var(--rosa), var(--lila)); color: white;
+  font-family: 'Fredoka One', cursive; font-size: 1.1rem; cursor: pointer;
+}
+
+/* ── PANTALLA FIN ── */
+#s-fin {
+  background: linear-gradient(135deg, #FFE0F0 0%, #F0E0FF 50%, #E0F0FF 100%);
+  padding: 2rem; text-align: center; position: relative;
+}
+.fin-trofeo { font-size: 5.5rem; display: block; animation: rebote 1s ease-in-out infinite; }
+@keyframes rebote { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+.fin-tit { font-family: 'Fredoka One', cursive; font-size: 2.5rem; color: var(--lila); margin: 1rem 0 .5rem; }
+.fin-pts {
+  font-family: 'Fredoka One', cursive; font-size: 4rem;
+  background: linear-gradient(135deg, var(--rosa), var(--lila));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.fin-sub { color: var(--sec); font-weight: 700; margin-top: .4rem; }
+.btn-fin {
+  margin-top: 1.2rem; padding: 1rem 2.2rem; border: none; border-radius: 20px;
+  background: linear-gradient(135deg, var(--rosa), var(--lila)); color: white;
+  font-family: 'Fredoka One', cursive; font-size: 1.3rem; cursor: pointer;
+  box-shadow: 0 6px 20px rgba(199,125,255,.4); transition: transform .15s;
+}
+.btn-fin:hover { transform: translateY(-2px); }
+.btn-fin.naranja { background: linear-gradient(135deg, var(--naranja), var(--rosa)); }
+
+/* ── CONFETI ── */
+.confeti-c { position: fixed; inset: 0; pointer-events: none; z-index: 300; overflow: hidden; }
+.confeti-p { position: absolute; border-radius: 2px; animation: caer linear forwards; }
+@keyframes caer { 0% { transform: translateY(-20px) rotate(0); opacity: 1; } 100% { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+</style>
 </head>
 <body>
 
-<div id="app">
-    <div class="bg-letters" id="bg"></div>
-    
-    <div class="nav">
-        <button class="btn-ui" onclick="parentalControl('home')">🏠</button>
-        <button class="btn-ui" onmousedown="startFSTimer()" onmouseup="stopFSTimer()">⛶</button>
-        <button class="btn-ui" onclick="downloadSessionReport()">📋</button>
+<!-- ── CONFETI ── -->
+<div class="confeti-c" id="confeti"></div>
+
+<!-- ── BURBUJAS ── -->
+<div class="bubbles" id="bubbles"></div>
+
+<!-- ── OVERLAY MATEMÁTICO ── -->
+<div class="ov-mat" id="ov-mat">
+  <div class="mat-card">
+    <p class="mat-tit">🔒 Control parental</p>
+    <p style="color:var(--sec);font-size:.9rem;font-weight:600;margin-bottom:.3rem">Resuelve la operación para salir:</p>
+    <p class="mat-q" id="mat-q">3 + 4 = ?</p>
+    <input type="number" class="mat-inp" id="mat-inp" placeholder="?"
+      onkeydown="if(event.key==='Enter')comprobarMat()">
+    <p class="mat-err" id="mat-err"></p>
+    <button class="mat-btn" onclick="comprobarMat()">✓ Comprobar</button>
+  </div>
+</div>
+
+<!-- ── OVERLAY RESULTADO ── -->
+<div class="ov-res" id="ov-res">
+  <div class="res-card" id="res-card">
+    <span class="res-ico" id="res-ico">🎉</span>
+    <h2 class="res-tit" id="res-tit">¡Perfecto!</h2>
+    <p class="res-msg" id="res-msg"></p>
+    <button class="res-btn" onclick="cerrarRes()">Siguiente reto →</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     PANTALLA NOMBRE
+════════════════════════════════ -->
+<div class="screen active" id="s-nombre">
+  <div class="nombre-card">
+    <span class="nombre-logo">🦘</span>
+    <h2 class="nombre-titulo">El Salto de la Sílaba</h2>
+    <p class="nombre-sub">Escribe el nombre del niño o niña para que Inma pueda ver cómo ha ido la sesión.</p>
+    <input class="nombre-inp" id="nombre-inp" type="text"
+      placeholder="Nombre del niño/a…" maxlength="50"
+      onkeydown="if(event.key==='Enter')guardarNombre()">
+    <button class="btn-grad" onclick="guardarNombre()">Enviar informe a Inma ✓</button>
+    <button class="btn-skip" onclick="sinNombre()">Continuar sin enviar informe</button>
+    <p class="nombre-nota">🔒 Si escribes el nombre, al terminar Inma recibirá un informe con los resultados. Es voluntario y los datos solo los verá ella para el seguimiento.</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     PANTALLA CONFIG
+════════════════════════════════ -->
+<div class="screen" id="s-config">
+  <div class="cfg-card">
+    <div style="font-size:3rem;margin-bottom:.3rem">🦘</div>
+    <h1 class="cfg-titulo">El Salto de la Sílaba</h1>
+    <p class="cfg-sub">¡Completa las palabras con la sílaba correcta!</p>
+
+    <div class="cfg-sec">
+      <h3>🔤 Tipo de letra</h3>
+      <div class="opt-row">
+        <button class="opt-btn sel" id="bl-min" onclick="selOp('letra','min',this)">
+          <span class="ico" style="font-family:'Playwrite HR Lijeva',cursive;font-weight:300;font-size:1.3rem;">abc</span>
+          <span>Minúscula</span>
+        </button>
+        <button class="opt-btn" id="bl-may" onclick="selOp('letra','may',this)">
+          <span class="ico" style="font-family:'Playwrite DE Grund',cursive;font-weight:300;font-size:1.3rem;">ABC</span>
+          <span>Mayúscula</span>
+        </button>
+      </div>
     </div>
 
-    <div id="menu">
-        <div class="card">
-            <h1 id="menu-title" style="color:var(--accent)">Salto Silábico: 40 Retos</h1>
-            <p>Elige el tipo de letra:</p>
-            <button id="b-may" class="btn-case active" onclick="updateLetterCase('MAY')">MAYÚSCULAS</button>
-            <button id="b-min" class="btn-case" onclick="updateLetterCase('MIN')">minúsculas</button>
-            <br><br>
-            <button class="btn-case active" style="background:var(--success); color:white; border:none; font-weight: bold;" onclick="startGame()">¡EMPEZAR!</button>
-        </div>
+    <div class="cfg-sec">
+      <h3>🎯 Nivel</h3>
+      <div class="opt-row">
+        <button class="opt-btn sel" id="bn-1" onclick="selOp('nivel','1',this)">
+          <span class="ico">⭐</span><span>Nivel 1</span>
+          <small style="font-size:.72rem;color:var(--sec)">20 retos básicos</small>
+        </button>
+        <button class="opt-btn" id="bn-2" onclick="selOp('nivel','2',this)">
+          <span class="ico">⭐⭐</span><span>Nivel 2</span>
+          <small style="font-size:.72rem;color:var(--sec)">20 retos avanzados</small>
+        </button>
+        <button class="opt-btn" id="bn-t" onclick="selOp('nivel','t',this)">
+          <span class="ico">🏆</span><span>Completo</span>
+          <small style="font-size:.72rem;color:var(--sec)">40 retos</small>
+        </button>
+      </div>
     </div>
 
-    <div id="emoji"></div>
-    <div class="word-ui" id="word-box"></div>
-    <div class="options" id="opt-box"></div>
-    <button id="btn-next" onclick="loadNextChallenge()">SIGUIENTE ➔</button>
-    
-    <div id="fs-timer">Mantén 3 segundos para salir...</div>
+    <button class="btn-start" onclick="iniciarJuego()">¡A saltar! 🦘</button>
+    <a href="https://manosconmuchoquecontar.github.io/" target="_blank" style="
+      display:block;width:100%;margin-top:.8rem;padding:.8rem;border-radius:16px;
+      background:white;border:2px solid #E8E0F0;color:var(--sec);
+      font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer;
+      text-align:center;text-decoration:none;transition:all .2s;
+    " onmouseover="this.style.borderColor='#FF8E53';this.style.color='#FF8E53';"
+       onmouseout="this.style.borderColor='#E8E0F0';this.style.color='var(--sec)';">
+      🌐 Ir a la web principal
+    </a>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     PANTALLA JUEGO
+════════════════════════════════ -->
+<div class="screen" id="s-juego">
+  <div class="game-wrap">
+
+    <!-- barra -->
+    <div class="topbar">
+      <button class="t-btn" onclick="volverInicio()">← Salir</button>
+      <div style="display:flex;gap:.4rem;flex-wrap:wrap;align-items:center">
+        <div class="t-chip" id="chip-reto">Reto 1/40</div>
+        <div class="t-chip verde" id="chip-ok">✅ 0</div>
+        <div class="t-chip rosa"  id="chip-err">❌ 0</div>
+      </div>
+      <div style="display:flex;gap:.4rem">
+        <button class="t-btn rep" onclick="descargar()">📄 Reporte</button>
+        <button class="t-btn fs"  onclick="entrarFS()">⛶ Completa</button>
+      </div>
+    </div>
+
+    <!-- progreso -->
+    <div class="prog-wrap">
+      <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+      <div class="prog-label" id="prog-label">0 / 0</div>
+    </div>
+
+    <!-- tarjeta del reto -->
+    <div class="reto-card">
+      <div class="reto-emoji" id="reto-emoji">🦘</div>
+      <div class="reto-hint fj" id="reto-hint">Completa la palabra</div>
+      <div class="palabra-display" id="palabra-display"></div>
+      <div class="opciones" id="opciones"></div>
+      <button class="btn-sig" id="btn-sig" onclick="siguienteReto()">Siguiente reto ➔</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     PANTALLA FIN
+════════════════════════════════ -->
+<div class="screen" id="s-fin">
+  <span class="fin-trofeo">🏆</span>
+  <h1 class="fin-tit">¡Juego completado!</h1>
+  <p style="font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--sec)">Puntuación final</p>
+  <p class="fin-pts" id="fin-pts">0</p>
+  <p class="fin-sub" id="fin-sub"></p>
+  <div style="display:flex;gap:1rem;margin-top:1.5rem;flex-wrap:wrap;justify-content:center">
+    <button class="btn-fin naranja" onclick="descargar()">📄 Descargar reporte</button>
+    <button class="btn-fin" onclick="volverInicio()">🏠 Volver al inicio</button>
+  </div>
 </div>
 
 <script>
-    const CHALLENGES = [
-        // NIVEL 1: 20 RETOS
-        { e: '🏰', c: 'as', o: ['as','sa'], w: 'C__TILLO', f: 'CASTILLO' },
-        { e: '🐍', c: 'se', o: ['es','se'], w: '__RPIENTE', f: 'SERPIENTE' },
-        { e: '🎒', c: 'mo', o: ['om','mo'], w: '__CHILA', f: 'MOCHILA' },
-        { e: '🪜', c: 'es', o: ['es','se'], w: '__CALERA', f: 'ESCALERA' },
-        { e: '🍊', c: 'na', o: ['an','na'], w: '__RANJA', f: 'NARANJA' },
-        { e: '🦒', c: 'ra', o: ['ar','ra'], w: 'JI__FA', f: 'JIRAFA' },
-        { e: '🐜', c: 'an', o: ['an','na'], w: '__TENA', f: 'ANTENA' },
-        { e: '🌴', c: 'al', o: ['al','la'], w: 'P__MA', f: 'PALMA' },
-        { e: '🧤', c: 'gu', o: ['ug','gu'], w: '__ANTE', f: 'GUANTE' },
-        { e: '🐀', c: 'ra', o: ['ar','ra'], w: '__TÓN', f: 'RATÓN' },
-        { e: '🌲', c: 'ar', o: ['ar','ra'], w: '__BOL', f: 'ÁRBOL' },
-        { e: '🍕', c: 'pi', o: ['ip','pi'], w: '__ZZA', f: 'PIZZA' },
-        { e: '🧜‍♀️', c: 'si', o: ['is','si'], w: '__RENA', f: 'SIRENA' },
-        { e: '🏝️', c: 'is', o: ['is','si'], w: '__LA', f: 'ISLA' },
-        { e: '🌙', c: 'lu', o: ['ul','lu'], w: '__NA', f: 'LUNA' },
-        { e: '🎯', c: 'ul', o: ['ul','lu'], w: '__TIMO', f: 'ÚLTIMO' },
-        { e: '👂', c: 'or', o: ['or','ro'], w: '__EJA', f: 'OREJA' },
-        { e: '🌹', c: 'ro', o: ['or','ro'], w: '__SA', f: 'ROSA' },
-        { e: '🐘', c: 'el', o: ['el','le'], w: '__EFANTE', f: 'ELEFANTE' },
-        { e: '🦁', c: 'le', o: ['el','le'], w: '__ÓN', f: 'LEÓN' },
-        // NIVEL 2: 20 RETOS
-        { e: '👻', c: 'fa', o: ['af','fa'], w: '__NTASMA', f: 'FANTASMA' },
-        { e: '🎂', c: 'as', o: ['as','sa'], w: 'P__TEL', f: 'PASTEL' },
-        { e: '🌂', c: 'pa', o: ['ap','pa'], w: '__RAGUAS', f: 'PARAGUAS' },
-        { e: '🥣', c: 'as', o: ['as','sa'], w: 'P__TA', f: 'PASTA' },
-        { e: '🚢', c: 'ba', o: ['ab','ba'], w: '__RCO', f: 'BARCO' },
-        { e: '🪣', c: 'cu', o: ['uc','cu'], w: '__BO', f: 'CUBO' },
-        { e: '🦟', c: 'mo', o: ['om','mo'], w: '__SQUITO', f: 'MOSQUITO' },
-        { e: '🧥', c: 'ab', o: ['ab','ba'], w: '__RIGO', f: 'ABRIGO' },
-        { e: '🚪', c: 'pu', o: ['up','pu'], w: '__ERTA', f: 'PUERTA' },
-        { e: '🦴', c: 'ue', o: ['eu','ue'], w: 'H__SO', f: 'HUESO' },
-        { e: '🦷', c: 'di', o: ['id','di'], w: '__ENTE', f: 'DIENTE' },
-        { e: '🚿', c: 'du', o: ['ud','du'], w: '__CHA', f: 'DUCHA' },
-        { e: '🧸', c: 'os', o: ['os','so'], w: '__O', f: 'OSO' },
-        { e: '🍲', c: 'so', o: ['os','so'], w: '__PA', f: 'SOPA' },
-        { e: '🔔', c: 'ca', o: ['ac','ca'], w: '__MPANA', f: 'CAMPANA' },
-        { e: '👨‍🍳', c: 'co', o: ['oc','co'], w: '__CINA', f: 'COCINA' },
-        { e: '👓', c: 'ga', o: ['ag','ga'], w: '__FAS', f: 'GAFAS' },
-        { e: '🐱', c: 'ga', o: ['ag','ga'], w: '__TO', f: 'GATO' },
-        { e: '🐆', c: 'ti', o: ['it','ti'], w: '__GRE', f: 'TIGRE' },
-        { e: '👟', c: 'te', o: ['et','te'], w: '__NIS', f: 'TENIS' }
-    ];
+// ════════════════════════════════
+//  DATOS
+// ════════════════════════════════
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbw4AKlcc8-09jA0uBl7EYDW_lorkazvEOwhZTthN6FD_BIhM1Q6o4HJdNSeUvqba2an/exec";
 
-    let currentCase = 'MAY', currentIndex = 0, sessionStats = [], fsHoldTimer;
+const RETOS_N1 = [
+  { e:'🏰', c:'as', o:['as','sa'], w:'C__TILLO',  f:'CASTILLO'  },
+  { e:'🐍', c:'se', o:['es','se'], w:'__RPIENTE', f:'SERPIENTE' },
+  { e:'🎒', c:'mo', o:['om','mo'], w:'__CHILA',   f:'MOCHILA'   },
+  { e:'🪜', c:'es', o:['es','se'], w:'__CALERA',  f:'ESCALERA'  },
+  { e:'🍊', c:'na', o:['an','na'], w:'__RANJA',   f:'NARANJA'   },
+  { e:'🦒', c:'ra', o:['ar','ra'], w:'JI__FA',    f:'JIRAFA'    },
+  { e:'🐜', c:'an', o:['an','na'], w:'__TENA',    f:'ANTENA'    },
+  { e:'🌴', c:'al', o:['al','la'], w:'P__MA',     f:'PALMA'     },
+  { e:'🧤', c:'gu', o:['ug','gu'], w:'__ANTE',    f:'GUANTE'    },
+  { e:'🐀', c:'ra', o:['ar','ra'], w:'__TÓN',     f:'RATÓN'     },
+  { e:'🌲', c:'ar', o:['ar','ra'], w:'__BOL',     f:'ÁRBOL'     },
+  { e:'🍕', c:'pi', o:['ip','pi'], w:'__ZZA',     f:'PIZZA'     },
+  { e:'🧜‍♀️', c:'si', o:['is','si'], w:'__RENA',   f:'SIRENA'    },
+  { e:'🏝️', c:'is', o:['is','si'], w:'__LA',      f:'ISLA'      },
+  { e:'🌙', c:'lu', o:['ul','lu'], w:'__NA',      f:'LUNA'      },
+  { e:'🎯', c:'ul', o:['ul','lu'], w:'__TIMO',    f:'ÚLTIMO'    },
+  { e:'👂', c:'or', o:['or','ro'], w:'__EJA',     f:'OREJA'     },
+  { e:'🌹', c:'ro', o:['or','ro'], w:'__SA',      f:'ROSA'      },
+  { e:'🐘', c:'el', o:['el','le'], w:'__EFANTE',  f:'ELEFANTE'  },
+  { e:'🦁', c:'le', o:['el','le'], w:'__ÓN',      f:'LEÓN'      },
+];
+const RETOS_N2 = [
+  { e:'👻', c:'fa', o:['af','fa'], w:'__NTASMA',  f:'FANTASMA'  },
+  { e:'🎂', c:'as', o:['as','sa'], w:'P__TEL',    f:'PASTEL'    },
+  { e:'🌂', c:'pa', o:['ap','pa'], w:'__RAGUAS',  f:'PARAGUAS'  },
+  { e:'🥣', c:'as', o:['as','sa'], w:'P__TA',     f:'PASTA'     },
+  { e:'🚢', c:'ba', o:['ab','ba'], w:'__RCO',     f:'BARCO'     },
+  { e:'🪣', c:'cu', o:['uc','cu'], w:'__BO',      f:'CUBO'      },
+  { e:'🦟', c:'mo', o:['om','mo'], w:'__SQUITO',  f:'MOSQUITO'  },
+  { e:'🧥', c:'ab', o:['ab','ba'], w:'__RIGO',    f:'ABRIGO'    },
+  { e:'🚪', c:'pu', o:['up','pu'], w:'__ERTA',    f:'PUERTA'    },
+  { e:'🦴', c:'ue', o:['eu','ue'], w:'H__SO',     f:'HUESO'     },
+  { e:'🦷', c:'di', o:['id','di'], w:'__ENTE',    f:'DIENTE'    },
+  { e:'🚿', c:'du', o:['ud','du'], w:'__CHA',     f:'DUCHA'     },
+  { e:'🧸', c:'os', o:['os','so'], w:'__O',       f:'OSO'       },
+  { e:'🍲', c:'so', o:['os','so'], w:'__PA',      f:'SOPA'      },
+  { e:'🔔', c:'ca', o:['ac','ca'], w:'__MPANA',   f:'CAMPANA'   },
+  { e:'👨‍🍳', c:'co', o:['oc','co'], w:'__CINA',   f:'COCINA'    },
+  { e:'👓', c:'ga', o:['ag','ga'], w:'__FAS',     f:'GAFAS'     },
+  { e:'🐱', c:'ga', o:['ag','ga'], w:'__TO',      f:'GATO'      },
+  { e:'🐆', c:'ti', o:['it','ti'], w:'__GRE',     f:'TIGRE'     },
+  { e:'👟', c:'te', o:['et','te'], w:'__NIS',     f:'TENIS'     },
+];
 
-    function updateLetterCase(type) {
-        currentCase = type;
-        document.getElementById('b-may').classList.toggle('active', type === 'MAY');
-        document.getElementById('b-min').classList.toggle('active', type === 'MIN');
-        
-        // Aplicación estricta de fuentes por tipo
-        const appElement = document.body;
-        if (type === 'MAY') {
-            appElement.style.fontFamily = "var(--font-mayus)";
-            document.getElementById('menu-title').style.fontFamily = "var(--font-mayus)";
-        } else {
-            appElement.style.fontFamily = "var(--font-minus)";
-            document.getElementById('menu-title').style.fontFamily = "var(--font-minus)";
-        }
+const OK_MSGS  = ['¡Silaba perfecta! 🌟','¡Lo has clavado! 🎯','¡Eso es! 🧠','¡Genial! 🏆','¡Bravo! ✨'];
+const ERR_MSGS = ['¡Casi! Prueba de nuevo 💪','¡Ánimo, sigue intentando! 🤔','¡Esa no era, venga! 😅'];
+
+// ════════════════════════════════
+//  ESTADO
+// ════════════════════════════════
+let nombreAlumno = '', enviarInforme = false;
+let letra = 'min', nivel = '1';
+let retosPartida = [], idxActual = 0;
+let aciertos = 0, errores = 0;
+let registro = [], t0 = null;
+let matResp = 0, matCb = null;
+let respondido = false;
+
+// ════════════════════════════════
+//  VOZ — robusto
+// ════════════════════════════════
+let vocesListas = [];
+function cargarVoces(){
+  if(!window.speechSynthesis) return;
+  vocesListas = speechSynthesis.getVoices();
+  if(!vocesListas.length)
+    speechSynthesis.onvoiceschanged = ()=>{ vocesListas = speechSynthesis.getVoices(); };
+}
+cargarVoces();
+setTimeout(cargarVoces, 800);
+
+function elegirVoz(){
+  const vs = speechSynthesis.getVoices();
+  if(vs.length) vocesListas = vs;
+  return vocesListas.find(v=>v.lang.startsWith('es')&&v.name.toLowerCase().includes('female'))
+      || vocesListas.find(v=>v.lang==='es-ES')
+      || vocesListas.find(v=>v.lang.startsWith('es'))
+      || null;
+}
+
+function hablar(txt){
+  if(!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(txt);
+  u.lang = 'es-ES'; u.rate = 0.75; u.pitch = 1.1; u.volume = 1;
+  const v = elegirVoz(); if(v) u.voice = v;
+  speechSynthesis.speak(u);
+  setTimeout(()=>{ if(speechSynthesis.paused) speechSynthesis.resume(); }, 200);
+}
+
+// ════════════════════════════════
+//  BURBUJAS
+// ════════════════════════════════
+function initBubbles(){
+  const c = document.getElementById('bubbles'); c.innerHTML = '';
+  const cols = ['#FF6B9D','#C77DFF','#FFD93D','#4ECDC4','#FF8E53','#6BCB77'];
+  for(let i=0;i<14;i++){
+    const b = document.createElement('div'); b.className = 'bubble';
+    const s = 20+Math.random()*60;
+    b.style.cssText = `width:${s}px;height:${s}px;background:${cols[i%cols.length]};left:${Math.random()*100}%;animation-duration:${9+Math.random()*12}s;animation-delay:-${Math.random()*10}s;`;
+    c.appendChild(b);
+  }
+}
+
+// ════════════════════════════════
+//  PANTALLAS
+// ════════════════════════════════
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ════════════════════════════════
+//  NOMBRE
+// ════════════════════════════════
+function guardarNombre(){
+  const n = document.getElementById('nombre-inp').value.trim();
+  if(!n){ document.getElementById('nombre-inp').style.borderColor='#FF6B9D'; return; }
+  nombreAlumno = n; enviarInforme = true;
+  show('s-config');
+}
+function sinNombre(){
+  nombreAlumno = 'Anónimo'; enviarInforme = false;
+  show('s-config');
+}
+
+// ════════════════════════════════
+//  CONFIG
+// ════════════════════════════════
+function selOp(tipo, val, btn){
+  const gs = { letra:['bl-min','bl-may'], nivel:['bn-1','bn-2','bn-t'] };
+  gs[tipo].forEach(id=>document.getElementById(id).classList.remove('sel'));
+  btn.classList.add('sel');
+  if(tipo==='letra'){ letra=val; document.body.className=val==='may'?'may':''; }
+  if(tipo==='nivel') nivel=val;
+}
+
+function fmt(txt){
+  return letra==='may' ? txt.toUpperCase() : txt.toLowerCase();
+}
+
+// ════════════════════════════════
+//  INICIAR
+// ════════════════════════════════
+function iniciarJuego(){
+  document.body.className = letra==='may'?'may':'';
+  if(nivel==='1')      retosPartida = [...RETOS_N1];
+  else if(nivel==='2') retosPartida = [...RETOS_N2];
+  else                 retosPartida = [...RETOS_N1, ...RETOS_N2];
+
+  idxActual = 0; aciertos = 0; errores = 0;
+  registro = []; t0 = new Date();
+
+  show('s-juego'); initBubbles(); cargarReto();
+}
+
+// ════════════════════════════════
+//  RETO
+// ════════════════════════════════
+function cargarReto(){
+  if(idxActual >= retosPartida.length){ mostrarFin(); return; }
+  respondido = false;
+  const r = retosPartida[idxActual];
+
+  // chips
+  document.getElementById('chip-reto').textContent = `Reto ${idxActual+1}/${retosPartida.length}`;
+  document.getElementById('chip-ok').textContent   = `✅ ${aciertos}`;
+  document.getElementById('chip-err').textContent  = `❌ ${errores}`;
+
+  // progreso
+  const pct = (idxActual / retosPartida.length) * 100;
+  document.getElementById('prog-fill').style.width  = pct + '%';
+  document.getElementById('prog-label').textContent = `${idxActual} / ${retosPartida.length}`;
+
+  // emoji con nueva animación
+  const emojiEl = document.getElementById('reto-emoji');
+  emojiEl.style.animation = 'none'; void emojiEl.offsetWidth;
+  emojiEl.style.animation = 'emojibounce 2.5s ease-in-out infinite';
+  emojiEl.textContent = r.e;
+
+  // hint
+  document.getElementById('reto-hint').textContent = fmt('Completa la palabra');
+
+  // palabra con hueco
+  renderPalabra(r);
+
+  // opciones
+  renderOpciones(r);
+
+  // botón siguiente oculto
+  document.getElementById('btn-sig').className = 'btn-sig';
+
+  // leer
+  setTimeout(()=> hablar(fmt(r.f)), 500);
+}
+
+function renderPalabra(r){
+  const display = document.getElementById('palabra-display');
+  display.innerHTML = '';
+  const partes = r.w.split('__');
+
+  const crearSpan = (txt, cls) => {
+    const s = document.createElement('span');
+    s.className = cls + ' fj';
+    s.style.fontFamily = letra==='may'
+      ? "'Playwrite DE Grund', cursive"
+      : "'Playwrite HR Lijeva', cursive";
+    s.style.fontWeight = '300';
+    s.textContent = fmt(txt);
+    return s;
+  };
+
+  if(partes[0]) display.appendChild(crearSpan(partes[0], 'palabra-letra'));
+
+  const hueco = document.createElement('span');
+  hueco.className = 'palabra-hueco fj';
+  hueco.id = 'hueco';
+  hueco.style.fontFamily = letra==='may'
+    ? "'Playwrite DE Grund', cursive"
+    : "'Playwrite HR Lijeva', cursive";
+  hueco.style.fontWeight = '300';
+  hueco.textContent = '_ _';
+  display.appendChild(hueco);
+
+  if(partes[1]) display.appendChild(crearSpan(partes[1], 'palabra-letra'));
+}
+
+function renderOpciones(r){
+  const cont = document.getElementById('opciones');
+  cont.innerHTML = '';
+  r.o.forEach(sil => {
+    const btn = document.createElement('button');
+    btn.className = 'op-btn fj';
+    btn.style.fontFamily = letra==='may'
+      ? "'Playwrite DE Grund', cursive"
+      : "'Playwrite HR Lijeva', cursive";
+    btn.style.fontWeight = '300';
+    btn.textContent = fmt(sil);
+    btn.onclick = () => verificar(sil, btn, r);
+    cont.appendChild(btn);
+  });
+}
+
+function verificar(sel, btn, r){
+  if(respondido) return;
+  const correcto = sel.toLowerCase() === r.c.toLowerCase();
+
+  if(correcto){
+    respondido = true;
+    aciertos++;
+    // Rellenar hueco con la sílaba correcta
+    const hueco = document.getElementById('hueco');
+    hueco.textContent = fmt(r.c);
+    hueco.classList.add('ok');
+    btn.classList.add('correct');
+    registro.push({ palabra: r.f, sílaba: r.c, resultado: '✅' });
+    // Actualizar chips
+    document.getElementById('chip-ok').textContent  = `✅ ${aciertos}`;
+    document.getElementById('chip-err').textContent = `❌ ${errores}`;
+    confeti();
+    hablar('¡Muy bien!');
+    // Mostrar directamente el botón siguiente (sin overlay)
+    if(idxActual >= retosPartida.length - 1){
+      // Último reto: botón que va a fin
+      const sig = document.getElementById('btn-sig');
+      sig.textContent = '¡Finalizar! 🏆';
+      sig.className = 'btn-sig visible';
+    } else {
+      document.getElementById('btn-sig').className = 'btn-sig visible';
     }
+  } else {
+    errores++;
+    btn.classList.add('wrong');
+    registro.push({ palabra: r.f, sílaba: sel, resultado: '❌' });
+    document.getElementById('chip-ok').textContent  = `✅ ${aciertos}`;
+    document.getElementById('chip-err').textContent = `❌ ${errores}`;
+    hablar('Inténtalo de nuevo');
+    setTimeout(()=> btn.classList.remove('wrong'), 400);
+    // Solo en fallo mostramos el overlay de ánimo
+    mostrarRes(false, r.f);
+  }
+}
 
-    function startGame() {
-        document.getElementById('menu').style.display = 'none';
-        renderChallenge();
-    }
+function mostrarRes(ok, palabra){
+  const card = document.getElementById('res-card');
+  card.className = 'res-card ' + (ok?'res-ok':'res-err');
+  document.getElementById('res-ico').textContent = ok
+    ? ['🎉','🌟','🏆','✨','🎊'][~~(Math.random()*5)] : '💪';
+  document.getElementById('res-tit').textContent = ok ? '¡Correcto!' : '¡Casi!';
+  document.getElementById('res-msg').textContent = ok
+    ? OK_MSGS[~~(Math.random()*OK_MSGS.length)]
+    : ERR_MSGS[~~(Math.random()*ERR_MSGS.length)];
+  document.getElementById('ov-res').classList.add('vis');
+}
 
-    function renderChallenge() {
-        const item = CHALLENGES[currentIndex];
-        document.getElementById('emoji').innerText = item.e;
-        document.getElementById('btn-next').style.display = 'none';
-        
-        const wordBox = document.getElementById('word-box');
-        wordBox.innerHTML = "";
-        const parts = item.w.split("__");
-        
-        wordBox.innerHTML = `
-            <span>${format(parts[0])}</span>
-            <span class="gap" id="gap-target">_ _</span>
-            <span>${format(parts[1] || "")}</span>
-        `;
-        
-        const optBox = document.getElementById('opt-box');
-        optBox.innerHTML = "";
-        item.o.forEach(o => {
-            const btn = document.createElement('button');
-            btn.className = 'btn-syl';
-            btn.innerText = format(o);
-            btn.onclick = () => verify(o, btn);
-            optBox.appendChild(btn);
-        });
+function cerrarRes(){
+  document.getElementById('ov-res').classList.remove('vis');
+  // Solo se llega aquí desde un fallo — el niño puede seguir intentando
+}
 
-        speak(`Completa la palabra ${item.f}`);
-    }
+function siguienteReto(){
+  idxActual++;
+  if(idxActual >= retosPartida.length) mostrarFin();
+  else cargarReto();
+}
 
-    function format(text) {
-        return currentCase === 'MAY' ? text.toUpperCase() : text.toLowerCase();
-    }
+// ════════════════════════════════
+//  FIN
+// ════════════════════════════════
+function mostrarFin(){
+  show('s-fin');
+  const total = retosPartida.length;
+  const pct   = total ? Math.round(aciertos/total*100) : 0;
+  document.getElementById('fin-pts').textContent = `${aciertos} / ${total}`;
+  document.getElementById('fin-sub').textContent = `${pct}% de aciertos · ${errores} fallos`;
+  if(pct>=80){ confeti(); setTimeout(confeti,700); setTimeout(confeti,1400); }
+  enviarASheet();
+}
 
-    function verify(selected, btnElement) {
-        const item = CHALLENGES[currentIndex];
-        if (selected === item.c) {
-            document.getElementById('gap-target').innerText = format(selected);
-            document.getElementById('gap-target').style.border = "none";
-            document.getElementById('gap-target').style.color = "var(--success)";
-            
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-            speak("¡Excelente!");
-            
-            document.getElementById('opt-box').innerHTML = "";
-            document.getElementById('btn-next').style.display = 'block';
-            sessionStats.push({ palabra: item.f, resultado: 'Acierto' });
-        } else {
-            speak("Esa no es, prueba otra");
-            btnElement.style.borderColor = "red";
-            sessionStats.push({ palabra: item.f, resultado: 'Fallo' });
-            setTimeout(() => btnElement.style.borderColor = "var(--accent)", 600);
-        }
-    }
+// ════════════════════════════════
+//  PANTALLA COMPLETA + PARENTAL
+// ════════════════════════════════
+function entrarFS(){
+  const el = document.documentElement;
+  if(el.requestFullscreen) el.requestFullscreen();
+  else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+}
+function enJuego(){ return document.getElementById('s-juego').classList.contains('active'); }
 
-    function loadNextChallenge() {
-        currentIndex = (currentIndex + 1) % CHALLENGES.length;
-        renderChallenge();
-    }
+function generarOp(){
+  const r = ~~(Math.random()*3);
+  if(r===0){ const a=1+~~(Math.random()*10),b=1+~~(Math.random()*10); return{t:`${a} + ${b} = ?`,r:a+b}; }
+  if(r===1){ const a=6+~~(Math.random()*9), b=1+~~(Math.random()*5);  return{t:`${a} - ${b} = ?`,r:a-b}; }
+  const a=2+~~(Math.random()*5),b=2+~~(Math.random()*5); return{t:`${a} × ${b} = ?`,r:a*b};
+}
 
-    function speak(text) {
-        const msg = new SpeechSynthesisUtterance(text);
-        msg.lang = 'es-ES';
-        window.speechSynthesis.speak(msg);
-    }
+function pedirMat(cb){
+  const op=generarOp(); matResp=op.r; matCb=cb;
+  document.getElementById('mat-q').textContent=op.t;
+  document.getElementById('mat-inp').value='';
+  document.getElementById('mat-err').textContent='';
+  document.getElementById('ov-mat').classList.add('vis');
+  setTimeout(()=>document.getElementById('mat-inp').focus(),120);
+}
 
-    // --- CONTROLES PARENTALES ---
-    function parentalControl(action) {
-        const num1 = Math.floor(Math.random() * 8) + 1;
-        const num2 = Math.floor(Math.random() * 5);
-        Swal.fire({
-            title: 'Control Parental',
-            text: `Resuelve esta suma: ${num1} + ${num2}`,
-            input: 'number',
-            confirmButtonText: 'Verificar'
-        }).then(result => {
-            if (parseInt(result.value) === (num1 + num2)) {
-                if (action === 'home') location.reload();
-            } else if (result.isConfirmed) {
-                Swal.fire('Error', 'Suma incorrecta', 'error');
-            }
-        });
-    }
+function comprobarMat(){
+  const v=parseInt(document.getElementById('mat-inp').value,10);
+  if(v===matResp){
+    document.getElementById('ov-mat').classList.remove('vis');
+    if(matCb) matCb();
+  } else {
+    document.getElementById('mat-err').textContent='¡Incorrecto! Inténtalo de nuevo.';
+    document.getElementById('mat-inp').value=''; document.getElementById('mat-inp').focus();
+  }
+}
 
-    function startFSTimer() {
-        document.getElementById('fs-timer').style.display = 'block';
-        fsHoldTimer = setTimeout(() => {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else {
-                document.exitFullscreen();
-            }
-        }, 3000);
-    }
+function onFSChange(){
+  const enFS=!!(document.fullscreenElement||document.webkitFullscreenElement);
+  if(!enFS && enJuego()){
+    pedirMat(()=>{
+      entrarFS();
+      if(enviarInforme) enviarASheet();
+    });
+  }
+}
+document.addEventListener('fullscreenchange', onFSChange);
+document.addEventListener('webkitfullscreenchange', onFSChange);
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape' && document.getElementById('ov-mat').classList.contains('vis')){
+    e.preventDefault(); e.stopPropagation();
+  }
+}, true);
 
-    function stopFSTimer() {
-        clearTimeout(fsHoldTimer);
-        document.getElementById('fs-timer').style.display = 'none';
-    }
+// ════════════════════════════════
+//  GOOGLE SHEET + REPORTE
+// ════════════════════════════════
+function enviarASheet(){
+  if(!enviarInforme) return;
+  const total  = retosPartida.length;
+  const falls  = registro.filter(r=>r.resultado==='❌').map(r=>`${r.palabra}(${r.sílaba})`).join(', ') || 'Ninguna';
+  fetch(SHEET_URL,{
+    method:'POST',
+    body: JSON.stringify({
+      Nombre:     nombreAlumno,
+      Actividad:  `Salto Sílaba · Nivel ${nivel} · ${letra==='may'?'Mayúsculas':'Minúsculas'}`,
+      Aciertos:   aciertos,
+      Errores:    errores,
+      PalabrasFalladas: falls
+    }),
+    headers:{'Content-Type':'application/json'}
+  }).catch(e=>console.log('Sheet err:',e));
+}
 
-    function downloadSessionReport() {
-        let content = `
-            <html>
-            <head>
-                <title>Informe El Salto de la Sílaba</title>
-                <style>
-                    body { font-family: sans-serif; padding: 20px; }
-                    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-                    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-                    th { background-color: #f2f2f2; }
-                    .acierto { color: green; font-weight: bold; }
-                    .fallo { color: red; font-weight: bold; }
-                </style>
-            </head>
-            <body>
-                <h1>Resultados de la Sesión</h1>
-                <table>
-                    <thead><tr><th>Reto</th><th>Resultado</th></tr></thead>
-                    <tbody>
-                        ${sessionStats.map(s => `<tr><td>${s.palabra}</td><td class="${s.resultado.toLowerCase()}">${s.resultado}</td></tr>`).join('')}
-                    </tbody>
-                </table>
-            </body>
-            </html>
-        `;
-        const blob = new Blob([content], { type: 'text/html' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `informe_silabas_${new Date().toLocaleDateString()}.html`;
-        link.click();
-    }
+function htmlReporte(){
+  const now = new Date();
+  const dur = t0 ? Math.round((now-t0)/1000) : 0;
+  const mins=Math.floor(dur/60), segs=dur%60;
+  const total=retosPartida.length, pct=total?Math.round(aciertos/total*100):0;
+  const filas = registro.map((r,i)=>`
+    <tr style="background:${r.resultado==='✅'?'#F0FFF4':'#FFF5F5'}">
+      <td style="padding:8px 12px;text-align:center;font-weight:700">${i+1}</td>
+      <td style="padding:8px 12px;font-weight:700">${r.palabra}</td>
+      <td style="padding:8px 12px;text-align:center">${r.sílaba.toUpperCase()}</td>
+      <td style="padding:8px 12px;text-align:center;font-size:1.2rem">${r.resultado}</td>
+    </tr>`).join('');
+  return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+<title>Reporte · El Salto de la Sílaba</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body{font-family:'Nunito',sans-serif;background:#FFF5F9;color:#2D1B33;padding:2rem;margin:0}
+  h1{font-family:'Fredoka One',cursive;font-size:2rem;background:linear-gradient(135deg,#FF6B9D,#C77DFF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem}
+  .chips{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0 1.5rem}
+  .chip{background:white;border-radius:16px;padding:.5rem 1.2rem;font-weight:700;font-size:1rem;box-shadow:0 2px 8px rgba(199,125,255,.15)}
+  .chip span{color:#C77DFF}
+  table{width:100%;border-collapse:collapse;background:white;border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(199,125,255,.1)}
+  th{background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white;padding:10px 12px;font-family:'Fredoka One',cursive;font-size:.95rem;text-align:left}
+  td{border-bottom:1px solid #F0E8F8;font-size:.9rem}
+  tr:last-child td{border-bottom:none}
+  footer{margin-top:2rem;font-size:.85rem;color:#7A5C8A;text-align:center}
+</style></head><body>
+<h1>🦘 El Salto de la Sílaba — Reporte</h1>
+<p style="color:#7A5C8A;font-weight:600">Alumno/a: <strong>${nombreAlumno}</strong> · ${now.toLocaleDateString('es-ES',{weekday:'long',year:'numeric',month:'long',day:'numeric'})} a las ${now.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})}</p>
+<div class="chips">
+  <div class="chip">Nivel: <span>${nivel==='t'?'Completo (40)':nivel==='1'?'1 (20 básicos)':'2 (20 avanzados)'}</span></div>
+  <div class="chip">Letras: <span>${letra==='may'?'ABC Mayúscula':'abc Minúscula'}</span></div>
+  <div class="chip">Aciertos: <span>${aciertos} / ${total}</span></div>
+  <div class="chip">Fallos: <span>${errores}</span></div>
+  <div class="chip">Porcentaje: <span>${pct}%</span></div>
+  <div class="chip">Tiempo: <span>${mins}m ${segs}s</span></div>
+</div>
+<table>
+  <thead><tr><th>#</th><th>Palabra</th><th>Sílaba respondida</th><th>Resultado</th></tr></thead>
+  <tbody>${filas||'<tr><td colspan="4" style="padding:1rem;text-align:center;color:#999">Sin retos registrados</td></tr>'}</tbody>
+</table>
+<footer>El Salto de la Sílaba · Juego educativo</footer>
+</body></html>`;
+}
 
-    // Fondo decorativo
-    function initBackground() {
-        const container = document.getElementById('bg');
-        const chars = "A B C D E L P S N M T O R".split(" ");
-        for(let i=0; i<25; i++) {
-            const span = document.createElement('span');
-            span.className = 'bg-char';
-            span.innerText = chars[Math.floor(Math.random() * chars.length)];
-            span.style.left = Math.random() * 95 + 'vw';
-            span.style.animationDelay = Math.random() * 10 + 's';
-            span.style.color = `hsl(${Math.random() * 360}, 70%, 85%)`;
-            container.appendChild(span);
-        }
-    }
-    
-    initBackground();
-    // Forzar fuente inicial
-    updateLetterCase('MAY');
+function descargar(){
+  const blob = new Blob([htmlReporte()],{type:'text/html;charset=utf-8'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a'); a.href=url;
+  a.download = `reporte_silaba_${nombreAlumno||'anonimo'}_${new Date().toISOString().slice(0,10)}.html`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+// ════════════════════════════════
+//  CONFETI
+// ════════════════════════════════
+function confeti(){
+  const c = document.getElementById('confeti');
+  const cs = ['#FF6B9D','#C77DFF','#FFD93D','#4ECDC4','#FF8E53','#6BCB77','#4D96FF'];
+  for(let i=0;i<36;i++){
+    const p = document.createElement('div'); p.className='confeti-p';
+    p.style.cssText=`left:${10+Math.random()*80}%;background:${cs[~~(Math.random()*cs.length)]};animation-duration:${1.4+Math.random()*2}s;animation-delay:${Math.random()*.5}s;transform:rotate(${Math.random()*360}deg);width:${6+Math.random()*10}px;height:${6+Math.random()*10}px;border-radius:${Math.random()>.5?'50%':'2px'};`;
+    c.appendChild(p); p.addEventListener('animationend',()=>p.remove());
+  }
+}
+
+// ════════════════════════════════
+//  VOLVER
+// ════════════════════════════════
+function volverInicio(){
+  window.speechSynthesis&&speechSynthesis.cancel();
+  document.getElementById('ov-res').classList.remove('vis');
+  document.getElementById('ov-mat').classList.remove('vis');
+  if(document.fullscreenElement||document.webkitFullscreenElement)
+    document.exitFullscreen&&document.exitFullscreen();
+  show('s-nombre');
+}
+
+// ════════════════════════════════
+//  INIT
+// ════════════════════════════════
+initBubbles();
 </script>
 </body>
 </html>

@@ -214,7 +214,19 @@ body{font-family:var(--font-ui);color:var(--col-text);overflow-x:hidden;user-sel
 .btn-pop-ok{flex:1;padding:.75rem;border-radius:var(--radius-sm);border:none;background:var(--col-purple-d);color:white;font-family:var(--font-ui);font-weight:800;font-size:.95rem;cursor:pointer;}
 .btn-pop-cancel{flex:1;padding:.75rem;border-radius:var(--radius-sm);border:2px solid #D1D5DB;background:white;color:var(--col-muted);font-family:var(--font-ui);font-weight:700;font-size:.95rem;cursor:pointer;}
 
-@media(max-width:480px){
+/* Selector de modo */
+.mode-selector{width:100%;max-width:680px;margin-bottom:1.5rem;display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;}
+.btn-mode{padding:.7rem 1.6rem;border-radius:50px;border:3px solid transparent;font-family:var(--font-ui);font-size:.95rem;font-weight:800;cursor:pointer;background:white;color:var(--col-muted);box-shadow:0 2px 10px var(--col-shadow);transition:transform .15s,background .15s,color .15s,border-color .15s;}
+.btn-mode:active{transform:scale(.95);}
+.btn-mode.active-mode{background:linear-gradient(135deg,var(--col-purple),var(--col-purple-d));color:white;border-color:transparent;}
+.btn-mode.active-hard{background:linear-gradient(135deg,var(--col-coral),var(--col-coral-d));color:white;border-color:transparent;}
+/* Pares (nivel difícil) */
+.pair-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.7rem;}
+.btn-par{padding:.9rem .5rem;border-radius:var(--radius-sm);border:none;cursor:pointer;font-family:var(--font-game);font-size:1.1rem;font-weight:700;color:white;transition:transform .15s,box-shadow .15s;box-shadow:0 3px 10px rgba(0,0,0,.1);background:linear-gradient(135deg,var(--col-coral),var(--col-purple-d));line-height:1.4;}
+.btn-par:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,.15);}
+.btn-par:active{transform:scale(.95);}
+/* Tag de trabada en las tarjetas en modo par */
+.word-trabada-tag{display:inline-block;background:linear-gradient(135deg,var(--col-purple),var(--col-purple-d));color:white;font-family:var(--font-game);font-size:.9rem;font-weight:800;padding:.2rem .7rem;border-radius:50px;margin-bottom:.3rem;}
   .acts-grid{grid-template-columns:1fr 1fr;}
   .trabada-grid{grid-template-columns:repeat(3,1fr);}
   .drop-slot,.letter-tile{width:43px;height:50px;font-size:1.2rem;}
@@ -249,13 +261,31 @@ body{font-family:var(--font-ui);color:var(--col-text);overflow-x:hidden;user-sel
     <h1>Sílabas Trabadas</h1>
     <p id="home-sub">¡Elige una sílaba para empezar!</p>
   </div>
-  <div class="group-section">
-    <div class="group-label"><span class="group-badge badge-l">L</span> Grupo L</div>
-    <div class="trabada-grid" id="gridL"></div>
+
+  <!-- Selector de nivel -->
+  <div class="mode-selector">
+    <button class="btn-mode active-mode" id="btnModeNormal" onclick="setMode('normal')">⭐ Por trabada</button>
+    <button class="btn-mode" id="btnModeHard" onclick="setMode('pares')">🔥 Por pares L/R</button>
   </div>
-  <div class="group-section">
-    <div class="group-label"><span class="group-badge badge-r">R</span> Grupo R</div>
-    <div class="trabada-grid" id="gridR"></div>
+
+  <!-- Nivel normal: por trabada -->
+  <div id="secNormal">
+    <div class="group-section">
+      <div class="group-label"><span class="group-badge badge-l">L</span> Grupo L</div>
+      <div class="trabada-grid" id="gridL"></div>
+    </div>
+    <div class="group-section">
+      <div class="group-label"><span class="group-badge badge-r">R</span> Grupo R</div>
+      <div class="trabada-grid" id="gridR"></div>
+    </div>
+  </div>
+
+  <!-- Nivel difícil: por pares -->
+  <div id="secPares" style="display:none;width:100%;max-width:680px;">
+    <div class="group-section">
+      <div class="group-label" style="color:var(--col-coral-d);">🔥 Elige un par L + R</div>
+      <div class="pair-grid" id="gridPares"></div>
+    </div>
   </div>
 </div>
 
@@ -264,6 +294,7 @@ body{font-family:var(--font-ui);color:var(--col-text);overflow-x:hidden;user-sel
   <div class="back-bar">
     <button class="btn-back" onclick="requestParental('home')">← Inicio</button>
     <div class="sel-title" id="selTitle">BR</div>
+    <div id="selSubtitle" style="display:none;font-size:.9rem;color:var(--col-muted);font-weight:700;font-family:var(--font-ui);"></div>
   </div>
   <div class="acts-grid">
     <button class="btn-act act-1" onclick="startActivity(1)"><div class="act-icon">✏️</div><div class="act-name">Completar la palabra</div><div class="act-desc">Elige la sílaba correcta</div></button>
@@ -283,6 +314,7 @@ body{font-family:var(--font-ui);color:var(--col-text);overflow-x:hidden;user-sel
   <div class="game-body">
     <div class="game-card" id="card1">
       <div class="word-img-wrap"><img id="img1" class="word-img" src="" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="img-fallback" id="fb-img1" style="display:none">🖼️</span></div>
+      <span id="trabada-tag1" class="word-trabada-tag" style="display:none"></span>
       <div class="word-display" id="wordDisp1"></div>
       <div class="options-grid" id="opts1"></div>
       <div class="feedback-msg" id="fb1"></div>
@@ -611,12 +643,22 @@ const VOCALES = {
 };
 
 const TRABADAS = {L:['BL','CL','FL','GL','PL','TL'], R:['BR','CR','DR','FR','GR','PR','TR']};
+const PARES = [
+  {label:'BL + BR', t1:'BL', t2:'BR'},
+  {label:'CL + CR', t1:'CL', t2:'CR'},
+  {label:'FL + FR', t1:'FL', t2:'FR'},
+  {label:'GL + GR', t1:'GL', t2:'GR'},
+  {label:'PL + PR', t1:'PL', t2:'PR'},
+  {label:'TL + TR', t1:'TL', t2:'TR'},
+];
 
 // ═══ ESTADO ═══
 let currentTrabada='', currentActivity=0, questionList=[], currentIndex=0, pts=0;
 let fontMode='lower', draggedTile=null, a2Target='', a3Placed=[];
 let mediaRecorder=null, recordedChunks=[], recordingURL=null, isRecording=false;
 let parentalA, parentalB, parentalAction, playerName='';
+let gameMode='normal';   // 'normal' | 'pares'
+let currentPar=null;     // {label, t1, t2} cuando mode=pares
 
 // ═══ ANTESALA ═══
 function antesalaOk(){
@@ -629,14 +671,22 @@ function antesalaSinNombre(){
   document.getElementById('antesala').style.display='none';
 }
 
+// ═══ SELECTOR DE MODO ═══
+function setMode(mode){
+  gameMode=mode;
+  document.getElementById('secNormal').style.display = mode==='normal'?'':'none';
+  document.getElementById('secPares').style.display  = mode==='pares' ?'':'none';
+  document.getElementById('btnModeNormal').className = 'btn-mode'+(mode==='normal'?' active-mode':'');
+  document.getElementById('btnModeHard').className   = 'btn-mode'+(mode==='pares' ?' active-hard':'');
+}
+
 // ═══ FONT ═══
 function toggleFont(){
   fontMode=fontMode==='lower'?'upper':'lower';
   document.documentElement.style.setProperty('--font-game', fontMode==='lower'?'var(--font-min)':'var(--font-may)');
   document.getElementById('fontLabel').textContent=fontMode==='lower'?'abc — minúsculas':'ABC — Mayúsculas';
-  // Actualiza botones trabada
-  document.querySelectorAll('.btn-trabada').forEach(b=>{
-    b.textContent=T(b.textContent.trim().toUpperCase());
+  document.querySelectorAll('.btn-trabada,.btn-par').forEach(b=>{
+    b.innerHTML=b.innerHTML.replace(/[A-Za-z+\s]+/g, m=>T(m));
   });
   const st=document.getElementById('selTitle');
   if(st&&currentTrabada) st.textContent=T(currentTrabada);
@@ -650,13 +700,22 @@ function showScreen(id){
   window.scrollTo(0,0);
 }
 function selectTrabada(t){
-  currentTrabada=t;
+  gameMode='normal'; currentPar=null; currentTrabada=t;
   document.getElementById('selTitle').textContent=T(t);
+  document.getElementById('selSubtitle').style.display='none';
+  showScreen('act-selector');
+}
+function selectPar(par){
+  gameMode='pares'; currentPar=par; currentTrabada=par.t1+'+'+par.t2;
+  document.getElementById('selTitle').textContent=T(par.t1)+' + '+T(par.t2);
+  const sub=document.getElementById('selSubtitle');
+  sub.textContent='Nivel difícil 🔥'; sub.style.display='block';
   showScreen('act-selector');
 }
 
 // ═══ INIT ═══
 function init(){
+  // Botones trabada individual
   ['L','R'].forEach(g=>{
     const grid=document.getElementById('grid'+g);
     grid.innerHTML='';
@@ -668,6 +727,16 @@ function init(){
       grid.appendChild(btn);
     });
   });
+  // Botones pares
+  const gp=document.getElementById('gridPares');
+  gp.innerHTML='';
+  PARES.forEach(par=>{
+    const btn=document.createElement('button');
+    btn.className='btn-par';
+    btn.innerHTML=T(par.t1)+'<br>+<br>'+T(par.t2);
+    btn.onclick=()=>selectPar(par);
+    gp.appendChild(btn);
+  });
 }
 
 // ═══ HELPERS ═══
@@ -675,7 +744,15 @@ function shuffle(a){
   for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
   return a;
 }
-function getWords(){ return shuffle([...DATA[currentTrabada]]).slice(0,10); }
+function getWords(){
+  if(gameMode==='pares' && currentPar){
+    // Mezcla palabras de las dos trabadas, 5 de cada una, con etiqueta de trabada
+    const w1=shuffle([...DATA[currentPar.t1]]).slice(0,5).map(w=>({...w, trabada:currentPar.t1}));
+    const w2=shuffle([...DATA[currentPar.t2]]).slice(0,5).map(w=>({...w, trabada:currentPar.t2}));
+    return shuffle([...w1,...w2]);
+  }
+  return shuffle([...DATA[currentTrabada]]).slice(0,10).map(w=>({...w, trabada:currentTrabada}));
+}
 function updateProgress(n){
   const pct=(currentIndex/questionList.length)*100;
   document.getElementById('prog'+n).style.width=pct+'%';
@@ -732,91 +809,84 @@ function loadAct1(){
   if(currentIndex>=questionList.length){showCel(1);return;}
   updateProgress(1);
   const w=questionList[currentIndex];
+  const wTrabada = w.trabada || currentTrabada;  // trabada específica de esta palabra
   setImg(1, w.img, w.p);
-  // Construye la palabra con el hueco mostrando tantos guiones como letras tiene la trabada
-  const tL=currentTrabada.toLowerCase();
+  // Etiqueta de trabada en modo pares
+  const tagEl = document.getElementById('trabada-tag1');
+  if(gameMode==='pares'){
+    tagEl.textContent=T(wTrabada);
+    tagEl.style.display='inline-block';
+  } else {
+    tagEl.style.display='none';
+  }
+  // Construye la palabra con el hueco
+  const tL=wTrabada.toLowerCase();
   const wL=w.p.toLowerCase();
-  const blank='<span class="blank-slot">'+'_'.repeat(currentTrabada.length)+'</span>';
+  const blank='<span class="blank-slot">'+'_'.repeat(wTrabada.length)+'</span>';
   const gapped=wL.includes(tL) ? wL.replace(tL,'▪▪▪') : '▪▪▪'+wL;
   document.getElementById('wordDisp1').innerHTML=
     T(gapped).replace('▪▪▪', blank);
   document.getElementById('fb1').textContent='';
   document.getElementById('btn-siguiente1').style.display='none';
-  // Opciones
-  const all=[...TRABADAS.L,...TRABADAS.R].filter(t=>t!==currentTrabada);
-  const opts=shuffle([currentTrabada,...shuffle(all).slice(0,3)]);
+  // En modo pares: las 4 opciones son siempre t1 y t2 del par + 2 distractores externos
+  let opts;
+  if(gameMode==='pares' && currentPar){
+    const distractores=[...TRABADAS.L,...TRABADAS.R]
+      .filter(t=>t!==currentPar.t1 && t!==currentPar.t2);
+    opts=shuffle([currentPar.t1, currentPar.t2, ...shuffle(distractores).slice(0,2)]);
+  } else {
+    const all=[...TRABADAS.L,...TRABADAS.R].filter(t=>t!==wTrabada);
+    opts=shuffle([wTrabada,...shuffle(all).slice(0,3)]);
+  }
   const container=document.getElementById('opts1');
   container.innerHTML='';
   opts.forEach(opt=>{
     const btn=document.createElement('button');
     btn.className='btn-option'; btn.textContent=T(opt);
-    btn.onclick=()=>checkAct1(btn,opt);
+    btn.onclick=()=>checkAct1(btn, opt, wTrabada);
     container.appendChild(btn);
   });
 }
-function checkAct1(btn, choice){
-  if(choice === currentTrabada){
-    // Bloquea todos los botones
+function checkAct1(btn, choice, wTrabada){
+  const correcta = wTrabada || currentTrabada;
+  if(choice === correcta){
     document.querySelectorAll('#opts1 .btn-option').forEach(b=>b.disabled=true);
     pts+=10; document.getElementById('pts1').textContent=pts;
-
-    // 1) Anima el botón pulsado
     btn.classList.add('correct');
-
-    // 2) Crea la sílaba voladora desde la posición del botón al hueco
     const btnRect  = btn.getBoundingClientRect();
     const blankEl  = document.querySelector('#wordDisp1 .blank-slot');
     const blankRect = blankEl ? blankEl.getBoundingClientRect() : btnRect;
-
     const fly = document.createElement('div');
     fly.className = 'sil-fly';
-    fly.textContent = T(currentTrabada);
-    // Empieza en el centro del botón
+    fly.textContent = T(correcta);
     fly.style.left = (btnRect.left + btnRect.width/2) + 'px';
     fly.style.top  = (btnRect.top  + btnRect.height/2) + 'px';
     fly.style.transform = 'translate(-50%,-50%) scale(1)';
     document.body.appendChild(fly);
-
-    // Fuerza reflow para que la transición funcione
     fly.getBoundingClientRect();
-
-    // Vuela hacia el hueco
     fly.style.transition = 'left .55s cubic-bezier(.4,0,.2,1), top .55s cubic-bezier(.4,0,.2,1), transform .55s, opacity .2s';
     fly.style.left      = (blankRect.left + blankRect.width/2) + 'px';
     fly.style.top       = (blankRect.top  + blankRect.height/2) + 'px';
     fly.style.transform = 'translate(-50%,-50%) scale(1.25)';
-
-    // 3) Cuando llega: muestra la palabra completa y la lee en voz alta
     setTimeout(()=>{
       fly.remove();
-
-      // Reemplaza el display con la palabra completa iluminada
       const w   = questionList[currentIndex];
-      const tL  = currentTrabada.toLowerCase();
+      const tL  = correcta.toLowerCase();
       const wL  = w.p.toLowerCase();
       const disp = document.getElementById('wordDisp1');
-
       let html;
       if(wL.includes(tL)){
         const before = T(wL.slice(0, wL.indexOf(tL)));
         const after  = T(wL.slice(wL.indexOf(tL) + tL.length));
-        const sil    = T(currentTrabada);
-        html = `${before}<span class="sil-highlight">${sil}</span>${after}`;
+        html = `${before}<span class="sil-highlight">${T(correcta)}</span>${after}`;
       } else {
         html = T(w.p);
       }
       disp.innerHTML = `<span class="word-complete">${html}</span>`;
-
-      // Lee la palabra en voz alta
       speak(w.p);
-
       document.getElementById('fb1').innerHTML='<span class="fb-ok">✅ ¡Muy bien!</span>';
-
-      // Muestra botón de siguiente en vez de avanzar automáticamente
-      const btnSig = document.getElementById('btn-siguiente1');
-      btnSig.style.display = 'flex';
+      document.getElementById('btn-siguiente1').style.display = 'flex';
     }, 600);
-
   } else {
     btn.classList.add('wrong'); btn.disabled=true;
     document.getElementById('fb1').innerHTML='<span class="fb-fail">❌ Inténtalo de nuevo</span>';
@@ -824,27 +894,44 @@ function checkAct1(btn, choice){
 }
 
 // ═══ ACT 2: AUDITIVA ═══
-// Discrimina la posición de la vocal dentro de la trabada:
-// Directa (correcta):   B·L·U = BLU,  C·R·A = CRA,  F·L·O = FLO
-// Invertida (incorrecta): B·U·L = BUL,  C·A·R = CAR,  F·O·L = FOL
-// La vocal siempre va al final en la correcta y en medio en la incorrecta
+// Modo normal (una trabada):  BLU vs BUL — discrimina posición de la vocal
+// Modo pares  (L/R):          BLA vs BRA — discrimina L o R, misma consonante y vocal
 function loadAct2(){
   if(currentIndex>=questionList.length){showCel(2);return;}
   updateProgress(2);
   document.getElementById('fb2').textContent='';
-  const vocales=VOCALES[currentTrabada]||['A','E','O'];
-  const vocal=vocales[Math.floor(Math.random()*vocales.length)];
-  const c1=currentTrabada[0];  // consonante: B, C, F, G, P, T, D...
-  const c2=currentTrabada[1];  // líquida: L o R
-  const directa = c1 + c2 + vocal;  // BLU, CRA, FLO
-  const inversa  = c1 + vocal + c2; // BUL, CAR, FOL
+
+  let opA, opB;
+
+  if(gameMode==='pares' && currentPar){
+    // Modo pares: misma consonante + misma vocal, cambia L↔R
+    const c  = currentPar.t1[0];               // B, C, F, G, P, T
+    const liq1 = currentPar.t1[1];             // L
+    const liq2 = currentPar.t2[1];             // R
+    // Vocales válidas para ambas trabadas (intersección)
+    const v1 = VOCALES[currentPar.t1] || ['A','E','O'];
+    const v2 = VOCALES[currentPar.t2] || ['A','E','O'];
+    const comunes = v1.filter(v=>v2.includes(v));
+    const pool = comunes.length ? comunes : v1;
+    const vocal = pool[Math.floor(Math.random()*pool.length)];
+    opA = c + liq1 + vocal;   // BLA
+    opB = c + liq2 + vocal;   // BRA
+  } else {
+    // Modo normal: misma trabada, vocal al final vs vocal en medio
+    const vocales = VOCALES[currentTrabada] || ['A','E','O'];
+    const vocal   = vocales[Math.floor(Math.random()*vocales.length)];
+    const c1 = currentTrabada[0];
+    const c2 = currentTrabada[1];
+    opA = c1 + c2 + vocal;   // BLU
+    opB = c1 + vocal + c2;   // BUL
+  }
+
   const hint = document.getElementById('audio-hint');
-  if(hint) hint.textContent = '¿Escuchas ' + T(directa) + ' o ' + T(inversa) + '?';
-  a2Target = Math.random()>0.5 ? directa : inversa;
-  const opts = shuffle([directa, inversa]);
-  const container=document.getElementById('audioOpts');
+  if(hint) hint.textContent = '¿Escuchas ' + T(opA) + ' o ' + T(opB) + '?';
+  a2Target = Math.random()>0.5 ? opA : opB;
+  const container = document.getElementById('audioOpts');
   container.innerHTML='';
-  opts.forEach(opt=>{
+  shuffle([opA, opB]).forEach(opt=>{
     const btn=document.createElement('button');
     btn.className='btn-audio'; btn.textContent=T(opt);
     btn.onclick=()=>checkAct2(btn,opt);

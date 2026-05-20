@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sílabas Trabadas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund:wght@100..400&family=Playwrite+HR+Lijeva:wght@100..400&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --col-bg:#FFF8F0;--col-purple:#A78BFA;--col-purple-d:#7C3AED;
+  --col-teal:#34D399;--col-teal-d:#059669;--col-coral:#FB7185;--col-coral-d:#E11D48;
+  --col-amber:#FBBF24;--col-amber-d:#D97706;--col-sky:#38BDF8;--col-sky-d:#0284C7;
+  --col-text:#1E1B4B;--col-muted:#6B7280;--col-shadow:rgba(99,102,241,.15);
+  --radius:20px;--radius-sm:12px;
+  --font-ui:'Nunito',sans-serif;
+  --font-may:'Playwrite DE Grund',cursive;
+  --font-min:'Playwrite HR Lijeva',cursive;
+  --font-game:var(--font-min);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;min-height:100%;background:var(--col-bg);}
+body{font-family:var(--font-ui);color:var(--col-text);overflow-x:hidden;user-select:none;}
+
+/* ANTESALA */
+#antesala{position:fixed;inset:0;background:linear-gradient(135deg,#e3f2fd,#bbdefb);display:flex;align-items:center;justify-content:center;z-index:9999;padding:1.5rem;}
+.ante-card{background:white;padding:2.5rem 2rem;border-radius:2.5rem;max-width:420px;width:100%;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,.1);}
+.ante-card h2{font-size:1.2rem;font-weight:700;color:var(--col-purple-d);margin-bottom:.5rem;}
+.ante-card p{font-size:.88rem;color:#636e72;margin-bottom:1.1rem;line-height:1.6;}
+.ante-input{width:100%;padding:12px 16px;border-radius:100px;border:2px solid #e0e0e0;font-size:1rem;font-family:var(--font-ui);text-align:center;outline:none;margin-bottom:.9rem;transition:border-color .2s;}
+.ante-input:focus{border-color:var(--col-purple-d);}
+.ante-btn-ok{width:100%;padding:13px;background:linear-gradient(135deg,var(--col-purple),var(--col-purple-d));color:white;border:none;border-radius:100px;font-size:.93rem;font-family:var(--font-ui);font-weight:700;cursor:pointer;margin-bottom:.6rem;transition:opacity .2s;}
+.ante-btn-ok:hover{opacity:.9;}
+.ante-btn-skip{background:none;border:none;color:#aaa;font-size:.8rem;font-family:var(--font-ui);cursor:pointer;text-decoration:underline;}
+.ante-legal{font-size:.72rem;color:#b2bec3;margin-top:1rem;border-top:1px solid #f0f0f0;padding-top:.75rem;line-height:1.5;}
+
+/* SCREENS */
+.screen{display:none;min-height:100vh;flex-direction:column;align-items:center;padding:1.5rem 1rem 2.5rem;}
+.screen.active{display:flex;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active>*{animation:fadeIn .35s ease both;}
+
+/* HOME */
+#home{background:linear-gradient(160deg,#FFF0FB 0%,#F0F4FF 50%,#F0FFF8 100%);}
+.home-topbar{width:100%;max-width:680px;display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;gap:.75rem;flex-wrap:wrap;}
+.home-title{text-align:center;margin-bottom:1.5rem;}
+.home-title h1{font-size:clamp(1.8rem,5vw,3rem);font-weight:900;background:linear-gradient(135deg,var(--col-purple-d),var(--col-coral-d));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2;}
+.home-title p{font-size:1rem;color:var(--col-muted);margin-top:.3rem;}
+.btn-ctrl{display:flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;border-radius:50px;border:none;cursor:pointer;font-family:var(--font-ui);font-size:.9rem;font-weight:700;transition:transform .15s;box-shadow:0 2px 10px var(--col-shadow);}
+.btn-ctrl:active{transform:scale(.95);}
+.btn-font{background:white;color:var(--col-purple-d);border:2px solid var(--col-purple);}
+.btn-fs{background:white;color:var(--col-teal-d);border:2px solid var(--col-teal);}
+.btn-home-link{background:white;color:var(--col-muted);border:2px solid #D1D5DB;font-size:.85rem;text-decoration:none;}
+.group-section{width:100%;max-width:680px;margin-bottom:1.5rem;}
+.group-label{font-size:1.05rem;font-weight:800;margin-bottom:.7rem;display:flex;align-items:center;gap:.5rem;}
+.group-badge{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;font-size:.95rem;font-weight:900;color:white;}
+.badge-l{background:var(--col-purple-d);}.badge-r{background:var(--col-coral-d);}
+.trabada-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:.7rem;}
+.btn-trabada{padding:.9rem .5rem;border-radius:var(--radius-sm);border:none;cursor:pointer;font-family:var(--font-game);font-size:1.35rem;font-weight:700;color:white;transition:transform .15s,box-shadow .15s;box-shadow:0 3px 10px rgba(0,0,0,.1);}
+.btn-trabada:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,.15);}
+.btn-trabada:active{transform:scale(.95);}
+.btn-l{background:linear-gradient(135deg,#A78BFA,#7C3AED);}
+.btn-r{background:linear-gradient(135deg,#FB7185,#E11D48);}
+
+/* ACT SELECTOR */
+#act-selector{background:linear-gradient(160deg,#FFF0FB 0%,#F0F4FF 100%);}
+.back-bar{width:100%;max-width:680px;display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;}
+.btn-back{background:white;border:2px solid var(--col-purple);color:var(--col-purple-d);border-radius:50px;padding:.45rem 1.1rem;font-family:var(--font-ui);font-weight:700;cursor:pointer;font-size:.9rem;}
+.sel-title{font-size:clamp(1.5rem,5vw,2.4rem);font-weight:900;font-family:var(--font-game);}
+.acts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.1rem;width:100%;max-width:680px;}
+.btn-act{background:white;border:none;border-radius:var(--radius);padding:1.6rem 1.1rem;cursor:pointer;text-align:center;box-shadow:0 4px 18px rgba(0,0,0,.07);transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column;align-items:center;gap:.7rem;}
+.btn-act:hover{transform:translateY(-5px);box-shadow:0 10px 28px rgba(0,0,0,.12);}
+.act-icon{font-size:2.8rem;}
+.act-name{font-family:var(--font-ui);font-size:1rem;font-weight:800;color:var(--col-text);line-height:1.3;}
+.act-desc{font-size:.82rem;color:var(--col-muted);font-weight:600;}
+.act-1{border-top:5px solid var(--col-purple);}
+.act-2{border-top:5px solid var(--col-coral);}
+.act-3{border-top:5px solid var(--col-amber);}
+.act-4{border-top:5px solid var(--col-teal);}
+
+/* GAME SCREENS */
+.game-screen{padding-top:0;justify-content:flex-start;}
+.game-header{position:sticky;top:0;z-index:50;background:white;border-radius:0 0 18px 18px;padding:.6rem 1rem;display:flex;align-items:center;justify-content:space-between;width:100%;box-shadow:0 4px 18px rgba(0,0,0,.08);gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;}
+.hdr-left{display:flex;align-items:center;gap:.6rem;flex:1;min-width:100px;}
+.prog-wrap{display:flex;flex-direction:column;gap:2px;}
+.prog-ronda{font-weight:900;font-size:.85rem;}
+.prog-bar{height:9px;background:#EEE;border-radius:10px;overflow:hidden;width:80px;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--col-purple),var(--col-coral));border-radius:10px;transition:width .5s;}
+.hdr-pts{font-weight:900;font-size:.9rem;color:var(--col-amber-d);white-space:nowrap;}
+.hdr-btns{display:flex;gap:.4rem;}
+.h-btn{width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:transform .2s;}
+.h-btn:hover{transform:scale(1.12);}
+.h-btn-fs{background:#FFF9DB;color:#CC8800;}
+.h-btn-back{background:#EFF8FF;color:var(--col-sky-d);}
+
+.game-body{display:flex;flex-direction:column;align-items:center;width:100%;max-width:600px;gap:1.2rem;padding:0 .5rem 2rem;}
+.game-card{background:white;border-radius:var(--radius);padding:1.8rem 1.5rem;width:100%;box-shadow:0 8px 36px rgba(99,102,241,.09);display:flex;flex-direction:column;align-items:center;gap:1.3rem;}
+
+/* Imagen de palabra */
+.word-img-wrap{width:160px;height:160px;border-radius:16px;overflow:hidden;background:#F9F9F9;display:flex;align-items:center;justify-content:center;border:3px solid #EEE;}
+.word-img{width:100%;height:100%;object-fit:contain;}
+.img-fallback{font-size:4rem;}
+
+.word-display{font-family:var(--font-game);font-size:clamp(1.5rem,5vw,2.4rem);font-weight:700;letter-spacing:.05em;text-align:center;}
+.blank-slot{color:var(--col-purple-d);font-weight:900;}
+
+/* Act 1 opciones */
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;width:100%;}
+.btn-option{padding:.9rem;border-radius:var(--radius-sm);border:3px solid transparent;font-family:var(--font-game);font-size:1.25rem;font-weight:700;cursor:pointer;transition:transform .15s,background .15s;background:#F3F4F6;color:var(--col-text);}
+.btn-option:hover:not(:disabled){background:#E0E7FF;border-color:var(--col-purple);}
+.btn-option.correct{background:#D1FAE5;border-color:var(--col-teal-d);color:var(--col-teal-d);}
+.btn-option.wrong{background:#FFE4E6;border-color:var(--col-coral-d);color:var(--col-coral-d);}
+.btn-option:disabled{opacity:.45;cursor:not-allowed;}
+.feedback-msg{font-size:1.1rem;font-weight:800;text-align:center;min-height:1.6rem;}
+.fb-ok{color:var(--col-teal-d);}.fb-fail{color:var(--col-coral-d);}
+
+/* Act 2 */
+.audio-prompt{font-size:.95rem;color:var(--col-muted);font-weight:700;text-align:center;}
+.btn-speaker{width:96px;height:96px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--col-coral),var(--col-coral-d));font-size:2.4rem;cursor:pointer;transition:transform .15s;box-shadow:0 6px 22px rgba(225,29,72,.28);display:flex;align-items:center;justify-content:center;}
+.btn-speaker:active{transform:scale(.9);}
+.audio-opts{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;width:100%;}
+.btn-audio{padding:1.1rem .5rem;border-radius:var(--radius-sm);border:3px solid transparent;font-family:var(--font-game);font-size:1.4rem;font-weight:800;cursor:pointer;background:#F3F4F6;color:var(--col-text);transition:transform .15s,background .15s;text-align:center;}
+.btn-audio:hover:not(:disabled){background:#FFE4E6;border-color:var(--col-coral);}
+.btn-audio.correct{background:#D1FAE5;border-color:var(--col-teal-d);}
+.btn-audio.wrong{background:#FFE4E6;border-color:var(--col-coral-d);}
+.btn-audio:disabled{opacity:.45;cursor:not-allowed;}
+
+/* Act 3 */
+.drop-zones{display:flex;gap:.45rem;flex-wrap:wrap;justify-content:center;}
+.drop-slot{width:50px;height:58px;border-radius:var(--radius-sm);border:3px dashed var(--col-amber-d);background:#FFFBEB;display:flex;align-items:center;justify-content:center;font-family:var(--font-game);font-size:1.5rem;font-weight:700;transition:background .2s;color:var(--col-text);}
+.drop-slot.filled{background:#FEF3C7;border-style:solid;}
+.drop-slot.slot-ok{background:#D1FAE5;border-color:var(--col-teal-d);border-style:solid;}
+.drop-slot.slot-ko{background:#FFE4E6;border-color:var(--col-coral-d);border-style:solid;}
+.drag-over{background:#FEF9C3!important;border-color:var(--col-amber)!important;border-style:solid!important;}
+.letter-pool{display:flex;flex-wrap:wrap;gap:.55rem;justify-content:center;min-height:66px;}
+.letter-tile{width:50px;height:58px;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--col-amber),var(--col-amber-d));color:white;font-family:var(--font-game);font-size:1.5rem;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:grab;transition:transform .15s,opacity .2s;box-shadow:0 3px 10px rgba(217,119,6,.28);user-select:none;}
+.letter-tile:hover{transform:translateY(-3px) scale(1.05);}
+.letter-tile.dragging{opacity:.35;}
+.letter-tile.used{opacity:0;pointer-events:none;}
+.btn-check{padding:.85rem 2.2rem;border-radius:50px;border:none;background:linear-gradient(135deg,var(--col-amber),var(--col-amber-d));color:white;font-family:var(--font-ui);font-size:1rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(217,119,6,.28);}
+.btn-reset-w{background:white;border:2px solid #D1D5DB;border-radius:50px;padding:.45rem 1.1rem;font-family:var(--font-ui);font-size:.88rem;font-weight:700;cursor:pointer;color:var(--col-muted);}
+
+/* Act 4 */
+.word-full{font-family:var(--font-game);font-size:clamp(1.9rem,6vw,3rem);font-weight:800;text-align:center;}
+.pronun-btns{display:flex;flex-direction:column;gap:.7rem;width:100%;}
+.btn-pronun{padding:.95rem 1.4rem;border-radius:var(--radius-sm);border:none;font-family:var(--font-ui);font-size:.95rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.65rem;transition:transform .15s;}
+.btn-pronun:active{transform:scale(.97);}
+.btn-model{background:linear-gradient(135deg,var(--col-sky),var(--col-sky-d));color:white;box-shadow:0 4px 14px rgba(2,132,199,.25);}
+.btn-record{background:linear-gradient(135deg,var(--col-coral),var(--col-coral-d));color:white;box-shadow:0 4px 14px rgba(225,29,72,.25);}
+.btn-record.recording{animation:pulseRec .8s ease-in-out infinite alternate;}
+@keyframes pulseRec{from{box-shadow:0 4px 14px rgba(225,29,72,.25);}to{box-shadow:0 4px 28px rgba(225,29,72,.65);transform:scale(1.02);}}
+.btn-playback{background:linear-gradient(135deg,var(--col-teal),var(--col-teal-d));color:white;box-shadow:0 4px 14px rgba(5,150,105,.25);}
+.btn-playback:disabled{opacity:.4;cursor:not-allowed;}
+.btn-next-p{padding:.85rem 2.2rem;border-radius:50px;border:none;background:linear-gradient(135deg,var(--col-teal),var(--col-teal-d));color:white;font-family:var(--font-ui);font-size:1rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(5,150,105,.25);}
+
+/* Celebration */
+.celebration{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:55vh;gap:1.4rem;text-align:center;padding:1.5rem;}
+.celebration.show{display:flex;}
+.celebration h2{font-size:clamp(1.8rem,5vw,2.8rem);font-weight:900;background:linear-gradient(135deg,var(--col-purple-d),var(--col-coral-d));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.cel-emoji{font-size:3.8rem;animation:bounce .65s infinite alternate;}
+@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-14px)}}
+.btn-again{padding:.9rem 2.2rem;border-radius:50px;border:none;background:linear-gradient(135deg,var(--col-purple),var(--col-purple-d));color:white;font-family:var(--font-ui);font-size:1.05rem;font-weight:800;cursor:pointer;box-shadow:0 5px 22px rgba(124,58,237,.28);}
+
+/* Parental overlay */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;align-items:center;justify-content:center;padding:1.5rem;}
+.overlay.show{display:flex;}
+.popup-card{background:white;border-radius:var(--radius);padding:1.8rem;max-width:360px;width:100%;box-shadow:0 20px 55px rgba(0,0,0,.2);text-align:center;display:flex;flex-direction:column;gap:1.1rem;}
+.popup-card h3{font-size:1.2rem;font-weight:900;}
+.popup-sum{font-size:1.9rem;font-weight:900;color:var(--col-purple-d);}
+.popup-input{width:100%;padding:.7rem 1rem;border:3px solid var(--col-purple);border-radius:var(--radius-sm);font-size:1.3rem;font-family:var(--font-ui);font-weight:700;text-align:center;color:var(--col-text);outline:none;}
+.popup-err{color:var(--col-coral-d);font-weight:700;font-size:.9rem;min-height:1.3rem;}
+.popup-btns{display:flex;gap:.7rem;}
+.btn-pop-ok{flex:1;padding:.75rem;border-radius:var(--radius-sm);border:none;background:var(--col-purple-d);color:white;font-family:var(--font-ui);font-weight:800;font-size:.95rem;cursor:pointer;}
+.btn-pop-cancel{flex:1;padding:.75rem;border-radius:var(--radius-sm);border:2px solid #D1D5DB;background:white;color:var(--col-muted);font-family:var(--font-ui);font-weight:700;font-size:.95rem;cursor:pointer;}
+
+@media(max-width:480px){
+  .acts-grid{grid-template-columns:1fr 1fr;}
+  .trabada-grid{grid-template-columns:repeat(3,1fr);}
+  .drop-slot,.letter-tile{width:43px;height:50px;font-size:1.2rem;}
+  .word-img-wrap{width:130px;height:130px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ANTESALA -->
+<div id="antesala">
+  <div class="ante-card">
+    <div style="font-size:2.8rem;margin-bottom:.75rem;">🔤✨</div>
+    <h2>¿Quién va a practicar?</h2>
+    <p>Escribe el nombre del niño o la niña para personalizar la sesión.</p>
+    <input id="ante-nombre" type="text" class="ante-input" placeholder="Nombre del niño/a…" maxlength="20"
+      onkeydown="if(event.key==='Enter') antesalaOk()">
+    <button class="ante-btn-ok" onclick="antesalaOk()">¡Vamos a jugar! ✓</button>
+    <button class="ante-btn-skip" onclick="antesalaSinNombre()">Continuar sin nombre</button>
+    <p class="ante-legal">🔒 El nombre solo se usa para personalizar la sesión en pantalla. No se envía a ningún servidor.</p>
+  </div>
+</div>
+
+<!-- HOME -->
+<div id="home" class="screen active">
+  <div class="home-topbar">
+    <button class="btn-ctrl btn-font" onclick="toggleFont()"><span id="fontLabel">abc — minúsculas</span></button>
+    <button class="btn-ctrl btn-fs" onclick="requestParental('fullscreen')">⛶ Pantalla completa</button>
+    <a href="https://manosconmuchoquecontar.github.io/" class="btn-ctrl btn-home-link">🏠 Volver a los juegos</a>
+  </div>
+  <div class="home-title">
+    <h1>Sílabas Trabadas</h1>
+    <p id="home-sub">¡Elige una sílaba para empezar!</p>
+  </div>
+  <div class="group-section">
+    <div class="group-label"><span class="group-badge badge-l">L</span> Grupo L</div>
+    <div class="trabada-grid" id="gridL"></div>
+  </div>
+  <div class="group-section">
+    <div class="group-label"><span class="group-badge badge-r">R</span> Grupo R</div>
+    <div class="trabada-grid" id="gridR"></div>
+  </div>
+</div>
+
+<!-- ACT SELECTOR -->
+<div id="act-selector" class="screen">
+  <div class="back-bar">
+    <button class="btn-back" onclick="requestParental('home')">← Inicio</button>
+    <div class="sel-title" id="selTitle">BR</div>
+  </div>
+  <div class="acts-grid">
+    <button class="btn-act act-1" onclick="startActivity(1)"><div class="act-icon">✏️</div><div class="act-name">Completar la palabra</div><div class="act-desc">Elige la sílaba correcta</div></button>
+    <button class="btn-act act-2" onclick="startActivity(2)"><div class="act-icon">👂</div><div class="act-name">Discriminación auditiva</div><div class="act-desc">¿Qué has escuchado?</div></button>
+    <button class="btn-act act-3" onclick="startActivity(3)"><div class="act-icon">🧩</div><div class="act-name">Formar palabras</div><div class="act-desc">Arrastra las letras</div></button>
+    <button class="btn-act act-4" onclick="startActivity(4)"><div class="act-icon">🎙️</div><div class="act-name">Pronunciación</div><div class="act-desc">Escucha y graba tu voz</div></button>
+  </div>
+</div>
+
+<!-- ACT 1 -->
+<div id="act1" class="screen game-screen">
+  <div class="game-header">
+    <div class="hdr-left"><div class="prog-wrap"><span class="prog-ronda">Palabra <span id="ronda1">1</span>/<span id="total1">10</span></span><div class="prog-bar"><div class="prog-fill" id="prog1"></div></div></div></div>
+    <span class="hdr-pts">⭐ <span id="pts1">0</span></span>
+    <div class="hdr-btns"><button class="h-btn h-btn-fs" onclick="requestParental('fullscreen')">⛶</button><button class="h-btn h-btn-back" onclick="requestParental('acts')">🏠</button></div>
+  </div>
+  <div class="game-body">
+    <div class="game-card" id="card1">
+      <div class="word-img-wrap"><img id="img1" class="word-img" src="" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="img-fallback" id="fb-img1" style="display:none">🖼️</span></div>
+      <div class="word-display" id="wordDisp1"></div>
+      <div class="options-grid" id="opts1"></div>
+      <div class="feedback-msg" id="fb1"></div>
+    </div>
+    <div class="celebration" id="cel1"><div class="cel-emoji">🎉</div><h2>¡Fantástico!</h2><p style="color:var(--col-muted);font-weight:700">Has completado todas las palabras</p><button class="btn-again" onclick="startActivity(1)">¡Otra vez!</button><button class="btn-back" style="margin-top:.5rem" onclick="showScreen('act-selector')">Elegir actividad</button></div>
+  </div>
+</div>
+
+<!-- ACT 2 -->
+<div id="act2" class="screen game-screen" style="background:linear-gradient(160deg,#FFF0F3,#F0F4FF)">
+  <div class="game-header">
+    <div class="hdr-left"><div class="prog-wrap"><span class="prog-ronda">Ronda <span id="ronda2">1</span>/<span id="total2">10</span></span><div class="prog-bar"><div class="prog-fill" id="prog2"></div></div></div></div>
+    <span class="hdr-pts">⭐ <span id="pts2">0</span></span>
+    <div class="hdr-btns"><button class="h-btn h-btn-fs" onclick="requestParental('fullscreen')">⛶</button><button class="h-btn h-btn-back" onclick="requestParental('acts')">🏠</button></div>
+  </div>
+  <div class="game-body">
+    <div class="game-card" id="card2">
+      <div class="audio-prompt">Pulsa el altavoz y escucha bien</div>
+      <button class="btn-speaker" onclick="playAudio2()">🔊</button>
+      <div class="audio-opts" id="audioOpts"></div>
+      <div class="feedback-msg" id="fb2"></div>
+    </div>
+    <div class="celebration" id="cel2"><div class="cel-emoji">🌟</div><h2>¡Excelente oído!</h2><p style="color:var(--col-muted);font-weight:700">Has discriminado todos los sonidos</p><button class="btn-again" onclick="startActivity(2)">¡Otra vez!</button><button class="btn-back" style="margin-top:.5rem" onclick="showScreen('act-selector')">Elegir actividad</button></div>
+  </div>
+</div>
+
+<!-- ACT 3 -->
+<div id="act3" class="screen game-screen" style="background:linear-gradient(160deg,#FFFBF0,#F0FFF4)">
+  <div class="game-header">
+    <div class="hdr-left"><div class="prog-wrap"><span class="prog-ronda">Palabra <span id="ronda3">1</span>/<span id="total3">10</span></span><div class="prog-bar"><div class="prog-fill" id="prog3"></div></div></div></div>
+    <span class="hdr-pts">⭐ <span id="pts3">0</span></span>
+    <div class="hdr-btns"><button class="h-btn h-btn-fs" onclick="requestParental('fullscreen')">⛶</button><button class="h-btn h-btn-back" onclick="requestParental('acts')">🏠</button></div>
+  </div>
+  <div class="game-body">
+    <div class="game-card" id="card3">
+      <div class="word-img-wrap"><img id="img3" class="word-img" src="" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="img-fallback" id="fb-img3" style="display:none">🖼️</span></div>
+      <div class="drop-zones" id="dropZones"></div>
+      <div style="width:100%;border-top:2px dashed #E5E7EB;padding-top:.9rem"><div class="letter-pool" id="letterPool"></div></div>
+      <div style="display:flex;gap:.65rem;flex-wrap:wrap;justify-content:center">
+        <button class="btn-reset-w" onclick="resetLetters()">↺ Borrar</button>
+        <button class="btn-check" onclick="checkAnagram()">✓ Comprobar</button>
+      </div>
+      <div class="feedback-msg" id="fb3"></div>
+    </div>
+    <div class="celebration" id="cel3"><div class="cel-emoji">🧩</div><h2>¡Eres un puzzle maestro!</h2><p style="color:var(--col-muted);font-weight:700">Has formado todas las palabras</p><button class="btn-again" onclick="startActivity(3)">¡Otra vez!</button><button class="btn-back" style="margin-top:.5rem" onclick="showScreen('act-selector')">Elegir actividad</button></div>
+  </div>
+</div>
+
+<!-- ACT 4 -->
+<div id="act4" class="screen game-screen" style="background:linear-gradient(160deg,#F0FFF8,#F0F4FF)">
+  <div class="game-header">
+    <div class="hdr-left"><div class="prog-wrap"><span class="prog-ronda">Palabra <span id="ronda4">1</span>/<span id="total4">10</span></span><div class="prog-bar"><div class="prog-fill" id="prog4"></div></div></div></div>
+    <span class="hdr-pts">⭐ <span id="pts4">0</span></span>
+    <div class="hdr-btns"><button class="h-btn h-btn-fs" onclick="requestParental('fullscreen')">⛶</button><button class="h-btn h-btn-back" onclick="requestParental('acts')">🏠</button></div>
+  </div>
+  <div class="game-body">
+    <div class="game-card" id="card4">
+      <div class="word-img-wrap"><img id="img4" class="word-img" src="" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="img-fallback" id="fb-img4" style="display:none">🖼️</span></div>
+      <div class="word-full" id="wordFull4"></div>
+      <div class="pronun-btns">
+        <button class="btn-pronun btn-model" onclick="playModel4()">🔊 Escuchar modelo</button>
+        <button class="btn-pronun btn-record" id="btnRecord" onclick="toggleRecord()">🎙️ Grabar mi voz</button>
+        <button class="btn-pronun btn-playback" id="btnPlayback" disabled onclick="playRecording()">▶️ Escuchar mi grabación</button>
+      </div>
+      <button class="btn-next-p" onclick="nextPronun()">Siguiente →</button>
+      <div class="feedback-msg" id="fb4"></div>
+    </div>
+    <div class="celebration" id="cel4"><div class="cel-emoji">🎙️</div><h2>¡Voz de campeón!</h2><p style="color:var(--col-muted);font-weight:700">Has practicado todas las palabras</p><button class="btn-again" onclick="startActivity(4)">¡Practicar más!</button><button class="btn-back" style="margin-top:.5rem" onclick="showScreen('act-selector')">Elegir actividad</button></div>
+  </div>
+</div>
+
+<!-- PARENTAL -->
+<div class="overlay" id="parentalOverlay">
+  <div class="popup-card">
+    <div style="font-size:2.2rem">🔐</div>
+    <h3>Control parental</h3>
+    <p style="color:var(--col-muted);font-size:.9rem;font-weight:600">Resuelve la suma para continuar</p>
+    <div class="popup-sum" id="parentalSum"></div>
+    <input class="popup-input" type="number" id="parentalInput" placeholder="?" onkeydown="if(event.key==='Enter') checkParental()">
+    <div class="popup-err" id="parentalErr"></div>
+    <div class="popup-btns">
+      <button class="btn-pop-ok" onclick="checkParental()">✓ Confirmar</button>
+      <button class="btn-pop-cancel" onclick="closeParental()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// DATOS — 170 palabras con imágenes reales
+// ═══════════════════════════════════════════
+const DATA = {
+  BL: [
+    {p:"biblia", img:"https://manosconmuchoquecontar.github.io/fotos/BL/biblia.png"},
+    {p:"biblioteca", img:"https://manosconmuchoquecontar.github.io/fotos/BL/biblioteca.png"},
+    {p:"blanco", img:"https://manosconmuchoquecontar.github.io/fotos/BL/Blanco.png"},
+    {p:"bloque", img:"https://manosconmuchoquecontar.github.io/fotos/BL/bloque.png"},
+    {p:"blusa", img:"https://manosconmuchoquecontar.github.io/fotos/BL/Blusa.png"},
+    {p:"cable", img:"https://manosconmuchoquecontar.github.io/fotos/BL/cable.png"},
+    {p:"establo", img:"https://manosconmuchoquecontar.github.io/fotos/BL/establo.png"},
+    {p:"hablar", img:"https://manosconmuchoquecontar.github.io/fotos/BL/hablar.png"},
+    {p:"niebla", img:"https://manosconmuchoquecontar.github.io/fotos/BL/niebla.png"},
+    {p:"ombligo", img:"https://manosconmuchoquecontar.github.io/fotos/BL/ombligo.png"},
+    {p:"poblado", img:"https://manosconmuchoquecontar.github.io/fotos/BL/poblado.png"},
+    {p:"pueblo", img:"https://manosconmuchoquecontar.github.io/fotos/BL/pueblo.png"},
+    {p:"sable", img:"https://manosconmuchoquecontar.github.io/fotos/BL/Sable.png"},
+    {p:"tabla", img:"https://manosconmuchoquecontar.github.io/fotos/BL/tabla.png"},
+    {p:"temblor", img:"https://manosconmuchoquecontar.github.io/fotos/BL/Temblor.png"},
+  ],
+  BR: [
+    {p:"abrazo", img:"https://manosconmuchoquecontar.github.io/fotos/BR/abrazo.png"},
+    {p:"abrigo", img:"https://manosconmuchoquecontar.github.io/fotos/BR/abrigo.png"},
+    {p:"brazo", img:"https://manosconmuchoquecontar.github.io/fotos/BR/brazo.png"},
+    {p:"brillante", img:"https://manosconmuchoquecontar.github.io/fotos/BR/brillante.png"},
+    {p:"brillo", img:"https://manosconmuchoquecontar.github.io/fotos/BR/brillo.png"},
+    {p:"brisa", img:"https://manosconmuchoquecontar.github.io/fotos/BR/brisa.png"},
+    {p:"brocha", img:"https://manosconmuchoquecontar.github.io/fotos/BR/brocha.png"},
+    {p:"broma", img:"https://manosconmuchoquecontar.github.io/fotos/BR/broma.png"},
+    {p:"bruja", img:"https://manosconmuchoquecontar.github.io/fotos/BR/bruja.png"},
+    {p:"brócoli", img:"https://manosconmuchoquecontar.github.io/fotos/BR/brócoli.png"},
+    {p:"brújula", img:"https://manosconmuchoquecontar.github.io/fotos/BR/brújula.png"},
+    {p:"cebra", img:"https://manosconmuchoquecontar.github.io/fotos/BR/cebra.png"},
+    {p:"cerebro", img:"https://manosconmuchoquecontar.github.io/fotos/BR/cerebro.png"},
+    {p:"fiebre", img:"https://manosconmuchoquecontar.github.io/fotos/BR/fiebre.png"},
+    {p:"fábrica", img:"https://manosconmuchoquecontar.github.io/fotos/BR/fábrica.png"},
+    {p:"hombro", img:"https://manosconmuchoquecontar.github.io/fotos/BR/hombro.png"},
+    {p:"libro", img:"https://manosconmuchoquecontar.github.io/fotos/BR/libro.png"},
+    {p:"pobre", img:"https://manosconmuchoquecontar.github.io/fotos/BR/pobre.png"},
+    {p:"sobre", img:"https://manosconmuchoquecontar.github.io/fotos/BR/sobre.png"},
+    {p:"sombrero", img:"https://manosconmuchoquecontar.github.io/fotos/BR/sombrero.png"},
+  ],
+  CL: [
+    {p:"ancla", img:"https://manosconmuchoquecontar.github.io/fotos/CL/ancla.png"},
+    {p:"bicicleta", img:"https://manosconmuchoquecontar.github.io/fotos/CL/bicicleta.png"},
+    {p:"chancla", img:"https://manosconmuchoquecontar.github.io/fotos/CL/chancla.png"},
+    {p:"chicle", img:"https://manosconmuchoquecontar.github.io/fotos/CL/chicle.png"},
+    {p:"ciclista", img:"https://manosconmuchoquecontar.github.io/fotos/CL/ciclista.png"},
+    {p:"clase", img:"https://manosconmuchoquecontar.github.io/fotos/CL/clase.png"},
+    {p:"clavel", img:"https://manosconmuchoquecontar.github.io/fotos/CL/clavel.png"},
+    {p:"clavo", img:"https://manosconmuchoquecontar.github.io/fotos/CL/clavo.png"},
+    {p:"cleopatra", img:"https://manosconmuchoquecontar.github.io/fotos/CL/cleopatra.png"},
+    {p:"clima", img:"https://manosconmuchoquecontar.github.io/fotos/CL/clima.png"},
+    {p:"clip", img:"https://manosconmuchoquecontar.github.io/fotos/CL/clip.png"},
+    {p:"eclipse", img:"https://manosconmuchoquecontar.github.io/fotos/CL/eclipse.png"},
+    {p:"triciclo", img:"https://manosconmuchoquecontar.github.io/fotos/CL/triciclo.png"},
+  ],
+  CR: [
+    {p:"crecer", img:"https://manosconmuchoquecontar.github.io/fotos/CR/crecer.png"},
+    {p:"crema", img:"https://manosconmuchoquecontar.github.io/fotos/CR/crema.png"},
+    {p:"cremallera", img:"https://manosconmuchoquecontar.github.io/fotos/CR/cremallera.png"},
+    {p:"cristal", img:"https://manosconmuchoquecontar.github.io/fotos/CR/cristal.png"},
+    {p:"cromo", img:"https://manosconmuchoquecontar.github.io/fotos/CR/cromo.png"},
+    {p:"cronómetro", img:"https://manosconmuchoquecontar.github.io/fotos/CR/cronómetro.png"},
+    {p:"croqueta", img:"https://manosconmuchoquecontar.github.io/fotos/CR/croqueta.png"},
+    {p:"cruasán", img:"https://manosconmuchoquecontar.github.io/fotos/CR/cruasán.png"},
+    {p:"crucero", img:"https://manosconmuchoquecontar.github.io/fotos/CR/crucero.png"},
+    {p:"crudo", img:"https://manosconmuchoquecontar.github.io/fotos/CR/crudo.png"},
+    {p:"crujiente", img:"https://manosconmuchoquecontar.github.io/fotos/CR/crujiente.png"},
+    {p:"cruz", img:"https://manosconmuchoquecontar.github.io/fotos/CR/cruz.png"},
+    {p:"escribir", img:"https://manosconmuchoquecontar.github.io/fotos/CR/escribir.png"},
+    {p:"microondas", img:"https://manosconmuchoquecontar.github.io/fotos/CR/microondas.png"},
+    {p:"micrófono", img:"https://manosconmuchoquecontar.github.io/fotos/CR/micrófono.png"},
+    {p:"recreo", img:"https://manosconmuchoquecontar.github.io/fotos/CR/recreo.png"},
+    {p:"secreto", img:"https://manosconmuchoquecontar.github.io/fotos/CR/secreto.png"},
+  ],
+  DR: [
+    {p:"ajedrez", img:"https://manosconmuchoquecontar.github.io/fotos/DR/ajedrez.png"},
+    {p:"almendra", img:"https://manosconmuchoquecontar.github.io/fotos/DR/almendra.png"},
+    {p:"catedral", img:"https://manosconmuchoquecontar.github.io/fotos/DR/catedral.png"},
+    {p:"cocodrilo", img:"https://manosconmuchoquecontar.github.io/fotos/DR/cocodrilo.png"},
+    {p:"cuadrado", img:"https://manosconmuchoquecontar.github.io/fotos/DR/cuadrado.png"},
+    {p:"cuadro", img:"https://manosconmuchoquecontar.github.io/fotos/DR/cuadro.png"},
+    {p:"dromedario", img:"https://manosconmuchoquecontar.github.io/fotos/DR/dromedario.png"},
+    {p:"dron", img:"https://manosconmuchoquecontar.github.io/fotos/DR/dron.png"},
+    {p:"golondrina", img:"https://manosconmuchoquecontar.github.io/fotos/DR/golondrina.png"},
+    {p:"ladrar", img:"https://manosconmuchoquecontar.github.io/fotos/DR/ladrar.png"},
+    {p:"ladrillo", img:"https://manosconmuchoquecontar.github.io/fotos/DR/ladrillo.png"},
+    {p:"ladrón", img:"https://manosconmuchoquecontar.github.io/fotos/DR/ladrón.png"},
+    {p:"madre", img:"https://manosconmuchoquecontar.github.io/fotos/DR/madre.png"},
+    {p:"padre", img:"https://manosconmuchoquecontar.github.io/fotos/DR/padre.png"},
+    {p:"piedra", img:"https://manosconmuchoquecontar.github.io/fotos/DR/piedra.png"},
+    {p:"taladro", img:"https://manosconmuchoquecontar.github.io/fotos/DR/taladro.png"},
+    {p:"vidrio", img:"https://manosconmuchoquecontar.github.io/fotos/DR/vidrio.png"},
+  ],
+  FL: [
+    {p:"coliflor", img:"https://manosconmuchoquecontar.github.io/fotos/FL/coliflor.png"},
+    {p:"flaco", img:"https://manosconmuchoquecontar.github.io/fotos/FL/flaco.png"},
+    {p:"flamenca", img:"https://manosconmuchoquecontar.github.io/fotos/FL/flamenca.png"},
+    {p:"flamenco", img:"https://manosconmuchoquecontar.github.io/fotos/FL/flamenco.png"},
+    {p:"flan", img:"https://manosconmuchoquecontar.github.io/fotos/FL/flan.png"},
+    {p:"flauta", img:"https://manosconmuchoquecontar.github.io/fotos/FL/flauta.png"},
+    {p:"flecha", img:"https://manosconmuchoquecontar.github.io/fotos/FL/flecha.png"},
+    {p:"flor", img:"https://manosconmuchoquecontar.github.io/fotos/FL/flor.png"},
+    {p:"florero", img:"https://manosconmuchoquecontar.github.io/fotos/FL/florero.png"},
+    {p:"flotador", img:"https://manosconmuchoquecontar.github.io/fotos/FL/flotador.png"},
+  ],
+  FR: [
+    {p:"azafrán", img:"https://manosconmuchoquecontar.github.io/fotos/FR/azafrán.png"},
+    {p:"cofre", img:"https://manosconmuchoquecontar.github.io/fotos/FR/cofre.png"},
+    {p:"disfraz", img:"https://manosconmuchoquecontar.github.io/fotos/FR/disfraz.png"},
+    {p:"fraile", img:"https://manosconmuchoquecontar.github.io/fotos/FR/fraile.png"},
+    {p:"frambuesa", img:"https://manosconmuchoquecontar.github.io/fotos/FR/frambuesa.png"},
+    {p:"francia", img:"https://manosconmuchoquecontar.github.io/fotos/FR/Francia.png"},
+    {p:"frasco", img:"https://manosconmuchoquecontar.github.io/fotos/FR/frasco.png"},
+    {p:"fregar", img:"https://manosconmuchoquecontar.github.io/fotos/FR/fregar.png"},
+    {p:"freidora", img:"https://manosconmuchoquecontar.github.io/fotos/FR/freidora.png"},
+    {p:"freir", img:"https://manosconmuchoquecontar.github.io/fotos/FR/freir.png"},
+    {p:"fresa", img:"https://manosconmuchoquecontar.github.io/fotos/FR/fresa.png"},
+    {p:"frigorífico", img:"https://manosconmuchoquecontar.github.io/fotos/FR/frigorífico.png"},
+    {p:"fruta", img:"https://manosconmuchoquecontar.github.io/fotos/FR/fruta.png"},
+    {p:"frutería", img:"https://manosconmuchoquecontar.github.io/fotos/FR/frutería.png"},
+    {p:"frío", img:"https://manosconmuchoquecontar.github.io/fotos/FR/frío.png"},
+    {p:"refresco", img:"https://manosconmuchoquecontar.github.io/fotos/FR/refresco.png"},
+    {p:"áfrica", img:"https://manosconmuchoquecontar.github.io/fotos/FR/África.png"},
+  ],
+  GL: [
+    {p:"arreglar", img:"https://manosconmuchoquecontar.github.io/fotos/GL/arreglar.png"},
+    {p:"globo", img:"https://manosconmuchoquecontar.github.io/fotos/GL/globo.png"},
+    {p:"gluten", img:"https://manosconmuchoquecontar.github.io/fotos/GL/gluten.png"},
+    {p:"iglesia", img:"https://manosconmuchoquecontar.github.io/fotos/GL/iglesia.png"},
+    {p:"iglú", img:"https://manosconmuchoquecontar.github.io/fotos/GL/iglú.png"},
+    {p:"inglés", img:"https://manosconmuchoquecontar.github.io/fotos/GL/inglés.png"},
+    {p:"jungla", img:"https://manosconmuchoquecontar.github.io/fotos/GL/jungla.png"},
+    {p:"regla", img:"https://manosconmuchoquecontar.github.io/fotos/GL/regla.png"},
+  ],
+  GR: [
+    {p:"alegría", img:"https://manosconmuchoquecontar.github.io/fotos/GR/alegría.png"},
+    {p:"cangrejo", img:"https://manosconmuchoquecontar.github.io/fotos/GR/cangrejo.png"},
+    {p:"granada", img:"https://manosconmuchoquecontar.github.io/fotos/GR/granada.png"},
+    {p:"grande", img:"https://manosconmuchoquecontar.github.io/fotos/GR/grande.png"},
+    {p:"granizo", img:"https://manosconmuchoquecontar.github.io/fotos/GR/granizo.png"},
+    {p:"granja", img:"https://manosconmuchoquecontar.github.io/fotos/GR/granja.png"},
+    {p:"grapa", img:"https://manosconmuchoquecontar.github.io/fotos/GR/grapa.png"},
+    {p:"grapadora", img:"https://manosconmuchoquecontar.github.io/fotos/GR/grapadora.png"},
+    {p:"grifo", img:"https://manosconmuchoquecontar.github.io/fotos/GR/grifo.png"},
+    {p:"grillo", img:"https://manosconmuchoquecontar.github.io/fotos/GR/grillo.png"},
+    {p:"gris", img:"https://manosconmuchoquecontar.github.io/fotos/GR/gris.png"},
+    {p:"gritar", img:"https://manosconmuchoquecontar.github.io/fotos/GR/gritar.png"},
+    {p:"grulla", img:"https://manosconmuchoquecontar.github.io/fotos/GR/grulla.png"},
+    {p:"grupo", img:"https://manosconmuchoquecontar.github.io/fotos/GR/grupo.png"},
+    {p:"grúa", img:"https://manosconmuchoquecontar.github.io/fotos/GR/grúa.png"},
+    {p:"lágrima", img:"https://manosconmuchoquecontar.github.io/fotos/GR/lágrima.png"},
+    {p:"negro", img:"https://manosconmuchoquecontar.github.io/fotos/GR/negro.png"},
+    {p:"ogro", img:"https://manosconmuchoquecontar.github.io/fotos/GR/ogro.png"},
+    {p:"tigre", img:"https://manosconmuchoquecontar.github.io/fotos/GR/tigre.png"},
+  ],
+  PL: [
+    {p:"cantimplora", img:"https://manosconmuchoquecontar.github.io/fotos/PL/cantimplora.png"},
+    {p:"diploma", img:"https://manosconmuchoquecontar.github.io/fotos/PL/diploma.png"},
+    {p:"multiplicar", img:"https://manosconmuchoquecontar.github.io/fotos/PL/multiplicar.png"},
+    {p:"plancha", img:"https://manosconmuchoquecontar.github.io/fotos/PL/plancha.png"},
+    {p:"planeta", img:"https://manosconmuchoquecontar.github.io/fotos/PL/planeta.png"},
+    {p:"plano", img:"https://manosconmuchoquecontar.github.io/fotos/PL/plano.png"},
+    {p:"planta", img:"https://manosconmuchoquecontar.github.io/fotos/PL/planta.png"},
+    {p:"plantilla", img:"https://manosconmuchoquecontar.github.io/fotos/PL/plantilla.png"},
+    {p:"plastilina", img:"https://manosconmuchoquecontar.github.io/fotos/PL/plastilina.png"},
+    {p:"plata", img:"https://manosconmuchoquecontar.github.io/fotos/PL/plata.png"},
+    {p:"platillos", img:"https://manosconmuchoquecontar.github.io/fotos/PL/platillos.png"},
+    {p:"plato", img:"https://manosconmuchoquecontar.github.io/fotos/PL/plato.png"},
+    {p:"playa", img:"https://manosconmuchoquecontar.github.io/fotos/PL/playa.png"},
+    {p:"plaza", img:"https://manosconmuchoquecontar.github.io/fotos/PL/plaza.png"},
+    {p:"pluma", img:"https://manosconmuchoquecontar.github.io/fotos/PL/pluma.png"},
+    {p:"plumero", img:"https://manosconmuchoquecontar.github.io/fotos/PL/plumero.png"},
+    {p:"plutón", img:"https://manosconmuchoquecontar.github.io/fotos/PL/plutón.png"},
+    {p:"plátano", img:"https://manosconmuchoquecontar.github.io/fotos/PL/plátano.png"},
+    {p:"soplar", img:"https://manosconmuchoquecontar.github.io/fotos/PL/soplar.png"},
+  ],
+  PR: [
+    {p:"aprender", img:"https://manosconmuchoquecontar.github.io/fotos/PR/aprender.png"},
+    {p:"compra", img:"https://manosconmuchoquecontar.github.io/fotos/PR/compra.png"},
+    {p:"impresora", img:"https://manosconmuchoquecontar.github.io/fotos/PR/impresora.png"},
+    {p:"pradera", img:"https://manosconmuchoquecontar.github.io/fotos/PR/pradera.png"},
+    {p:"precio", img:"https://manosconmuchoquecontar.github.io/fotos/PR/precio.png"},
+    {p:"pregunta", img:"https://manosconmuchoquecontar.github.io/fotos/PR/pregunta.png"},
+    {p:"premio", img:"https://manosconmuchoquecontar.github.io/fotos/PR/premio.png"},
+    {p:"presidente", img:"https://manosconmuchoquecontar.github.io/fotos/PR/presidente.png"},
+    {p:"preso", img:"https://manosconmuchoquecontar.github.io/fotos/PR/preso.png"},
+    {p:"primate", img:"https://manosconmuchoquecontar.github.io/fotos/PR/primate.png"},
+    {p:"primavera", img:"https://manosconmuchoquecontar.github.io/fotos/PR/primavera.png"},
+    {p:"prisma", img:"https://manosconmuchoquecontar.github.io/fotos/PR/prisma.png"},
+    {p:"problema", img:"https://manosconmuchoquecontar.github.io/fotos/PR/problema.png"},
+    {p:"profesor", img:"https://manosconmuchoquecontar.github.io/fotos/PR/profesor.png"},
+    {p:"prohibido", img:"https://manosconmuchoquecontar.github.io/fotos/PR/prohibido.png"},
+    {p:"prueba", img:"https://manosconmuchoquecontar.github.io/fotos/PR/prueba.png"},
+  ],
+  TR: [
+    {p:"estrella", img:"https://manosconmuchoquecontar.github.io/fotos/TR/estrella.png"},
+    {p:"trabajo", img:"https://manosconmuchoquecontar.github.io/fotos/TR/trabajo.png"},
+    {p:"tractor", img:"https://manosconmuchoquecontar.github.io/fotos/TR/tractor.png"},
+    {p:"traje", img:"https://manosconmuchoquecontar.github.io/fotos/TR/traje.png"},
+    {p:"trampa", img:"https://manosconmuchoquecontar.github.io/fotos/TR/trampa.png"},
+    {p:"trapo", img:"https://manosconmuchoquecontar.github.io/fotos/TR/trapo.png"},
+    {p:"treinta", img:"https://manosconmuchoquecontar.github.io/fotos/TR/treinta.png"},
+    {p:"tren", img:"https://manosconmuchoquecontar.github.io/fotos/TR/tren.png"},
+    {p:"trenza", img:"https://manosconmuchoquecontar.github.io/fotos/TR/trenza.png"},
+    {p:"tres", img:"https://manosconmuchoquecontar.github.io/fotos/TR/tres.png"},
+    {p:"tribu", img:"https://manosconmuchoquecontar.github.io/fotos/TR/tribu.png"},
+    {p:"triciclo", img:"https://manosconmuchoquecontar.github.io/fotos/TR/triciclo.png"},
+    {p:"trigo", img:"https://manosconmuchoquecontar.github.io/fotos/TR/trigo.png"},
+    {p:"triste", img:"https://manosconmuchoquecontar.github.io/fotos/TR/triste.png"},
+    {p:"triángulo", img:"https://manosconmuchoquecontar.github.io/fotos/TR/triángulo.png"},
+    {p:"trofeo", img:"https://manosconmuchoquecontar.github.io/fotos/TR/trofeo.png"},
+    {p:"trompa", img:"https://manosconmuchoquecontar.github.io/fotos/TR/trompa.png"},
+    {p:"trompeta", img:"https://manosconmuchoquecontar.github.io/fotos/TR/trompeta.png"},
+    {p:"trompo", img:"https://manosconmuchoquecontar.github.io/fotos/TR/trompo.png"},
+    {p:"trucha", img:"https://manosconmuchoquecontar.github.io/fotos/TR/trucha.png"},
+    {p:"truco", img:"https://manosconmuchoquecontar.github.io/fotos/TR/truco.png"},
+    {p:"trueno", img:"https://manosconmuchoquecontar.github.io/fotos/TR/trueno.png"},
+    {p:"trufa", img:"https://manosconmuchoquecontar.github.io/fotos/TR/trufa.png"},
+    {p:"trébol", img:"https://manosconmuchoquecontar.github.io/fotos/TR/trébol.png"},
+  ],
+};
+
+// Vocales válidas por trabada para Act 2
+const VOCALES = {
+  BL:['A','O','U'], CL:['A','E','I','O'], FL:['A','E','O','U'],
+  GL:['O','U'],     PL:['A','E','I','O'],  TL:['A'],
+  BR:['A','E','I','O','U'], CR:['A','E','I','O','U'],
+  DR:['A','E','I','O','U'], FR:['A','E','I','O'],
+  GR:['A','E','I','O','U'], PR:['A','E','I','O','U'],
+  TR:['A','E','I','O','U']
+};
+
+const TRABADAS = {L:['BL','CL','FL','GL','PL','TL'], R:['BR','CR','DR','FR','GR','PR','TR']};
+
+// ═══ ESTADO ═══
+let currentTrabada='', currentActivity=0, questionList=[], currentIndex=0, pts=0;
+let fontMode='lower', draggedTile=null, a2Target='', a3Placed=[];
+let mediaRecorder=null, recordedChunks=[], recordingURL=null, isRecording=false;
+let parentalA, parentalB, parentalAction, playerName='';
+
+// ═══ ANTESALA ═══
+function antesalaOk(){
+  const n=document.getElementById('ante-nombre').value.trim();
+  playerName=n||'';
+  document.getElementById('antesala').style.display='none';
+  if(playerName) document.getElementById('home-sub').textContent='¡Hola, '+playerName+'! Elige una sílaba para empezar.';
+}
+function antesalaSinNombre(){
+  document.getElementById('antesala').style.display='none';
+}
+
+// ═══ FONT ═══
+function toggleFont(){
+  fontMode=fontMode==='lower'?'upper':'lower';
+  document.documentElement.style.setProperty('--font-game', fontMode==='lower'?'var(--font-min)':'var(--font-may)');
+  document.getElementById('fontLabel').textContent=fontMode==='lower'?'abc — minúsculas':'ABC — Mayúsculas';
+  // Actualiza botones trabada
+  document.querySelectorAll('.btn-trabada').forEach(b=>{
+    b.textContent=T(b.textContent.trim().toUpperCase());
+  });
+  const st=document.getElementById('selTitle');
+  if(st&&currentTrabada) st.textContent=T(currentTrabada);
+}
+function T(s){ return fontMode==='lower'?s.toLowerCase():s.toUpperCase(); }
+
+// ═══ NAVEGACIÓN ═══
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function selectTrabada(t){
+  currentTrabada=t;
+  document.getElementById('selTitle').textContent=T(t);
+  showScreen('act-selector');
+}
+
+// ═══ INIT ═══
+function init(){
+  ['L','R'].forEach(g=>{
+    const grid=document.getElementById('grid'+g);
+    grid.innerHTML='';
+    TRABADAS[g].forEach(t=>{
+      const btn=document.createElement('button');
+      btn.className='btn-trabada btn-'+g.toLowerCase();
+      btn.textContent=T(t);
+      btn.onclick=()=>selectTrabada(t);
+      grid.appendChild(btn);
+    });
+  });
+}
+
+// ═══ HELPERS ═══
+function shuffle(a){
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+function getWords(){ return shuffle([...DATA[currentTrabada]]).slice(0,10); }
+function updateProgress(n){
+  const pct=(currentIndex/questionList.length)*100;
+  document.getElementById('prog'+n).style.width=pct+'%';
+  document.getElementById('ronda'+n).textContent=currentIndex+1;
+  document.getElementById('total'+n).textContent=questionList.length;
+  document.getElementById('pts'+n).textContent=pts;
+}
+function showCel(n){
+  document.getElementById('card'+n).style.display='none';
+  document.getElementById('cel'+n).classList.add('show');
+}
+function setImg(n, url, alt){
+  const img=document.getElementById('img'+n);
+  const fb=document.getElementById('fb-img'+n);
+  img.style.display='block'; fb.style.display='none';
+  img.src=url; img.alt=alt;
+}
+
+// ═══ ACTIVITY ROUTER ═══
+function startActivity(n){
+  currentActivity=n; questionList=getWords(); currentIndex=0; pts=0;
+  [1,2,3,4].forEach(i=>{
+    const c=document.getElementById('cel'+i); if(c) c.classList.remove('show');
+    const card=document.getElementById('card'+i); if(card) card.style.display='';
+  });
+  showScreen('act'+n);
+  if(n===1) loadAct1();
+  else if(n===2) loadAct2();
+  else if(n===3) loadAct3();
+  else if(n===4) loadAct4();
+}
+
+// ═══ ACT 1: COMPLETAR ═══
+function loadAct1(){
+  if(currentIndex>=questionList.length){showCel(1);return;}
+  updateProgress(1);
+  const w=questionList[currentIndex];
+  setImg(1, w.img, w.p);
+  // Construye la palabra con el hueco
+  const tL=currentTrabada.toLowerCase();
+  const wL=w.p.toLowerCase();
+  // Hueco al principio o en medio
+  const gapped=wL.includes(tL) ? wL.replace(tL,'▪▪▪') : '▪▪▪'+wL;
+  document.getElementById('wordDisp1').innerHTML=
+    T(gapped).replace('▪▪▪','<span class="blank-slot">___</span>');
+  document.getElementById('fb1').textContent='';
+  // Opciones
+  const all=[...TRABADAS.L,...TRABADAS.R].filter(t=>t!==currentTrabada);
+  const opts=shuffle([currentTrabada,...shuffle(all).slice(0,3)]);
+  const container=document.getElementById('opts1');
+  container.innerHTML='';
+  opts.forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.className='btn-option'; btn.textContent=T(opt);
+    btn.onclick=()=>checkAct1(btn,opt);
+    container.appendChild(btn);
+  });
+}
+function checkAct1(btn,choice){
+  if(choice===currentTrabada){
+    btn.classList.add('correct');
+    document.getElementById('fb1').innerHTML='<span class="fb-ok">✅ ¡Muy bien!</span>';
+    document.querySelectorAll('#opts1 .btn-option').forEach(b=>b.disabled=true);
+    pts+=10; document.getElementById('pts1').textContent=pts;
+    setTimeout(()=>{currentIndex++;loadAct1();},1200);
+  } else {
+    btn.classList.add('wrong'); btn.disabled=true;
+    document.getElementById('fb1').innerHTML='<span class="fb-fail">❌ Inténtalo de nuevo</span>';
+  }
+}
+
+// ═══ ACT 2: AUDITIVA ═══
+function loadAct2(){
+  if(currentIndex>=questionList.length){showCel(2);return;}
+  updateProgress(2);
+  document.getElementById('fb2').textContent='';
+  const vocales=VOCALES[currentTrabada]||['A','E','O'];
+  const vocal=vocales[Math.floor(Math.random()*vocales.length)];
+  const directa=currentTrabada+vocal;
+  const inversa=vocal+currentTrabada;
+  a2Target=Math.random()>0.5?directa:inversa;
+  const opts=shuffle([directa,inversa]);
+  const container=document.getElementById('audioOpts');
+  container.innerHTML='';
+  opts.forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.className='btn-audio'; btn.textContent=T(opt);
+    btn.onclick=()=>checkAct2(btn,opt);
+    container.appendChild(btn);
+  });
+}
+function playAudio2(){ speak(a2Target); }
+function checkAct2(btn,choice){
+  if(choice===a2Target){
+    btn.classList.add('correct');
+    document.getElementById('fb2').innerHTML='<span class="fb-ok">✅ ¡Correcto!</span>';
+    document.querySelectorAll('#audioOpts .btn-audio').forEach(b=>b.disabled=true);
+    pts+=10; document.getElementById('pts2').textContent=pts;
+    setTimeout(()=>{currentIndex++;loadAct2();},1200);
+  } else {
+    btn.classList.add('wrong'); btn.disabled=true;
+    document.getElementById('fb2').innerHTML='<span class="fb-fail">❌ Vuelve a escuchar</span>';
+  }
+}
+
+// ═══ ACT 3: ANAGRAMA ═══
+function loadAct3(){
+  if(currentIndex>=questionList.length){showCel(3);return;}
+  updateProgress(3);
+  document.getElementById('fb3').textContent='';
+  const w=questionList[currentIndex];
+  setImg(3, w.img, w.p);
+  const letters=w.p.toUpperCase().split('');
+  a3Placed=new Array(letters.length).fill(null);
+  buildSlots(letters.length);
+  buildPool(letters);
+}
+function buildSlots(n){
+  const zones=document.getElementById('dropZones');
+  zones.innerHTML='';
+  for(let i=0;i<n;i++){
+    const s=document.createElement('div');
+    s.className='drop-slot'; s.dataset.idx=i;
+    s.addEventListener('dragover',e=>{e.preventDefault();s.classList.add('drag-over');});
+    s.addEventListener('dragleave',()=>s.classList.remove('drag-over'));
+    s.addEventListener('drop',e=>{e.preventDefault();s.classList.remove('drag-over');handleDrop(s,i);});
+    s.addEventListener('click',()=>clearSlot(i));
+    zones.appendChild(s);
+  }
+}
+function buildPool(letters){
+  const pool=document.getElementById('letterPool');
+  pool.innerHTML='';
+  shuffle([...letters]).forEach((l,i)=>{
+    const t=document.createElement('div');
+    t.className='letter-tile'; t.textContent=T(l);
+    t.dataset.letter=l; t.dataset.pi=i;
+    t.draggable=true;
+    t.addEventListener('dragstart',()=>{draggedTile=t;t.classList.add('dragging');});
+    t.addEventListener('dragend',()=>t.classList.remove('dragging'));
+    t.addEventListener('click',()=>placeByClick(t));
+    pool.appendChild(t);
+  });
+}
+function handleDrop(slot,idx){
+  if(!draggedTile||slot.classList.contains('filled')) return;
+  placeInSlot(slot,idx,draggedTile); draggedTile=null;
+}
+function placeByClick(tile){
+  if(tile.classList.contains('used')) return;
+  const slots=[...document.querySelectorAll('#dropZones .drop-slot:not(.filled)')];
+  if(!slots.length) return;
+  placeInSlot(slots[0],parseInt(slots[0].dataset.idx),tile);
+}
+function placeInSlot(slot,idx,tile){
+  slot.textContent=T(tile.dataset.letter);
+  slot.classList.add('filled'); slot.dataset.pi=tile.dataset.pi;
+  a3Placed[idx]=tile.dataset.letter; tile.classList.add('used');
+}
+function clearSlot(idx){
+  const slots=document.querySelectorAll('#dropZones .drop-slot');
+  const slot=slots[idx];
+  if(!slot.classList.contains('filled')) return;
+  document.querySelectorAll('#letterPool .letter-tile').forEach(t=>{
+    if(t.dataset.pi==slot.dataset.pi) t.classList.remove('used');
+  });
+  slot.textContent='';
+  slot.classList.remove('filled','slot-ok','slot-ko');
+  delete slot.dataset.pi;
+  a3Placed[idx]=null;
+}
+function resetLetters(){
+  const w=questionList[currentIndex];
+  buildPool(w.p.toUpperCase().split(''));
+  document.querySelectorAll('#dropZones .drop-slot').forEach(s=>{
+    s.textContent=''; s.classList.remove('filled','slot-ok','slot-ko'); delete s.dataset.pi;
+  });
+  a3Placed=new Array(w.p.length).fill(null);
+  document.getElementById('fb3').textContent='';
+}
+function checkAnagram(){
+  const target=questionList[currentIndex].p.toUpperCase().split('');
+  if(a3Placed.includes(null)){
+    document.getElementById('fb3').innerHTML='<span class="fb-fail">⚠️ Coloca todas las letras</span>'; return;
+  }
+  const slots=document.querySelectorAll('#dropZones .drop-slot');
+  let ok=true;
+  a3Placed.forEach((l,i)=>{
+    if(l===target[i]) slots[i].classList.add('slot-ok');
+    else{slots[i].classList.add('slot-ko'); ok=false;}
+  });
+  if(ok){
+    document.getElementById('fb3').innerHTML='<span class="fb-ok">✅ ¡Perfecto!</span>';
+    pts+=10; document.getElementById('pts3').textContent=pts;
+    setTimeout(()=>{currentIndex++;loadAct3();},1400);
+  } else {
+    document.getElementById('fb3').innerHTML='<span class="fb-fail">❌ Revisa las letras en rojo</span>';
+    setTimeout(()=>resetLetters(),1800);
+  }
+}
+
+// ═══ ACT 4: PRONUNCIACIÓN ═══
+function loadAct4(){
+  if(currentIndex>=questionList.length){showCel(4);return;}
+  updateProgress(4);
+  const w=questionList[currentIndex];
+  setImg(4, w.img, w.p);
+  document.getElementById('wordFull4').textContent=T(w.p);
+  document.getElementById('fb4').textContent='';
+  document.getElementById('btnPlayback').disabled=true;
+  const btnR=document.getElementById('btnRecord');
+  btnR.classList.remove('recording'); btnR.textContent='🎙️ Grabar mi voz';
+  isRecording=false;
+  if(recordingURL){URL.revokeObjectURL(recordingURL);recordingURL=null;}
+}
+function playModel4(){ speak(questionList[currentIndex].p); }
+async function toggleRecord(){ isRecording?stopRec():startRec(); }
+async function startRec(){
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    recordedChunks=[];
+    mediaRecorder=new MediaRecorder(stream);
+    mediaRecorder.ondataavailable=e=>{if(e.data.size>0)recordedChunks.push(e.data);};
+    mediaRecorder.onstop=()=>{
+      const blob=new Blob(recordedChunks,{type:'audio/webm'});
+      if(recordingURL) URL.revokeObjectURL(recordingURL);
+      recordingURL=URL.createObjectURL(blob);
+      document.getElementById('btnPlayback').disabled=false;
+      stream.getTracks().forEach(t=>t.stop());
+    };
+    mediaRecorder.start(); isRecording=true;
+    const btn=document.getElementById('btnRecord');
+    btn.classList.add('recording'); btn.textContent='⏹️ Detener grabación';
+    document.getElementById('fb4').innerHTML='<span style="color:var(--col-coral-d);font-weight:700">🔴 Grabando…</span>';
+  } catch{
+    document.getElementById('fb4').innerHTML='<span class="fb-fail">❌ Permiso de micrófono denegado</span>';
+  }
+}
+function stopRec(){
+  if(mediaRecorder&&mediaRecorder.state!=='inactive') mediaRecorder.stop();
+  isRecording=false;
+  const btn=document.getElementById('btnRecord');
+  btn.classList.remove('recording'); btn.textContent='🎙️ Grabar mi voz';
+  document.getElementById('fb4').innerHTML='<span class="fb-ok">✅ ¡Grabación lista! Escúchate</span>';
+}
+function playRecording(){ if(recordingURL) new Audio(recordingURL).play(); }
+function nextPronun(){ currentIndex++; loadAct4(); }
+
+// ═══ SPEECH ═══
+function speak(text){
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='es-ES'; u.rate=0.72; u.pitch=1.05;
+  const vv=window.speechSynthesis.getVoices();
+  const voz=vv.find(v=>v.lang.startsWith('es')&&/mujer|female|lucia|conchita|maria|monica/i.test(v.name))||vv.find(v=>v.lang.startsWith('es'));
+  if(voz) u.voice=voz;
+  window.speechSynthesis.speak(u);
+}
+
+// ═══ PARENTAL ═══
+function requestParental(action){
+  if(action==='fullscreen'&&!document.fullscreenElement){
+    document.documentElement.requestFullscreen().catch(()=>{}); return;
+  }
+  parentalAction=action;
+  parentalA=Math.floor(Math.random()*9)+1; parentalB=Math.floor(Math.random()*9)+1;
+  document.getElementById('parentalSum').textContent=parentalA+' + '+parentalB+' = ?';
+  document.getElementById('parentalInput').value='';
+  document.getElementById('parentalErr').textContent='';
+  document.getElementById('parentalOverlay').classList.add('show');
+  setTimeout(()=>document.getElementById('parentalInput').focus(),100);
+}
+function checkParental(){
+  const val=parseInt(document.getElementById('parentalInput').value);
+  if(val===parentalA+parentalB){
+    closeParental();
+    if(parentalAction==='home'){stopRecClean();showScreen('home');}
+    else if(parentalAction==='acts'){stopRecClean();showScreen('act-selector');}
+    else if(parentalAction==='fullscreen'){document.exitFullscreen&&document.exitFullscreen();}
+  } else {
+    document.getElementById('parentalErr').textContent='❌ Incorrecto, inténtalo de nuevo';
+    document.getElementById('parentalInput').value='';
+    document.getElementById('parentalInput').focus();
+  }
+}
+function closeParental(){ document.getElementById('parentalOverlay').classList.remove('show'); }
+function stopRecClean(){
+  if(mediaRecorder&&mediaRecorder.state!=='inactive') mediaRecorder.stop();
+  isRecording=false;
+  const b=document.getElementById('btnRecord'); if(b) b.classList.remove('recording');
+}
+
+// ═══ BOOT ═══
+if(window.speechSynthesis) window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();
+init();
+</script>
+</body>
+</html>

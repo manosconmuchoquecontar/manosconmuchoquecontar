@@ -824,17 +824,20 @@ function checkAct1(btn, choice){
 }
 
 // ═══ ACT 2: AUDITIVA ═══
-// Siempre el mismo par: TRABADA+vocal  vs  vocal+TRABADA
-// Ej: BLU vs UBL, BRA vs ARB, FLO vs OFL
-// El niño discrimina dónde va la letra intermedia
+// Discrimina la posición de la vocal dentro de la trabada:
+// Directa (correcta):   B·L·U = BLU,  C·R·A = CRA,  F·L·O = FLO
+// Invertida (incorrecta): B·U·L = BUL,  C·A·R = CAR,  F·O·L = FOL
+// La vocal siempre va al final en la correcta y en medio en la incorrecta
 function loadAct2(){
   if(currentIndex>=questionList.length){showCel(2);return;}
   updateProgress(2);
   document.getElementById('fb2').textContent='';
   const vocales=VOCALES[currentTrabada]||['A','E','O'];
   const vocal=vocales[Math.floor(Math.random()*vocales.length)];
-  const directa = currentTrabada + vocal;          // BLU
-  const inversa  = vocal + currentTrabada;          // UBL
+  const c1=currentTrabada[0];  // consonante: B, C, F, G, P, T, D...
+  const c2=currentTrabada[1];  // líquida: L o R
+  const directa = c1 + c2 + vocal;  // BLU, CRA, FLO
+  const inversa  = c1 + vocal + c2; // BUL, CAR, FOL
   const hint = document.getElementById('audio-hint');
   if(hint) hint.textContent = '¿Escuchas ' + T(directa) + ' o ' + T(inversa) + '?';
   a2Target = Math.random()>0.5 ? directa : inversa;

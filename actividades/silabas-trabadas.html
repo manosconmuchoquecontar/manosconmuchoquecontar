@@ -113,6 +113,46 @@ body{font-family:var(--font-ui);color:var(--col-text);overflow-x:hidden;user-sel
 .btn-option.wrong{background:#FFE4E6;border-color:var(--col-coral-d);color:var(--col-coral-d);}
 .btn-option:disabled{opacity:.45;cursor:not-allowed;}
 .feedback-msg{font-size:1.1rem;font-weight:800;text-align:center;min-height:1.6rem;}
+
+/* Botón siguiente palabra act1 */
+.btn-siguiente{padding:.85rem 2rem;border-radius:50px;border:none;background:linear-gradient(135deg,var(--col-purple),var(--col-purple-d));color:white;font-family:var(--font-ui);font-size:1rem;font-weight:800;cursor:pointer;box-shadow:0 5px 18px rgba(124,58,237,.28);align-items:center;gap:.5rem;transition:transform .15s;animation:wordPop .4s ease both;}
+.btn-siguiente:hover{transform:translateY(-2px);}
+.btn-siguiente:active{transform:scale(.97);}
+.sil-fly{
+  position:fixed;
+  font-family:var(--font-game);
+  font-size:1.6rem;
+  font-weight:900;
+  color:white;
+  background:linear-gradient(135deg,var(--col-purple),var(--col-purple-d));
+  padding:.35rem .8rem;
+  border-radius:10px;
+  pointer-events:none;
+  z-index:9000;
+  box-shadow:0 4px 16px rgba(124,58,237,.4);
+  transform-origin:center center;
+  transition: none;
+}
+/* Palabra completa iluminada tras el vuelo */
+.word-complete{
+  font-family:var(--font-game);
+  font-size:clamp(1.6rem,5vw,2.6rem);
+  font-weight:800;
+  text-align:center;
+  animation:wordPop .45s cubic-bezier(.175,.885,.32,1.275) both;
+}
+@keyframes wordPop{
+  0%{transform:scale(.7);opacity:0;}
+  60%{transform:scale(1.12);}
+  100%{transform:scale(1);opacity:1;}
+}
+.word-complete .sil-highlight{
+  color:var(--col-purple-d);
+  text-decoration:underline;
+  text-decoration-color:var(--col-purple);
+  text-underline-offset:4px;
+  text-decoration-thickness:3px;
+}
 .fb-ok{color:var(--col-teal-d);}.fb-fail{color:var(--col-coral-d);}
 
 /* Act 2 */
@@ -246,6 +286,9 @@ body{font-family:var(--font-ui);color:var(--col-text);overflow-x:hidden;user-sel
       <div class="word-display" id="wordDisp1"></div>
       <div class="options-grid" id="opts1"></div>
       <div class="feedback-msg" id="fb1"></div>
+      <button id="btn-siguiente1" class="btn-siguiente" style="display:none" onclick="siguienteAct1()">
+        Siguiente palabra →
+      </button>
     </div>
     <div class="celebration" id="cel1"><div class="cel-emoji">🎉</div><h2>¡Fantástico!</h2><p style="color:var(--col-muted);font-weight:700">Has completado todas las palabras</p><button class="btn-again" onclick="startActivity(1)">¡Otra vez!</button><button class="btn-back" style="margin-top:.5rem" onclick="showScreen('act-selector')">Elegir actividad</button></div>
   </div>
@@ -677,6 +720,12 @@ function startActivity(n){
   else if(n===4) loadAct4();
 }
 
+function siguienteAct1(){
+  document.getElementById('btn-siguiente1').style.display='none';
+  currentIndex++;
+  loadAct1();
+}
+
 // ═══ ACT 1: COMPLETAR ═══
 function loadAct1(){
   if(currentIndex>=questionList.length){showCel(1);return;}
@@ -691,6 +740,7 @@ function loadAct1(){
   document.getElementById('wordDisp1').innerHTML=
     T(gapped).replace('▪▪▪', blank);
   document.getElementById('fb1').textContent='';
+  document.getElementById('btn-siguiente1').style.display='none';
   // Opciones
   const all=[...TRABADAS.L,...TRABADAS.R].filter(t=>t!==currentTrabada);
   const opts=shuffle([currentTrabada,...shuffle(all).slice(0,3)]);
@@ -703,13 +753,69 @@ function loadAct1(){
     container.appendChild(btn);
   });
 }
-function checkAct1(btn,choice){
-  if(choice===currentTrabada){
-    btn.classList.add('correct');
-    document.getElementById('fb1').innerHTML='<span class="fb-ok">✅ ¡Muy bien!</span>';
+function checkAct1(btn, choice){
+  if(choice === currentTrabada){
+    // Bloquea todos los botones
     document.querySelectorAll('#opts1 .btn-option').forEach(b=>b.disabled=true);
     pts+=10; document.getElementById('pts1').textContent=pts;
-    setTimeout(()=>{currentIndex++;loadAct1();},1200);
+
+    // 1) Anima el botón pulsado
+    btn.classList.add('correct');
+
+    // 2) Crea la sílaba voladora desde la posición del botón al hueco
+    const btnRect  = btn.getBoundingClientRect();
+    const blankEl  = document.querySelector('#wordDisp1 .blank-slot');
+    const blankRect = blankEl ? blankEl.getBoundingClientRect() : btnRect;
+
+    const fly = document.createElement('div');
+    fly.className = 'sil-fly';
+    fly.textContent = T(currentTrabada);
+    // Empieza en el centro del botón
+    fly.style.left = (btnRect.left + btnRect.width/2) + 'px';
+    fly.style.top  = (btnRect.top  + btnRect.height/2) + 'px';
+    fly.style.transform = 'translate(-50%,-50%) scale(1)';
+    document.body.appendChild(fly);
+
+    // Fuerza reflow para que la transición funcione
+    fly.getBoundingClientRect();
+
+    // Vuela hacia el hueco
+    fly.style.transition = 'left .55s cubic-bezier(.4,0,.2,1), top .55s cubic-bezier(.4,0,.2,1), transform .55s, opacity .2s';
+    fly.style.left      = (blankRect.left + blankRect.width/2) + 'px';
+    fly.style.top       = (blankRect.top  + blankRect.height/2) + 'px';
+    fly.style.transform = 'translate(-50%,-50%) scale(1.25)';
+
+    // 3) Cuando llega: muestra la palabra completa y la lee en voz alta
+    setTimeout(()=>{
+      fly.remove();
+
+      // Reemplaza el display con la palabra completa iluminada
+      const w   = questionList[currentIndex];
+      const tL  = currentTrabada.toLowerCase();
+      const wL  = w.p.toLowerCase();
+      const disp = document.getElementById('wordDisp1');
+
+      let html;
+      if(wL.includes(tL)){
+        const before = T(wL.slice(0, wL.indexOf(tL)));
+        const after  = T(wL.slice(wL.indexOf(tL) + tL.length));
+        const sil    = T(currentTrabada);
+        html = `${before}<span class="sil-highlight">${sil}</span>${after}`;
+      } else {
+        html = T(w.p);
+      }
+      disp.innerHTML = `<span class="word-complete">${html}</span>`;
+
+      // Lee la palabra en voz alta
+      speak(w.p);
+
+      document.getElementById('fb1').innerHTML='<span class="fb-ok">✅ ¡Muy bien!</span>';
+
+      // Muestra botón de siguiente en vez de avanzar automáticamente
+      const btnSig = document.getElementById('btn-siguiente1');
+      btnSig.style.display = 'flex';
+    }, 600);
+
   } else {
     btn.classList.add('wrong'); btn.disabled=true;
     document.getElementById('fb1').innerHTML='<span class="fb-fail">❌ Inténtalo de nuevo</span>';

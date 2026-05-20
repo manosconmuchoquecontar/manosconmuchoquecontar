@@ -103,7 +103,7 @@ body{font-family:var(--font-ui);color:var(--col-text);overflow-x:hidden;user-sel
 .img-fallback{font-size:4rem;}
 
 .word-display{font-family:var(--font-game);font-size:clamp(1.5rem,5vw,2.4rem);font-weight:700;letter-spacing:.05em;text-align:center;}
-.blank-slot{color:var(--col-purple-d);font-weight:900;}
+.blank-slot{color:var(--col-purple-d);font-weight:900;border-bottom:4px solid var(--col-purple-d);padding-bottom:2px;letter-spacing:.12em;}
 
 /* Act 1 opciones */
 .options-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;width:100%;}
@@ -647,7 +647,20 @@ function setImg(n, url, alt){
   const img=document.getElementById('img'+n);
   const fb=document.getElementById('fb-img'+n);
   img.style.display='block'; fb.style.display='none';
-  img.src=url; img.alt=alt;
+  img.alt=alt;
+  // Prueba URL original; si falla prueba versión todo minúsculas
+  img.onerror=function(){
+    const lower=url.replace(/\/([^/]+)\.png$/i, (m,name)=>'/'+name.toLowerCase()+'.png');
+    if(img.src!==lower && url!==lower){
+      img.src=lower;
+      img.onerror=function(){
+        img.style.display='none'; fb.style.display='block';
+      };
+    } else {
+      img.style.display='none'; fb.style.display='block';
+    }
+  };
+  img.src=url;
 }
 
 // ═══ ACTIVITY ROUTER ═══
@@ -670,13 +683,13 @@ function loadAct1(){
   updateProgress(1);
   const w=questionList[currentIndex];
   setImg(1, w.img, w.p);
-  // Construye la palabra con el hueco
+  // Construye la palabra con el hueco mostrando tantos guiones como letras tiene la trabada
   const tL=currentTrabada.toLowerCase();
   const wL=w.p.toLowerCase();
-  // Hueco al principio o en medio
+  const blank='<span class="blank-slot">'+'_'.repeat(currentTrabada.length)+'</span>';
   const gapped=wL.includes(tL) ? wL.replace(tL,'▪▪▪') : '▪▪▪'+wL;
   document.getElementById('wordDisp1').innerHTML=
-    T(gapped).replace('▪▪▪','<span class="blank-slot">___</span>');
+    T(gapped).replace('▪▪▪', blank);
   document.getElementById('fb1').textContent='';
   // Opciones
   const all=[...TRABADAS.L,...TRABADAS.R].filter(t=>t!==currentTrabada);

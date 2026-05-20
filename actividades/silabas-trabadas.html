@@ -851,7 +851,7 @@ function loadAct2(){
     container.appendChild(btn);
   });
 }
-function playAudio2(){ speak(a2Target); }
+function playAudio2(){ speakSilaba(a2Target); }
 function checkAct2(btn,choice){
   if(choice===a2Target){
     btn.classList.add('correct');
@@ -1016,6 +1016,29 @@ function speak(text){
   u.lang='es-ES'; u.rate=0.72; u.pitch=1.05;
   const vv=window.speechSynthesis.getVoices();
   const voz=vv.find(v=>v.lang.startsWith('es')&&/mujer|female|lucia|conchita|maria|monica/i.test(v.name))||vv.find(v=>v.lang.startsWith('es'));
+  if(voz) u.voice=voz;
+  window.speechSynthesis.speak(u);
+}
+
+// Para el ejercicio auditivo: convierte la sílaba en texto pronunciable como una sola emisión
+// BLU → "blu" (con puntos SSML no disponibles en Web Speech, usamos el truco de añadir
+// una vocal muda al final si acaba en consonante, y rate muy lento)
+function speakSilaba(sil){
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+
+  // Mapa de pronunciación: fuerza que el motor lea como sílaba y no como letras
+  // Añadimos la sílaba dentro de una frase corta con contexto para que no la deletree
+  const texto = sil.toLowerCase();
+
+  const u = new SpeechSynthesisUtterance(texto);
+  u.lang  = 'es-ES';
+  u.rate  = 0.65;   // muy lento para que se oiga bien cada fonema
+  u.pitch = 1.1;
+
+  const vv  = window.speechSynthesis.getVoices();
+  const voz = vv.find(v=>v.lang.startsWith('es')&&/mujer|female|lucia|conchita|maria|monica/i.test(v.name))
+            ||vv.find(v=>v.lang.startsWith('es'));
   if(voz) u.voice=voz;
   window.speechSynthesis.speak(u);
 }

@@ -2,269 +2,410 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Salto de la Sílaba - 20 Retos</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund&family=Playwrite+HR+Lijeva&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Detective Animal - Premium Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        :root { 
-            --accent: #ff4081; 
-            --bg: #f0f4f8; 
-            --success: #4caf50; 
-            --font-mayus: 'Playwrite DE Grund', sans-serif;
-            --font-minus: 'Playwrite HR Lijeva', sans-serif;
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400&display=swap');
+
+        :root {
+            --gradient-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --accent-color: #6c5ce7;
+            --text-primary: #2d3436;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --font-main: 'Montserrat', sans-serif;
         }
-        
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            overflow: hidden; background: var(--bg); user-select: none; 
-            font-family: var(--font-mayus);
+
+        body {
+            font-family: var(--font-main);
+            background: var(--gradient-bg);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            touch-action: manipulation;
+            color: var(--text-primary);
         }
-        
-        #app { width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-        
-        /* Fondo letras colores flotantes */
-        .bg-letters { position: fixed; inset: 0; z-index: 1; opacity: 0.18; pointer-events: none; }
-        .bg-char { position: absolute; font-size: 4rem; font-weight: bold; animation: float 15s infinite linear; }
-        @keyframes float { from { transform: translateY(110vh) rotate(0deg); } to { transform: translateY(-10vh) rotate(360deg); } }
 
-        /* Capas de contenido sobre el fondo */
-        #menu, #game-content { position: relative; z-index: 10; }
+        /* PANTALLA DE NOMBRE */
+        #nombre-screen {
+            text-align: center;
+            background: var(--card-bg);
+            padding: 50px 40px;
+            border-radius: 50px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 480px;
+            width: 90%;
+        }
+        #nombre-screen .icono { font-size: 4rem; margin-bottom: 15px; display: block; }
+        #nombre-screen h2 {
+            font-weight: 300; letter-spacing: 4px; font-size: 1.4rem;
+            margin: 0 0 8px 0; text-transform: uppercase; color: var(--accent-color);
+        }
+        #nombre-screen p {
+            font-size: 0.85rem; color: #636e72; margin-bottom: 25px;
+            line-height: 1.6; font-weight: 300;
+        }
+        #nombre-input {
+            width: 100%; padding: 15px 20px; border-radius: 100px;
+            border: 2px solid #e0e0e0; font-size: 1.1rem;
+            font-family: var(--font-main); text-align: center;
+            outline: none; box-sizing: border-box; margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        #nombre-input:focus { border-color: var(--accent-color); }
+        .btn-con-nombre {
+            width: 100%; padding: 16px; background: var(--accent-color);
+            color: white; border: none; border-radius: 100px;
+            font-size: 1rem; font-family: var(--font-main);
+            font-weight: 400; letter-spacing: 3px; text-transform: uppercase;
+            cursor: pointer; margin-bottom: 12px; transition: 0.3s;
+        }
+        .btn-con-nombre:hover { opacity: 0.9; transform: translateY(-2px); }
+        .btn-sin-nombre {
+            background: none; border: none; color: #a0a0a0;
+            font-size: 0.8rem; font-family: var(--font-main);
+            cursor: pointer; letter-spacing: 2px; text-transform: uppercase;
+            text-decoration: underline; padding: 5px;
+        }
+        .privacidad-nota {
+            font-size: 0.72rem; color: #b2bec3; margin-top: 20px;
+            line-height: 1.5; border-top: 1px solid #f0f0f0; padding-top: 15px;
+        }
 
-        /* UI */
-        .nav { position: absolute; top: 20px; width: 92%; display: flex; justify-content: space-between; z-index: 100; }
-        .btn-ui { width: 60px; height: 60px; border-radius: 15px; border: 3px solid white; background: white; cursor: pointer; font-size: 25px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        /* ANTESALA */
+        #intro-screen {
+            text-align: center; background: var(--card-bg);
+            padding: 60px; border-radius: 50px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px; width: 90%;
+            border: 1px solid rgba(255,255,255,0.3);
+            display: none;
+        }
+        .intro-icon {
+            font-size: 5rem; margin-bottom: 20px; display: block;
+            animation: float 3s ease-in-out infinite;
+        }
+        #intro-screen h1 {
+            font-weight: 300; letter-spacing: 8px; font-size: 2.2rem;
+            margin: 0 0 10px 0; text-transform: uppercase;
+        }
+        #intro-screen p {
+            font-weight: 300; letter-spacing: 2px; color: #636e72;
+            margin-bottom: 40px; text-transform: uppercase; font-size: 0.9rem;
+        }
 
-        /* MENU */
-        #menu { position: fixed; inset: 0; background: rgba(240, 244, 248, 0.95); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .card { background: white; padding: 40px; border-radius: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); text-align: center; max-width: 500px; }
-        .btn-case { padding: 15px 25px; margin: 10px; border: 2px solid #ddd; border-radius: 20px; cursor: pointer; font-family: inherit; font-size: 1.1rem; transition: 0.3s; }
-        .btn-case.active { background: var(--accent); color: white; border-color: var(--accent); }
+        /* JUEGO */
+        #game-container {
+            width: 95%; max-width: 900px; background: var(--card-bg);
+            padding: 40px; border-radius: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center; display: none; backdrop-filter: blur(10px);
+        }
+        .progress-text {
+            font-weight: 300; color: #a4b0be; letter-spacing: 4px;
+            font-size: 0.8rem; margin-bottom: 30px; text-transform: uppercase;
+        }
+        .instruction {
+            font-size: 1.8rem; min-height: 60px; margin: 10px 0;
+            text-transform: uppercase; font-weight: 300; letter-spacing: 2px;
+            color: var(--text-primary);
+        }
+        .repeat-btn {
+            background: white; color: var(--accent-color);
+            border: 1px solid var(--accent-color); padding: 15px 40px;
+            border-radius: 100px; font-size: 1rem; cursor: pointer;
+            margin-bottom: 35px; display: inline-flex; align-items: center;
+            gap: 12px; font-family: var(--font-main); font-weight: 400;
+            text-transform: uppercase; letter-spacing: 2px; transition: all 0.3s;
+        }
+        .repeat-btn:hover { background: var(--accent-color); color: white; }
+        .options-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .option-btn {
+            background: white; border: 1px solid #f1f2f6; border-radius: 30px;
+            padding: 30px; font-size: 1.5rem; font-weight: 300; cursor: pointer;
+            text-transform: uppercase; display: flex; flex-direction: column;
+            align-items: center; gap: 15px; letter-spacing: 2px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: var(--text-primary);
+        }
+        .option-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border-color: var(--accent-color);
+        }
+        .option-btn span { font-size: 4rem; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1)); }
+        .btn-start {
+            font-size: 1.4rem; padding: 20px 60px; background: var(--accent-color);
+            color: white; border: none; border-radius: 100px; font-weight: 300;
+            text-transform: uppercase; letter-spacing: 5px; cursor: pointer;
+            transition: 0.3s; box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
+        }
+        .btn-start:hover { transform: scale(1.05); box-shadow: 0 15px 25px rgba(108, 92, 231, 0.4); }
 
-        /* GAME AREA */
-        #game-content { display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        #emoji { font-size: 100px; margin-bottom: 10px; }
-        .word-ui { font-size: 4rem; display: flex; align-items: center; gap: 10px; margin-bottom: 40px; }
-        .gap { color: var(--accent); border-bottom: 5px solid var(--accent); min-width: 100px; text-align: center; }
-        .options { display: flex; gap: 30px; margin-bottom: 30px; }
-        .btn-syl { background: white; border: 4px solid var(--accent); padding: 20px 40px; border-radius: 25px; font-size: 3.5rem; cursor: pointer; transition: 0.2s; font-family: inherit; min-width: 160px; }
-        
-        #btn-next { display: none; padding: 15px 45px; font-size: 1.5rem; background: var(--success); color: white; border: none; border-radius: 50px; cursor: pointer; font-family: inherit; }
-        #fs-timer { position: fixed; bottom: 20px; background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 20px; display: none; z-index: 2000; }
+        #exit-fs-container { position: fixed; top: 20px; left: 20px; display: none; z-index: 9999; }
+        .exit-btn {
+            background: rgba(255,255,255,0.8); color: #ff7675;
+            border: 1px solid #ff7675; padding: 12px 25px; border-radius: 100px;
+            font-weight: 300; font-size: 0.7rem; text-transform: uppercase;
+            letter-spacing: 2px; backdrop-filter: blur(5px);
+        }
+        .admin-controls { position: fixed; bottom: 20px; right: 20px; display: flex; gap: 15px; }
+        .admin-btn {
+            background: white; border: 1px solid #dfe6e9; color: #b2bec3;
+            padding: 10px 20px; border-radius: 100px; font-weight: 300;
+            font-size: 0.7rem; text-transform: uppercase; cursor: pointer; letter-spacing: 1px;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
     </style>
 </head>
-    <div style="position:fixed;bottom:10px;left:12px;z-index:9999;pointer-events:none;background:rgba(42,157,143,0.75);color:white;font-family:sans-serif;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;letter-spacing:0.03em;">© Creado por Inma Merino Rus</div>
 <body>
 
-<div id="app">
-    <div class="bg-letters" id="bg"></div>
-
-    <div class="nav">
-        <button class="btn-ui" onclick="parental('home')">🏠</button>
-        <button class="btn-ui" onmousedown="fsStart()" onmouseup="fsEnd()" ontouchstart="fsStart()" ontouchend="fsEnd()">⛶</button>
-        <button class="btn-ui" onclick="getReport()">📋</button>
+    <!-- CONTROL PARENTAL -->
+    <div id="parental-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:9999;color:white;justify-content:center;align-items:center;flex-direction:column;">
+        <h2 style="font-family:var(--font-main);font-weight:300;letter-spacing:4px;margin-bottom:10px;">CONTROL PARENTAL</h2>
+        <p>Resuelve la suma para salir:</p>
+        <p id="math-exp" style="font-size:2.5rem;color:#fdcb6e;margin:15px 0;"></p>
+        <input type="number" id="math-answer" style="font-size:2rem;width:120px;text-align:center;border-radius:10px;margin:10px;padding:5px;">
+        <br>
+        <button onclick="verifyParental()" style="background:#6c5ce7;color:white;border:none;padding:15px 40px;border-radius:100px;font-size:1rem;cursor:pointer;margin-top:10px;font-family:var(--font-main);letter-spacing:2px;text-transform:uppercase;">VERIFICAR</button>
+        <button onclick="closeParental()" style="background:none;border:none;color:#aaa;margin-top:15px;cursor:pointer;font-size:0.8rem;text-transform:uppercase;letter-spacing:2px;">CANCELAR</button>
     </div>
 
-    <div id="menu">
-        <div class="card">
-            <h1 id="main-title" style="color:var(--accent)">Salto Silábico</h1>
-            <p>Selecciona letra:</p>
-            <button id="b-may" class="btn-case active" onclick="setL('MAY')">MAYÚSCULAS</button>
-            <button id="b-min" class="btn-case" onclick="setL('MIN')">minúsculas</button>
-            <br><br>
-            <button class="btn-case active" style="background:var(--success); color:white; border:none;" onclick="start()">¡EMPEZAR!</button>
-        </div>
+    <!-- PANTALLA DE NOMBRE -->
+    <div id="nombre-screen">
+        <span class="icono">👦</span>
+        <h2>¿Quién va a jugar?</h2>
+        <p>Si quieres, escribe el nombre del niño o niña para que Inma pueda ver cómo ha ido la sesión.</p>
+        <input type="text" id="nombre-input" placeholder="Nombre del niño/a..." maxlength="50">
+        <button class="btn-con-nombre" onclick="guardarNombreYContinuar()">Enviar informe a Inma ✓</button>
+        <br>
+        <button class="btn-sin-nombre" onclick="continuarSinNombre()">Continuar sin enviar informe</button>
+        <p class="privacidad-nota">
+            🔒 Si escribes el nombre, al terminar la actividad Inma recibirá un informe con los resultados.<br>
+            Es completamente voluntario. Los datos solo los verá Inma Merino Rus y se usarán únicamente para el seguimiento terapéutico.
+        </p>
     </div>
 
-    <div id="game-content">
-        <div id="emoji"></div>
-        <div class="word-ui" id="word-box"></div>
-        <div class="options" id="opt-box"></div>
-        <button id="btn-next" onclick="next()">SIGUIENTE ➔</button>
+    <!-- ANTESALA -->
+    <div id="intro-screen">
+        <span class="intro-icon">🕵️‍♀️</span>
+        <h1>DETECTIVE</h1>
+        <p>Misión: Inferencias Animales</p>
+        <button class="btn-start" onclick="startGame()">COMENZAR</button>
     </div>
 
-    <div id="fs-timer">Mantén pulsado (3s)... <span id="fs-count">0</span>%</div>
-</div>
+    <div id="game-container">
+        <div id="progress" class="progress-text"></div>
+        <div class="instruction" id="riddle-display">ADIVINA EL ANIMAL</div>
+        <button class="repeat-btn" onclick="repeatRiddle()">
+            <span>🔊</span> ESCUCHAR PISTA
+        </button>
+        <div class="options-grid" id="options-container"></div>
+    </div>
 
-<script>
-    const WORDS = [
-        // NIVEL 1 (20)
-        { e: '🏰', c: 'as', o: ['as','sa'], w: 'C__TILLO', f: 'CASTILLO' },
-        { e: '🐍', c: 'se', o: ['es','se'], w: '__RPIENTE', f: 'SERPIENTE' },
-        { e: '🎒', c: 'mo', o: ['om','mo'], w: '__CHILA', f: 'MOCHILA' },
-        { e: '🪜', c: 'es', o: ['es','se'], w: '__CALERA', f: 'ESCALERA' },
-        { e: '🍊', c: 'na', o: ['an','na'], w: '__RANJA', f: 'NARANJA' },
-        { e: '🦒', c: 'ra', o: ['ar','ra'], w: 'JI__FA', f: 'JIRAFA' },
-        { e: '🐜', c: 'an', o: ['an','na'], w: '__TENA', f: 'ANTENA' },
-        { e: '🌴', c: 'al', o: ['al','la'], w: 'P__MA', f: 'PALMA' },
-        { e: '🧤', c: 'gu', o: ['ug','gu'], w: '__ANTE', f: 'GUANTE' },
-        { e: '🐀', c: 'ra', o: ['ar','ra'], w: '__TÓN', f: 'RATÓN' },
-        { e: '🌲', c: 'ar', o: ['ar','ra'], w: '__BOL', f: 'ÁRBOL' },
-        { e: '🍕', c: 'pi', o: ['ip','pi'], w: '__ZZA', f: 'PIZZA' },
-        { e: '🧜‍♀️', c: 'si', o: ['is','si'], w: '__RENA', f: 'SIRENA' },
-        { e: '🏝️', c: 'is', o: ['is','si'], w: '__LA', f: 'ISLA' },
-        { e: '🌙', c: 'lu', o: ['ul','lu'], w: '__NA', f: 'LUNA' },
-        { e: '🎯', c: 'ul', o: ['ul','lu'], w: '__TIMO', f: 'ÚLTIMO' },
-        { e: '👂', c: 'or', o: ['or','ro'], w: '__EJA', f: 'OREJA' },
-        { e: '🌹', c: 'ro', o: ['or','ro'], w: '__SA', f: 'ROSA' },
-        { e: '🐘', c: 'el', o: ['el','le'], w: '__EFANTE', f: 'ELEFANTE' },
-        { e: '🦁', c: 'le', o: ['el','le'], w: '__ÓN', f: 'LEÓN' },
-        // NIVEL 2 (20)
-        { e: '👻', c: 'fa', o: ['af','fa'], w: '__NTASMA', f: 'FANTASMA' },
-        { e: '🎂', c: 'as', o: ['as','sa'], w: 'P__TEL', f: 'PASTEL' },
-        { e: '🌂', c: 'pa', o: ['ap','pa'], w: '__RAGUAS', f: 'PARAGUAS' },
-        { e: '🥣', c: 'as', o: ['as','sa'], w: 'P__TA', f: 'PASTA' },
-        { e: '🚢', c: 'ba', o: ['ab','ba'], w: '__RCO', f: 'BARCO' },
-        { e: '🪣', c: 'cu', o: ['uc','cu'], w: '__BO', f: 'CUBO' },
-        { e: '🦟', c: 'mo', o: ['om','mo'], w: '__SQUITO', f: 'MOSQUITO' },
-        { e: '🧥', c: 'ab', o: ['ab','ba'], w: '__RIGO', f: 'ABRIGO' },
-        { e: '🚪', c: 'pu', o: ['up','pu'], w: '__ERTA', f: 'PUERTA' },
-        { e: '🦴', c: 'ue', o: ['eu','ue'], w: 'H__SO', f: 'HUESO' },
-        { e: '🦷', c: 'di', o: ['id','di'], w: '__ENTE', f: 'DIENTE' },
-        { e: '🚿', c: 'du', o: ['ud','du'], w: '__CHA', f: 'DUCHA' },
-        { e: '🧸', c: 'os', o: ['os','so'], w: '__O', f: 'OSO' },
-        { e: '🍲', c: 'so', o: ['os','so'], w: '__PA', f: 'SOPA' },
-        { e: '🔔', c: 'ca', o: ['ac','ca'], w: '__MPANA', f: 'CAMPANA' },
-        { e: '👨‍🍳', c: 'co', o: ['oc','co'], w: '__CINA', f: 'COCINA' },
-        { e: '👓', c: 'ga', o: ['ag','ga'], w: '__FAS', f: 'GAFAS' },
-        { e: '🐱', c: 'ga', o: ['ag','ga'], w: '__TO', f: 'GATO' },
-        { e: '🐆', c: 'ti', o: ['it','ti'], w: '__GRE', f: 'TIGRE' },
-        { e: '👟', c: 'te', o: ['et','te'], w: '__NIS', f: 'TENIS' }
-    ];
+    <div class="admin-controls">
+        <button class="admin-btn" onclick="downloadReport()">DESCARGAR REPORTE</button>
+        <button class="admin-btn" onclick="askPermission()">🔒 SALIR</button>
+        <button id="fs-btn" class="admin-btn">PANTALLA COMPLETA</button>
+    </div>
 
-    let currentL = 'MAY', idx = 0, log = [], fsHoldInterval, fsProgress = 0;
+    <script>
+        // ── CONFIGURACION ──
+        var GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbw4AKlcc8-09jA0uBl7EYDW_lorkazvEOwhZTthN6FD_BIhM1Q6o4HJdNSeUvqba2an/exec";
+        var NOMBRE_ALUMNO = "";
+        var ENVIAR_INFORME = false;
 
-    function setL(c) {
-        currentL = c;
-        document.getElementById('b-may').classList.toggle('active', c==='MAY');
-        document.getElementById('b-min').classList.toggle('active', c==='MIN');
-        
-        const targetFont = c === 'MAY' ? "var(--font-mayus)" : "var(--font-minus)";
-        document.body.style.fontFamily = targetFont;
-        document.getElementById('main-title').style.fontFamily = targetFont;
-    }
-
-    function start() { 
-        document.getElementById('menu').style.display='none'; 
-        load(); 
-    }
-
-    function load() {
-        const item = WORDS[idx];
-        document.getElementById('emoji').innerText = item.e;
-        document.getElementById('btn-next').style.display = 'none';
-        const box = document.getElementById('word-box');
-        box.innerHTML = "";
-        const p = item.w.split("__");
-        box.innerHTML = `<span>${fmt(p[0])}</span><span class="gap" id="gap">_ _</span><span>${fmt(p[1]||"")}</span>`;
-        
-        const opts = document.getElementById('opt-box');
-        opts.innerHTML = "";
-        item.o.forEach(o => {
-            const b = document.createElement('button');
-            b.className = 'btn-syl';
-            b.innerText = fmt(o);
-            b.onclick = () => check(o, b);
-            opts.appendChild(b);
-        });
-        speak(`Completa la palabra ${item.f}`);
-    }
-
-    function fmt(t) { return currentL==='MAY' ? t.toUpperCase() : t.toLowerCase(); }
-
-    function check(val, btn) {
-        const item = WORDS[idx];
-        if(val === item.c) {
-            document.getElementById('gap').innerText = fmt(val);
-            document.getElementById('gap').style.border = "none";
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-            speak("¡Genial!");
-            document.getElementById('opt-box').innerHTML = "";
-            document.getElementById('btn-next').style.display = 'block';
-            log.push({ w: item.f, r: 'Acierto' });
-        } else {
-            speak("Intenta otra vez");
-            btn.style.borderColor = "red";
-            log.push({ w: item.f, r: 'Fallo' });
-        }
-    }
-
-    function next() { idx = (idx + 1) % WORDS.length; load(); }
-
-    function speak(t) { 
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
-            const m = new SpeechSynthesisUtterance(t); 
-            m.lang='es-ES'; 
-            window.speechSynthesis.speak(m); 
-        }
-    }
-
-    function parental(a) {
-        const n1 = Math.floor(Math.random()*8)+1, n2 = Math.floor(Math.random()*5);
-        Swal.fire({ title: 'Control Parental', text: `¿Cuánto es ${n1} + ${n2}?`, input: 'number' }).then(r => {
-            if(parseInt(r.value) === (n1+n2) && a === 'home') {
-                window.location.reload();
+        function guardarNombreYContinuar() {
+            var nombre = document.getElementById('nombre-input').value.trim();
+            if (nombre === "") {
+                document.getElementById('nombre-input').style.borderColor = "#ff7675";
+                document.getElementById('nombre-input').placeholder = "Por favor escribe un nombre...";
+                return;
             }
-        });
-    }
+            NOMBRE_ALUMNO = nombre;
+            ENVIAR_INFORME = true;
+            mostrarIntro();
+        }
 
-    /* --- SISTEMA ROBUSTO DE PANTALLA COMPLETA --- */
-    function toggleFullscreenNatively() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(err => {
-                console.log(`Error al activar pantalla completa: ${err.message}`);
+        function continuarSinNombre() {
+            NOMBRE_ALUMNO = "Anonimo";
+            ENVIAR_INFORME = false;
+            mostrarIntro();
+        }
+
+        function mostrarIntro() {
+            document.getElementById('nombre-screen').style.display = 'none';
+            document.getElementById('intro-screen').style.display = 'block';
+        }
+
+        // ── JUEGO ──
+        var gameData = [
+            { p: "DIGO MUUU. DOY LECHE. VIVO EN LA GRANJA.", c: "VACA", e: "🐄", o: [{t:"VACA", e:"🐄"}, {t:"GATO", e:"🐈"}, {t:"PERRO", e:"🐕"}, {t:"POLLO", e:"🐥"}] },
+            { p: "TENGO BIGOTES. DIGO MIAU. CAZO RATONES.", c: "GATO", e: "🐈", o: [{t:"GATO", e:"🐈"}, {t:"LEON", e:"🦁"}, {t:"CONEJO", e:"🐇"}, {t:"PEZ", e:"🐟"}] },
+            { p: "LADRO MUY FUERTE. SOY EL MEJOR AMIGO DEL HOMBRE.", c: "PERRO", e: "🐕", o: [{t:"PERRO", e:"🐕"}, {t:"LOBO", e:"🐺"}, {t:"VACA", e:"🐄"}, {t:"PATO", e:"🦆"}] },
+            { p: "SOY VERDE. DIGO CROAC. SALTO EN EL AGUA.", c: "RANA", e: "🐸", o: [{t:"RANA", e:"🐸"}, {t:"PAJARO", e:"🐦"}, {t:"SERPIENTE", e:"🐍"}, {t:"PEZ", e:"🐟"}] },
+            { p: "TENGO OREJAS LARGAS. COMO ZANAHORIAS.", c: "CONEJO", e: "🐇", o: [{t:"CONEJO", e:"🐇"}, {t:"RATON", e:"🐭"}, {t:"OSO", e:"🐻"}, {t:"OVEJA", e:"🐑"}] },
+            { p: "DIGO CUA CUA. NADO EN EL ESTANQUE.", c: "PATO", e: "🦆", o: [{t:"PATO", e:"🦆"}, {t:"POLLO", e:"🐥"}, {t:"CERDO", e:"🐷"}, {t:"CISNE", e:"🦢"}] },
+            { p: "DIGO BEEE. TENGO MUCHA LANA BLANCA.", c: "OVEJA", e: "🐑", o: [{t:"OVEJA", e:"🐑"}, {t:"CABRA", e:"🐐"}, {t:"VACA", e:"🐄"}, {t:"PERRO", e:"🐕"}] },
+            { p: "TENGO NARIZ DE ENCHUFE. DIGO OINK OINK.", c: "CERDO", e: "🐷", o: [{t:"CERDO", e:"🐷"}, {t:"VACA", e:"🐄"}, {t:"CABALLO", e:"🐎"}, {t:"CONEJO", e:"🐇"}] },
+            { p: "TENGO EL CUELLO LARGO. COMO HOJAS ALTAS. TENGO MANCHAS.", c: "JIRAFA", e: "🦒", o: [{t:"JIRAFA", e:"🦒"}, {t:"CEBRA", e:"🦓"}, {t:"ELEFANTE", e:"🐘"}, {t:"LAGARTO", e:"🦎"}] },
+            { p: "SOY GRIS. TENGO OREJAS GIGANTES. TROMPA LARGA.", c: "ELEFANTE", e: "🐘", o: [{t:"ELEFANTE", e:"🐘"}, {t:"HIPOPOTAMO", e:"🦛"}, {t:"RINOCERONTE", e:"🦏"}, {t:"OSO", e:"🐻"}] },
+            { p: "PAREZCO UN CABALLO. TENGO RAYAS BLANCAS NEGRAS.", c: "CEBRA", e: "🦓", o: [{t:"CEBRA", e:"🦓"}, {t:"TIGRE", e:"🐅"}, {t:"BURRO", e:"🫏"}, {t:"VACA", e:"🐄"}] },
+            { p: "TENGO UNA BOLSA EN MI BARRIGA. SALTO MUCHO.", c: "CANGURO", e: "🦘", o: [{t:"CANGURO", e:"🦘"}, {t:"CONEJO", e:"🐇"}, {t:"MONO", e:"🐒"}, {t:"KOALA", e:"🐨"}] },
+            { p: "ME GUSTA COLGARME DE LAS RAMAS. COMO PLATANOS.", c: "MONO", e: "🐒", o: [{t:"MONO", e:"🐒"}, {t:"GATO", e:"🐈"}, {t:"ARDILLA", e:"🐿️"}, {t:"PERRO", e:"🐕"}] },
+            { p: "VIVO EN EL FRIO. SOY BLANCO. MUY PELUDO.", c: "OSO POLAR", e: "🐻‍❄️", o: [{t:"OSO POLAR", e:"🐻‍❄️"}, {t:"PINGUINO", e:"🐧"}, {t:"FOCA", e:"🦭"}, {t:"ZORRO", e:"🦊"}] },
+            { p: "NO TENGO PATAS. ME ARRASTRO. TENGO LENGUA LARGA.", c: "SERPIENTE", e: "🐍", o: [{t:"SERPIENTE", e:"🐍"}, {t:"GUSANO", e:"🐛"}, {t:"LAGARTO", e:"🦎"}, {t:"PEZ", e:"🐟"}] },
+            { p: "TENGO UNA CORONA DE PLUMAS. CANTO AL SOL.", c: "GALLO", e: "🐓", o: [{t:"GALLO", e:"🐓"}, {t:"PATO", e:"🦆"}, {t:"BUHO", e:"🦉"}, {t:"LORO", e:"🦜"}] },
+            { p: "SOY EL REY DE LA SELVA. TENGO MELENA GRANDE.", c: "LEON", e: "🦁", o: [{t:"LEON", e:"🦁"}, {t:"TIGRE", e:"🐅"}, {t:"GORILA", e:"🦍"}, {t:"LOBO", e:"🐺"}] },
+            { p: "LLEVO MI CASA ENCIMA. CAMINO MUY LENTO.", c: "CARACOL", e: "🐌", o: [{t:"CARACOL", e:"🐌"}, {t:"TORTUGA", e:"🐢"}, {t:"CANGREJO", e:"🦀"}, {t:"GUSANO", e:"🐛"}] },
+            { p: "SOY UN AVE QUE NO VUELA. VIVO EN EL HIELO.", c: "PINGUINO", e: "🐧", o: [{t:"PINGUINO", e:"🐧"}, {t:"PATO", e:"🦆"}, {t:"PAJARO", e:"🐦"}, {t:"FOCA", e:"🦭"}] },
+            { p: "VIVO EN EL MAR. SOY INTELIGENTE. SALTO EN LAS OLAS.", c: "DELFIN", e: "🐬", o: [{t:"DELFIN", e:"🐬"}, {t:"TIBURON", e:"🦈"}, {t:"BALLENA", e:"🐳"}, {t:"PULPO", e:"🐙"}] },
+            { p: "TENGO OCHO PATAS. TEJO REDES.", c: "ARANA", e: "🕷️", o: [{t:"ARANA", e:"🕷️"}, {t:"HORMIGA", e:"🐜"}, {t:"ABEJA", e:"🐝"}, {t:"CANGREJO", e:"🦀"}] },
+            { p: "CAMBIO EL COLOR DE MI PIEL PARA ESCONDERME.", c: "CAMALEON", e: "🦎", o: [{t:"CAMALEON", e:"🦎"}, {t:"SERPIENTE", e:"🐍"}, {t:"RANA", e:"🐸"}, {t:"TORTUGA", e:"🐢"}] },
+            { p: "SOY NOCTURNO. GIRO LA CABEZA POR COMPLETO.", c: "BUHO", e: "🦉", o: [{t:"BUHO", e:"🦉"}, {t:"MURCIELAGO", e:"🦇"}, {t:"AGUILA", e:"🦅"}, {t:"GATO", e:"🐈"}] },
+            { p: "ANTES FUI UNA ORUGA. TENGO ALAS LINDAS.", c: "MARIPOSA", e: "🦋", o: [{t:"MARIPOSA", e:"🦋"}, {t:"ABEJA", e:"🐝"}, {t:"LIBELULA", e:"🛸"}, {t:"MOSCA", e:"🪰"}] }
+        ];
+
+        var index = 0;
+        var logs = [];
+        var palabrasFalladas = [];
+        var synth = window.speechSynthesis;
+
+        function speak(text) {
+            synth.cancel();
+            var tabletFix = text.replace(/ Y /g, ". ");
+            var msg = new SpeechSynthesisUtterance(tabletFix);
+            msg.lang = 'es-ES';
+            msg.rate = 0.75;
+            synth.speak(msg);
+        }
+
+        function repeatRiddle() { speak(gameData[index].p); }
+
+        function startGame() {
+            speak("");
+            document.getElementById('intro-screen').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
+            loadCase();
+        }
+
+        function loadCase() {
+            var data = gameData[index];
+            document.getElementById('progress').innerText = "INFORME DETECTIVE: CASO " + (index + 1) + " / 24";
+            var container = document.getElementById('options-container');
+            container.innerHTML = '';
+            data.o.slice().sort(function() { return Math.random() - 0.5; }).forEach(function(opt) {
+                var b = document.createElement('button');
+                b.className = 'option-btn';
+                b.innerHTML = '<span>' + opt.e + '</span> ' + opt.t;
+                b.onclick = function() { check(opt.t); };
+                container.appendChild(b);
             });
-        } else {
-            document.exitFullscreen();
+            setTimeout(function() { speak(data.p); }, 600);
         }
-    }
 
-    function fsStart() {
-        fsProgress = 0;
-        document.getElementById('fs-count').innerText = "0";
-        document.getElementById('fs-timer').style.display = 'block';
-        
-        clearInterval(fsHoldInterval);
-        fsHoldInterval = setInterval(() => {
-            fsProgress += 10;
-            document.getElementById('fs-count').innerText = fsProgress;
-            
-            if (fsProgress >= 100) {
-                clearInterval(fsHoldInterval);
-                document.getElementById('fs-timer').style.display = 'none';
-                toggleFullscreenNatively();
+        function check(guess) {
+            var correct = gameData[index].c;
+            var ok = guess === correct;
+            logs.push({ n: index + 1, res: guess, ok: ok, palabra: correct });
+            if (!ok) { palabrasFalladas.push(correct); }
+
+            if (ok) {
+                Swal.fire({ icon: 'success', title: 'CORRECTO', showConfirmButton: false, timer: 1000, backdrop: 'rgba(0,184,148,0.1)' });
+                index++;
+                if (index < gameData.length) {
+                    setTimeout(loadCase, 1100);
+                } else {
+                    finalizarJuego();
+                }
+            } else {
+                Swal.fire({ icon: 'error', title: 'INTENTA OTRA VEZ', showConfirmButton: false, timer: 800, backdrop: 'rgba(214,48,49,0.1)' });
+                repeatRiddle();
             }
-        }, 300); // 10 iteraciones de 300ms = 3 segundos
-    }
-
-    function fsEnd() {
-        clearInterval(fsHoldInterval);
-        document.getElementById('fs-timer').style.display = 'none';
-    }
-
-    function getReport() {
-        let h = "<h2>Informe de Progreso - Salto Silábico</h2><table border='1' cellpadding='8' style='border-collapse:collapse;'><tr><th>Palabra</th><th>Resultado</th></tr>";
-        log.forEach(l => h += `<tr><td>${l.w}</td><td style="color:${l.r === 'Acierto' ? 'green':'red'}">${l.r}</td></tr>`);
-        const b = new Blob([h+"</table>"], {type:'text/html'});
-        const a = document.createElement('a'); a.href=URL.createObjectURL(b); a.download="informe_silabas.html"; a.click();
-    }
-
-    function bg() {
-        const b = document.getElementById('bg'), ch = "A B C D E L P S N M T O R I U".split(" ");
-        b.innerHTML = "";
-        for(let i=0; i<25; i++) {
-            const s = document.createElement('span'); s.className='bg-char';
-            s.innerText = ch[Math.floor(Math.random()*ch.length)];
-            s.style.left = Math.random()*90+'vw'; s.style.animationDelay = Math.random()*10+'s';
-            s.style.color = `hsl(${Math.random()*360}, 75%, 75%)`; b.appendChild(s);
         }
-    }
-    
-    // Inicialización del entorno
-    bg();
-    setL('MAY');
-</script>
+
+        function finalizarJuego() {
+            var aciertos = logs.filter(function(l) { return l.ok; }).length;
+            var errores = logs.filter(function(l) { return !l.ok; }).length;
+            var falladas = [...new Set(palabrasFalladas)].join(", ");
+
+            if (ENVIAR_INFORME) {
+                enviarAGoogleSheet(aciertos, errores, falladas);
+            }
+
+            Swal.fire('MISION CUMPLIDA', 'ERES UN AGENTE MAESTRO\nAciertos: ' + aciertos + ' | Errores: ' + errores, 'success');
+        }
+
+        function enviarAGoogleSheet(aciertos, errores, falladas) {
+            var ahora = new Date();
+            var fecha = ahora.toLocaleDateString('es-ES');
+            var hora = ahora.toLocaleTimeString('es-ES');
+
+            var datos = JSON.stringify({
+                Nombre: NOMBRE_ALUMNO,
+                Actividad: "Detective Animal - Inferencias",
+                Aciertos: aciertos,
+                Errores: errores,
+                PalabrasFalladas: falladas || "Ninguna"
+            });
+
+            fetch(GOOGLE_SHEET_URL, {
+                method: 'POST',
+                body: datos,
+                headers: { 'Content-Type': 'application/json' }
+            }).catch(function(e) { console.log('Error al enviar informe:', e); });
+        }
+
+        var expectedAnswer = 0;
+
+        document.getElementById('fs-btn').addEventListener('click', function() {
+            document.documentElement.requestFullscreen();
+        });
+
+        function askPermission() {
+            var n1 = Math.floor(Math.random() * 8) + 2;
+            var n2 = Math.floor(Math.random() * 8) + 2;
+            expectedAnswer = n1 + n2;
+            document.getElementById('math-exp').innerText = n1 + ' + ' + n2 + ' = ?';
+            document.getElementById('math-answer').value = '';
+            document.getElementById('parental-modal').style.display = 'flex';
+        }
+
+        function verifyParental() {
+            if (parseInt(document.getElementById('math-answer').value) === expectedAnswer) {
+                // Enviar reporte al salir
+                var aciertos = logs.filter(function(l) { return l.ok; }).length;
+                var errores = logs.filter(function(l) { return !l.ok; }).length;
+                var falladas = [...new Set(palabrasFalladas)].join(", ");
+                enviarAGoogleSheet(aciertos, errores, falladas ? falladas + " (sesion incompleta)" : "Sesion incompleta");
+                if (document.exitFullscreen) document.exitFullscreen();
+                location.reload();
+            } else {
+                closeParental();
+            }
+        }
+
+        function closeParental() {
+            document.getElementById('parental-modal').style.display = 'none';
+        }
+
+        function downloadReport() {
+            var t = "REPORTE DETECTIVE - SESION\n=================================\n\n";
+            logs.forEach(function(l) { t += "CASO " + l.n + ": " + (l.ok ? "ACERTO" : "FALLO") + " (" + l.res + ")\n"; });
+            var b = new Blob([t], {type: 'text/plain'});
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(b);
+            a.download = "reporte_detective.txt";
+            a.click();
+        }
+    </script>
 </body>
 </html>

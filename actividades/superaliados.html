@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>El Club de los SuperAliados</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund:wght@100..400&family=Playwrite+HR+Lijeva:wght@100..400&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f0c29;--bg2:#1a1545;
+  --card-bg:rgba(255,255,255,.06);--card-border:rgba(255,255,255,.14);
+  --gold:#FFD700;--gold2:#FFA500;--teal:#00E5CC;--purple:#9B5DE5;
+  --pink:#FF6B9D;--green:#06D6A0;--red:#FF4757;--sky:#38BDF8;
+  --text-main:#F0EEFF;--text-muted:#9E9BC5;
+  --radius:20px;--radius-sm:12px;
+  --font-ui:'Nunito',sans-serif;
+  --font-may:'Playwrite DE Grund',cursive;
+  --font-min:'Playwrite HR Lijeva',cursive;
+  --font-game:var(--font-min);
+  --card-w:220px;--card-h:293px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;min-height:100%;overflow-x:hidden;}
+body{font-family:var(--font-ui);color:var(--text-main);font-size:16px;
+  background:var(--bg);
+  background-image:radial-gradient(ellipse at 20% 20%,rgba(155,93,229,.3) 0%,transparent 50%),
+    radial-gradient(ellipse at 80% 80%,rgba(0,229,204,.2) 0%,transparent 50%),
+    radial-gradient(ellipse at 50% 50%,rgba(255,107,157,.1) 0%,transparent 70%);
+  min-height:100vh;}
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.star{position:absolute;background:white;border-radius:50%;animation:twinkle var(--d,3s) ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:.2;transform:scale(1);}50%{opacity:.9;transform:scale(1.4);}}
+.screen{display:none;position:relative;z-index:1;min-height:100vh;
+  flex-direction:column;align-items:center;padding:1.5rem 1rem 3rem;}
+.screen.active{display:flex;}
+
+/* ANTESALA */
+#antesala{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;
+  justify-content:center;padding:1.5rem;background:linear-gradient(135deg,#1a0533,#0a1628);}
+.ante-card{background:rgba(255,255,255,.06);backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.15);padding:2.5rem 2rem;border-radius:2rem;
+  max-width:420px;width:100%;text-align:center;box-shadow:0 25px 60px rgba(0,0,0,.5);}
+.ante-card h2{font-size:1.2rem;font-weight:800;color:var(--gold);margin-bottom:.5rem;}
+.ante-card p{font-size:1rem;color:var(--text-muted);margin-bottom:1.1rem;line-height:1.6;}
+.ante-input{width:100%;padding:12px 16px;border-radius:50px;
+  border:2px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);
+  color:white;font-size:1rem;font-family:var(--font-ui);text-align:center;
+  outline:none;margin-bottom:.9rem;transition:border-color .2s;}
+.ante-input::placeholder{color:rgba(255,255,255,.3);}
+.ante-input:focus{border-color:var(--gold);}
+.ante-btn-ok{width:100%;padding:13px;
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  color:#1a0533;border:none;border-radius:50px;font-size:.95rem;
+  font-family:var(--font-ui);font-weight:800;cursor:pointer;
+  margin-bottom:.6rem;transition:transform .15s;}
+.ante-btn-ok:hover{transform:translateY(-2px);}
+.ante-btn-skip{background:none;border:none;color:var(--text-muted);
+  font-size:.8rem;font-family:var(--font-ui);cursor:pointer;text-decoration:underline;}
+.ante-legal{font-size:.72rem;color:rgba(255,255,255,.3);margin-top:1rem;
+  border-top:1px solid rgba(255,255,255,.08);padding-top:.75rem;line-height:1.5;}
+
+/* HOME */
+#home{justify-content:center;gap:1.5rem;}
+.home-hero{text-align:center;}
+.home-badge{display:inline-flex;align-items:center;gap:.5rem;
+  background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);
+  border-radius:50px;padding:.4rem 1.1rem;font-size:.8rem;font-weight:700;
+  color:var(--gold);margin-bottom:1rem;}
+.home-title{font-size:clamp(2rem,6vw,3.2rem);font-weight:900;line-height:1.15;
+  background:linear-gradient(135deg,var(--gold),var(--teal),var(--pink));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.home-sub{font-size:1.1rem;color:var(--text-muted);margin-top:.5rem;}
+.config-card{background:var(--card-bg);backdrop-filter:blur(16px);
+  border:1px solid var(--card-border);border-radius:var(--radius);
+  padding:1.8rem;width:100%;max-width:560px;}
+.config-section{margin-bottom:1.4rem;}
+.config-label{font-size:1rem;font-weight:800;color:var(--text-muted);
+  text-transform:uppercase;letter-spacing:.1em;margin-bottom:.7rem;}
+.config-opts{display:flex;gap:.6rem;flex-wrap:wrap;}
+.btn-cfg{padding:.6rem 1.2rem;border-radius:50px;
+  border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);
+  color:var(--text-main);font-family:var(--font-ui);font-size:1rem;
+  font-weight:700;cursor:pointer;transition:all .2s;}
+.btn-cfg:hover{border-color:rgba(255,255,255,.4);}
+.btn-cfg.sel{background:linear-gradient(135deg,var(--purple),var(--teal));
+  border-color:transparent;color:white;transform:scale(1.04);}
+.btn-start{width:100%;padding:1rem;
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  border:none;border-radius:50px;color:white;font-family:var(--font-ui);
+  font-size:1.05rem;font-weight:900;cursor:pointer;
+  transition:transform .15s,box-shadow .2s;
+  box-shadow:0 6px 24px rgba(155,93,229,.4);}
+.btn-start:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(155,93,229,.5);}
+.btn-start:active{transform:scale(.97);}
+.top-utils{display:flex;gap:.6rem;flex-wrap:wrap;justify-content:flex-end;
+  width:100%;max-width:560px;}
+.btn-util{padding:.5rem 1rem;border-radius:50px;
+  border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);
+  color:var(--text-muted);font-family:var(--font-ui);font-size:.9rem;
+  font-weight:700;cursor:pointer;transition:all .2s;text-decoration:none;
+  display:inline-flex;align-items:center;gap:.4rem;}
+.btn-util:hover{border-color:rgba(255,255,255,.35);color:var(--text-main);}
+
+/* JUEGO */
+#juego{padding-top:0;justify-content:flex-start;}
+.game-header{position:sticky;top:0;z-index:100;width:100%;
+  background:rgba(15,12,41,.9);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  padding:.7rem 1rem;display:flex;align-items:center;
+  justify-content:space-between;gap:.5rem;flex-wrap:wrap;}
+.hdr-left{display:flex;align-items:center;gap:.8rem;flex:1;}
+.hdr-score{font-weight:900;font-size:1.05rem;color:var(--gold);}
+.prog-wrap{display:flex;flex-direction:column;gap:3px;}
+.prog-label{font-size:.9rem;color:var(--text-muted);font-weight:700;}
+.prog-bar{height:8px;background:rgba(255,255,255,.1);border-radius:10px;overflow:hidden;width:100px;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--teal));
+  border-radius:10px;transition:width .5s ease;}
+.hdr-btns{display:flex;gap:.4rem;}
+.h-btn{width:36px;height:36px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);
+  cursor:pointer;font-size:1rem;display:flex;align-items:center;
+  justify-content:center;transition:all .2s;color:var(--text-main);}
+.h-btn:hover{background:rgba(255,255,255,.15);transform:scale(1.1);}
+
+.game-layout{display:flex;gap:1.5rem;width:100%;max-width:900px;
+  padding:1.2rem .5rem;flex-wrap:wrap;justify-content:center;}
+
+/* COLUMNA PERSONAJE */
+.col-personaje{display:flex;flex-direction:column;align-items:center;gap:.9rem;flex:0 0 auto;}
+.silueta-wrap{position:relative;width:var(--card-w);height:var(--card-h);
+  border-radius:var(--radius);overflow:hidden;
+  border:2px solid rgba(255,255,255,.15);
+  box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1);
+  background:linear-gradient(160deg,#1a0a2e,#0d1b2a);}
+.silueta-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  filter:brightness(.08) saturate(0) blur(2px);transition:filter .7s ease,opacity .7s ease;}
+.silueta-img.reveal{filter:none;}
+/* Overlay misterioso: silueta SVG + interrogación brillante */
+.mystery-overlay{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:0;
+  transition:opacity .6s ease;pointer-events:none;z-index:2;}
+.mystery-overlay.hidden{opacity:0;}
+.silueta-fallback{width:100%;height:100%;display:flex;align-items:center;
+  justify-content:center;font-size:5rem;
+  background:linear-gradient(135deg,rgba(155,93,229,.3),rgba(0,229,204,.2));}
+.nombre-badge{position:absolute;bottom:0;left:0;right:0;padding:.5rem .8rem;
+  background:linear-gradient(to top,rgba(0,0,0,.85),transparent);
+  font-family:var(--font-game);font-size:1.15rem;font-weight:700;
+  color:var(--gold);text-align:center;}
+.narrativa-box{background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);border-radius:var(--radius-sm);
+  padding:.9rem 1rem;width:var(--card-w);font-size:1.1rem;line-height:1.8;
+  color:var(--text-main);font-family:var(--font-ui);
+  max-height:200px;overflow-y:auto;}
+.narrativa-box::-webkit-scrollbar{width:4px;}
+.narrativa-box::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:4px;}
+
+/* ZONA DESTINO */
+.drop-zone{width:var(--card-w);min-height:80px;border-radius:var(--radius);
+  border:2.5px dashed rgba(0,229,204,.4);background:rgba(0,229,204,.05);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.4rem;font-size:1rem;font-weight:700;color:rgba(0,229,204,.6);
+  transition:all .25s;padding:.6rem;text-align:center;font-family:var(--font-ui);}
+.drop-zone.drag-over{border-color:var(--teal);background:rgba(0,229,204,.15);
+  color:var(--teal);transform:scale(1.03);}
+.drop-zone.has-card{border-style:solid;border-color:var(--gold);
+  background:rgba(255,215,0,.08);}
+.btn-confirmar{width:var(--card-w);padding:.8rem;
+  background:linear-gradient(135deg,var(--green),#059669);
+  border:none;border-radius:50px;color:white;font-family:var(--font-ui);
+  font-size:.9rem;font-weight:800;cursor:pointer;
+  box-shadow:0 4px 16px rgba(6,214,160,.3);display:none;transition:transform .15s;}
+.btn-confirmar:hover{transform:translateY(-2px);}
+.btn-confirmar.visible{display:block;}
+
+/* BANCO */
+.col-banco{display:flex;flex-direction:column;gap:.8rem;align-items:center;flex:1;min-width:240px;}
+.banco-titulo{font-size:1rem;font-weight:800;color:var(--text-muted);
+  text-transform:uppercase;letter-spacing:.1em;align-self:flex-start;}
+.banco-grid{display:grid;grid-template-columns:repeat(2,var(--card-w));gap:.8rem;}
+
+/* CROMO */
+.cromo{width:var(--card-w);height:var(--card-h);border-radius:var(--radius);
+  border:1.5px solid var(--card-border);background:var(--card-bg);
+  backdrop-filter:blur(10px);box-shadow:0 4px 20px rgba(0,0,0,.3);
+  display:flex;flex-direction:column;overflow:hidden;cursor:grab;
+  transition:transform .2s,box-shadow .2s,border-color .2s;
+  user-select:none;position:relative;}
+.cromo::before{content:'';position:absolute;inset:0;border-radius:var(--radius);
+  background:linear-gradient(135deg,rgba(255,255,255,.12) 0%,transparent 50%,rgba(255,255,255,.04) 100%);
+  pointer-events:none;}
+.cromo:hover,.cromo:focus-visible{transform:translateY(-6px) scale(1.03);
+  box-shadow:0 14px 40px rgba(0,0,0,.4),0 0 0 2px rgba(255,255,255,.3);
+  border-color:rgba(255,255,255,.35);outline:none;}
+.cromo.selected{border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(255,215,0,.5),0 10px 30px rgba(0,0,0,.4);
+  transform:scale(1.05);}
+.cromo.placed{opacity:.3;pointer-events:none;transform:none;}
+.cromo.shake{animation:shake .4s ease;}
+@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}
+  40%{transform:translateX(8px);}60%{transform:translateX(-5px);}80%{transform:translateX(5px);}}
+.cromo-img{flex:0 0 68%;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;background:rgba(0,0,0,.3);}
+.cromo-img img{width:100%;height:100%;object-fit:cover;}
+.cromo-img-fallback{font-size:3.2rem;}
+.cromo-label{flex:0 0 30%;display:flex;align-items:center;justify-content:center;
+  padding:.4rem .5rem;text-align:center;font-family:var(--font-game);
+  font-size:1rem;font-weight:900;color:white;line-height:1.3;font-family:var(--font-ui);}
+
+/* FEEDBACK ERROR */
+.feedback-error{background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.3);
+  border-radius:12px;padding:.8rem 1rem;font-size:1.05rem;color:#FF8A94;
+  font-family:var(--font-ui);line-height:1.5;max-width:580px;width:100%;
+  display:none;animation:fadeSlide .3s ease;}
+.feedback-error.show{display:block;}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:9990;
+  background:rgba(0,0,0,.8);backdrop-filter:blur(10px);
+  align-items:center;justify-content:center;padding:1.5rem;}
+.modal-overlay.show{display:flex;}
+.modal-card{background:linear-gradient(135deg,rgba(26,21,69,.97),rgba(15,12,41,.99));
+  border:1px solid rgba(255,255,255,.15);border-radius:1.5rem;
+  padding:2rem;max-width:460px;width:100%;text-align:center;
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+  animation:popIn .4s cubic-bezier(.175,.885,.32,1.275) both;}
+@keyframes popIn{from{transform:scale(.7);opacity:0;}to{transform:scale(1);opacity:1;}}
+.modal-img-wrap{width:170px;height:227px;border-radius:16px;overflow:hidden;
+  margin:0 auto .9rem;border:2px solid var(--gold);
+  box-shadow:0 8px 32px rgba(255,215,0,.3);}
+.modal-img-wrap img{width:100%;height:100%;object-fit:cover;}
+.modal-img-fallback{font-size:6rem;margin-bottom:.9rem;display:block;}
+.modal-nombre{font-family:var(--font-game);font-size:1.6rem;color:var(--gold);margin-bottom:.2rem;}
+.modal-tecnologia{font-size:1rem;color:var(--teal);font-weight:800;margin-bottom:.7rem;font-family:var(--font-ui);}
+.modal-texto{font-size:1.1rem;color:var(--text-muted);line-height:1.7;margin-bottom:1.1rem;
+  font-family:var(--font-ui);}
+.modal-stars{font-size:1.6rem;margin-bottom:.8rem;display:block;
+  animation:bounce .6s infinite alternate;}
+@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-8px)}}
+.btn-sig-modal{padding:.9rem 2.2rem;border-radius:50px;border:none;
+  background:linear-gradient(135deg,var(--purple),var(--pink));color:white;
+  font-family:var(--font-ui);font-size:1rem;font-weight:800;cursor:pointer;
+  box-shadow:0 5px 20px rgba(155,93,229,.4);transition:transform .15s;}
+.btn-sig-modal:hover{transform:translateY(-2px);}
+
+/* CONFETTI */
+.cf-piece{position:fixed;border-radius:2px;
+  animation:cfFall 2s ease-in forwards;pointer-events:none;z-index:9995;}
+@keyframes cfFall{0%{transform:translateY(-40px) rotate(0);opacity:1;}
+  100%{transform:translateY(100vh) rotate(720deg);opacity:0;}}
+
+/* RESULTADO */
+#resultado{justify-content:center;gap:1.5rem;}
+.res-card{background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:var(--radius);padding:2rem;max-width:440px;width:100%;text-align:center;}
+.res-trofeo{font-size:4rem;margin-bottom:.5rem;display:block;
+  animation:bounce .6s infinite alternate;}
+.res-titulo{font-size:1.7rem;font-weight:900;color:var(--gold);margin-bottom:.5rem;}
+.res-pts{font-size:2.4rem;font-weight:900;
+  background:linear-gradient(135deg,var(--gold),var(--teal));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.res-stats{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;margin:1rem 0;}
+.stat{text-align:center;}
+.stat-n{font-size:1.6rem;font-weight:900;}
+.stat-l{font-size:.88rem;color:var(--text-muted);}
+.res-btns{display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center;margin-top:.5rem;}
+
+/* PARENTAL */
+.parental-overlay{display:none;position:fixed;inset:0;z-index:9998;
+  background:rgba(0,0,0,.75);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;padding:1.5rem;}
+.parental-overlay.show{display:flex;}
+.parental-card{background:rgba(26,21,69,.97);border:1px solid rgba(255,255,255,.15);
+  border-radius:1.5rem;padding:2rem;max-width:340px;width:100%;text-align:center;
+  box-shadow:0 25px 60px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:1rem;}
+.parental-card h3{font-size:1.2rem;font-weight:900;}
+.parental-sum{font-size:2rem;font-weight:900;color:var(--gold);}
+.parental-input{width:100%;padding:.7rem;border:2px solid rgba(255,255,255,.2);
+  border-radius:12px;background:rgba(255,255,255,.07);color:white;
+  font-size:1.3rem;font-family:var(--font-ui);font-weight:700;
+  text-align:center;outline:none;}
+.parental-input:focus{border-color:var(--gold);}
+.parental-err{color:var(--red);font-weight:700;font-size:.88rem;min-height:1.2rem;}
+.parental-btns{display:flex;gap:.7rem;}
+.btn-par-ok{flex:1;padding:.75rem;border-radius:12px;border:none;
+  background:linear-gradient(135deg,var(--purple),var(--pink));color:white;
+  font-family:var(--font-ui);font-weight:800;font-size:.95rem;cursor:pointer;}
+.btn-par-cancel{flex:1;padding:.75rem;border-radius:12px;
+  border:1px solid rgba(255,255,255,.15);background:transparent;
+  color:var(--text-muted);font-family:var(--font-ui);font-weight:700;
+  font-size:.95rem;cursor:pointer;}
+
+@media(max-width:600px){
+  .game-layout{flex-direction:column;align-items:center;}
+  .col-banco{width:100%;}
+  .banco-grid{grid-template-columns:repeat(2,1fr);--card-w:150px;--card-h:200px;}
+  :root{--card-w:160px;--card-h:213px;}
+}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+
+<!-- ANTESALA -->
+<div id="antesala">
+  <div class="ante-card">
+    <div style="font-size:2.8rem;margin-bottom:.6rem">🦸✨</div>
+    <h2>¿Quién va a investigar?</h2>
+    <p>Escribe el nombre del niño o la niña para personalizar la sesión y generar el informe al terminar.</p>
+    <input id="ante-nombre" type="text" class="ante-input" placeholder="Nombre del explorador/a…"
+      maxlength="25" onkeydown="if(event.key==='Enter') antesalaOk()">
+    <button class="ante-btn-ok" onclick="antesalaOk()">¡Comenzar la investigación! 🔍</button>
+    <button class="ante-btn-skip" onclick="antesalaSinNombre()">Continuar sin nombre</button>
+    <p class="ante-legal">🔒 El nombre solo se usa para personalizar la sesión y el informe descargable. No se envía a ningún servidor.</p>
+  </div>
+</div>
+
+<!-- HOME -->
+<div id="home" class="screen active">
+  <div class="top-utils" style="margin-bottom:.5rem">
+    <button class="btn-util" onclick="requestParental('fullscreen')">⛶ Pantalla completa</button>
+    <a href="https://manosconmuchoquecontar.github.io/" class="btn-util">🏠 Mis juegos</a>
+  </div>
+  <div class="home-hero">
+    <div class="home-badge">🦸 Tecnologías de apoyo · Diversidad · Empatía</div>
+    <h1 class="home-title">El Club de los<br>SuperAliados</h1>
+    <p class="home-sub" id="home-sub">Descubre qué herramienta usa cada superhéroe</p>
+  </div>
+  <div class="config-card">
+    <div class="config-section">
+      <div class="config-label">🖱 Modo de control</div>
+      <div class="config-opts">
+        <button class="btn-cfg sel" id="cfg-raton" onclick="setCfg('control','raton',this)">🖱 Ratón / Táctil</button>
+        <button class="btn-cfg" id="cfg-teclado" onclick="setCfg('control','teclado',this)">⌨️ Teclado / Pulsador</button>
+      </div>
+    </div>
+    <div class="config-section">
+      <div class="config-label">⭐ Dificultad</div>
+      <div class="config-opts">
+        <button class="btn-cfg sel" id="cfg-basico" onclick="setCfg('dificultad','basico',this)">🌟 Básico (7–9 años)</button>
+        <button class="btn-cfg" id="cfg-avanzado" onclick="setCfg('dificultad','avanzado',this)">🚀 Avanzado (10–12 años)</button>
+      </div>
+    </div>
+    <div class="config-section" style="margin-bottom:1.6rem">
+      <div class="config-label">✍️ Tipo de letra</div>
+      <div class="config-opts">
+        <button class="btn-cfg" id="cfg-may" onclick="setCfg('fuente','may',this)">ABC Mayúsculas</button>
+        <button class="btn-cfg sel" id="cfg-min" onclick="setCfg('fuente','min',this)">abc minúsculas</button>
+      </div>
+    </div>
+    <button class="btn-start" onclick="comenzarJuego()">¡Comenzar la investigación! 🔍</button>
+  </div>
+</div>
+
+<!-- JUEGO -->
+<div id="juego" class="screen">
+  <div class="game-header">
+    <div class="hdr-left">
+      <div class="prog-wrap">
+        <span class="prog-label">Aliado <span id="hdr-num">1</span> de <span id="hdr-total">20</span></span>
+        <div class="prog-bar"><div class="prog-fill" id="hdr-prog"></div></div>
+      </div>
+      <span class="hdr-score">⭐ <span id="hdr-pts">0</span></span>
+    </div>
+    <div class="hdr-btns">
+      <button class="h-btn" onclick="requestParental('fullscreen')" title="Pantalla completa">⛶</button>
+      <button class="h-btn" onclick="descargarInforme()" title="Descargar informe">📥</button>
+      <button class="h-btn" onclick="requestParental('home')" title="Ir al inicio">🏠</button>
+    </div>
+  </div>
+
+  <div class="game-layout">
+    <div class="col-personaje">
+      <div class="silueta-wrap" id="silueta-wrap">
+        <img id="silueta-img" class="silueta-img" src="" alt="Personaje misterioso"
+          onerror="this.style.display='none'">
+        <!-- Overlay misterioso: silueta difuminada + interrogación 3D -->
+        <div class="mystery-overlay" id="mystery-overlay">
+          <svg width="100%" height="100%" viewBox="0 0 210 280" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="bgGrad" cx="50%" cy="40%" r="60%">
+                <stop offset="0%" stop-color="#2a1060"/>
+                <stop offset="100%" stop-color="#0d0820"/>
+              </radialGradient>
+              <radialGradient id="silGrad" cx="50%" cy="40%" r="55%">
+                <stop offset="0%" stop-color="#1a0a3a"/>
+                <stop offset="100%" stop-color="#0a0516"/>
+              </radialGradient>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="blur-sil">
+                <feGaussianBlur stdDeviation="4"/>
+              </filter>
+              <linearGradient id="qGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FFD700"/>
+                <stop offset="50%" stop-color="#FFA500"/>
+                <stop offset="100%" stop-color="#FF6B9D"/>
+              </linearGradient>
+              <linearGradient id="shimmer" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+                <stop offset="50%" stop-color="rgba(255,255,255,0.35)"/>
+                <stop offset="100%" stop-color="rgba(255,255,255,0.05)"/>
+              </linearGradient>
+            </defs>
+            <!-- Fondo -->
+            <rect width="210" height="280" fill="url(#bgGrad)"/>
+            <!-- Partículas de ambiente -->
+            <circle cx="30" cy="40" r="1.5" fill="#9B5DE5" opacity=".4"><animate attributeName="opacity" values=".2;.7;.2" dur="3s" repeatCount="indefinite"/></circle>
+            <circle cx="180" cy="60" r="1" fill="#00E5CC" opacity=".5"><animate attributeName="opacity" values=".3;.8;.3" dur="2.5s" repeatCount="indefinite"/></circle>
+            <circle cx="160" cy="220" r="1.5" fill="#FF6B9D" opacity=".4"><animate attributeName="opacity" values=".2;.6;.2" dur="4s" repeatCount="indefinite"/></circle>
+            <circle cx="25" cy="200" r="1" fill="#FFD700" opacity=".5"><animate attributeName="opacity" values=".3;.7;.3" dur="3.5s" repeatCount="indefinite"/></circle>
+            <!-- Silueta cuerpo de niño/a — forma suave y difuminada -->
+            <g filter="url(#blur-sil)" opacity=".55">
+              <!-- cabeza -->
+              <ellipse cx="105" cy="62" rx="28" ry="30" fill="#1e0e42"/>
+              <!-- cuello -->
+              <rect x="97" y="88" width="16" height="14" rx="4" fill="#1e0e42"/>
+              <!-- torso -->
+              <path d="M65 102 Q60 140 62 178 L148 178 Q150 140 145 102 Q130 96 105 95 Q80 96 65 102Z" fill="#1e0e42"/>
+              <!-- brazos -->
+              <path d="M65 105 Q40 120 38 158 Q43 162 50 158 Q54 130 70 118Z" fill="#1e0e42"/>
+              <path d="M145 105 Q170 120 172 158 Q167 162 160 158 Q156 130 140 118Z" fill="#1e0e42"/>
+              <!-- piernas -->
+              <path d="M72 176 Q68 220 66 255 Q76 258 84 255 Q88 220 92 176Z" fill="#1e0e42"/>
+              <path d="M138 176 Q142 220 144 255 Q134 258 126 255 Q122 220 118 176Z" fill="#1e0e42"/>
+            </g>
+            <!-- Interrogación 3D central -->
+            <g transform="translate(105,115)">
+              <!-- Sombra del signo -->
+              <text x="3" y="3" text-anchor="middle" font-size="62" font-family="Arial Black,sans-serif"
+                font-weight="900" fill="rgba(0,0,0,0.6)">?</text>
+              <!-- Signo con gradiente -->
+              <text x="0" y="0" text-anchor="middle" font-size="62" font-family="Arial Black,sans-serif"
+                font-weight="900" fill="url(#qGrad)" filter="url(#glow)">?</text>
+              <!-- Brillo encima -->
+              <text x="-1" y="-2" text-anchor="middle" font-size="62" font-family="Arial Black,sans-serif"
+                font-weight="900" fill="url(#shimmer)" opacity=".6">?</text>
+              <!-- Pulso animado -->
+              <text x="0" y="0" text-anchor="middle" font-size="62" font-family="Arial Black,sans-serif"
+                font-weight="900" fill="rgba(255,215,0,0.12)">?
+                <animate attributeName="font-size" values="62;66;62" dur="2s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.12;0.3;0.12" dur="2s" repeatCount="indefinite"/>
+              </text>
+            </g>
+            <!-- Marco decorativo interior -->
+            <rect x="8" y="8" width="194" height="264" rx="14" fill="none"
+              stroke="rgba(155,93,229,0.25)" stroke-width="1.5"/>
+            <rect x="14" y="14" width="182" height="252" rx="11" fill="none"
+              stroke="rgba(0,229,204,0.12)" stroke-width="1"/>
+          </svg>
+        </div>
+        <div class="nombre-badge" id="nombre-badge">???</div>
+      </div>
+      <div class="narrativa-box" id="narrativa-box" aria-live="polite"></div>
+      <div class="drop-zone" id="drop-zone"
+        ondragover="onDragOver(event)" ondragleave="onDragLeave()" ondrop="onDrop(event)"
+        onclick="onDropZoneClick()" tabindex="0"
+        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();onDropZoneClick();}"
+        aria-label="Zona para depositar la tecnología de apoyo">
+        <span id="drop-txt">⬇ Arrastra aquí la tecnología</span>
+      </div>
+      <button class="btn-confirmar" id="btn-confirmar" onclick="confirmar()">✓ Confirmar elección</button>
+    </div>
+
+    <div class="col-banco">
+      <div class="banco-titulo">🧩 Banco de tecnologías de apoyo</div>
+      <div class="banco-grid" id="banco-grid"></div>
+      <div class="feedback-error" id="feedback-error"></div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTADO -->
+<div id="resultado" class="screen">
+  <div class="res-card">
+    <span class="res-trofeo" id="res-trofeo">🏆</span>
+    <h2 class="res-titulo" id="res-titulo">¡Investigación completada!</h2>
+    <div class="res-pts" id="res-pts">0</div>
+    <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:.3rem">puntos de explorador</p>
+    <div class="res-stats">
+      <div class="stat"><div class="stat-n" id="res-ac" style="color:var(--green)">0</div><div class="stat-l">✅ Aciertos</div></div>
+      <div class="stat"><div class="stat-n" id="res-tot" style="color:var(--teal)">0</div><div class="stat-l">👥 Aliados</div></div>
+      <div class="stat"><div class="stat-n" id="res-int" style="color:var(--gold)">0</div><div class="stat-l">🎯 Intentos</div></div>
+    </div>
+    <div class="res-btns">
+      <button class="btn-start" style="max-width:180px" onclick="reiniciar()">🔄 Jugar de nuevo</button>
+      <button class="btn-start" style="max-width:180px;background:linear-gradient(135deg,var(--teal),var(--green))" onclick="descargarInforme()">📥 Informe</button>
+      <button class="btn-start" style="max-width:180px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a0533" onclick="requestParental('home')">🏠 Inicio</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CELEBRACIÓN -->
+<div class="modal-overlay" id="modal-cel">
+  <div class="modal-card">
+    <span class="modal-stars">⭐⭐⭐</span>
+    <div class="modal-img-wrap" id="modal-img-wrap">
+      <img id="modal-img" src="" alt=""
+        onerror="document.getElementById('modal-img-wrap').style.display='none';document.getElementById('modal-fb').style.display='block'">
+    </div>
+    <span class="modal-img-fallback" id="modal-fb" style="display:none">🦸</span>
+    <div class="modal-nombre" id="modal-nombre"></div>
+    <div class="modal-tecnologia" id="modal-tec"></div>
+    <p class="modal-texto" id="modal-texto"></p>
+    <button class="btn-sig-modal" onclick="siguientePersonaje()">Siguiente aliado →</button>
+  </div>
+</div>
+
+<!-- CONTROL PARENTAL -->
+<div class="parental-overlay" id="parental-overlay">
+  <div class="parental-card">
+    <div style="font-size:2rem">🔐</div>
+    <h3>Control parental</h3>
+    <p style="color:var(--text-muted);font-size:.88rem">Resuelve la suma para continuar</p>
+    <div class="parental-sum" id="parental-sum"></div>
+    <input class="parental-input" type="number" id="parental-input" placeholder="?"
+      onkeydown="if(event.key==='Enter') checkParental()">
+    <div class="parental-err" id="parental-err"></div>
+    <div class="parental-btns">
+      <button class="btn-par-ok" onclick="checkParental()">✓ Confirmar</button>
+      <button class="btn-par-cancel" onclick="closeParental()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// BASE URL DE IMÁGENES
+// ═══════════════════════════════════════════════════════════
+const IMG_BASE = 'https://manosconmuchoquecontar.github.io/fotos/superaliados/';
+
+// ═══════════════════════════════════════════════════════════
+// BASE DE DATOS — 20 PERSONAJES
+// ═══════════════════════════════════════════════════════════
+const PERSONAJES = [
+  {
+    id:1, nombre:'Lucas', archivo:'Lucas.png', emoji:'🏀',
+    tecnologiaId:'silla_activa', tecImg:'https://manosconmuchoquecontar.github.io/fotos/ayudas/silla_leo.png', nombreTec:'Silla de ruedas activa',
+    colorTec:'linear-gradient(135deg,#4ECDC4,#2C7873)',
+    textoBasico:'A nuestro aliado Lucas le apasiona el baloncesto adaptado. Para moverse súper rápido por la pista y hacer giros geniales, utiliza una silla muy ligera con las ruedas inclinadas.',
+    textoAvanzado:'Lucas es un jugador experto de baloncesto adaptado. Su aliada de autonomía es una silla de ruedas activa, diseñada con materiales ligeros y ruedas con caída angular que le permiten maniobrar a gran velocidad y estabilidad en la cancha.',
+    feedbackError:'Esta herramienta sirve para otra capacidad. Lucas necesita su silla activa para desplazarse a toda velocidad en la pista de baloncesto.'
+  },
+  {
+    id:2, nombre:'Sara', archivo:'Sara.png', emoji:'🔭',
+    tecnologiaId:'linea_braille', tecImg:'https://manosconmuchoquecontar.github.io/fotos/ayudas/linea_braille_sara.png', nombreTec:'Línea Braille',
+    colorTec:'linear-gradient(135deg,#9B5DE5,#5E17EB)',
+    textoBasico:'Sara es la astrónoma del club y le encanta investigar las estrellas. Como no puede ver con los ojos, lee los mapas del espacio tocando los puntos de una tablet especial en relieve.',
+    textoAvanzado:'Sara es una apasionada de la astronomía y tiene discapacidad visual total. Para estudiar las constelaciones de forma autónoma, utiliza una línea Braille conectada a su ordenador que traduce los textos a puntos en relieve en tiempo real.',
+    feedbackError:'Esta tecnología no traduce texto a relieve. Sara necesita su línea Braille para poder leer autónomamente los datos del espacio.'
+  },
+  {
+    id:3, nombre:'Mateo', archivo:'Mateo.png', emoji:'👨‍🍳',
+    tecnologiaId:'pictogramas', tecImg:'https://manosconmuchoquecontar.github.io/fotos/ayudas/pictogramas_mateo.png', nombreTec:'Recetario con pictogramas',
+    colorTec:'linear-gradient(135deg,#F9C74F,#F3722C)',
+    textoBasico:'Mateo es el súper chef del grupo y cocina platos riquísimos. Para recordar los pasos de las recetas sin perderse, utiliza un libro digital con dibujos muy claros llamados pictogramas.',
+    textoAvanzado:'Mateo tiene Síndrome de Down y destaca como un cocinero excelente. Para potenciar su autonomía y memoria secuencial en la cocina, utiliza un recetario digital adaptado con pictogramas de lectura fácil y utensilios ergonómicos.',
+    feedbackError:'Esta herramienta no muestra instrucciones visuales secuenciales. Mateo necesita su recetario con pictogramas para seguir los pasos de cocina de forma independiente.'
+  },
+  {
+    id:4, nombre:'Valeria', archivo:'Valeria.png', emoji:'🎵',
+    tecnologiaId:'implante_coclear', tecImg:'https://manosconmuchoquecontar.github.io/fotos/ayudas/implante_coclear_valeria.png', nombreTec:'Implante coclear con Bluetooth',
+    colorTec:'linear-gradient(135deg,#43AA8B,#277DA1)',
+    textoBasico:'A Valeria le encanta la música y edita sonidos en el ordenador. Como no puede oír por los oídos, usa un aparato mágico en su cabeza que envía el sonido de la música directo a su cerebro.',
+    textoAvanzado:'Valeria tiene hipoacusia profunda y es una apasionada de la edición de audio. Utiliza un implante coclear de alta tecnología conectado por Bluetooth directamente a su ordenador, lo que le permite percibir las ondas sonoras con total claridad.',
+    feedbackError:'Este dispositivo no transmite audio por conectividad inalámbrica ni estimula el nervio auditivo. Valeria necesita su implante coclear para escuchar y editar su música.'
+  },
+  {
+    id:5, nombre:'Leo', archivo:'Leo.png', emoji:'📝',
+    tecnologiaId:'comunicador_caa', tecImg:'https://manosconmuchoquecontar.github.io/fotos/ayudas/comunicador_leo.png', nombreTec:'Comunicador dinámico CAA',
+    colorTec:'linear-gradient(135deg,#FF9F1C,#E76F51)',
+    textoBasico:'Leo es un poeta fantástico y escribe historias preciosas. Como no usa la voz para hablar, pulsa los botones de una pantalla para que el ordenador diga en voz alta lo que piensa.',
+    textoAvanzado:'Leo es un escritor brillante con autismo no vocal. Se comunica e interactúa con el entorno utilizando un comunicador dinámico en su tablet, un software de Comunicación Aumentativa y Alternativa que transforma sus selecciones de iconos en voz sintetizada.',
+    feedbackError:'Esta herramienta no genera voz a partir de símbolos o texto. Leo requiere su comunicador dinámico para expresar sus poemas e ideas en voz alta.'
+  },
+  {
+    id:6, nombre:'Emma', archivo:'Emma.png', emoji:'🎨',
+    tecnologiaId:'lapiz_ergonomico', tecImg:'https://manosconmuchoquecontar.github.io/fotos/ayudas/lapiz_ergonomico_emma.png', nombreTec:'Lápiz ergonómico de alta sensibilidad',
+    colorTec:'linear-gradient(135deg,#FF6B9D,#C44569)',
+    textoBasico:'Emma es una artista genial que dibuja en su tablet. Su piel es tan delicada como las alas de una mariposa, así que usa un lápiz especial muy suave que pinta sin tener que apretar.',
+    textoAvanzado:'Emma tiene la condición de piel de mariposa, lo que hace que su piel sea extremadamente frágil. Como le encanta el arte digital, utiliza un lápiz óptico ergonómico de ultra-alta sensibilidad que registra sus trazos sin ejercer presión ni fricción en sus manos.',
+    feedbackError:'Esta herramienta requiere un agarre estándar o presión física que dañaría la piel de Emma. Ella necesita su lápiz ergonómico especial para dibujar sin dolor.'
+  },
+  {
+    id:7, nombre:'Daniel', archivo:'Daniel.png', emoji:'🎮',
+    tecnologiaId:'mando_adaptado', tecImg:'https://manosconmuchoquecontar.github.io/fotos/ayudas/mando_adaptado_daniel.png', nombreTec:'Mando de videojuegos adaptado',
+    colorTec:'linear-gradient(135deg,#4CC9F0,#4361EE)',
+    textoBasico:'Daniel es un campeón de los videojuegos y la robótica. Como le falta el brazo derecho, utiliza un mando especial con botones muy grandes en el suelo para jugar con los pies y con su otra mano.',
+    textoAvanzado:'Daniel tiene una amputación en su miembro superior derecho y es un estratega de los videojuegos. Consigue la máxima competitividad gracias a un mando adaptado modular con conmutadores externos que le permite mapear los controles en sus pies y mano izquierda.',
+    feedbackError:'Este periférico requiere el uso obligatorio de ambas manos. Daniel necesita su mando adaptado modular para competir en igualdad de condiciones.'
+  },
+  {
+    id:8, nombre:'Sofía', archivo:'Sofía.png', emoji:'🏃',
+    tecnologiaId:'protesis_ballesta', tecImg:'https://manosconmuchoquecontar.github.io/fotos/ayudas/protesis_deportiva_sofia.png', nombreTec:'Prótesis de ballesta deportiva',
+    colorTec:'linear-gradient(135deg,#F72585,#7209B7)',
+    textoBasico:'Sofía es la atleta más rápida del colegio y gana muchas carreras. Como nació sin una pierna, utiliza una prótesis genial con forma de muelle curvado que le ayuda a saltar y correr.',
+    textoAvanzado:'Sofía tiene una amputación congénita de la pierna izquierda y compite en atletismo. Su herramienta de rendimiento es una prótesis biomecánica de ballesta de fibra de carbono, diseñada para absorber el impacto y devolver la energía en cada zancada.',
+    feedbackError:'Este apoyo no está diseñado para el impacto de la carrera ni proporciona flexibilidad elástica. Sofía necesita su prótesis de ballesta para correr a máxima velocidad.'
+  },
+  {
+    id:9, nombre:'Hugo', archivo:'Hugo.png', emoji:'💻',
+    tecnologiaId:'eye_tracking', tecImg:'https://manosconmuchoquecontar.github.io/fotos/ayudas/seguimiento_ocular_hugo.png', nombreTec:'Sistema de seguimiento ocular (eye-tracking)',
+    colorTec:'linear-gradient(135deg,#00B4D8,#0077B6)',
+    textoBasico:'A Hugo le entusiasma diseñar sus propios videojuegos. Como le cuesta mucho mover el cuerpo y las manos, utiliza una cámara especial que sabe dónde mira y le permite controlar el ordenador con los ojos.',
+    textoAvanzado:'Hugo tiene parálisis cerebral que afecta gravemente a su movilidad motriz fina. Es un talentoso programador que utiliza un sistema de seguimiento ocular por infrarrojos para mover el cursor y escribir en la pantalla usando únicamente la mirada.',
+    feedbackError:'Esta tecnología requiere control manual o comandos de voz. Hugo necesita el lector de seguimiento ocular para manejar la computadora con sus ojos.'
+  },
+  {
+    id:10, nombre:'Alba', archivo:'Alba.png', emoji:'🔍',
+    tecnologiaId:'lupa_electronica', tecImg:'https://manosconmuchoquecontar.github.io/fotos/ayudas/lupa_alba.png', nombreTec:'Lupa electrónica portátil',
+    colorTec:'linear-gradient(135deg,#B5838D,#6D6875)',
+    textoBasico:'Alba es una gran reportera e investiga libros de historia. Como sus ojos ven muy poquito, pasa una pantalla mágica por encima de las letras para hacerlas gigantes y cambiarles el color.',
+    textoAvanzado:'Alba tiene una condición de baja visión que no se corrige con gafas comunes. Para realizar sus lecturas de investigación, utiliza una lupa electrónica portátil con pantallas de alto contraste invertido que aumentan el tamaño del texto sin perder nitidez.',
+    feedbackError:'Este apoyo óptico no ofrece magnificación digital ni inversión de contraste. Alba necesita su lupa electrónica para leer los textos impresos en tamaño grande.'
+  },
+  {
+    id:11, nombre:'Martín', archivo:'Martín.png', emoji:'♟️',
+    tecnologiaId:'auriculares_nc', tecImg:'https://manosconmuchoquecontar.github.io/fotos/ayudas/cancelacion_ruido_martin.png', nombreTec:'Auriculares de cancelación de ruido',
+    colorTec:'linear-gradient(135deg,#80B918,#55A630)',
+    textoBasico:'Martín es el campeón de ajedrez del colegio y piensa unas estrategias geniales. Como los ruidos fuertes le asustan y le distraen, usa unos cascos especiales que apagan el sonido del aula.',
+    textoAvanzado:'Martín es un alumno con Trastorno del Espectro Autista y una gran habilidad para el ajedrez. Debido a su hipersensibilidad acústica, utiliza auriculares de cancelación de ruido activo para bloquear los estímulos sonoros ambientales dañinos y mantener la concentración.',
+    feedbackError:'Este dispositivo amplifica el entorno o transmite sonido sin aislamiento pasivo/activo. Martín necesita sus auriculares de cancelación de ruido para protegerse de la saturación acústica.'
+  },
+  {
+    id:12, nombre:'Lucía', archivo:'Lucía.png', emoji:'🌱',
+    tecnologiaId:'extensores', tecImg:'https://manosconmuchoquecontar.github.io/fotos/ayudas/extensores_lucia.png', nombreTec:'Extensores telescópicos y taburete hidráulico',
+    colorTec:'linear-gradient(135deg,#52B788,#1B4332)',
+    textoBasico:'Lucía es la ingeniera ambiental de la escuela y cuida del huerto. Como es de talla baja, utiliza unas pinzas largas que se estiran y un taburete que sube solo para llegar a las plantas más altas.',
+    textoAvanzado:'Lucía tiene acondroplasia y gestiona el proyecto del huerto escolar urbano. Para garantizar su ergonomía y seguridad en el laboratorio y las plantaciones, emplea extensores telescópicos mecánicos y un taburete hidráulico regulable.',
+    feedbackError:'Este objeto no proporciona alcance extra ni regulación de altura segura. Lucía necesita sus herramientas telescópicas y su taburete para trabajar con comodidad.'
+  },
+  {
+    id:13, nombre:'Iván', archivo:'Iván.png', emoji:'🎬',
+    tecnologiaId:'asiento_balanceo', tecImg:'https://manosconmuchoquecontar.github.io/fotos/ayudas/asiento_balanceo_ivan.png', nombreTec:'Asiento de balanceo activo ergonómico',
+    colorTec:'linear-gradient(135deg,#48CAE4,#0096C7)',
+    textoBasico:'Iván crea dibujos animados en 3D en el ordenador. Como su cuerpo necesita moverse todo el rato para concentrarse mejor, se sienta en un taburete mágico que se balancea de lado a lado sin caerse.',
+    textoAvanzado:'Iván tiene TDAH y una gran creatividad para la animación digital. Para canalizar su necesidad de estimulación propioceptiva y mejorar su atención en las tareas de diseño, utiliza un asiento de balanceo activo que permite el micromovimiento controlado.',
+    feedbackError:'Un asiento rígido o estático no permite el movimiento corporal necesario para la regulación de Iván. Él necesita su taburete de balanceo activo.'
+  },
+  {
+    id:14, nombre:'Elena', archivo:'Elena.png', emoji:'✏️',
+    tecnologiaId:'ferulas', tecImg:'https://manosconmuchoquecontar.github.io/fotos/ayudas/ferulas_termoplasticas_elena.png', nombreTec:'Férulas termoplásticas ligeras',
+    colorTec:'linear-gradient(135deg,#FFAFCC,#BDE0FE)',
+    textoBasico:'A Elena le apasiona dibujar cómics e inventar superhéroes. A veces le duelen un poco los dedos, así que se pone unos anillos protectores transparentes que cuidan de sus articulaciones al sujetar el lápiz.',
+    textoAvanzado:'Elena convive con artritis idiopática juvenil y es una excelente ilustradora de cómics. Para estabilizar las articulaciones de sus manos y reducir la inflamación provocada por el esfuerzo repetido, utiliza férulas termoplásticas ligeras a medida.',
+    feedbackError:'Este soporte bloquea por completo la movilidad fina o no ofrece la sujeción articular necesaria. Elena requiere sus férulas termoplásticas para dibujar sin dolor.'
+  },
+  {
+    id:15, nombre:'Bruno', archivo:'Bruno.png', emoji:'🎭',
+    tecnologiaId:'bucle_magnetico', tecImg:'https://manosconmuchoquecontar.github.io/fotos/ayudas/bucle_magnetico_bruno.png', nombreTec:'Sistema de bucle magnético escolar',
+    colorTec:'linear-gradient(135deg,#F8961E,#F3722C)',
+    textoBasico:'Bruno es un actor de teatro fantástico y ensaya muchas obras. Lleva unos audífonos en sus oídos que se conectan por un imán invisible al micrófono de la profesora para oír su voz limpia y sin ruidos.',
+    textoAvanzado:'Bruno tiene discapacidad auditiva y participa activamente en el taller de teatro. Su aula está adaptada con un sistema de bucle magnético que transforma la voz del docente en un campo magnético captado directamente por sus audífonos, eliminando el eco.',
+    feedbackError:'Este dispositivo no interactúa con las bobinas de inducción de los audífonos. Bruno necesita el sistema de bucle magnético para limpiar el sonido de la sala.'
+  },
+  {
+    id:16, nombre:'Noa', archivo:'Noa.png', emoji:'📰',
+    tecnologiaId:'texto_a_voz', tecImg:'https://manosconmuchoquecontar.github.io/fotos/ayudas/texto_noa.png', nombreTec:'Software lector de pantalla texto a voz',
+    colorTec:'linear-gradient(135deg,#7B2D8B,#C77DFF)',
+    textoBasico:'Noa es la reportera del periódico escolar y le encanta hacer entrevistas. Como las letras de los libros a veces bailan en sus ojos, utiliza un programa informático que le lee los textos en voz alta.',
+    textoAvanzado:'Noa tiene dislexia y disgrafía severa, y lidera el equipo de redacción escolar. Para agilizar la comprensión de sus investigaciones, utiliza un software lector de pantalla con motor de texto a voz y fuentes tipográficas con espaciado optimizado.',
+    feedbackError:'Esta herramienta es un corrector visual o un teclado estándar. Noa necesita el software de texto a voz para escuchar los textos digitalizados de forma clara.'
+  },
+  {
+    id:17, nombre:'Diego', archivo:'Diego.png', emoji:'🚁',
+    tecnologiaId:'joystick_microlight', tecImg:'https://manosconmuchoquecontar.github.io/fotos/ayudas/joystick_diego.png', nombreTec:'Joystick de ultra-baja resistencia (Micro-light)',
+    colorTec:'linear-gradient(135deg,#E63946,#A8DADC)',
+    textoBasico:'Diego es un piloto experto de drones y graba los patios del colegio desde el aire. Como sus manos tienen poquita fuerza, usa un mando con una palanca tan suave que se mueve con rozarla con un dedo.',
+    textoAvanzado:'Diego tiene distrofia muscular de Duchenne y es el encargado de las grabaciones aéreas del club. Debido a la debilidad muscular progresiva, pilota sus drones utilizando un joystick de ultra-baja resistencia (Micro-light) que requiere un gramaje mínimo de presión.',
+    feedbackError:'Este mando estándar requiere una fuerza mecánica normal que fatiga los músculos de Diego. Él necesita su joystick Micro-light para pilotar sin esfuerzo.'
+  },
+  {
+    id:18, nombre:'Clara', archivo:'Clara.png', emoji:'💻',
+    tecnologiaId:'filtro_antiparpadeos', tecImg:'https://manosconmuchoquecontar.github.io/fotos/ayudas/filtro_protector_clara.png', nombreTec:'Filtro físico protector antiparpadeos',
+    colorTec:'linear-gradient(135deg,#D62828,#F77F00)',
+    textoBasico:'Clara es la programadora web del club y diseña páginas geniales. Para proteger sus ojos de las luces brillantes y los parpadeos que le hacen daño a su cerebro, usa una pantalla protectora especial en su monitor.',
+    textoAvanzado:'Clara convive con epilepsia fotosensible y es la desarrolladora web del equipo. Para evitar que los destellos lumínicos o las tasas de refresco de los monitores desencadenen crisis neurológicas, utiliza un filtro físico protector y software bloqueador de animaciones.',
+    feedbackError:'Esta herramienta solo altera el color de la luz pero no filtra los destellos ni regula el parpadeo de la pantalla. Clara necesita el filtro físico antiparpadeos para programar con total seguridad.'
+  },
+  {
+    id:19, nombre:'Enzo', archivo:'Enzo.png', emoji:'🏗️',
+    tecnologiaId:'dialisis_portatil', tecImg:'https://manosconmuchoquecontar.github.io/fotos/ayudas/dialisis_enzo.png', nombreTec:'Dispositivo de diálisis peritoneal portátil',
+    colorTec:'linear-gradient(135deg,#2DC653,#007F5F)',
+    textoBasico:'Enzo es un gran maquetista y diseña interiores de edificios. Para que sus riñones funcionen bien mientras juega y estudia, lleva una mochila súper ligera y silenciosa con sus medicinas conectadas.',
+    textoAvanzado:'Enzo tiene una insuficiencia renal crónica que afecta a su salud orgánica. Es un gran maquetista que mantiene su total libertad de movimientos gracias a una mochila adaptada que alberga un dispositivo portátil de diálisis peritoneal automatizada.',
+    feedbackError:'Este elemento no realiza funciones de soporte médico ni filtrado orgánico. Enzo requiere su mochila de diálisis portátil para mantener su bienestar mientras asiste a clase.'
+  },
+  {
+    id:20, nombre:'Maya', archivo:'Maya.png', emoji:'🩰',
+    tecnologiaId:'monitor_cardiaco', tecImg:'https://manosconmuchoquecontar.github.io/fotos/ayudas/monitor_plantillas_maya.png', nombreTec:'Monitor cardíaco y plantillas',
+    colorTec:'linear-gradient(135deg,#FF6B9D,#C44569)',
+    textoBasico:'A Maya le entusiasma bailar ballet y lleva unas gafas chulísimas. Tiene una cicatriz en el pecho de cuando le curaron el corazón de bebé. Para bailar segura, usa un reloj que mide sus latidos y unas plantillas en sus zapatillas.',
+    textoAvanzado:'Maya tiene Síndrome de Down y es una bailarina excepcional de ballet clásico. Nació con una cardiopatía congénita y luce con orgullo su cicatriz. Para entrenar de forma segura, utiliza plantillas ergonómicas y un monitor cardíaco para controlar sus pulsaciones.',
+    feedbackError:'Esta herramienta no mide las constantes de salud. Maya necesita su monitor cardíaco y sus plantillas para autorregular su esfuerzo mientras baila.'
+  }
+];
+
+
+let playerName='', cfg={control:'raton',dificultad:'basico',fuente:'min'};
+let orden=[], personaje=null, idx=0, pts=0, aciertos=0, intentos=0;
+let cardSel=null, cardEnZona=null, dragId=null;
+let parentalA, parentalB, parentalAction;
+let log=[];
+
+// ═══════════════════════════════════════════════════════════
+// ANTESALA
+// ═══════════════════════════════════════════════════════════
+function antesalaOk(){
+  playerName=document.getElementById('ante-nombre').value.trim()||'';
+  document.getElementById('antesala').style.display='none';
+  if(playerName) document.getElementById('home-sub').textContent=
+    '¡Hola, '+playerName+'! Descubre qué herramienta usa cada superhéroe';
+}
+function antesalaSinNombre(){
+  document.getElementById('antesala').style.display='none';
+}
+
+// ═══════════════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════════════
+function setCfg(tipo,valor,btn){
+  cfg[tipo]=valor;
+  const mapa={control:['cfg-raton','cfg-teclado'],
+    dificultad:['cfg-basico','cfg-avanzado'],fuente:['cfg-may','cfg-min']};
+  mapa[tipo].forEach(id=>document.getElementById(id).classList.remove('sel'));
+  btn.classList.add('sel');
+  if(tipo==='fuente') aplicarFuente();
+}
+function aplicarFuente(){
+  document.documentElement.style.setProperty('--font-game',
+    cfg.fuente==='may'?'var(--font-may)':'var(--font-min)');
+}
+
+// ═══════════════════════════════════════════════════════════
+// NAVEGACIÓN
+// ═══════════════════════════════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ═══════════════════════════════════════════════════════════
+// INICIO
+// ═══════════════════════════════════════════════════════════
+function comenzarJuego(){
+  aplicarFuente();
+  pts=0; aciertos=0; intentos=0; log=[]; idx=0;
+  orden=[...PERSONAJES];
+  for(let i=orden.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [orden[i],orden[j]]=[orden[j],orden[i]];
+  }
+  document.getElementById('hdr-total').textContent=orden.length;
+  showScreen('juego');
+  cargarPersonaje();
+}
+
+function cargarPersonaje(){
+  if(idx>=orden.length){mostrarResultado();return;}
+  personaje=orden[idx];
+  cardSel=null; cardEnZona=null;
+
+  // Header
+  document.getElementById('hdr-num').textContent=idx+1;
+  document.getElementById('hdr-prog').style.width=(idx/orden.length*100)+'%';
+  document.getElementById('hdr-pts').textContent=pts;
+
+  // Imagen — silueta oscura al inicio
+  const img=document.getElementById('silueta-img');
+  const fb=document.getElementById('silueta-fb');
+  img.classList.remove('reveal');
+  document.getElementById('mystery-overlay').classList.remove('hidden');
+  img.src=IMG_BASE+personaje.archivo;
+  img.style.display='block';
+  if(fb) fb.style.display='none';
+  document.getElementById('nombre-badge').textContent='???';
+
+  // Narrativa
+  document.getElementById('narrativa-box').textContent=
+    cfg.dificultad==='avanzado'?personaje.textoAvanzado:personaje.textoBasico;
+
+  // Reset
+  resetZona();
+  document.getElementById('feedback-error').classList.remove('show');
+  document.getElementById('btn-confirmar').classList.remove('visible');
+
+  generarBanco();
+  if(cfg.control==='teclado') setTimeout(()=>{
+    const c=document.querySelector('.cromo'); if(c) c.focus();
+  },300);
+}
+
+// ═══════════════════════════════════════════════════════════
+// BANCO DE TARJETAS
+// ═══════════════════════════════════════════════════════════
+function generarBanco(){
+  const grid=document.getElementById('banco-grid');
+  grid.innerHTML='';
+  const n=cfg.dificultad==='avanzado'?4:3;
+  const correcta=PERSONAJES.find(p=>p.id===personaje.id);
+  const dist=PERSONAJES
+    .filter(p=>p.tecnologiaId!==personaje.tecnologiaId)
+    .sort(()=>Math.random()-.5).slice(0,n-1);
+  const opciones=[correcta,...dist].sort(()=>Math.random()-.5);
+
+  opciones.forEach(p=>{
+    const card=document.createElement('div');
+    card.className='cromo';
+    card.dataset.id=p.tecnologiaId;
+    if(cfg.control==='raton'){card.draggable=true;}
+    else{card.tabIndex=0;}
+
+    // Imagen: foto real de la herramienta aislada
+    const imgArea=document.createElement('div');
+    imgArea.className='cromo-img';
+    if(p.tecImg){
+      const ci=document.createElement('img');
+      ci.src=p.tecImg;
+      ci.alt=p.nombreTec;
+      ci.style.cssText='width:100%;height:100%;object-fit:contain;padding:8px;';
+      ci.onerror=()=>{
+        ci.style.display='none';
+        imgArea.innerHTML='<span class="cromo-img-fallback">'+p.emoji+'</span>';
+      };
+      imgArea.appendChild(ci);
+    } else {
+      imgArea.innerHTML='<span class="cromo-img-fallback">'+p.emoji+'</span>';
+    }
+    card.appendChild(imgArea);
+
+    const lbl=document.createElement('div');
+    lbl.className='cromo-label';
+    lbl.style.background=p.colorTec;
+    lbl.textContent=p.nombreTec;
+    card.appendChild(lbl);
+
+    card.addEventListener('dragstart',()=>{dragId=p.tecnologiaId;card.classList.add('dragging');});
+    card.addEventListener('dragend',()=>card.classList.remove('dragging'));
+    card.addEventListener('click',()=>onCardClick(card,p.tecnologiaId));
+    card.addEventListener('keydown',e=>{
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();onCardClick(card,p.tecnologiaId);}
+    });
+    grid.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// INTERACCIÓN
+// ═══════════════════════════════════════════════════════════
+function onDragOver(e){e.preventDefault();document.getElementById('drop-zone').classList.add('drag-over');}
+function onDragLeave(){document.getElementById('drop-zone').classList.remove('drag-over');}
+function onDrop(e){e.preventDefault();onDragLeave();if(dragId)depositarEnZona(dragId);dragId=null;}
+
+function onCardClick(card,id){
+  if(cardEnZona!==null) return;
+  document.querySelectorAll('.cromo.selected').forEach(c=>c.classList.remove('selected'));
+  if(cardSel===id){cardSel=null;return;}
+  cardSel=id; card.classList.add('selected');
+}
+function onDropZoneClick(){if(cardSel!==null)depositarEnZona(cardSel);}
+
+function depositarEnZona(id){
+  const p=PERSONAJES.find(x=>x.tecnologiaId===id);
+  if(!p) return;
+  cardEnZona=id; cardSel=null;
+  document.querySelectorAll('.cromo.selected').forEach(c=>c.classList.remove('selected'));
+  const zona=document.getElementById('drop-zone');
+  zona.classList.add('has-card');
+  zona.innerHTML=`<span style="font-size:1.8rem">${p.emoji}</span>
+    <span style="font-family:var(--font-ui);font-size:1rem;font-weight:800;color:var(--gold);padding:0 .3rem">${p.nombreTec}</span>`;
+  document.getElementById('btn-confirmar').classList.add('visible');
+}
+
+function resetZona(){
+  const zona=document.getElementById('drop-zone');
+  zona.classList.remove('has-card','drag-over');
+  zona.innerHTML='<span id="drop-txt">⬇ Arrastra aquí la tecnología</span>';
+  cardEnZona=null;
+  document.getElementById('btn-confirmar').classList.remove('visible');
+}
+
+// ═══════════════════════════════════════════════════════════
+// CONFIRMAR
+// ═══════════════════════════════════════════════════════════
+function confirmar(){
+  if(cardEnZona===null) return;
+  intentos++;
+  if(cardEnZona===personaje.tecnologiaId){
+    pts+=20; aciertos++;
+    document.getElementById('hdr-pts').textContent=pts;
+    log.push({nombre:personaje.nombre,resultado:'✅',tec:personaje.nombreTec,intentos:1});
+    mostrarCelebracion();
+  } else {
+    const cardEl=[...document.querySelectorAll('.cromo')]
+      .find(c=>c.dataset.id===cardEnZona);
+    if(cardEl){cardEl.classList.add('shake');setTimeout(()=>cardEl.classList.remove('shake'),500);}
+    if(cfg.dificultad==='avanzado'){
+      const fb=document.getElementById('feedback-error');
+      fb.textContent=personaje.feedbackError;
+      fb.classList.add('show');
+    }
+    log.push({nombre:personaje.nombre,resultado:'❌',tec:PERSONAJES.find(p=>p.tecnologiaId===cardEnZona)?.nombreTec||cardEnZona});
+    resetZona();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// CELEBRACIÓN
+// ═══════════════════════════════════════════════════════════
+function mostrarCelebracion(){
+  // Revela imagen en silueta
+  document.getElementById('silueta-img').classList.add('reveal');
+  document.getElementById('mystery-overlay').classList.add('hidden');
+  document.getElementById('nombre-badge').textContent=personaje.nombre;
+
+  // Modal
+  const mImg=document.getElementById('modal-img');
+  const mWrap=document.getElementById('modal-img-wrap');
+  const mFb=document.getElementById('modal-fb');
+  mWrap.style.display=''; mFb.style.display='none';
+  mImg.src=IMG_BASE+personaje.archivo;
+
+  document.getElementById('modal-nombre').textContent=personaje.nombre;
+  document.getElementById('modal-tec').textContent='🔧 '+personaje.nombreTec;
+  document.getElementById('modal-texto').textContent=
+    cfg.dificultad==='avanzado'?personaje.textoAvanzado:personaje.textoBasico;
+  document.getElementById('modal-cel').classList.add('show');
+  lanzarConfetti();
+}
+
+function siguientePersonaje(){
+  document.getElementById('modal-cel').classList.remove('show');
+  idx++;
+  cargarPersonaje();
+}
+
+function lanzarConfetti(){
+  const cols=['#FFD700','#FF6B9D','#00E5CC','#9B5DE5','#06D6A0','#FF922B','#38BDF8'];
+  for(let i=0;i<55;i++){
+    setTimeout(()=>{
+      const p=document.createElement('div');
+      p.className='cf-piece';
+      const s=6+Math.random()*8;
+      p.style.cssText=`left:${Math.random()*100}vw;top:-20px;
+        width:${s}px;height:${s}px;
+        background:${cols[Math.floor(Math.random()*cols.length)]};
+        animation-duration:${1.4+Math.random()}s;
+        animation-delay:${Math.random()*.3}s;
+        transform:rotate(${Math.floor(Math.random()*360)}deg);`;
+      document.body.appendChild(p);
+      setTimeout(()=>p.remove(),3000);
+    },i*35);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// RESULTADO FINAL
+// ═══════════════════════════════════════════════════════════
+function mostrarResultado(){
+  showScreen('resultado');
+  const pct=aciertos/orden.length;
+  let trofeo,titulo;
+  if(pct>=.9){trofeo='🏆';titulo='¡Eres un SuperInvestigador!';}
+  else if(pct>=.7){trofeo='🌟';titulo='¡Gran explorador del club!';}
+  else if(pct>=.5){trofeo='😊';titulo='¡Buen trabajo, sigue así!';}
+  else{trofeo='💪';titulo='¡La próxima lo harás mejor!';}
+  document.getElementById('res-trofeo').textContent=trofeo;
+  document.getElementById('res-titulo').textContent=titulo;
+  document.getElementById('res-pts').textContent=pts;
+  document.getElementById('res-ac').textContent=aciertos;
+  document.getElementById('res-tot').textContent=orden.length;
+  document.getElementById('res-int').textContent=intentos;
+  if(pct>=.7) lanzarConfetti();
+}
+
+function reiniciar(){showScreen('home');}
+
+// ═══════════════════════════════════════════════════════════
+// INFORME
+// ═══════════════════════════════════════════════════════════
+function descargarInforme(){
+  const fecha=new Date().toLocaleDateString('es-ES',
+    {weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const filas=log.map(r=>
+    `<tr><td>${r.nombre}</td><td>${r.resultado}</td><td>${r.tec}</td></tr>`).join('');
+  const html=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+  <title>Informe SuperAliados</title>
+  <style>body{font-family:sans-serif;padding:24px;background:#f7f9fc;}
+  .hdr{background:linear-gradient(135deg,#9B5DE5,#FF6B9D);color:white;padding:20px;
+    border-radius:12px;margin-bottom:16px;}
+  .hdr h1{margin:0;font-size:1.4rem;}.hdr p{margin:4px 0 0;opacity:.85;font-size:.88rem;}
+  .stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;}
+  .stat{background:white;border-radius:10px;padding:12px 16px;text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.07);}
+  .stat-n{font-size:1.8rem;font-weight:900;color:#9B5DE5;}.stat-l{font-size:.72rem;color:#888;}
+  table{width:100%;border-collapse:collapse;font-size:.85rem;background:white;
+    border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.07);}
+  th{background:#9B5DE5;color:white;padding:10px 12px;text-align:left;}
+  td{padding:9px 12px;border-bottom:1px solid #eee;}
+  tr:hover td{background:#F9F0FF;}</style></head><body>
+  <div class="hdr"><h1>🦸 Informe: El Club de los SuperAliados</h1><p>${fecha}</p></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-n">${playerName||'Anónimo'}</div><div class="stat-l">Explorador/a</div></div>
+    <div class="stat"><div class="stat-n">${aciertos}</div><div class="stat-l">✅ Aciertos</div></div>
+    <div class="stat"><div class="stat-n">${orden.length}</div><div class="stat-l">👥 Aliados</div></div>
+    <div class="stat"><div class="stat-n">${intentos}</div><div class="stat-l">🎯 Intentos</div></div>
+    <div class="stat"><div class="stat-n">${pts}</div><div class="stat-l">⭐ Puntos</div></div>
+  </div>
+  ${log.length?`<table><tr><th>Personaje</th><th>Resultado</th><th>Tecnología seleccionada</th></tr>${filas}</table>`
+    :'<p>Sesión no completada.</p>'}
+  </body></html>`;
+  const blob=new Blob([html],{type:'text/html'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`informe_superaliados_${playerName||'sesion'}_${Date.now()}.html`;
+  a.click();
+}
+
+// ═══════════════════════════════════════════════════════════
+// CONTROL PARENTAL
+// ═══════════════════════════════════════════════════════════
+function requestParental(action){
+  if(action==='fullscreen'&&!document.fullscreenElement){
+    document.documentElement.requestFullscreen().catch(()=>{});return;
+  }
+  parentalAction=action;
+  parentalA=Math.floor(Math.random()*9)+1;
+  parentalB=Math.floor(Math.random()*9)+1;
+  document.getElementById('parental-sum').textContent=parentalA+' + '+parentalB+' = ?';
+  document.getElementById('parental-input').value='';
+  document.getElementById('parental-err').textContent='';
+  document.getElementById('parental-overlay').classList.add('show');
+  setTimeout(()=>document.getElementById('parental-input').focus(),100);
+}
+function checkParental(){
+  const val=parseInt(document.getElementById('parental-input').value);
+  if(val===parentalA+parentalB){
+    closeParental();
+    if(parentalAction==='home') showScreen('home');
+    else if(parentalAction==='fullscreen') document.exitFullscreen&&document.exitFullscreen();
+  } else {
+    document.getElementById('parental-err').textContent='❌ Incorrecto, inténtalo de nuevo';
+    document.getElementById('parental-input').value='';
+    document.getElementById('parental-input').focus();
+  }
+}
+function closeParental(){document.getElementById('parental-overlay').classList.remove('show');}
+
+// ═══════════════════════════════════════════════════════════
+// ESTRELLAS DE FONDO
+// ═══════════════════════════════════════════════════════════
+(function(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<90;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const sz=1+Math.random()*2.5;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;
+      left:${Math.random()*100}%;--d:${2+Math.random()*4}s;
+      animation-delay:${Math.random()*4}s;`;
+    c.appendChild(s);
+  }
+})();
+
+aplicarFuente();
+</script>
+</body>
+</html>

@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Fábrica de la D/R</title>
+<link href="https://fonts.googleapis.com/css2?family=Playwrite+HR+Lijeva:wght@100..400&family=Playwrite+DE+Grund:wght@100..400&family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   VARIABLES Y RESET
+══════════════════════════════════════════ */
+:root {
+  --rosa:    #FF6B9D; --rosa-c:  #FFB3D1;
+  --lila:    #C77DFF; --lila-c:  #E8C4FF;
+  --turq:    #4ECDC4; --turq-c:  #A8EDEA;
+  --naranja: #FF8E53; --naranja-c:#FFD0B0;
+  --verde:   #6BCB77; --verde-c: #B8F0BC;
+  --azul:    #4D96FF; --azul-c:  #B0D4FF;
+  --amarillo:#FFD93D; --amar-c:  #FFF3A0;
+  --rojo:    #FF4757;
+  --fondo:   #E8F4FF;
+  --texto:   #2D1B33; --sec:     #5A4070;
+  --sombra:  0 8px 32px rgba(77,150,255,.18);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Nunito',sans-serif;
+  background:linear-gradient(160deg,#C8E6FF 0%,#E8D5FF 50%,#FFD5EC 100%);
+  min-height:100vh; color:var(--texto);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  overflow:hidden; user-select:none;
+}
+
+/* ── FUENTES JUGABLES ── */
+.fj{font-family:'Playwrite HR Lijeva',cursive;font-weight:300;}
+body.may .fj,body.may .letra-juego{
+  font-family:'Playwrite DE Grund',cursive;font-weight:300;text-transform:uppercase;
+}
+.letra-juego{font-family:'Playwrite HR Lijeva',cursive;font-weight:300;}
+
+/* ── BURBUJAS ── */
+.bubbles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.bubble{position:absolute;border-radius:50%;opacity:.10;animation:rise linear infinite;}
+@keyframes rise{0%{transform:translateY(110vh)rotate(0)}100%{transform:translateY(-20vh)rotate(360deg)}}
+
+/* ── PANTALLAS ── */
+.screen{display:none;min-height:100vh;width:100%;position:relative;z-index:1;}
+.screen.active{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;}
+
+/* ══════════════════════════════════════════
+   PANTALLA NOMBRE
+══════════════════════════════════════════ */
+#s-nombre{background:transparent;}
+.nombre-card{
+  background:white;border-radius:32px;padding:2.5rem 2rem;
+  max-width:420px;width:90%;
+  box-shadow:0 20px 50px rgba(199,125,255,.25);
+  border:3px solid #F0E0FF;text-align:center;
+}
+.nombre-logo{font-size:3.5rem;display:inline-block;animation:wobble 2s ease-in-out infinite;}
+@keyframes wobble{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+.nombre-titulo{
+  font-family:'Fredoka One',cursive;font-size:1.65rem;
+  background:linear-gradient(135deg,var(--rosa),var(--lila));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin:.3rem 0;
+}
+.nombre-sub{color:var(--sec);font-size:.9rem;font-weight:600;margin-bottom:1.2rem;line-height:1.5;}
+.nombre-inp{
+  width:100%;padding:.8rem 1.2rem;border-radius:100px;
+  border:2px solid #E8E0F0;font-size:1rem;font-family:'Nunito',sans-serif;
+  text-align:center;outline:none;margin-bottom:1rem;color:var(--texto);
+  transition:border-color .2s;
+}
+.nombre-inp:focus{border-color:var(--lila);}
+.btn-grad{
+  width:100%;padding:.9rem;border:none;border-radius:100px;
+  background:linear-gradient(135deg,var(--rosa),var(--lila));color:white;
+  font-family:'Fredoka One',cursive;font-size:1.1rem;cursor:pointer;
+  margin-bottom:.7rem;box-shadow:0 6px 20px rgba(199,125,255,.35);transition:transform .15s;
+}
+.btn-grad:hover{transform:translateY(-2px);}
+.btn-skip{background:none;border:none;color:#B0A0C0;font-size:.85rem;font-family:'Nunito',sans-serif;cursor:pointer;text-decoration:underline;}
+.nombre-nota{font-size:.75rem;color:#C0B0D0;margin-top:1rem;border-top:1px solid #F0E8F8;padding-top:.8rem;line-height:1.5;}
+
+/* ══════════════════════════════════════════
+   PANTALLA INICIO (arrancar fábrica)
+══════════════════════════════════════════ */
+#s-inicio{background:transparent;}
+.fabrica-card{
+  background:white;border-radius:32px;padding:2.5rem 2rem;
+  max-width:480px;width:92%;text-align:center;
+  box-shadow:var(--sombra);
+}
+.fabrica-titulo{
+  font-family:'Fredoka One',cursive;font-size:2.4rem;
+  background:linear-gradient(135deg,var(--azul),var(--lila),var(--rosa));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:.4rem;line-height:1.2;
+}
+.fabrica-sub{color:var(--sec);font-weight:600;font-size:1rem;margin-bottom:1.6rem;}
+.btn-arrancar{
+  padding:1.1rem 2.5rem;border:none;border-radius:24px;
+  background:linear-gradient(135deg,var(--naranja),var(--rosa));color:white;
+  font-family:'Fredoka One',cursive;font-size:1.6rem;cursor:pointer;
+  box-shadow:0 8px 24px rgba(255,142,83,.45);transition:transform .15s,box-shadow .15s;
+  animation:pulsar 2s ease-in-out infinite;
+}
+@keyframes pulsar{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+.btn-arrancar:hover{transform:scale(1.07);box-shadow:0 12px 32px rgba(255,142,83,.55);}
+
+/* ══════════════════════════════════════════
+   MENÚ PRINCIPAL
+══════════════════════════════════════════ */
+#s-menu{background:transparent;}
+.menu-titulo{
+  font-family:'Fredoka One',cursive;font-size:2rem;
+  background:linear-gradient(135deg,var(--azul),var(--lila),var(--rosa));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:1rem;text-align:center;
+}
+
+/* selector letra */
+.letra-selector{
+  display:flex;gap:.7rem;margin-bottom:1.2rem;
+  background:white;border-radius:16px;padding:.6rem;box-shadow:var(--sombra);
+}
+.ls-btn{
+  flex:1;padding:.55rem .8rem;border:3px solid #E8E0F0;border-radius:12px;
+  background:white;cursor:pointer;font-family:'Nunito',sans-serif;font-size:.85rem;
+  font-weight:700;color:var(--sec);transition:all .2s;text-align:center;
+}
+.ls-btn:hover{border-color:var(--lila);color:var(--lila);}
+.ls-btn.sel{border-color:var(--lila);background:var(--lila-c);color:var(--lila);}
+
+/* tarjetas de juego */
+.juegos-grid{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-bottom:1rem;}
+.juego-card{
+  background:white;border-radius:24px;padding:1.4rem 1.2rem;
+  width:190px;text-align:center;cursor:pointer;
+  box-shadow:var(--sombra);transition:transform .2s,box-shadow .2s;
+  border:3px solid transparent;
+}
+.juego-card:hover{transform:translateY(-5px);box-shadow:0 14px 40px rgba(77,150,255,.25);}
+.juego-card:active{transform:scale(.97);}
+.juego-card.j1{border-color:var(--azul-c);}
+.juego-card.j2{border-color:var(--turq-c);}
+.juego-card.j3{border-color:var(--naranja-c);}
+.juego-ico{font-size:3rem;display:block;margin-bottom:.5rem;}
+.juego-nombre{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--texto);margin-bottom:.3rem;}
+.juego-desc{font-size:.75rem;color:var(--sec);font-weight:600;line-height:1.3;}
+
+/* ══════════════════════════════════════════
+   BARRA SUPERIOR DE JUEGO
+══════════════════════════════════════════ */
+.topbar{
+  display:flex;justify-content:space-between;align-items:center;
+  background:white;border-radius:16px;padding:.5rem .9rem;
+  box-shadow:var(--sombra);width:100%;max-width:860px;
+  margin-bottom:.6rem;flex-wrap:wrap;gap:.4rem;flex-shrink:0;
+}
+.t-chip{
+  font-family:'Fredoka One',cursive;font-size:.85rem;
+  color:var(--lila);background:var(--lila-c);padding:.2rem .75rem;border-radius:20px;
+}
+.t-chip.v{background:var(--verde-c);color:#2E7D32;}
+.t-chip.r{background:#FFE0EC;color:var(--rosa);}
+.t-btn{
+  padding:.28rem .65rem;border-radius:9px;border:2px solid #E0D0F0;
+  background:white;font-size:.78rem;font-weight:700;color:var(--sec);
+  cursor:pointer;transition:all .15s;white-space:nowrap;
+}
+.t-btn:hover{border-color:var(--lila);color:var(--lila);}
+.t-btn.fs{border-color:var(--turq);color:var(--turq);}
+.t-btn.rep{border-color:var(--naranja);color:var(--naranja);}
+
+/* barra de progreso */
+.prog-bar{width:100%;max-width:860px;height:8px;background:#E8E0F0;border-radius:4px;overflow:hidden;margin-bottom:.5rem;flex-shrink:0;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--azul),var(--lila));border-radius:4px;transition:width .5s ease;}
+
+/* ══════════════════════════════════════════
+   ÁREA DE JUEGO COMÚN
+══════════════════════════════════════════ */
+.game-area{
+  background:white;border-radius:24px;padding:1.5rem;
+  box-shadow:var(--sombra);width:100%;max-width:860px;
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:.8rem;position:relative;overflow:hidden;
+}
+.game-area::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:6px;
+  background:linear-gradient(90deg,var(--azul),var(--lila),var(--rosa),var(--naranja));
+}
+
+/* ══════════════════════════════════════════
+   MINIJUEGO 1 — LA RADIO
+══════════════════════════════════════════ */
+.robot-wrap{display:flex;flex-direction:column;align-items:center;gap:.5rem;}
+.robot-emoji{font-size:5rem;transition:filter .4s;filter:drop-shadow(0 4px 8px rgba(0,0,0,.1));}
+.robot-emoji.ok{filter:drop-shadow(0 0 20px #6BCB77);}
+.robot-emoji.err{filter:drop-shadow(0 0 20px #FF4757);}
+.bocadillo{
+  background:var(--amar-c);border:3px solid var(--amarillo);
+  border-radius:20px;padding:.8rem 1.5rem;position:relative;
+  font-size:2rem;font-weight:800;letter-spacing:.15em;text-align:center;
+  min-width:180px;
+}
+.bocadillo::after{
+  content:'';position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);
+  border:14px solid transparent;border-top-color:var(--amarillo);border-bottom:none;
+}
+.radio-btns{display:flex;gap:1.5rem;margin-top:.5rem;}
+.radio-btn{
+  padding:.9rem 2rem;border:none;border-radius:18px;font-family:'Fredoka One',cursive;
+  font-size:1.3rem;cursor:pointer;transition:transform .15s,box-shadow .15s;
+  color:white;box-shadow:0 6px 16px rgba(0,0,0,.15);
+}
+.radio-btn.R{background:linear-gradient(135deg,var(--azul),var(--lila));}
+.radio-btn.D{background:linear-gradient(135deg,var(--rosa),var(--naranja));}
+.radio-btn:hover{transform:translateY(-3px);}
+.radio-btn:active{transform:scale(.95);}
+
+/* ══════════════════════════════════════════
+   MINIJUEGO 2 — CINTA TRANSPORTADORA
+══════════════════════════════════════════ */
+.cinta-wrap{width:100%;display:flex;flex-direction:column;align-items:center;gap:1rem;}
+/* cinta */
+.cinta-pista{
+  width:100%;height:90px;background:linear-gradient(180deg,#888 0%,#555 40%,#888 100%);
+  border-radius:45px;position:relative;overflow:hidden;
+  box-shadow:inset 0 4px 12px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.2);
+}
+.cinta-banda{
+  position:absolute;inset:0;border-radius:45px;
+  background:repeating-linear-gradient(90deg,transparent 0px,transparent 38px,rgba(255,255,255,.12) 38px,rgba(255,255,255,.12) 42px);
+  animation:mover-cinta 1.2s linear infinite;
+}
+@keyframes mover-cinta{from{background-position-x:0}to{background-position-x:40px}}
+/* escáner */
+.scanner{
+  position:absolute;top:0;bottom:0;left:50%;transform:translateX(-50%);
+  width:80px;background:rgba(255,220,0,.25);border:3px dashed var(--amarillo);
+  border-top:none;border-bottom:none;display:flex;align-items:center;justify-content:center;
+  z-index:2;
+}
+.scanner-label{
+  font-family:'Fredoka One',cursive;font-size:.7rem;color:var(--amarillo);
+  writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:.1em;
+}
+/* caja */
+.caja{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:70px;height:70px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Playwrite HR Lijeva',cursive;font-weight:300;
+  font-size:2.4rem;color:white;font-weight:800;
+  box-shadow:0 4px 14px rgba(0,0,0,.3);
+  transition:left .05s linear;
+  z-index:3;
+}
+body.may .caja{font-family:'Playwrite DE Grund',cursive;}
+.caja.D-box{background:linear-gradient(135deg,var(--rosa),var(--naranja));}
+.caja.R-box{background:linear-gradient(135deg,var(--azul),var(--lila));}
+.caja.ok-anim{animation:caja-ok .4s ease-out forwards;}
+@keyframes caja-ok{0%{transform:translateY(-50%) scale(1)}50%{transform:translateY(-50%) scale(1.3)}100%{transform:translateY(-50%) scale(0);opacity:0}}
+.caja.err-anim{animation:caja-err .3s ease-out;}
+@keyframes caja-err{0%,100%{transform:translateY(-50%) translateX(0)}25%{transform:translateY(-50%) translateX(-10px)}75%{transform:translateY(-50%) translateX(10px)}}
+/* contenedores */
+.cinta-contenedores{display:flex;gap:1.5rem;width:100%;justify-content:center;}
+.cont-btn{
+  flex:1;max-width:180px;padding:.8rem;border-radius:18px;border:4px solid;
+  font-family:'Fredoka One',cursive;font-size:1.2rem;cursor:pointer;
+  transition:transform .15s;color:white;
+}
+.cont-btn.D{background:linear-gradient(135deg,var(--rosa),var(--naranja));border-color:var(--rosa);}
+.cont-btn.R{background:linear-gradient(135deg,var(--azul),var(--lila));border-color:var(--azul);}
+.cont-btn:hover{transform:translateY(-3px);}
+.cont-btn:active{transform:scale(.96);}
+
+/* ══════════════════════════════════════════
+   MINIJUEGO 3 — RECICLAJE
+══════════════════════════════════════════ */
+.recicla-wrap{width:100%;display:flex;flex-direction:column;align-items:center;gap:.8rem;}
+.recicla-emoji{
+  font-size:6rem;cursor:grab;
+  animation:flotando 2.5s ease-in-out infinite;
+  transition:filter .3s;
+}
+@keyframes flotando{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.recicla-emoji.ok{filter:drop-shadow(0 0 20px #6BCB77);}
+.recicla-emoji.err{animation:recicla-err .4s ease; filter:drop-shadow(0 0 20px #FF4757);}
+@keyframes recicla-err{0%,100%{transform:translateX(0)}25%{transform:translateX(-12px)}75%{transform:translateX(12px)}}
+.recicla-hint{
+  font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--sec);
+  background:var(--lila-c);padding:.3rem 1.2rem;border-radius:20px;
+}
+.recicla-contenedores{display:flex;gap:1.5rem;width:100%;max-width:500px;}
+.recicla-cont{
+  flex:1;border-radius:20px;border:4px solid;padding:1rem .8rem;
+  text-align:center;cursor:pointer;transition:transform .2s,box-shadow .2s;
+  font-family:'Fredoka One',cursive;
+}
+.recicla-cont:hover{transform:translateY(-4px);}
+.recicla-cont:active{transform:scale(.95);}
+.recicla-cont.D{background:linear-gradient(160deg,#FFE0EC,#FFD0B0);border-color:var(--rosa);}
+.recicla-cont.R{background:linear-gradient(160deg,#D0E8FF,#D0D4FF);border-color:var(--azul);}
+.recicla-cont .cont-ico{font-size:2.8rem;display:block;}
+.recicla-cont .cont-nombre{font-size:1.2rem;}
+.recicla-cont .cont-letra{
+  font-size:3rem;display:block;
+  font-family:'Playwrite HR Lijeva',cursive;font-weight:300;
+}
+body.may .recicla-cont .cont-letra{font-family:'Playwrite DE Grund',cursive;text-transform:uppercase;}
+.recicla-cont.comer{animation:comer .4s cubic-bezier(.34,1.56,.64,1);}
+@keyframes comer{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+
+/* ══════════════════════════════════════════
+   OVERLAY MATEMÁTICO
+══════════════════════════════════════════ */
+.ov-mat{
+  position:fixed;inset:0;background:rgba(45,27,51,.88);
+  display:none;align-items:center;justify-content:center;z-index:500;backdrop-filter:blur(6px);
+}
+.ov-mat.vis{display:flex;}
+.mat-card{
+  background:white;border-radius:28px;padding:2.5rem 2rem;text-align:center;
+  max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3);
+  animation:entrar .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes entrar{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.mat-tit{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--lila);margin-bottom:.3rem;}
+.mat-q{font-size:2.2rem;font-weight:800;color:var(--texto);margin:1rem 0;}
+.mat-inp{
+  width:100%;padding:.8rem;border:3px solid #E0D0F0;border-radius:14px;
+  font-size:1.5rem;font-weight:800;text-align:center;
+  font-family:'Nunito',sans-serif;outline:none;margin-bottom:.8rem;
+}
+.mat-inp:focus{border-color:var(--lila);}
+.mat-err{color:var(--rosa);font-weight:700;font-size:.9rem;min-height:1.2rem;margin-bottom:.5rem;}
+.mat-btn{
+  width:100%;padding:.9rem;border:none;border-radius:14px;
+  background:linear-gradient(135deg,var(--rosa),var(--lila));color:white;
+  font-family:'Fredoka One',cursive;font-size:1.2rem;cursor:pointer;
+}
+
+/* ══════════════════════════════════════════
+   PANTALLA VICTORIA
+══════════════════════════════════════════ */
+#s-victoria{background:transparent;text-align:center;}
+.victoria-card{
+  background:white;border-radius:32px;padding:2.5rem 2rem;
+  max-width:420px;width:92%;text-align:center;box-shadow:var(--sombra);
+}
+.victoria-trofeo{font-size:5rem;display:block;animation:rebote 1s ease-in-out infinite;}
+@keyframes rebote{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.victoria-tit{
+  font-family:'Fredoka One',cursive;font-size:2.2rem;
+  background:linear-gradient(135deg,var(--azul),var(--lila));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin:.8rem 0 .4rem;
+}
+.victoria-sub{color:var(--sec);font-weight:700;margin-bottom:1.5rem;}
+.btn-fin{
+  margin:.4rem;padding:.9rem 2rem;border:none;border-radius:18px;
+  background:linear-gradient(135deg,var(--rosa),var(--lila));color:white;
+  font-family:'Fredoka One',cursive;font-size:1.1rem;cursor:pointer;
+  box-shadow:0 6px 18px rgba(199,125,255,.4);transition:transform .15s;
+}
+.btn-fin:hover{transform:translateY(-2px);}
+.btn-fin.naranja{background:linear-gradient(135deg,var(--naranja),var(--rosa));}
+
+/* ══════════════════════════════════════════
+   CONFETI
+══════════════════════════════════════════ */
+.confeti-c{position:fixed;inset:0;pointer-events:none;z-index:400;overflow:hidden;}
+.cp{position:absolute;border-radius:2px;animation:caer linear forwards;}
+@keyframes caer{0%{transform:translateY(-20px)rotate(0);opacity:1}100%{transform:translateY(110vh)rotate(720deg);opacity:0}}
+</style>
+</head>
+<body>
+
+<!-- CONFETI -->
+<div class="confeti-c" id="confeti"></div>
+
+<!-- BURBUJAS -->
+<div class="bubbles" id="bubbles"></div>
+
+<!-- OVERLAY MATEMÁTICO -->
+<div class="ov-mat" id="ov-mat">
+  <div class="mat-card">
+    <p class="mat-tit">🔒 Control parental</p>
+    <p style="color:var(--sec);font-size:.9rem;font-weight:600;margin-bottom:.3rem">Resuelve la operación para salir:</p>
+    <p class="mat-q" id="mat-q">3 + 4 = ?</p>
+    <input type="number" class="mat-inp" id="mat-inp" placeholder="?"
+      onkeydown="if(event.key==='Enter')comprobarMat()">
+    <p class="mat-err" id="mat-err"></p>
+    <button class="mat-btn" onclick="comprobarMat()">✓ Comprobar</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     PANTALLA: NOMBRE
+═══════════════════════════════ -->
+<div class="screen active" id="s-nombre">
+  <div class="nombre-card">
+    <span class="nombre-logo">🏭</span>
+    <h2 class="nombre-titulo">La Fábrica de la D/R</h2>
+    <p class="nombre-sub">Escribe el nombre del niño o niña para que Inma pueda ver cómo ha ido la sesión.</p>
+    <input class="nombre-inp" id="nombre-inp" type="text" placeholder="Nombre del niño/a…" maxlength="50"
+      onkeydown="if(event.key==='Enter')guardarNombre()">
+    <button class="btn-grad" onclick="guardarNombre()">Enviar informe a Inma ✓</button>
+    <button class="btn-skip" onclick="sinNombre()">Continuar sin enviar informe</button>
+    <p class="nombre-nota">🔒 Si escribes el nombre, Inma recibirá un informe al terminar. Es voluntario y solo para seguimiento.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     PANTALLA: INICIO (arrancar fábrica)
+═══════════════════════════════ -->
+<div class="screen" id="s-inicio">
+  <div class="fabrica-card">
+    <div style="font-size:4rem;margin-bottom:.5rem">🏭</div>
+    <h1 class="fabrica-titulo">La Fábrica<br>de la D/R</h1>
+    <p class="fabrica-sub">¡Aprende a distinguir los sonidos <strong>D</strong> y <strong>R</strong>!</p>
+    <button class="btn-arrancar" onclick="arrancarFabrica()">¡Arrancar la Fábrica! ⚙️</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     PANTALLA: MENÚ
+═══════════════════════════════ -->
+<div class="screen" id="s-menu">
+  <h1 class="menu-titulo">🏭 Elige tu sección</h1>
+
+  <!-- selector de letra -->
+  <div class="letra-selector">
+    <button class="ls-btn sel" id="ls-min" onclick="selLetra('min',this)">
+      <span style="font-family:'Playwrite HR Lijeva',cursive;font-weight:300">abc</span> Minúscula
+    </button>
+    <button class="ls-btn" id="ls-may" onclick="selLetra('may',this)">
+      <span style="font-family:'Playwrite DE Grund',cursive;font-weight:300">ABC</span> Mayúscula
+    </button>
+  </div>
+
+  <div class="juegos-grid">
+    <div class="juego-card j1" onclick="irJuego(1)">
+      <span class="juego-ico">📻</span>
+      <div class="juego-nombre fj">La Radio de los Robots</div>
+      <div class="juego-desc">Escucha y decide: ¿R o D?</div>
+    </div>
+    <div class="juego-card j2" onclick="irJuego(2)">
+      <span class="juego-ico">🏭</span>
+      <div class="juego-nombre fj">La Cinta Transportadora</div>
+      <div class="juego-desc">Clasifica las cajas al vuelo</div>
+    </div>
+    <div class="juego-card j3" onclick="irJuego(3)">
+      <span class="juego-ico">♻️</span>
+      <div class="juego-nombre fj">El Centro de Reciclaje</div>
+      <div class="juego-desc">Envía cada objeto al contenedor</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center;margin-top:.5rem">
+    <button class="t-btn rep" onclick="descargar()">📄 Reporte</button>
+    <button class="t-btn fs"  onclick="entrarFS()">⛶ Pantalla completa</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     PANTALLA: JUEGO 1 — RADIO
+═══════════════════════════════ -->
+<div class="screen" id="s-j1">
+  <div class="topbar">
+    <button class="t-btn" onclick="volverMenu()">← Menú</button>
+    <div style="display:flex;gap:.4rem;flex-wrap:wrap">
+      <div class="t-chip">📻 Radio</div>
+      <div class="t-chip v" id="j1-ok">✅ 0</div>
+      <div class="t-chip r" id="j1-err">❌ 0</div>
+    </div>
+    <div style="display:flex;gap:.4rem">
+      <button class="t-btn rep" onclick="descargar()">📄</button>
+      <button class="t-btn fs"  onclick="entrarFS()">⛶</button>
+    </div>
+  </div>
+  <div class="prog-bar"><div class="prog-fill" id="j1-prog" style="width:0%"></div></div>
+  <div class="game-area" id="j1-area">
+    <div class="robot-wrap">
+      <div class="robot-emoji" id="j1-robot">🤖</div>
+      <div class="bocadillo">
+        <span class="letra-juego" id="j1-palabra">PE_A</span>
+      </div>
+    </div>
+    <p style="font-family:'Fredoka One',cursive;color:var(--sec);font-size:1rem">
+      ¿Qué sonido escuchaste?
+    </p>
+    <div class="radio-btns">
+      <button class="radio-btn D" onclick="j1Responder('D')" id="j1-btnD">
+        <span class="letra-juego">d</span> Frecuencia D
+      </button>
+      <button class="radio-btn R" onclick="j1Responder('R')" id="j1-btnR">
+        Frecuencia R <span class="letra-juego">r</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     PANTALLA: JUEGO 2 — CINTA
+═══════════════════════════════ -->
+<div class="screen" id="s-j2">
+  <div class="topbar">
+    <button class="t-btn" onclick="volverMenu()">← Menú</button>
+    <div style="display:flex;gap:.4rem;flex-wrap:wrap">
+      <div class="t-chip">🏭 Cinta</div>
+      <div class="t-chip v" id="j2-ok">✅ 0</div>
+      <div class="t-chip r" id="j2-err">❌ 0</div>
+    </div>
+    <div style="display:flex;gap:.4rem">
+      <button class="t-btn rep" onclick="descargar()">📄</button>
+      <button class="t-btn fs"  onclick="entrarFS()">⛶</button>
+    </div>
+  </div>
+  <div class="prog-bar"><div class="prog-fill" id="j2-prog" style="width:0%"></div></div>
+  <div class="game-area" id="j2-area">
+    <div class="cinta-wrap">
+      <p style="font-family:'Fredoka One',cursive;color:var(--sec)">
+        Cuando la caja llegue al escáner, ¡clasifícala!
+      </p>
+      <div class="cinta-pista" id="j2-cinta">
+        <div class="cinta-banda"></div>
+        <div class="scanner"><span class="scanner-label">ESCÁNER</span></div>
+        <div class="caja" id="j2-caja"></div>
+      </div>
+      <div class="cinta-contenedores">
+        <button class="cont-btn D" onclick="j2Clasificar('D')">
+          <span class="letra-juego" style="font-size:2rem;display:block">d</span>
+          Contenedor D<br><small>← Flecha izq.</small>
+        </button>
+        <button class="cont-btn R" onclick="j2Clasificar('R')">
+          <span class="letra-juego" style="font-size:2rem;display:block">r</span>
+          Contenedor R<br><small>Flecha der. →</small>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     PANTALLA: JUEGO 3 — RECICLAJE
+═══════════════════════════════ -->
+<div class="screen" id="s-j3">
+  <div class="topbar">
+    <button class="t-btn" onclick="volverMenu()">← Menú</button>
+    <div style="display:flex;gap:.4rem;flex-wrap:wrap">
+      <div class="t-chip">♻️ Reciclaje</div>
+      <div class="t-chip v" id="j3-ok">✅ 0</div>
+      <div class="t-chip r" id="j3-err">❌ 0</div>
+    </div>
+    <div style="display:flex;gap:.4rem">
+      <button class="t-btn rep" onclick="descargar()">📄</button>
+      <button class="t-btn fs"  onclick="entrarFS()">⛶</button>
+    </div>
+  </div>
+  <div class="prog-bar"><div class="prog-fill" id="j3-prog" style="width:0%"></div></div>
+  <div class="game-area">
+    <div class="recicla-wrap">
+      <div class="recicla-emoji" id="j3-emoji">🍐</div>
+      <div class="recicla-hint fj" id="j3-hint">¿Dónde va…?</div>
+      <div class="recicla-contenedores">
+        <div class="recicla-cont D" onclick="j3Enviar('D')" id="j3-contD">
+          <span class="cont-ico">🤖</span>
+          <span class="cont-letra">d</span>
+          <span class="cont-nombre" style="font-family:'Fredoka One',cursive">Don D<br><small>← izq.</small></span>
+        </div>
+        <div class="recicla-cont R" onclick="j3Enviar('R')" id="j3-contR">
+          <span class="cont-ico">🚀</span>
+          <span class="cont-letra">r</span>
+          <span class="cont-nombre" style="font-family:'Fredoka One',cursive">Roc R<br><small>der. →</small></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     PANTALLA: VICTORIA
+═══════════════════════════════ -->
+<div class="screen" id="s-victoria">
+  <div class="victoria-card">
+    <span class="victoria-trofeo">🏆</span>
+    <h1 class="victoria-tit">¡10 aciertos!</h1>
+    <p class="victoria-sub" id="vict-sub">¡La fábrica está en marcha!</p>
+    <div>
+      <button class="btn-fin" onclick="volverMenu()">🏭 Más juegos</button>
+      <button class="btn-fin naranja" onclick="descargar()">📄 Reporte</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════
+   CONFIGURACIÓN
+════════════════════════════════════════ */
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbw4AKlcc8-09jA0uBl7EYDW_lorkazvEOwhZTthN6FD_BIhM1Q6o4HJdNSeUvqba2an/exec";
+let nombreAlumno = '', enviarInforme = false;
+let letra = 'min';
+let matResp = 0, matCb = null;
+let juegoActual = 0; // 1,2,3
+let t0 = null;
+let registro = []; // { juego, palabra, correcto }
+
+/* ════════════════════════════════════════
+   BANCO DE PALABRAS (Fisher-Yates)
+════════════════════════════════════════ */
+const PALABRAS_R = [
+  {p:'araña',  f:'R', e:'🕷️'}, {p:'aro',    f:'R', e:'⭕'}, {p:'arena',  f:'R', e:'🏖️'},
+  {p:'barato', f:'R', e:'💸'}, {p:'caracol',f:'R', e:'🐌'}, {p:'cara',   f:'R', e:'🧑'},
+  {p:'cera',   f:'R', e:'🕯️'}, {p:'pera',   f:'R', e:'🍐'}, {p:'tesoro', f:'R', e:'💎'},
+  {p:'lirio',  f:'R', e:'🪻'}, {p:'marino', f:'R', e:'⚓'}, {p:'pirata', f:'R', e:'🏴‍☠️'},
+  {p:'sirena', f:'R', e:'🧜‍♀️'},{p:'coro',   f:'R', e:'🎶'}, {p:'oro',    f:'R', e:'🪙'},
+  {p:'farol',  f:'R', e:'🏮'}, {p:'toro',   f:'R', e:'🐂'}, {p:'muro',   f:'R', e:'🧱'},
+  {p:'mariposa',f:'R',e:'🦋'}, {p:'martillo',f:'R',e:'🔨'},
+];
+const PALABRAS_MIXTAS = [
+  {p:'dinosaurio',f:'D',e:'🦖'}, {p:'madera',f:'R',e:'🪵'},
+];
+const PALABRAS_D = []; // para J3 solo usamos R puro + mixtas excluidas
+
+function mezclar(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+/* Palabra con hueco para J1: PE_A */
+function palabraConHueco(p){
+  // Buscar primera R o D y reemplazar por _
+  const upper = p.toUpperCase();
+  let idx = -1;
+  for(let i=0;i<upper.length;i++){
+    if(upper[i]==='R'||upper[i]==='D'){idx=i;break;}
+  }
+  if(idx===-1) return p.toUpperCase();
+  const resultado = p.substring(0,idx) + '_' + p.substring(idx+1);
+  return letra==='may' ? resultado.toUpperCase() : resultado.toLowerCase();
+}
+
+/* ════════════════════════════════════════
+   VOZ — robusto
+════════════════════════════════════════ */
+let vocesListas = [];
+function cargarVoces(){
+  if(!window.speechSynthesis) return;
+  vocesListas = speechSynthesis.getVoices();
+  if(!vocesListas.length)
+    speechSynthesis.onvoiceschanged = ()=>{ vocesListas = speechSynthesis.getVoices(); };
+}
+cargarVoces(); setTimeout(cargarVoces, 800);
+
+function elegirVoz(){
+  const vs = speechSynthesis.getVoices(); if(vs.length) vocesListas=vs;
+  return vocesListas.find(v=>v.lang.startsWith('es')&&v.name.toLowerCase().includes('female'))
+      || vocesListas.find(v=>v.lang==='es-ES')
+      || vocesListas.find(v=>v.lang.startsWith('es'))
+      || null;
+}
+
+function hablar(txt, rate=0.75){
+  if(!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(txt);
+  u.lang='es-ES'; u.rate=rate; u.pitch=1.1; u.volume=1;
+  const v=elegirVoz(); if(v) u.voice=v;
+  speechSynthesis.speak(u);
+  setTimeout(()=>{ if(speechSynthesis.paused) speechSynthesis.resume(); },200);
+}
+
+/* ════════════════════════════════════════
+   BURBUJAS
+════════════════════════════════════════ */
+function initBubbles(){
+  const c=document.getElementById('bubbles'); c.innerHTML='';
+  const cols=['#4D96FF','#C77DFF','#FFD93D','#4ECDC4','#FF8E53','#6BCB77','#FF6B9D'];
+  for(let i=0;i<14;i++){
+    const b=document.createElement('div'); b.className='bubble';
+    const s=20+Math.random()*60;
+    b.style.cssText=`width:${s}px;height:${s}px;background:${cols[i%cols.length]};left:${Math.random()*100}%;animation-duration:${9+Math.random()*12}s;animation-delay:-${Math.random()*10}s;`;
+    c.appendChild(b);
+  }
+}
+initBubbles();
+
+/* ════════════════════════════════════════
+   PANTALLAS
+════════════════════════════════════════ */
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ════════════════════════════════════════
+   NOMBRE
+════════════════════════════════════════ */
+function guardarNombre(){
+  const n=document.getElementById('nombre-inp').value.trim();
+  if(!n){document.getElementById('nombre-inp').style.borderColor='#FF6B9D';return;}
+  nombreAlumno=n; enviarInforme=true;
+  t0=new Date(); show('s-inicio');
+}
+function sinNombre(){
+  nombreAlumno='Anónimo'; enviarInforme=false;
+  t0=new Date(); show('s-inicio');
+}
+
+/* ════════════════════════════════════════
+   INICIO
+════════════════════════════════════════ */
+function arrancarFabrica(){
+  hablar('¡Bienvenido a la Fábrica de la D y la R! Elige tu sección favorita.',0.8);
+  show('s-menu');
+}
+
+/* ════════════════════════════════════════
+   CONFIG LETRA
+════════════════════════════════════════ */
+function selLetra(val, btn){
+  ['ls-min','ls-may'].forEach(id=>document.getElementById(id).classList.remove('sel'));
+  btn.classList.add('sel');
+  letra=val;
+  document.body.className=val==='may'?'may':'';
+  // Actualizar textos de juego activo si hay uno
+  if(juegoActual===1) j1ActualizarTexto();
+  if(juegoActual===2) j2ActualizarCaja();
+  if(juegoActual===3) j3ActualizarTexto();
+}
+
+function fmt(txt){ return letra==='may'?txt.toUpperCase():txt.toLowerCase(); }
+
+/* ════════════════════════════════════════
+   MENÚ
+════════════════════════════════════════ */
+function volverMenu(){
+  speechSynthesis&&speechSynthesis.cancel();
+  j2Parar();
+  show('s-menu');
+}
+
+function irJuego(n){
+  juegoActual=n;
+  if(n===1) iniciarJ1();
+  if(n===2) iniciarJ2();
+  if(n===3) iniciarJ3();
+}
+
+/* ════════════════════════════════════════
+   VICTORIA
+════════════════════════════════════════ */
+function mostrarVictoria(nombreJuego){
+  show('s-victoria');
+  document.getElementById('vict-sub').textContent=`¡Superaste ${nombreJuego} con 10 aciertos!`;
+  hablar('¡Diez aciertos! ¡Fantástico! La fábrica está en marcha.');
+  confeti(); setTimeout(confeti,700); setTimeout(confeti,1400);
+  enviarASheet();
+}
+
+/* ════════════════════════════════════════
+   ── JUEGO 1: LA RADIO ──
+════════════════════════════════════════ */
+let j1Pool=[], j1Idx=0, j1Ok=0, j1Err=0, j1Esperando=false;
+let j1FonemaHablado=''; // 'R' o 'D' — lo que dijo la voz
+
+function iniciarJ1(){
+  j1Pool=mezclar([...PALABRAS_R,...PALABRAS_MIXTAS]);
+  j1Idx=0; j1Ok=0; j1Err=0; j1Esperando=false;
+  show('s-j1'); actualizarChipsJ1(); j1Cargar();
+}
+
+function j1Cargar(){
+  if(j1Ok>=10){mostrarVictoria('La Radio de los Robots');return;}
+  if(j1Idx>=j1Pool.length){j1Pool=mezclar([...PALABRAS_R,...PALABRAS_MIXTAS]);j1Idx=0;}
+  const item=j1Pool[j1Idx++];
+  j1Esperando=true;
+  // Reset robot
+  const robot=document.getElementById('j1-robot');
+  robot.className='robot-emoji'; robot.textContent='🤖';
+  // Mostrar palabra con hueco
+  document.getElementById('j1-palabra').textContent=palabraConHueco(item.p);
+  document.getElementById('j1-btnD').disabled=false;
+  document.getElementById('j1-btnR').disabled=false;
+  // Decidir aleatoriamente si pronuncia R o D
+  const decirR = Math.random()>0.4; // 60% R, 40% D para practicar más la R
+  j1FonemaHablado = item.f==='R' ? (decirR?'R':'D') : 'D';
+  // Si la palabra es mixta (madera → tiene R), al decir deformado suena D
+  let textoPronunciado;
+  if(j1FonemaHablado===item.f){
+    textoPronunciado=item.p; // correcto
+  } else {
+    // Deformar: cambiar la primera R→D o D→R
+    textoPronunciado=item.p.replace(/r/i, j1FonemaHablado==='D'?'d':'r');
+  }
+  setTimeout(()=> hablar(textoPronunciado, 0.7), 400);
+  document.getElementById('j1-prog').style.width=(j1Ok/10*100)+'%';
+  document.getElementById('j1-btnR').querySelector('.letra-juego').textContent=fmt('r');
+  document.getElementById('j1-btnD').querySelector('.letra-juego').textContent=fmt('d');
+}
+
+function j1Responder(elegido){
+  if(!j1Esperando) return;
+  j1Esperando=false;
+  document.getElementById('j1-btnD').disabled=true;
+  document.getElementById('j1-btnR').disabled=true;
+  const correcto=(elegido===j1FonemaHablado);
+  const robot=document.getElementById('j1-robot');
+  registro.push({juego:'Radio',fonema:j1FonemaHablado,elegido,correcto});
+  if(correcto){
+    j1Ok++; robot.className='robot-emoji ok'; robot.textContent='🤩';
+    hablar('¡Correcto!'); confeti();
+    setTimeout(()=>{robot.className='robot-emoji';j1Cargar();},1200);
+  } else {
+    j1Err++; robot.className='robot-emoji err'; robot.textContent='😬';
+    hablar('Escucha de nuevo.');
+    setTimeout(()=>{
+      robot.className='robot-emoji'; robot.textContent='🤖';
+      j1Esperando=true;
+      document.getElementById('j1-btnD').disabled=false;
+      document.getElementById('j1-btnR').disabled=false;
+      // Volver a leer el mismo fonema
+      hablar(j1Pool[j1Idx-1].p,0.7);
+    },1200);
+  }
+  actualizarChipsJ1();
+}
+
+function j1ActualizarTexto(){
+  // Actualizar etiquetas de botones al cambiar letra
+  if(document.getElementById('j1-btnR'))
+    document.getElementById('j1-btnR').querySelector('.letra-juego').textContent=fmt('r');
+  if(document.getElementById('j1-btnD'))
+    document.getElementById('j1-btnD').querySelector('.letra-juego').textContent=fmt('d');
+  if(j1Pool.length&&j1Idx>0){
+    const item=j1Pool[j1Idx-1];
+    document.getElementById('j1-palabra').textContent=palabraConHueco(item.p);
+  }
+}
+
+function actualizarChipsJ1(){
+  document.getElementById('j1-ok').textContent=`✅ ${j1Ok}`;
+  document.getElementById('j1-err').textContent=`❌ ${j1Err}`;
+}
+
+/* ════════════════════════════════════════
+   ── JUEGO 2: CINTA TRANSPORTADORA ──
+════════════════════════════════════════ */
+let j2Pool=[], j2Idx=0, j2Ok=0, j2Err=0;
+let j2Timer=null, j2PosX=0, j2VelocidadBase=1.2;
+let j2CajaFonema='', j2EnEscaner=false, j2Bloqueado=false;
+
+function iniciarJ2(){
+  j2Pool=mezclar(['R','R','R','D','R','D','R','R','D','R','R','D','R','R','R','D','R','D','R','R']);
+  j2Idx=0; j2Ok=0; j2Err=0;
+  show('s-j2'); actualizarChipsJ2();
+  j2NuevaCaja();
+}
+
+function j2NuevaCaja(){
+  if(j2Ok>=10){mostrarVictoria('La Cinta Transportadora');return;}
+  if(j2Idx>=j2Pool.length){j2Pool=mezclar(j2Pool);j2Idx=0;}
+  j2CajaFonema=j2Pool[j2Idx++];
+  j2PosX=0; j2Bloqueado=false; j2EnEscaner=false;
+  const caja=document.getElementById('j2-caja');
+  caja.className='caja '+(j2CajaFonema==='D'?'D-box':'R-box');
+  j2ActualizarCaja();
+  caja.style.left='0px';
+  document.getElementById('j2-prog').style.width=(j2Ok/10*100)+'%';
+  clearInterval(j2Timer);
+  j2Timer=setInterval(j2Tick,16);
+}
+
+function j2ActualizarCaja(){
+  const caja=document.getElementById('j2-caja');
+  if(caja) caja.textContent=fmt(j2CajaFonema);
+}
+
+function j2Tick(){
+  if(j2Bloqueado) return;
+  const cinta=document.getElementById('j2-cinta');
+  const ancho=cinta.offsetWidth;
+  j2PosX+=j2VelocidadBase;
+  const cajaEl=document.getElementById('j2-caja');
+  cajaEl.style.left=j2PosX+'px';
+  // Escáner está en 50% del ancho - 40px
+  const scannerCenter=ancho/2-35;
+  const enZona=(j2PosX>scannerCenter-15 && j2PosX<scannerCenter+50);
+  if(enZona && !j2EnEscaner){
+    j2EnEscaner=true;
+    hablar(j2CajaFonema==='R'?'Rrr':'Ddd',0.6);
+  }
+  if(!enZona && j2PosX>scannerCenter) j2EnEscaner=false;
+  // Si se pasa del final → volver al inicio
+  if(j2PosX>ancho-30){
+    j2Err++; actualizarChipsJ2();
+    registro.push({juego:'Cinta',fonema:j2CajaFonema,elegido:'(tiempo)',correcto:false});
+    j2PosX=0; cajaEl.style.left='0px'; j2EnEscaner=false;
+    hablar('¡Se escapó! Inténtalo de nuevo.');
+  }
+}
+
+function j2Clasificar(elegido){
+  if(j2Bloqueado) return;
+  j2Bloqueado=true;
+  clearInterval(j2Timer);
+  const caja=document.getElementById('j2-caja');
+  const correcto=(elegido===j2CajaFonema);
+  registro.push({juego:'Cinta',fonema:j2CajaFonema,elegido,correcto});
+  if(correcto){
+    j2Ok++; actualizarChipsJ2();
+    caja.classList.add('ok-anim'); hablar('¡Bien clasificada!'); confeti();
+    setTimeout(()=>j2NuevaCaja(),700);
+  } else {
+    j2Err++; actualizarChipsJ2();
+    caja.classList.add('err-anim');
+    hablar('Ese no es el contenedor correcto.');
+    setTimeout(()=>{
+      caja.classList.remove('err-anim');
+      j2PosX=0; caja.style.left='0px'; j2Bloqueado=false; j2EnEscaner=false;
+      j2Timer=setInterval(j2Tick,16);
+    },800);
+  }
+}
+
+function j2Parar(){ clearInterval(j2Timer); }
+
+function actualizarChipsJ2(){
+  document.getElementById('j2-ok').textContent=`✅ ${j2Ok}`;
+  document.getElementById('j2-err').textContent=`❌ ${j2Err}`;
+}
+
+/* ════════════════════════════════════════
+   ── JUEGO 3: RECICLAJE ──
+════════════════════════════════════════ */
+let j3Pool=[], j3Idx=0, j3Ok=0, j3Err=0, j3Actual=null, j3Bloqueado=false;
+
+function iniciarJ3(){
+  // Solo palabras R puro (sin mixtas para no confundir)
+  j3Pool=mezclar([...PALABRAS_R]);
+  j3Idx=0; j3Ok=0; j3Err=0;
+  show('s-j3'); actualizarChipsJ3(); j3Cargar();
+}
+
+function j3Cargar(){
+  if(j3Ok>=10){mostrarVictoria('El Centro de Reciclaje');return;}
+  if(j3Idx>=j3Pool.length){j3Pool=mezclar([...PALABRAS_R]);j3Idx=0;}
+  j3Actual=j3Pool[j3Idx++];
+  j3Bloqueado=false;
+  const em=document.getElementById('j3-emoji');
+  em.className='recicla-emoji'; em.textContent=j3Actual.e;
+  j3ActualizarTexto();
+  document.getElementById('j3-prog').style.width=(j3Ok/10*100)+'%';
+  setTimeout(()=> hablar(`¿Dónde va… ${j3Actual.p}?`,0.75), 400);
+}
+
+function j3ActualizarTexto(){
+  if(!j3Actual) return;
+  document.getElementById('j3-hint').textContent=
+    fmt('¿Dónde va… ')+j3Actual.e;
+  // Actualizar letras de contenedores
+  document.querySelectorAll('.recicla-cont .cont-letra').forEach((el,i)=>{
+    el.textContent=fmt(i===0?'d':'r');
+  });
+}
+
+function j3Enviar(elegido){
+  if(j3Bloqueado||!j3Actual) return;
+  j3Bloqueado=true;
+  const correcto=(elegido===j3Actual.f);
+  registro.push({juego:'Reciclaje',palabra:j3Actual.p,elegido,correcto});
+  const em=document.getElementById('j3-emoji');
+  const contId=elegido==='D'?'j3-contD':'j3-contR';
+  if(correcto){
+    j3Ok++; actualizarChipsJ3();
+    em.className='recicla-emoji ok';
+    document.getElementById(contId).classList.add('comer');
+    hablar('¡Al contenedor correcto!'); confeti();
+    setTimeout(()=>{
+      document.getElementById(contId).classList.remove('comer');
+      j3Cargar();
+    },900);
+  } else {
+    j3Err++; actualizarChipsJ3();
+    em.className='recicla-emoji err';
+    hablar('Ese no es el sitio. Escucha el sonido.');
+    setTimeout(()=>{
+      em.className='recicla-emoji'; j3Bloqueado=false;
+      hablar(`${j3Actual.p}`,0.7);
+    },1100);
+  }
+}
+
+function actualizarChipsJ3(){
+  document.getElementById('j3-ok').textContent=`✅ ${j3Ok}`;
+  document.getElementById('j3-err').textContent=`❌ ${j3Err}`;
+}
+
+/* ════════════════════════════════════════
+   TECLADO
+════════════════════════════════════════ */
+document.addEventListener('keydown', e=>{
+  if(document.getElementById('ov-mat').classList.contains('vis')){
+    if(e.key==='Escape'){e.preventDefault();e.stopPropagation();}
+    return;
+  }
+  const s=document.querySelector('.screen.active')?.id;
+  if(s==='s-j1'){
+    if(e.key==='ArrowLeft')  j1Responder('D');
+    if(e.key==='ArrowRight') j1Responder('R');
+  }
+  if(s==='s-j2'){
+    if(e.key==='ArrowLeft')  j2Clasificar('D');
+    if(e.key==='ArrowRight') j2Clasificar('R');
+  }
+  if(s==='s-j3'){
+    if(e.key==='ArrowLeft')  j3Enviar('D');
+    if(e.key==='ArrowRight') j3Enviar('R');
+  }
+},true);
+
+/* ════════════════════════════════════════
+   PANTALLA COMPLETA + PARENTAL
+════════════════════════════════════════ */
+function entrarFS(){
+  const el=document.documentElement;
+  if(el.requestFullscreen) el.requestFullscreen();
+  else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+}
+function enJuego(){
+  const id=document.querySelector('.screen.active')?.id||'';
+  return ['s-j1','s-j2','s-j3'].includes(id);
+}
+function generarOp(){
+  const r=~~(Math.random()*3);
+  if(r===0){const a=1+~~(Math.random()*10),b=1+~~(Math.random()*10);return{t:`${a} + ${b} = ?`,r:a+b};}
+  if(r===1){const a=6+~~(Math.random()*9), b=1+~~(Math.random()*5); return{t:`${a} - ${b} = ?`,r:a-b};}
+  const a=2+~~(Math.random()*5),b=2+~~(Math.random()*5);return{t:`${a} × ${b} = ?`,r:a*b};
+}
+function pedirMat(cb){
+  const op=generarOp(); matResp=op.r; matCb=cb;
+  document.getElementById('mat-q').textContent=op.t;
+  document.getElementById('mat-inp').value='';
+  document.getElementById('mat-err').textContent='';
+  document.getElementById('ov-mat').classList.add('vis');
+  setTimeout(()=>document.getElementById('mat-inp').focus(),120);
+}
+function comprobarMat(){
+  const v=parseInt(document.getElementById('mat-inp').value,10);
+  if(v===matResp){
+    document.getElementById('ov-mat').classList.remove('vis');
+    if(matCb) matCb();
+  } else {
+    document.getElementById('mat-err').textContent='¡Incorrecto! Inténtalo de nuevo.';
+    document.getElementById('mat-inp').value='';
+    document.getElementById('mat-inp').focus();
+  }
+}
+function onFSChange(){
+  const enFS=!!(document.fullscreenElement||document.webkitFullscreenElement);
+  if(!enFS && enJuego()){
+    j2Parar();
+    pedirMat(()=>{
+      entrarFS();
+      if(juegoActual===2) j2Timer=setInterval(j2Tick,16);
+      if(enviarInforme) enviarASheet();
+    });
+  }
+}
+document.addEventListener('fullscreenchange',onFSChange);
+document.addEventListener('webkitfullscreenchange',onFSChange);
+
+/* ════════════════════════════════════════
+   GOOGLE SHEET + REPORTE
+════════════════════════════════════════ */
+function enviarASheet(){
+  if(!enviarInforme) return;
+  const oks=registro.filter(r=>r.correcto).length;
+  const errs=registro.filter(r=>!r.correcto).length;
+  const falls=registro.filter(r=>!r.correcto).map(r=>`${r.palabra||r.fonema}(→${r.elegido})`).join(', ')||'Ninguna';
+  fetch(SHEET_URL,{
+    method:'POST',
+    body:JSON.stringify({
+      Nombre:nombreAlumno,
+      Actividad:`Fábrica D/R · ${letra==='may'?'Mayúsculas':'Minúsculas'}`,
+      Aciertos:oks, Errores:errs,
+      PalabrasFalladas:falls
+    }),
+    headers:{'Content-Type':'application/json'}
+  }).catch(e=>console.log('Sheet err:',e));
+}
+
+function htmlReporte(){
+  const now=new Date();
+  const dur=t0?Math.round((now-t0)/1000):0;
+  const mins=Math.floor(dur/60),segs=dur%60;
+  const oks=registro.filter(r=>r.correcto).length;
+  const tot=registro.length;
+  const pct=tot?Math.round(oks/tot*100):0;
+  const filas=registro.map((r,i)=>`
+    <tr style="background:${r.correcto?'#F0FFF4':'#FFF5F5'}">
+      <td style="padding:8px 12px;text-align:center;font-weight:700">${i+1}</td>
+      <td style="padding:8px 12px">${r.juego}</td>
+      <td style="padding:8px 12px;font-weight:700">${r.palabra||r.fonema||'—'}</td>
+      <td style="padding:8px 12px;text-align:center">${r.elegido}</td>
+      <td style="padding:8px 12px;text-align:center;font-size:1.2rem">${r.correcto?'✅':'❌'}</td>
+    </tr>`).join('');
+  return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+<title>Reporte · La Fábrica de la D/R</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body{font-family:'Nunito',sans-serif;background:#E8F4FF;color:#2D1B33;padding:2rem;margin:0}
+  h1{font-family:'Fredoka One',cursive;font-size:2rem;background:linear-gradient(135deg,#4D96FF,#C77DFF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem}
+  .chips{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0 1.5rem}
+  .chip{background:white;border-radius:16px;padding:.5rem 1.2rem;font-weight:700;font-size:1rem;box-shadow:0 2px 8px rgba(77,150,255,.15)}
+  .chip span{color:#C77DFF}
+  table{width:100%;border-collapse:collapse;background:white;border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(77,150,255,.1)}
+  th{background:linear-gradient(135deg,#4D96FF,#C77DFF);color:white;padding:10px 12px;font-family:'Fredoka One',cursive;font-size:.95rem;text-align:left}
+  td{border-bottom:1px solid #EAF2FF;font-size:.9rem}
+  tr:last-child td{border-bottom:none}
+  footer{margin-top:2rem;font-size:.85rem;color:#5A7090;text-align:center}
+</style></head><body>
+<h1>🏭 La Fábrica de la D/R — Reporte</h1>
+<p style="color:#5A7090;font-weight:600">Alumno/a: <strong>${nombreAlumno}</strong> · ${now.toLocaleDateString('es-ES',{weekday:'long',year:'numeric',month:'long',day:'numeric'})} a las ${now.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})}</p>
+<div class="chips">
+  <div class="chip">Letras: <span>${letra==='may'?'ABC Mayúscula':'abc Minúscula'}</span></div>
+  <div class="chip">Intentos: <span>${tot}</span></div>
+  <div class="chip">Aciertos: <span>${oks}</span></div>
+  <div class="chip">Porcentaje: <span>${pct}%</span></div>
+  <div class="chip">Tiempo: <span>${mins}m ${segs}s</span></div>
+</div>
+<table>
+  <thead><tr><th>#</th><th>Sección</th><th>Estímulo</th><th>Respuesta</th><th>Resultado</th></tr></thead>
+  <tbody>${filas||'<tr><td colspan="5" style="padding:1rem;text-align:center;color:#999">Sin intentos registrados</td></tr>'}</tbody>
+</table>
+<footer>La Fábrica de la D/R · Juego educativo</footer>
+</body></html>`;
+}
+
+function descargar(){
+  const blob=new Blob([htmlReporte()],{type:'text/html;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url;
+  a.download=`reporte_fabrica_${nombreAlumno||'anonimo'}_${new Date().toISOString().slice(0,10)}.html`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+/* ════════════════════════════════════════
+   CONFETI
+════════════════════════════════════════ */
+function confeti(){
+  const c=document.getElementById('confeti');
+  const cs=['#FF6B9D','#C77DFF','#FFD93D','#4ECDC4','#FF8E53','#6BCB77','#4D96FF'];
+  for(let i=0;i<35;i++){
+    const p=document.createElement('div'); p.className='cp';
+    p.style.cssText=`left:${10+Math.random()*80}%;background:${cs[~~(Math.random()*cs.length)]};animation-duration:${1.4+Math.random()*2}s;animation-delay:${Math.random()*.4}s;transform:rotate(${Math.random()*360}deg);width:${6+Math.random()*10}px;height:${6+Math.random()*10}px;border-radius:${Math.random()>.5?'50%':'2px'};`;
+    c.appendChild(p); p.addEventListener('animationend',()=>p.remove());
+  }
+}
+</script>
+</body>
+</html>

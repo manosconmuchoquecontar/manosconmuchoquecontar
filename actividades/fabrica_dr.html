@@ -136,10 +136,11 @@ body.may .fj,body.may .letra-juego{
 /* tarjetas de juego */
 .juegos-grid{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-bottom:1rem;}
 .juego-card{
-  background:white;border-radius:24px;padding:1.4rem 1.2rem;
-  width:190px;text-align:center;cursor:pointer;
+  background:white;border-radius:24px;padding:1.4rem 1rem;
+  width:200px;min-height:170px;text-align:center;cursor:pointer;
   box-shadow:var(--sombra);transition:transform .2s,box-shadow .2s;
   border:3px solid transparent;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
 }
 .juego-card:hover{transform:translateY(-5px);box-shadow:0 14px 40px rgba(77,150,255,.25);}
 .juego-card:active{transform:scale(.97);}
@@ -147,7 +148,11 @@ body.may .fj,body.may .letra-juego{
 .juego-card.j2{border-color:var(--turq-c);}
 .juego-card.j3{border-color:var(--naranja-c);}
 .juego-ico{font-size:3rem;display:block;margin-bottom:.5rem;}
-.juego-nombre{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--texto);margin-bottom:.3rem;}
+.juego-nombre{
+  font-family:'Fredoka One',cursive;font-size:1rem;color:var(--texto);
+  margin-bottom:.3rem;line-height:1.25;word-break:break-word;
+}
+body.may .juego-nombre{font-size:.82rem;}
 .juego-desc{font-size:.75rem;color:var(--sec);font-weight:600;line-height:1.3;}
 
 /* ══════════════════════════════════════════
@@ -261,6 +266,7 @@ body.may .fj,body.may .letra-juego{
 body.may .caja{font-family:'Playwrite DE Grund',cursive;}
 .caja.D-box{background:linear-gradient(135deg,var(--rosa),var(--naranja));}
 .caja.R-box{background:linear-gradient(135deg,var(--azul),var(--lila));}
+.caja.caja-neutra{background:linear-gradient(135deg,#9E9E9E,#607D8B);font-size:2rem;}
 .caja.ok-anim{animation:caja-ok .4s ease-out forwards;}
 @keyframes caja-ok{0%{transform:translateY(-50%) scale(1)}50%{transform:translateY(-50%) scale(1.3)}100%{transform:translateY(-50%) scale(0);opacity:0}}
 .caja.err-anim{animation:caja-err .3s ease-out;}
@@ -495,10 +501,10 @@ body.may .recicla-cont .cont-letra{font-family:'Playwrite DE Grund',cursive;text
     </p>
     <div class="radio-btns">
       <button class="radio-btn D" onclick="j1Responder('D')" id="j1-btnD">
-        <span class="letra-juego">d</span> Frecuencia D
+        <span class="letra-juego" id="j1-letraD">d</span> <span id="j1-textoD">Frecuencia D</span>
       </button>
       <button class="radio-btn R" onclick="j1Responder('R')" id="j1-btnR">
-        Frecuencia R <span class="letra-juego">r</span>
+        <span id="j1-textoR">Frecuencia R</span> <span class="letra-juego" id="j1-letraR">r</span>
       </button>
     </div>
     <button id="j1-btnRepetir" onclick="j1Repetir()" style="
@@ -540,12 +546,12 @@ body.may .recicla-cont .cont-letra{font-family:'Playwrite DE Grund',cursive;text
       </div>
       <div class="cinta-contenedores">
         <button class="cont-btn D" onclick="j2Clasificar('D')">
-          <span class="letra-juego" style="font-size:2rem;display:block">d</span>
-          Contenedor D<br><small>← Flecha izq.</small>
+          <span class="letra-juego" id="j2-letraD" style="font-size:2rem;display:block">d</span>
+          <span id="j2-textoD">Contenedor D</span><br><small>← Flecha izq.</small>
         </button>
         <button class="cont-btn R" onclick="j2Clasificar('R')">
-          <span class="letra-juego" style="font-size:2rem;display:block">r</span>
-          Contenedor R<br><small>Flecha der. →</small>
+          <span class="letra-juego" id="j2-letraR" style="font-size:2rem;display:block">r</span>
+          <span id="j2-textoR">Contenedor R</span><br><small>Flecha der. →</small>
         </button>
       </div>
       <button onclick="j2Repetir()" style="
@@ -583,13 +589,13 @@ body.may .recicla-cont .cont-letra{font-family:'Playwrite DE Grund',cursive;text
       <div class="recicla-contenedores">
         <div class="recicla-cont D" onclick="j3Enviar('D')" id="j3-contD">
           <span class="cont-ico">🤖</span>
-          <span class="cont-letra">d</span>
-          <span class="cont-nombre" style="font-family:'Fredoka One',cursive">Don D<br><small>← izq.</small></span>
+          <span class="cont-letra" id="j3-letraD">d</span>
+          <span class="cont-nombre" style="font-family:'Fredoka One',cursive"><span id="j3-nombreD">Don D</span><br><small>← izq.</small></span>
         </div>
         <div class="recicla-cont R" onclick="j3Enviar('R')" id="j3-contR">
           <span class="cont-ico">🚀</span>
-          <span class="cont-letra">r</span>
-          <span class="cont-nombre" style="font-family:'Fredoka One',cursive">Roc R<br><small>der. →</small></span>
+          <span class="cont-letra" id="j3-letraR">r</span>
+          <span class="cont-nombre" style="font-family:'Fredoka One',cursive"><span id="j3-nombreR">Roc R</span><br><small>der. →</small></span>
         </div>
       </div>
       <button onclick="j3Repetir()" style="
@@ -686,7 +692,7 @@ function elegirVoz(){
       || null;
 }
 
-function hablar(txt, rate=0.75){
+function hablar(txt, rate=0.65){
   if(!window.speechSynthesis) return;
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(txt);
@@ -749,13 +755,40 @@ function selLetra(val, btn){
   btn.classList.add('sel');
   letra=val;
   document.body.className=val==='may'?'may':'';
-  // Actualizar textos de juego activo si hay uno
-  if(juegoActual===1) j1ActualizarTexto();
-  if(juegoActual===2) j2ActualizarCaja();
-  if(juegoActual===3) j3ActualizarTexto();
+  actualizarTextosTodos();
 }
 
 function fmt(txt){ return letra==='may'?txt.toUpperCase():txt.toLowerCase(); }
+
+// Actualiza TODOS los textos visibles de los tres juegos según el modo letra activo
+function actualizarTextosTodos(){
+  // ── J1: Radio ──
+  const set = (id,txt) => { const el=document.getElementById(id); if(el) el.textContent=txt; };
+  set('j1-letraD',  fmt('d'));
+  set('j1-letraR',  fmt('r'));
+  set('j1-textoD',  fmt('Frecuencia D'));
+  set('j1-textoR',  fmt('Frecuencia R'));
+  if(j1ItemActual)
+    set('j1-palabra', palabraConHueco(j1ItemActual.p));
+
+  // ── J2: Cinta ──
+  set('j2-letraD',  fmt('d'));
+  set('j2-letraR',  fmt('r'));
+  set('j2-textoD',  fmt('Contenedor D'));
+  set('j2-textoR',  fmt('Contenedor R'));
+  // La caja solo muestra la letra si ya se clasificó (ok-anim); si viaja como '?' no tocar
+  const caja = document.getElementById('j2-caja');
+  if(caja && caja.textContent !== '?')
+    caja.textContent = fmt(j2CajaFonema);
+
+  // ── J3: Reciclaje ──
+  set('j3-letraD',  fmt('d'));
+  set('j3-letraR',  fmt('r'));
+  set('j3-nombreD', fmt('Don D'));
+  set('j3-nombreR', fmt('Roc R'));
+  if(j3Actual)
+    set('j3-hint', j3Actual.e);
+}
 
 /* ════════════════════════════════════════
    MENÚ
@@ -793,7 +826,7 @@ let j1ItemActual=null; // item actual para poder repetir
 function iniciarJ1(){
   j1Pool=mezclar([...PALABRAS_R,...PALABRAS_MIXTAS]);
   j1Idx=0; j1Ok=0; j1Err=0; j1Esperando=false;
-  show('s-j1'); actualizarChipsJ1(); j1Cargar();
+  show('s-j1'); actualizarChipsJ1(); actualizarTextosTodos(); j1Cargar();
 }
 
 function j1Cargar(){
@@ -810,15 +843,13 @@ function j1Cargar(){
   document.getElementById('j1-btnR').disabled=false;
   document.getElementById('j1-btnRepetir').disabled=false;
   // Pronunciar la palabra real — el niño decide qué fonema escuchó
-  setTimeout(()=> hablar(j1ItemActual.p, 0.7), 400);
+  setTimeout(()=> hablar(j1ItemActual.p, 0.65), 400);
   document.getElementById('j1-prog').style.width=(j1Ok/10*100)+'%';
-  document.getElementById('j1-btnR').querySelector('.letra-juego').textContent=fmt('r');
-  document.getElementById('j1-btnD').querySelector('.letra-juego').textContent=fmt('d');
 }
 
 function j1Repetir(){
   if(!j1ItemActual) return;
-  hablar(j1ItemActual.p, 0.7);
+  hablar(j1ItemActual.p, 0.65);
 }
 
 function j1Responder(elegido){
@@ -844,19 +875,14 @@ function j1Responder(elegido){
       document.getElementById('j1-btnD').disabled=false;
       document.getElementById('j1-btnR').disabled=false;
       document.getElementById('j1-btnRepetir').disabled=false;
-      hablar(j1ItemActual.p, 0.7);
+      hablar(j1ItemActual.p, 0.65);
     }, 1200);
   }
   actualizarChipsJ1();
 }
 
 function j1ActualizarTexto(){
-  if(document.getElementById('j1-btnR'))
-    document.getElementById('j1-btnR').querySelector('.letra-juego').textContent=fmt('r');
-  if(document.getElementById('j1-btnD'))
-    document.getElementById('j1-btnD').querySelector('.letra-juego').textContent=fmt('d');
-  if(j1ItemActual)
-    document.getElementById('j1-palabra').textContent=palabraConHueco(j1ItemActual.p);
+  actualizarTextosTodos();
 }
 
 function actualizarChipsJ1(){
@@ -874,7 +900,7 @@ let j2CajaFonema='', j2EnEscaner=false, j2Bloqueado=false;
 function iniciarJ2(){
   j2Pool=mezclar(['R','R','R','D','R','D','R','R','D','R','R','D','R','R','R','D','R','D','R','R']);
   j2Idx=0; j2Ok=0; j2Err=0;
-  show('s-j2'); actualizarChipsJ2();
+  show('s-j2'); actualizarChipsJ2(); actualizarTextosTodos();
   j2NuevaCaja();
 }
 
@@ -884,8 +910,9 @@ function j2NuevaCaja(){
   j2CajaFonema=j2Pool[j2Idx++];
   j2PosX=0; j2Bloqueado=false; j2EnEscaner=false;
   const caja=document.getElementById('j2-caja');
-  caja.className='caja '+(j2CajaFonema==='D'?'D-box':'R-box');
-  j2ActualizarCaja();
+  // Sin color ni letra hasta clasificar — caja neutra
+  caja.className='caja caja-neutra';
+  caja.textContent='?';
   caja.style.left='0px';
   document.getElementById('j2-prog').style.width=(j2Ok/10*100)+'%';
   clearInterval(j2Timer);
@@ -893,8 +920,7 @@ function j2NuevaCaja(){
 }
 
 function j2ActualizarCaja(){
-  const caja=document.getElementById('j2-caja');
-  if(caja) caja.textContent=fmt(j2CajaFonema);
+  // Solo se llama al cambiar modo letra — ya no muestra la letra en tránsito
 }
 
 function j2Tick(){
@@ -904,15 +930,13 @@ function j2Tick(){
   j2PosX+=j2VelocidadBase;
   const cajaEl=document.getElementById('j2-caja');
   cajaEl.style.left=j2PosX+'px';
-  // Escáner está en 50% del ancho - 40px
   const scannerCenter=ancho/2-35;
   const enZona=(j2PosX>scannerCenter-15 && j2PosX<scannerCenter+50);
   if(enZona && !j2EnEscaner){
     j2EnEscaner=true;
-    hablar(j2CajaFonema==='R'?'Rrr':'Ddd',0.6);
+    hablar(j2CajaFonema==='R'?'Rrr':'Ddd', 0.6);
   }
   if(!enZona && j2PosX>scannerCenter) j2EnEscaner=false;
-  // Si se pasa del final → volver al inicio
   if(j2PosX>ancho-30){
     j2Err++; actualizarChipsJ2();
     registro.push({juego:'Cinta',fonema:j2CajaFonema,elegido:'(tiempo)',correcto:false});
@@ -930,17 +954,20 @@ function j2Clasificar(elegido){
   registro.push({juego:'Cinta',fonema:j2CajaFonema,elegido,correcto});
   if(correcto){
     j2Ok++; actualizarChipsJ2();
-    caja.classList.add('ok-anim'); hablar('¡Bien clasificada!'); confeti();
-    setTimeout(()=>j2NuevaCaja(),700);
+    // Ahora sí revelamos la letra y el color correcto
+    caja.className='caja '+(j2CajaFonema==='D'?'D-box':'R-box');
+    caja.textContent=fmt(j2CajaFonema);
+    setTimeout(()=>{ caja.classList.add('ok-anim'); hablar('¡Bien clasificada!'); confeti(); },200);
+    setTimeout(()=>j2NuevaCaja(), 900);
   } else {
     j2Err++; actualizarChipsJ2();
     caja.classList.add('err-anim');
-    hablar('Ese no es el contenedor correcto.');
+    hablar('Escucha bien el sonido.');
     setTimeout(()=>{
       caja.classList.remove('err-anim');
       j2PosX=0; caja.style.left='0px'; j2Bloqueado=false; j2EnEscaner=false;
       j2Timer=setInterval(j2Tick,16);
-    },800);
+    },900);
   }
 }
 
@@ -956,12 +983,12 @@ function actualizarChipsJ2(){
    ── JUEGO 3: RECICLAJE ──
 ════════════════════════════════════════ */
 let j3Pool=[], j3Idx=0, j3Ok=0, j3Err=0, j3Actual=null, j3Bloqueado=false;
+let j3InstruccionDicha=false;
 
 function iniciarJ3(){
-  // Solo palabras R puro (sin mixtas para no confundir)
   j3Pool=mezclar([...PALABRAS_R]);
-  j3Idx=0; j3Ok=0; j3Err=0;
-  show('s-j3'); actualizarChipsJ3(); j3Cargar();
+  j3Idx=0; j3Ok=0; j3Err=0; j3InstruccionDicha=false;
+  show('s-j3'); actualizarChipsJ3(); actualizarTextosTodos(); j3Cargar();
 }
 
 function j3Cargar(){
@@ -973,17 +1000,19 @@ function j3Cargar(){
   em.className='recicla-emoji'; em.textContent=j3Actual.e;
   j3ActualizarTexto();
   document.getElementById('j3-prog').style.width=(j3Ok/10*100)+'%';
-  setTimeout(()=> hablar(`¿Dónde va… ${j3Actual.p}?`,0.75), 400);
+
+  if(!j3InstruccionDicha){
+    j3InstruccionDicha=true;
+    // Instrucción completa solo la primera vez
+    hablar(`Pon cada palabra en el cajón que corresponde. ${j3Actual.p}`, 0.65);
+  } else {
+    // A partir del segundo turno, solo la palabra
+    setTimeout(()=> hablar(j3Actual.p, 0.65), 300);
+  }
 }
 
 function j3ActualizarTexto(){
-  if(!j3Actual) return;
-  document.getElementById('j3-hint').textContent=
-    fmt('¿Dónde va… ')+j3Actual.e;
-  // Actualizar letras de contenedores
-  document.querySelectorAll('.recicla-cont .cont-letra').forEach((el,i)=>{
-    el.textContent=fmt(i===0?'d':'r');
-  });
+  actualizarTextosTodos();
 }
 
 function j3Enviar(elegido){
@@ -1008,7 +1037,7 @@ function j3Enviar(elegido){
     hablar('Ese no es el sitio. Escucha el sonido.');
     setTimeout(()=>{
       em.className='recicla-emoji'; j3Bloqueado=false;
-      hablar(`${j3Actual.p}`,0.7);
+      hablar(`${j3Actual.p}`,0.65);
     },1100);
   }
 }
@@ -1018,7 +1047,7 @@ function actualizarChipsJ3(){
   document.getElementById('j3-err').textContent=`❌ ${j3Err}`;
 }
 function j3Repetir(){
-  if(j3Actual) hablar(`¿Dónde va… ${j3Actual.p}?`, 0.75);
+  if(j3Actual) hablar(j3Actual.p, 0.65);
 }
 
 /* ════════════════════════════════════════

@@ -641,37 +641,35 @@ let registro = []; // { juego, palabra, correcto }
 ════════════════════════════════════════ */
 const PALABRAS_R = [
   // originales
-  {p:'araña',   f:'R', e:'🕷️'}, {p:'aro',      f:'R', e:'⭕'}, {p:'arena',    f:'R', e:'🏖️'},
-  {p:'barato',  f:'R', e:'💸'}, {p:'caracol',  f:'R', e:'🐌'}, {p:'cara',     f:'R', e:'🧑'},
-  {p:'cera',    f:'R', e:'🕯️'}, {p:'pera',     f:'R', e:'🍐'}, {p:'tesoro',   f:'R', e:'💎'},
-  {p:'lirio',   f:'R', e:'🪻'}, {p:'marino',   f:'R', e:'⚓'}, {p:'pirata',   f:'R', e:'🏴‍☠️'},
-  {p:'sirena',  f:'R', e:'🧜‍♀️'},{p:'coro',     f:'R', e:'🎶'}, {p:'oro',      f:'R', e:'🪙'},
-  {p:'farol',   f:'R', e:'🏮'}, {p:'toro',     f:'R', e:'🐂'}, {p:'muro',     f:'R', e:'🧱'},
-  {p:'mariposa',f:'R', e:'🦋'}, {p:'martillo', f:'R', e:'🔨'},
+  {p:'araña',      f:'R', e:'🕷️'}, {p:'aro',        f:'R', e:'⭕'},  {p:'arena',      f:'R', e:'🏖️'},
+  {p:'barato',     f:'R', e:'💸'}, {p:'caracol',    f:'R', e:'🐌'},  {p:'cara',       f:'R', e:'🧑'},
+  {p:'cera',       f:'R', e:'🕯️'}, {p:'pera',       f:'R', e:'🍐'},  {p:'tesoro',     f:'R', e:'💎'},
+  {p:'lirio',      f:'R', e:'🪻'}, {p:'marino',     f:'R', e:'⚓'},  {p:'pirata',     f:'R', e:'🏴‍☠️'},
+  {p:'sirena',     f:'R', e:'🧜‍♀️'},{p:'coro',       f:'R', e:'🎶'},  {p:'oro',        f:'R', e:'🪙'},
+  {p:'farol',      f:'R', e:'🏮'}, {p:'toro',       f:'R', e:'🐂'},  {p:'muro',       f:'R', e:'🧱'},
+  {p:'mariposa',   f:'R', e:'🦋'}, {p:'martillo',   f:'R', e:'🔨'},
   // nuevas
-  {p:'naranja',  f:'R', e:'🍊'}, {p:'faro',     f:'R', e:'🗼'}, {p:'cerezas',  f:'R', e:'🍒'},
-  {p:'barco',    f:'R', e:'⛵'}, {p:'loro',     f:'R', e:'🦜'}, {p:'carota',   f:'R', e:'🥕'},
-  {p:'corona',   f:'R', e:'👑'}, {p:'caramelo', f:'R', e:'🍭'}, {p:'paracaídas',f:'R',e:'🪂'},
-  {p:'girafa',   f:'R', e:'🦒'}, {p:'orca',     f:'R', e:'🐋'}, {p:'trueno',   f:'R', e:'⛈️'},
-  {p:'cerebro',  f:'R', e:'🧠'}, {p:'carrusel', f:'R', e:'🎠'}, {p:'tortuga',  f:'R', e:'🐢'},
-  {p:'fresas',   f:'R', e:'🍓'}, {p:'paraguas', f:'R', e:'☂️'}, {p:'ternera',  f:'R', e:'🐄'},
-  {p:'cohete',   f:'R', e:'🚀'}, {p:'jarabe',   f:'R', e:'🍯'},
+  {p:'naranja',    f:'R', e:'🍊'}, {p:'faro',       f:'R', e:'🗼'},  {p:'cerezas',    f:'R', e:'🍒'},
+  {p:'barco',      f:'R', e:'⛵'}, {p:'loro',       f:'R', e:'🦜'},  {p:'zanahoria',  f:'R', e:'🥕'},
+  {p:'corona',     f:'R', e:'👑'}, {p:'caramelo',   f:'R', e:'🍭'},
+  {p:'jirafa',     f:'R', e:'🦒'}, {p:'orca',       f:'R', e:'🐋'},
+  {p:'cerebro',    f:'R', e:'🧠'},
+  {p:'tortuga',    f:'R', e:'🐢'}, {p:'paraguas',   f:'R', e:'☂️'},  {p:'ternera',    f:'R', e:'🐄'},
+  {p:'jarabe',     f:'R', e:'🍯'},
 ];
-const PALABRAS_MIXTAS = [
-  {p:'dinosaurio',f:'D',e:'🦖'},
-];
+const PALABRAS_MIXTAS = [];
 const PALABRAS_D = [
   // originales
-  {p:'dedo',     f:'D', e:'☝️'}, {p:'dado',     f:'D', e:'🎲'}, {p:'duende',   f:'D', e:'🧝'},
-  {p:'dinero',   f:'D', e:'💰'}, {p:'dulce',    f:'D', e:'🍬'}, {p:'delfín',   f:'D', e:'🐬'},
-  {p:'dragón',   f:'D', e:'🐉'}, {p:'dominó',   f:'D', e:'🎯'}, {p:'ducha',    f:'D', e:'🚿'},
-  {p:'detective',f:'D', e:'🔍'},
+  {p:'dedo',       f:'D', e:'☝️'}, {p:'dado',       f:'D', e:'🎲'},  {p:'duende',     f:'D', e:'🧝'},
+  {p:'dulce',      f:'D', e:'🍬'}, {p:'delfín',     f:'D', e:'🐬'},
+  {p:'dragón',     f:'D', e:'🐉'}, {p:'dominó',     f:'D', e:'🎯'},  {p:'ducha',      f:'D', e:'🚿'},
+  {p:'detective',  f:'D', e:'🔍'},
   // nuevas
-  {p:'diente',   f:'D', e:'🦷'}, {p:'dedal',    f:'D', e:'🧵'}, {p:'dibujo',   f:'D', e:'🎨'},
-  {p:'dominó',   f:'D', e:'🁣'}, {p:'dunas',    f:'D', e:'🏜️'}, {p:'dinasaurio',f:'D',e:'🦕'},
-  {p:'dados',    f:'D', e:'🎲'}, {p:'dálmata',  f:'D', e:'🐕'}, {p:'durazno',  f:'D', e:'🍑'},
-  {p:'damasco',  f:'D', e:'🌸'}, {p:'despertador',f:'D',e:'⏰'},{p:'diploma',  f:'D', e:'📜'},
-  {p:'dominada', f:'D', e:'💪'}, {p:'disfraz',  f:'D', e:'🎭'}, {p:'dominoes', f:'D', e:'🀱'},
+  {p:'diente',     f:'D', e:'🦷'}, {p:'dedal',      f:'D', e:'🧵'},  {p:'dibujo',     f:'D', e:'🎨'},
+  {p:'dunas',      f:'D', e:'🏜️'}, {p:'dálmata',    f:'D', e:'🐕'},
+  {p:'diploma',    f:'D', e:'📜'}, {p:'disfraz',    f:'D', e:'🎭'},
+  {p:'dardo',      f:'D', e:'🎯'}, {p:'diadema',    f:'D', e:'👑'},
+  {p:'dados',      f:'D', e:'🎲'},
 ];
 
 function mezclar(arr){

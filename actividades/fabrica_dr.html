@@ -491,7 +491,7 @@ body.may .recicla-cont .cont-letra{font-family:'Playwrite DE Grund',cursive;text
       </div>
     </div>
     <p style="font-family:'Fredoka One',cursive;color:var(--sec);font-size:1rem">
-      ¿Qué sonido escuchaste?
+      ¿Qué sonido tiene la palabra?
     </p>
     <div class="radio-btns">
       <button class="radio-btn D" onclick="j1Responder('D')" id="j1-btnD">
@@ -501,6 +501,13 @@ body.may .recicla-cont .cont-letra{font-family:'Playwrite DE Grund',cursive;text
         Frecuencia R <span class="letra-juego">r</span>
       </button>
     </div>
+    <button id="j1-btnRepetir" onclick="j1Repetir()" style="
+      margin-top:.4rem;padding:.55rem 1.4rem;border:none;border-radius:14px;
+      background:linear-gradient(135deg,var(--turq),var(--azul));color:white;
+      font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer;
+      box-shadow:0 4px 12px rgba(78,205,196,.35);transition:transform .15s;">
+      🔊 Escuchar de nuevo
+    </button>
   </div>
 </div>
 
@@ -541,6 +548,13 @@ body.may .recicla-cont .cont-letra{font-family:'Playwrite DE Grund',cursive;text
           Contenedor R<br><small>Flecha der. →</small>
         </button>
       </div>
+      <button onclick="j2Repetir()" style="
+        padding:.5rem 1.4rem;border:none;border-radius:14px;
+        background:linear-gradient(135deg,var(--turq),var(--azul));color:white;
+        font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer;
+        box-shadow:0 4px 12px rgba(78,205,196,.35);">
+        🔊 Escuchar fonema
+      </button>
     </div>
   </div>
 </div>
@@ -578,6 +592,13 @@ body.may .recicla-cont .cont-letra{font-family:'Playwrite DE Grund',cursive;text
           <span class="cont-nombre" style="font-family:'Fredoka One',cursive">Roc R<br><small>der. →</small></span>
         </div>
       </div>
+      <button onclick="j3Repetir()" style="
+        padding:.5rem 1.4rem;border:none;border-radius:14px;
+        background:linear-gradient(135deg,var(--turq),var(--azul));color:white;
+        font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer;
+        box-shadow:0 4px 12px rgba(78,205,196,.35);">
+        🔊 Escuchar de nuevo
+      </button>
     </div>
   </div>
 </div>
@@ -767,7 +788,7 @@ function mostrarVictoria(nombreJuego){
    ── JUEGO 1: LA RADIO ──
 ════════════════════════════════════════ */
 let j1Pool=[], j1Idx=0, j1Ok=0, j1Err=0, j1Esperando=false;
-let j1FonemaHablado=''; // 'R' o 'D' — lo que dijo la voz
+let j1ItemActual=null; // item actual para poder repetir
 
 function iniciarJ1(){
   j1Pool=mezclar([...PALABRAS_R,...PALABRAS_MIXTAS]);
@@ -778,30 +799,26 @@ function iniciarJ1(){
 function j1Cargar(){
   if(j1Ok>=10){mostrarVictoria('La Radio de los Robots');return;}
   if(j1Idx>=j1Pool.length){j1Pool=mezclar([...PALABRAS_R,...PALABRAS_MIXTAS]);j1Idx=0;}
-  const item=j1Pool[j1Idx++];
+  j1ItemActual=j1Pool[j1Idx++];
   j1Esperando=true;
   // Reset robot
   const robot=document.getElementById('j1-robot');
   robot.className='robot-emoji'; robot.textContent='🤖';
   // Mostrar palabra con hueco
-  document.getElementById('j1-palabra').textContent=palabraConHueco(item.p);
+  document.getElementById('j1-palabra').textContent=palabraConHueco(j1ItemActual.p);
   document.getElementById('j1-btnD').disabled=false;
   document.getElementById('j1-btnR').disabled=false;
-  // Decidir aleatoriamente si pronuncia R o D
-  const decirR = Math.random()>0.4; // 60% R, 40% D para practicar más la R
-  j1FonemaHablado = item.f==='R' ? (decirR?'R':'D') : 'D';
-  // Si la palabra es mixta (madera → tiene R), al decir deformado suena D
-  let textoPronunciado;
-  if(j1FonemaHablado===item.f){
-    textoPronunciado=item.p; // correcto
-  } else {
-    // Deformar: cambiar la primera R→D o D→R
-    textoPronunciado=item.p.replace(/r/i, j1FonemaHablado==='D'?'d':'r');
-  }
-  setTimeout(()=> hablar(textoPronunciado, 0.7), 400);
+  document.getElementById('j1-btnRepetir').disabled=false;
+  // Pronunciar la palabra real — el niño decide qué fonema escuchó
+  setTimeout(()=> hablar(j1ItemActual.p, 0.7), 400);
   document.getElementById('j1-prog').style.width=(j1Ok/10*100)+'%';
   document.getElementById('j1-btnR').querySelector('.letra-juego').textContent=fmt('r');
   document.getElementById('j1-btnD').querySelector('.letra-juego').textContent=fmt('d');
+}
+
+function j1Repetir(){
+  if(!j1ItemActual) return;
+  hablar(j1ItemActual.p, 0.7);
 }
 
 function j1Responder(elegido){
@@ -809,13 +826,15 @@ function j1Responder(elegido){
   j1Esperando=false;
   document.getElementById('j1-btnD').disabled=true;
   document.getElementById('j1-btnR').disabled=true;
-  const correcto=(elegido===j1FonemaHablado);
+  document.getElementById('j1-btnRepetir').disabled=true;
+  // La respuesta correcta es el fonema REAL de la palabra
+  const correcto=(elegido===j1ItemActual.f);
   const robot=document.getElementById('j1-robot');
-  registro.push({juego:'Radio',fonema:j1FonemaHablado,elegido,correcto});
+  registro.push({juego:'Radio', palabra:j1ItemActual.p, fonema:j1ItemActual.f, elegido, correcto});
   if(correcto){
     j1Ok++; robot.className='robot-emoji ok'; robot.textContent='🤩';
     hablar('¡Correcto!'); confeti();
-    setTimeout(()=>{robot.className='robot-emoji';j1Cargar();},1200);
+    setTimeout(()=>{robot.className='robot-emoji'; j1Cargar();}, 1200);
   } else {
     j1Err++; robot.className='robot-emoji err'; robot.textContent='😬';
     hablar('Escucha de nuevo.');
@@ -824,23 +843,20 @@ function j1Responder(elegido){
       j1Esperando=true;
       document.getElementById('j1-btnD').disabled=false;
       document.getElementById('j1-btnR').disabled=false;
-      // Volver a leer el mismo fonema
-      hablar(j1Pool[j1Idx-1].p,0.7);
-    },1200);
+      document.getElementById('j1-btnRepetir').disabled=false;
+      hablar(j1ItemActual.p, 0.7);
+    }, 1200);
   }
   actualizarChipsJ1();
 }
 
 function j1ActualizarTexto(){
-  // Actualizar etiquetas de botones al cambiar letra
   if(document.getElementById('j1-btnR'))
     document.getElementById('j1-btnR').querySelector('.letra-juego').textContent=fmt('r');
   if(document.getElementById('j1-btnD'))
     document.getElementById('j1-btnD').querySelector('.letra-juego').textContent=fmt('d');
-  if(j1Pool.length&&j1Idx>0){
-    const item=j1Pool[j1Idx-1];
-    document.getElementById('j1-palabra').textContent=palabraConHueco(item.p);
-  }
+  if(j1ItemActual)
+    document.getElementById('j1-palabra').textContent=palabraConHueco(j1ItemActual.p);
 }
 
 function actualizarChipsJ1(){
@@ -929,6 +945,7 @@ function j2Clasificar(elegido){
 }
 
 function j2Parar(){ clearInterval(j2Timer); }
+function j2Repetir(){ hablar(j2CajaFonema==='R'?'Rrr':'Ddd', 0.6); }
 
 function actualizarChipsJ2(){
   document.getElementById('j2-ok').textContent=`✅ ${j2Ok}`;
@@ -999,6 +1016,9 @@ function j3Enviar(elegido){
 function actualizarChipsJ3(){
   document.getElementById('j3-ok').textContent=`✅ ${j3Ok}`;
   document.getElementById('j3-err').textContent=`❌ ${j3Err}`;
+}
+function j3Repetir(){
+  if(j3Actual) hablar(`¿Dónde va… ${j3Actual.p}?`, 0.75);
 }
 
 /* ════════════════════════════════════════

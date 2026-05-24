@@ -651,7 +651,18 @@ const PALABRAS_R = [
 const PALABRAS_MIXTAS = [
   {p:'dinosaurio',f:'D',e:'🦖'}, {p:'madera',f:'R',e:'🪵'},
 ];
-const PALABRAS_D = []; // para J3 solo usamos R puro + mixtas excluidas
+const PALABRAS_D = [
+  {p:'dedo',    f:'D', e:'☝️'},
+  {p:'dado',    f:'D', e:'🎲'},
+  {p:'duende',  f:'D', e:'🧝'},
+  {p:'dinero',  f:'D', e:'💰'},
+  {p:'dulce',   f:'D', e:'🍬'},
+  {p:'delfín',  f:'D', e:'🐬'},
+  {p:'dragón',  f:'D', e:'🐉'},
+  {p:'dominó',  f:'D', e:'🁣'},
+  {p:'ducha',   f:'D', e:'🚿'},
+  {p:'detective',f:'D',e:'🔍'},
+];
 
 function mezclar(arr){
   const a=[...arr];
@@ -824,14 +835,14 @@ let j1Pool=[], j1Idx=0, j1Ok=0, j1Err=0, j1Esperando=false;
 let j1ItemActual=null; // item actual para poder repetir
 
 function iniciarJ1(){
-  j1Pool=mezclar([...PALABRAS_R,...PALABRAS_MIXTAS]);
+  j1Pool=mezclar([...PALABRAS_R,...PALABRAS_MIXTAS,...PALABRAS_D]);
   j1Idx=0; j1Ok=0; j1Err=0; j1Esperando=false;
   show('s-j1'); actualizarChipsJ1(); actualizarTextosTodos(); j1Cargar();
 }
 
 function j1Cargar(){
   if(j1Ok>=10){mostrarVictoria('La Radio de los Robots');return;}
-  if(j1Idx>=j1Pool.length){j1Pool=mezclar([...PALABRAS_R,...PALABRAS_MIXTAS]);j1Idx=0;}
+  if(j1Idx>=j1Pool.length){j1Pool=mezclar([...PALABRAS_R,...PALABRAS_MIXTAS,...PALABRAS_D]);j1Idx=0;}
   j1ItemActual=j1Pool[j1Idx++];
   j1Esperando=true;
   // Reset robot

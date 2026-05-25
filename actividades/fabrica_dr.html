@@ -1014,7 +1014,7 @@ let j3Pool=[], j3Idx=0, j3Ok=0, j3Err=0, j3Actual=null, j3Bloqueado=false;
 let j3InstruccionDicha=false;
 
 function iniciarJ3(){
-  j3Pool=mezclar([...PALABRAS_R]);
+  j3Pool=mezclar([...PALABRAS_R,...PALABRAS_D]);
   j3Idx=0; j3Ok=0; j3Err=0; j3InstruccionDicha=false;
   show('s-j3'); actualizarChipsJ3(); actualizarTextosTodos(); j3Cargar();
 }

@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aprende a escribir - Teclado</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Varela+Round&family=Playwrite+HR+Lijeva:wght@100..400&family=Playwrite+DE+Grund:wght@100..400&family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap');
+        :root {
+            --pri: #2193b0; --pri-l: #6dd5ed;
+            --ok: #4CAF50;  --err: #f44336;
+            --lv1: #4CAF50; --lv2: #2196F3;
+            --fn: 'Varela Round',sans-serif;
+            --ft: 'Fredoka One',cursive;
+            --fu: 'Nunito',sans-serif;
+            --fmin: 'Playwrite HR Lijeva',cursive;
+            --fmay: 'Playwrite DE Grund',cursive;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;user-select:none;}
+        body{font-family:var(--fn);background:#e8f4f8;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+
+        /* NOMBRE */
+        #nombre-screen{position:fixed;inset:0;background:linear-gradient(135deg,var(--pri-l),var(--pri));z-index:2000;display:flex;align-items:center;justify-content:center;}
+        .ncard{background:white;padding:2.5rem 2rem;border-radius:32px;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.2);}
+        .ncard h2{font-family:var(--ft);font-size:1.6rem;color:var(--pri);margin:0 0 .4rem;}
+        .ncard p{color:#555;font-size:.9rem;margin-bottom:1.2rem;line-height:1.6;}
+        .ninp{width:100%;padding:.8rem 1.2rem;border-radius:100px;border:2px solid #cce5f0;font-size:1rem;font-family:var(--fu);text-align:center;outline:none;margin-bottom:1rem;transition:border-color .2s;}
+        .ninp:focus{border-color:var(--pri);}
+        .nok{width:100%;padding:.9rem;border:none;border-radius:100px;background:linear-gradient(135deg,var(--pri-l),var(--pri));color:white;font-family:var(--ft);font-size:1.1rem;cursor:pointer;margin-bottom:.7rem;box-shadow:0 6px 20px rgba(33,147,176,.35);transition:transform .15s;}
+        .nok:hover{transform:translateY(-1px);}
+        .nno{background:none;border:none;color:#aaa;font-size:.85rem;font-family:var(--fu);cursor:pointer;text-decoration:underline;}
+        .nnota{font-size:.75rem;color:#bbb;margin-top:1rem;border-top:1px solid #f0f0f0;padding-top:.8rem;line-height:1.5;}
+
+        /* SPLASH */
+        #splash-screen{position:fixed;inset:0;background:linear-gradient(135deg,var(--pri-l),var(--pri));z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;padding:20px;text-align:center;overflow-y:auto;}
+        .bg-emoji{position:fixed;font-size:2rem;opacity:.2;pointer-events:none;animation:float 6s infinite ease-in-out;z-index:0;}
+        @keyframes float{0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-20px) rotate(20deg);}}
+        .wbox{background:rgba(255,255,255,.2);padding:24px 30px 18px;border-radius:40px;backdrop-filter:blur(10px);margin-bottom:16px;max-width:520px;width:100%;position:relative;z-index:1;}
+        .wbox h1{font-family:var(--ft);font-size:2.2rem;margin-bottom:6px;}
+        .wbox p{font-size:1.1rem;opacity:.9;}
+        .lpanel{background:rgba(255,255,255,.2);border-radius:24px;padding:16px 24px;margin-bottom:14px;max-width:520px;width:100%;backdrop-filter:blur(6px);position:relative;z-index:1;}
+        .lpanel h3{font-family:var(--ft);font-size:1rem;margin-bottom:10px;opacity:.9;}
+        .lfila{display:flex;gap:10px;justify-content:center;}
+        .btnl{flex:1;padding:10px 16px;border:3px solid rgba(255,255,255,.4);border-radius:16px;background:rgba(255,255,255,.15);cursor:pointer;color:white;font-family:var(--fu);font-size:.95rem;font-weight:700;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:4px;}
+        .btnl.sel{background:rgba(255,255,255,.35);border-color:white;box-shadow:0 0 20px rgba(255,255,255,.3);}
+        .prev-min{font-family:var(--fmin);font-size:1.4rem;font-weight:300;}
+        .prev-may{font-family:var(--fmay);font-size:1.1rem;font-weight:300;text-transform:uppercase;}
+        .lvcard{background:white;color:#333;width:95%;max-width:520px;padding:18px 22px;margin:6px auto;border-radius:24px;cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:20px;box-shadow:0 6px 15px rgba(0,0,0,.1);position:relative;z-index:1;}
+        .lvcard:hover{transform:translateY(-3px);box-shadow:0 10px 25px rgba(0,0,0,.15);}
+        .volver{display:inline-block;margin-top:14px;padding:10px 26px;border-radius:999px;border:2px solid rgba(255,255,255,.5);background:rgba(255,255,255,.15);color:white;font-family:var(--fu);font-size:.95rem;font-weight:700;text-decoration:none;transition:all .2s;backdrop-filter:blur(4px);position:relative;z-index:1;}
+        .volver:hover{background:rgba(255,255,255,.3);border-color:white;}
+
+        /* JUEGO */
+        #game-container{background:white;width:98vw;height:96vh;border-radius:40px;border:8px solid #eee;display:flex;flex-direction:column;padding:12px;position:relative;overflow:hidden;}
+        .topbar{display:flex;justify-content:space-between;align-items:center;padding:6px 16px;flex-shrink:0;}
+        .bsys{width:50px;height:50px;border-radius:18px;border:none;cursor:pointer;color:white;font-size:1.4rem;display:flex;align-items:center;justify-content:center;transition:transform .15s;}
+        .bsys:hover{transform:scale(1.08);}
+        #score-bar{display:flex;align-items:center;gap:20px;font-family:var(--ft);font-size:1.1rem;color:#555;}
+        #score-display{background:linear-gradient(135deg,var(--pri-l),var(--pri));color:white;padding:6px 20px;border-radius:100px;font-size:1.3rem;}
+        #progress-display{color:#999;font-size:1rem;}
+        #main-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;min-height:0;}
+
+        /* PALABRA + IMAGEN */
+        #word-area{display:flex;gap:24px;align-items:center;justify-content:center;width:100%;}
+        #word-panel{background:#e8f4fb;border-radius:28px;min-width:220px;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 30px;gap:12px;border:4px solid transparent;transition:background .3s,border-color .3s;}
+        #word-panel.ok{background:#e8f8e8;border-color:var(--ok);animation:pok .4s ease;}
+        #word-panel.ko{background:#ffeaea;border-color:var(--err);animation:shake .35s ease;}
+        @keyframes pok{0%,100%{transform:scale(1);}50%{transform:scale(1.04);}}
+        @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
+        #typed-letters{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;}
+        .tl{font-size:clamp(1.8rem,4vw,3rem);font-weight:400;color:#2196F3;min-width:30px;text-align:center;border-bottom:4px solid #ccc;padding:0 4px;transition:color .2s,border-color .2s;}
+        .tl.filled{border-color:#2196F3;}
+        .tl.correct{color:var(--ok);border-color:var(--ok);}
+        .tl.wrong{color:var(--err);border-color:var(--err);}
+        .tl.mode-min{font-family:var(--fmin);}
+        .tl.mode-may{font-family:var(--fmay);}
+        #word-hint{display:none;}
+        #img-panel{background:#e8f4fb;border-radius:28px;width:140px;height:140px;display:flex;align-items:center;justify-content:center;font-size:5.5rem;}
+        #bonus-indicator{font-family:var(--ft);font-size:1rem;color:#FF9800;min-height:1.4rem;}
+
+        /* TECLADO */
+        #keyboard{width:100%;max-width:860px;background:#f0f0f0;border-radius:24px;padding:12px 14px;display:flex;flex-direction:column;gap:7px;flex-shrink:0;}
+        .kbrow{display:flex;gap:6px;justify-content:center;}
+        .key{height:46px;min-width:42px;border-radius:10px;border:none;cursor:pointer;font-family:var(--fu);font-size:.95rem;font-weight:700;display:flex;align-items:center;justify-content:center;transition:transform .08s;box-shadow:0 3px 0 rgba(0,0,0,.18);flex:1;}
+        .key:active,.key.pressed{transform:translateY(3px);box-shadow:none;}
+        .kn{background:#e05252;color:white;}
+        .kq{background:#3a7bd5;color:white;}
+        .ka{background:#4a9a6a;color:white;}
+        .kz{background:#8b6bb1;color:white;}
+        .kv{background:#52aacc;color:white;}
+        .kf{background:#5a7a5a;color:white;font-size:.75rem;min-width:52px;flex:0 0 auto;}
+        .ksp{background:#5a7a5a;color:white;flex:4;min-width:140px;}
+        .kdel{background:#cc6633;color:white;min-width:80px;flex:0 0 auto;font-size:.8rem;}
+        .kent{background:#5a7a5a;color:white;min-width:80px;flex:0 0 auto;font-size:.8rem;}
+        .key.hl{filter:brightness(1.3) drop-shadow(0 0 8px rgba(255,220,0,.9));animation:kp .6s infinite alternate;}
+        @keyframes kp{from{filter:brightness(1.15) drop-shadow(0 0 4px rgba(255,220,0,.5));}to{filter:brightness(1.4) drop-shadow(0 0 12px rgba(255,220,0,1));}}
+
+        /* FINAL */
+        #final-screen{position:fixed;inset:0;background:linear-gradient(135deg,var(--pri-l),var(--pri));z-index:1500;display:none;flex-direction:column;align-items:center;justify-content:center;color:white;text-align:center;padding:20px;}
+        #final-screen.vis{display:flex;}
+        .fcard{background:white;color:#333;border-radius:40px;padding:2.5rem 2rem;max-width:460px;width:95%;box-shadow:0 20px 60px rgba(0,0,0,.25);}
+        .fcard h2{font-family:var(--ft);font-size:2rem;color:var(--pri);margin-bottom:.3rem;}
+        .fscore{font-family:var(--ft);font-size:4rem;color:#FF9800;margin:.5rem 0;}
+        .fstars{font-size:2rem;margin:.5rem 0;}
+        .fstats{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:1rem 0;}
+        .schip{background:#f0f8ff;border-radius:14px;padding:10px 18px;font-family:var(--fu);font-weight:700;font-size:.9rem;}
+        .schip span{color:var(--pri);font-size:1.2rem;display:block;}
+        .breplay{width:100%;padding:1rem;border:none;border-radius:100px;margin-top:1rem;background:linear-gradient(135deg,var(--pri-l),var(--pri));color:white;font-family:var(--ft);font-size:1.2rem;cursor:pointer;box-shadow:0 6px 20px rgba(33,147,176,.35);transition:transform .15s;}
+        .breplay:hover{transform:translateY(-1px);}
+        .brep2{width:100%;padding:.8rem;border:2px solid #ddd;border-radius:100px;margin-top:.6rem;background:none;color:#888;font-family:var(--fu);font-size:1rem;cursor:pointer;transition:all .2s;}
+        .brep2:hover{border-color:var(--pri);color:var(--pri);}
+
+        /* PARENTAL */
+        #parental-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:3000;align-items:center;justify-content:center;flex-direction:column;text-align:center;}
+        #parental-modal.vis{display:flex;}
+        .pcard{background:white;color:#333;border-radius:28px;padding:2.5rem 2rem;max-width:340px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+        .pcard h2{font-family:var(--ft);font-size:1.4rem;color:var(--pri);margin-bottom:.3rem;}
+        .psum{font-size:2.2rem;font-weight:900;color:#FF9800;margin:1rem 0;}
+        .pinp{width:100%;padding:.8rem;border:3px solid #cce5f0;border-radius:14px;font-size:1.5rem;font-weight:800;text-align:center;font-family:var(--fu);outline:none;margin-bottom:.8rem;}
+        .pinp:focus{border-color:var(--pri);}
+        .perr{color:var(--err);font-size:.9rem;min-height:1.2rem;margin-bottom:.5rem;}
+        .pok{width:100%;padding:.9rem;border:none;border-radius:14px;background:linear-gradient(135deg,var(--pri-l),var(--pri));color:white;font-family:var(--ft);font-size:1.2rem;cursor:pointer;margin-bottom:.5rem;transition:transform .15s;}
+        .pok:hover{transform:translateY(-1px);}
+        .pcancel{background:none;border:none;color:#aaa;font-size:.85rem;cursor:pointer;font-family:var(--fu);}
+
+        /* ── AVISO ROTACIÓN ── */
+        #rotate-msg {
+            display: none;
+            position: fixed; inset: 0; z-index: 4000;
+            background: linear-gradient(135deg, #6dd5ed, #2193b0);
+            flex-direction: column; align-items: center; justify-content: center;
+            color: white; text-align: center; padding: 30px;
+        }
+        #rotate-msg.vis { display: flex; }
+        #rotate-msg .rico { font-size: 5rem; animation: spin 2s infinite linear; }
+        @keyframes spin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+        #rotate-msg h2 { font-family: var(--ft); font-size: 2rem; margin: 1rem 0 .5rem; }
+        #rotate-msg p  { font-size: 1rem; opacity: .9; font-family: var(--fu); }
+
+        /* ── AJUSTES LANDSCAPE MÓVIL ── */
+        @media (max-height: 500px) and (orientation: landscape) {
+            #game-container { height: 100vh; border-radius: 0; border: none; padding: 4px 8px; }
+            .topbar { padding: 2px 10px; }
+            .bsys { width: 38px; height: 38px; font-size: 1rem; border-radius: 12px; }
+            #score-display { font-size: 1rem; padding: 4px 14px; }
+            #progress-display { font-size: .85rem; }
+            #word-area { gap: 12px; }
+            #word-panel { min-width: 140px; min-height: 80px; padding: 10px 16px; gap: 6px; border-radius: 18px; }
+            #img-panel { width: 80px; height: 80px; font-size: 3rem; border-radius: 18px; }
+            .tl { font-size: 1.4rem; }
+            #word-hint { font-size: .7rem; }
+            #bonus-indicator { font-size: .8rem; min-height: 1rem; }
+            #keyboard { padding: 6px 8px; gap: 4px; border-radius: 16px; }
+            .kbrow { gap: 3px; }
+            .key { height: 32px; min-width: 28px; font-size: .75rem; border-radius: 7px; box-shadow: 0 2px 0 rgba(0,0,0,.18); }
+            .kf  { min-width: 36px !important; font-size: .65rem; }
+            .kdel { min-width: 56px !important; font-size: .65rem; }
+            .kent { min-width: 56px !important; font-size: .65rem; }
+            .ksp { min-width: 80px; }
+        }
+
+        .kfont-min { font-family: var(--fmin) !important; font-size: 1.1rem !important; font-weight: 300 !important; }
+        .kfont-may { font-family: var(--fmay) !important; font-size: 0.85rem !important; font-weight: 300 !important; }
+        @media (max-height: 500px) and (orientation: landscape) {
+            .kfont-min { font-size: 0.8rem !important; }
+            .kfont-may { font-size: 0.65rem !important; }
+        }
+        
+        #img-panel:active { transform: scale(0.93); }
+        #img-panel { transition: transform 0.1s; }
+        #img-panel::after { content: '🔊'; position: absolute; font-size: 0.9rem; bottom: 6px; right: 8px; opacity: 0.5; }
+        #img-panel { position: relative; }
+.hidden{display:none!important;}
+    </style>
+</head>
+
+<div style="position:fixed;bottom:10px;left:12px;z-index:9999;pointer-events:none;background:rgba(42,157,143,.75);color:white;font-family:sans-serif;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;letter-spacing:.03em;">© Creado por Inma Merino Rus</div>
+
+<body>
+
+<!-- AVISO ROTACIÓN -->
+<div id="rotate-msg">
+    <div class="rico">📱</div>
+    <h2>Gira el móvil</h2>
+    <p>Este juego se ve mejor en<br><strong>horizontal 🔄</strong></p>
+</div>
+
+<!-- NOMBRE -->
+<div id="nombre-screen">
+    <div class="ncard">
+        <div style="font-size:3rem;margin-bottom:.5rem;">⌨️</div>
+        <h2>¿Quién va a jugar?</h2>
+        <p>Si quieres, escribe el nombre del niño o niña para que Inma pueda ver cómo ha ido la sesión.</p>
+        <input id="nombre-inp" class="ninp" type="text" placeholder="Nombre del niño/a…" maxlength="50"
+            onkeydown="if(event.key==='Enter')guardarNombre()">
+        <button class="nok" onclick="guardarNombre()">Enviar informe a Inma ✓</button>
+        <button class="nno" onclick="sinNombre()">Continuar sin enviar informe</button>
+        <p class="nnota">🔒 Si escribes el nombre, al terminar Inma recibirá un informe con los resultados.<br>Es voluntario y los datos solo los verá ella para el seguimiento terapéutico.</p>
+    </div>
+</div>
+
+<!-- SPLASH -->
+<div id="splash-screen" class="hidden">
+    <div id="emoji-bg"></div>
+    <div class="wbox">
+        <h1>⌨️ Aprende a escribir 🌟</h1>
+        <p>Escucha la palabra y escríbela en el teclado</p>
+    </div>
+    <div class="lpanel">
+        <h3>🔤 Tipo de letra</h3>
+        <div class="lfila">
+            <button class="btnl sel" id="btn-min" onclick="setLetra('min',this)">
+                <span class="prev-min">abc</span><span>minúsculas</span>
+            </button>
+            <button class="btnl" id="btn-may" onclick="setLetra('may',this)">
+                <span class="prev-may">ABC</span><span>MAYÚSCULAS</span>
+            </button>
+        </div>
+    </div>
+    <div class="lvcard" onclick="startGame(1)">
+        <div style="font-size:3rem;">🌱</div>
+        <div style="text-align:left;">
+            <h2 style="color:var(--lv1);font-family:var(--ft);">Nivel 1 — Principiante</h2>
+            <p>La tecla correcta se ilumina como ayuda</p>
+        </div>
+    </div>
+    <div class="lvcard" onclick="startGame(2)">
+        <div style="font-size:3rem;">🚀</div>
+        <div style="text-align:left;">
+            <h2 style="color:var(--lv2);font-family:var(--ft);">Nivel 2 — Autónomo</h2>
+            <p>Sin ayuda, escribe tú solo la palabra</p>
+        </div>
+    </div>
+    <a href="https://manosconmuchoquecontar.github.io/" target="_blank" class="volver">🏠 Volver a los juegos</a>
+</div>
+
+<!-- JUEGO -->
+<div id="game-container" class="hidden">
+    <div class="topbar">
+        <button class="bsys" style="background:#ff5722;" onclick="abrirParental('salir')">🏠</button>
+        <div id="score-bar">
+            <span id="progress-display">1 / 20</span>
+            <span id="score-display">0 pts</span>
+        </div>
+        <div style="display:flex;gap:10px;">
+            <button class="bsys" style="background:#9c27b0;" onclick="generateReport()">📋</button>
+            <button class="bsys" style="background:#607d8b;" onclick="toggleFS()">⛶</button>
+        </div>
+    </div>
+    <div id="main-stage">
+        <div id="word-area">
+            <div id="word-panel">
+                <div id="typed-letters"></div>
+                <div id="word-hint"></div>
+            </div>
+            <div id="img-panel">❓</div>
+        </div>
+        <div id="bonus-indicator"></div>
+        <div id="keyboard">
+            <div class="kbrow">
+                <button class="key kf">esc</button>
+                <button class="key kn" data-k="1">1</button>
+                <button class="key kn" data-k="2">2</button>
+                <button class="key kn" data-k="3">3</button>
+                <button class="key kn" data-k="4">4</button>
+                <button class="key kn" data-k="5">5</button>
+                <button class="key kn" data-k="6">6</button>
+                <button class="key kn" data-k="7">7</button>
+                <button class="key kn" data-k="8">8</button>
+                <button class="key kn" data-k="9">9</button>
+                <button class="key kn" data-k="0">0</button>
+                <button class="key kdel" data-k="Backspace">⌫ borrar</button>
+            </div>
+            <div class="kbrow">
+                <button class="key kf">⇥</button>
+                <button class="key kq" data-k="q">Q</button>
+                <button class="key kq" data-k="w">W</button>
+                <button class="key kv" data-k="e">E</button>
+                <button class="key kq" data-k="r">R</button>
+                <button class="key kq" data-k="t">T</button>
+                <button class="key kq" data-k="y">Y</button>
+                <button class="key kv" data-k="u">U</button>
+                <button class="key kv" data-k="i">I</button>
+                <button class="key kv" data-k="o">O</button>
+                <button class="key kq" data-k="p">P</button>
+            </div>
+            <div class="kbrow">
+                <button class="key kf" style="min-width:58px;">⇪</button>
+                <button class="key kv" data-k="a">A</button>
+                <button class="key ka" data-k="s">S</button>
+                <button class="key ka" data-k="d">D</button>
+                <button class="key ka" data-k="f">F</button>
+                <button class="key ka" data-k="g">G</button>
+                <button class="key ka" data-k="h">H</button>
+                <button class="key ka" data-k="j">J</button>
+                <button class="key ka" data-k="k">K</button>
+                <button class="key ka" data-k="l">L</button>
+                <button class="key ka" data-k="ñ">Ñ</button>
+                <button class="key kent" data-k="Enter">↵ enter</button>
+            </div>
+            <div class="kbrow">
+                <button class="key kf" style="min-width:68px;">⇧</button>
+                <button class="key kz" data-k="z">Z</button>
+                <button class="key kz" data-k="x">X</button>
+                <button class="key kz" data-k="c">C</button>
+                <button class="key kz" data-k="v">V</button>
+                <button class="key kz" data-k="b">B</button>
+                <button class="key kz" data-k="n">N</button>
+                <button class="key kz" data-k="m">M</button>
+                <button class="key kf" style="min-width:68px;">⇧</button>
+            </div>
+            <div class="kbrow">
+                <button class="key kf" style="min-width:52px;">ctrl</button>
+                <button class="key kf" style="min-width:52px;">alt</button>
+                <button class="key ksp">espacio</button>
+                <button class="key kf" style="min-width:52px;">alt</button>
+                <button class="key kf" style="min-width:52px;">ctrl</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FINAL -->
+<div id="final-screen">
+    <div class="fcard">
+        <div style="font-size:3rem;margin-bottom:.3rem;">🏆</div>
+        <h2>¡Sesión completada!</h2>
+        <div class="fscore" id="fs-pts">0 pts</div>
+        <div class="fstars" id="fs-stars">⭐</div>
+        <div class="fstats">
+            <div class="schip">Palabras<span id="fs-pal">0/20</span></div>
+            <div class="schip">A la 1ª<span id="fs-p1">0</span></div>
+            <div class="schip">A la 2ª<span id="fs-p2">0</span></div>
+            <div class="schip">Más intentos<span id="fs-pm">0</span></div>
+        </div>
+        <button class="breplay" onclick="replayGame()">🔄 Jugar otra vez</button>
+        <button class="brep2" onclick="generateReport()">📋 Descargar informe</button>
+    </div>
+</div>
+
+<!-- PARENTAL -->
+<div id="parental-modal">
+    <div class="pcard">
+        <h2>🔒 Control parental</h2>
+        <p style="color:#666;font-size:.9rem;margin-bottom:.3rem;" id="p-desc"></p>
+        <p class="psum" id="p-suma"></p>
+        <input type="number" class="pinp" id="p-inp" placeholder="?" onkeydown="if(event.key==='Enter')verificarParental()">
+        <p class="perr" id="p-err"></p>
+        <button class="pok" onclick="verificarParental()">✓ Comprobar</button><br>
+        <button class="pcancel" onclick="cerrarParental()">Cancelar</button>
+    </div>
+</div>
+
+<script>
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbw4AKlcc8-09jA0uBl7EYDW_lorkazvEOwhZTthN6FD_BIhM1Q6o4HJdNSeUvqba2an/exec";
+const NOMBRE_ACT = "Aprende a escribir - Teclado";
+const N_PALABRAS = 20;
+
+const BANCO = [
+    {p:"CASA",   v:"casa",    i:"🏠"},{p:"GATO",   v:"gato",    i:"🐱"},
+    {p:"PERRO",  v:"perro",   i:"🐶"},{p:"LUNA",   v:"luna",    i:"🌙"},
+    {p:"COCHE",  v:"coche",   i:"🚗"},{p:"PATO",   v:"pato",    i:"🦆"},
+    {p:"SAPO",   v:"sapo",    i:"🐸"},{p:"NUBE",   v:"nube",    i:"☁️"},
+    {p:"ROSA",   v:"rosa",    i:"🌹"},{p:"PERA",   v:"pera",    i:"🍐"},
+    {p:"SOPA",   v:"sopa",    i:"🍜"},{p:"VACA",   v:"vaca",    i:"🐄"},
+    {p:"MOTO",   v:"moto",    i:"🛵"},{p:"BOTA",   v:"bota",    i:"🥾"},
+    {p:"PIÑA",   v:"piña",    i:"🍍"},{p:"LOBO",   v:"lobo",    i:"🐺"},
+    {p:"PELOTA", v:"pelota",  i:"⚽"},{p:"TOMATE", v:"tomate",  i:"🍅"},
+    {p:"MALETA", v:"maleta",  i:"🧳"},{p:"ZAPATO", v:"zapato",  i:"👞"},
+    {p:"CAMINO", v:"camino",  i:"🛤️"},{p:"REGALO", v:"regalo",  i:"🎁"},
+    {p:"COCINA", v:"cocina",  i:"🍳"},{p:"CEREZA", v:"cereza",  i:"🍒"},
+    {p:"PAJARO", v:"pájaro",  i:"🐦"},{p:"PIRATA", v:"pirata",  i:"🏴‍☠️"},
+    {p:"CAMARA", v:"cámara",  i:"📷"},{p:"NEVERA", v:"nevera",  i:"❄️"},
+    {p:"PLATANO",v:"plátano", i:"🍌"},{p:"GLOBO",  v:"globo",   i:"🎈"},
+    {p:"FRUTA",  v:"fruta",   i:"🍎"},{p:"DRAGON", v:"dragón",  i:"🐲"},
+    {p:"TRACTOR",v:"tractor", i:"🚜"},{p:"PLATO",  v:"plato",   i:"🍽️"},
+    {p:"FRESA",  v:"fresa",   i:"🍓"},{p:"TIGRE",  v:"tigre",   i:"🐅"},
+    {p:"LIBRO",  v:"libro",   i:"📚"},{p:"CEBRA",  v:"cebra",   i:"🦓"},
+    {p:"PREMIO", v:"premio",  i:"🥇"},{p:"GRANJA", v:"granja",  i:"🐄"}
+];
+
+// ESTADO
+let nombreAlumno="", enviarInforme=false, modoLetra="min", nivelJuego=1;
+let sessionWords=[], currentIdx=0, currentWord=null;
+let typedSoFar="", intentosPalabra=0, errEnIntento=false, score=0;
+let sessionLog=[];
+let pAccion="", pEsperado=0;
+const synth=window.speechSynthesis;
+
+// EMOJIS FONDO
+function bgEmojis() {
+    const c=document.getElementById("emoji-bg"); c.innerHTML="";
+    ["⌨️","🖥️","📝","✏️","🌟","🎮","📚","🐱","🐶","⭐"].forEach(e=>{
+        for(let i=0;i<2;i++){
+            const s=document.createElement("span"); s.className="bg-emoji"; s.innerText=e;
+            s.style.cssText="left:"+Math.random()*90+"vw;top:"+Math.random()*90+"vh;animation-delay:"+Math.random()*5+"s;position:fixed";
+            c.appendChild(s);
+        }
+    });
+}
+
+// NOMBRE
+function guardarNombre(){
+    const n=document.getElementById("nombre-inp").value.trim();
+    if(!n){document.getElementById("nombre-inp").style.borderColor="#f44336";return;}
+    nombreAlumno=n; enviarInforme=true; irSplash();
+}
+function sinNombre(){nombreAlumno="Anonimo"; enviarInforme=false; irSplash();}
+function irSplash(){
+    document.getElementById("nombre-screen").style.display="none";
+    document.getElementById("splash-screen").classList.remove("hidden");
+    bgEmojis();
+}
+
+// LETRA
+function setLetra(m,btn){
+    modoLetra=m;
+    document.querySelectorAll(".btnl").forEach(b=>b.classList.remove("sel"));
+    btn.classList.add("sel");
+    updateKeyLabels();
+}
+function fmt(t){return modoLetra==="may"?t.toUpperCase():t.toLowerCase();}
+function claseLetra(){return modoLetra==="may"?"mode-may":"mode-min";}
+
+// INICIO
+function startGame(nivel){
+    nivelJuego=nivel; clearHl(); score=0; sessionLog=[]; currentIdx=0;
+    sessionWords=[...BANCO].sort(()=>Math.random()-.5).slice(0,N_PALABRAS);
+    document.getElementById("splash-screen").classList.add("hidden");
+    document.getElementById("game-container").classList.remove("hidden");
+    document.getElementById("score-display").textContent="0 pts";
+    updateKeyLabels();
+    loadWord();
+}
+function replayGame(){
+    document.getElementById("final-screen").classList.remove("vis");
+    document.getElementById("splash-screen").classList.remove("hidden");
+}
+
+// CARGA PALABRA
+function loadWord(){
+    if(currentIdx>=sessionWords.length){finSession();return;}
+    currentWord=sessionWords[currentIdx];
+    typedSoFar=""; intentosPalabra=0; errEnIntento=false;
+    document.getElementById("progress-display").textContent=(currentIdx+1)+" / "+sessionWords.length;
+    document.getElementById("img-panel").textContent=currentWord.i;
+    document.getElementById("bonus-indicator").textContent="";
+    // reset panel sin tocar id
+    const wp=document.getElementById("word-panel");
+    wp.classList.remove("ok","ko");
+    renderSlots();
+    speak(currentWord.v || currentWord.p);
+}
+
+// SLOTS
+function renderSlots(){
+    const cont=document.getElementById("typed-letters");
+    cont.innerHTML="";
+    const cl=claseLetra();
+    for(let i=0;i<currentWord.p.length;i++){
+        const d=document.createElement("div");
+        d.className="tl "+cl;
+        d.id="sl"+i;
+        if(i<typedSoFar.length){
+            d.textContent=fmt(typedSoFar[i]);
+            d.classList.add("filled");
+        }
+        cont.appendChild(d);
+    }
+    document.getElementById("word-hint").textContent=currentWord.p.split("").map(()=>"_").join(" ");
+    if(nivelJuego===1) hlNext();
+}
+
+// HIGHLIGHT
+function hlNext(){
+    clearHl();
+    if(nivelJuego!==1) return;
+    if(!currentWord||typedSoFar.length>=currentWord.p.length) return;
+    const next=sa(currentWord.p[typedSoFar.length]);
+    document.querySelectorAll(".key[data-k]").forEach(k=>{
+        if(k.dataset.k.toLowerCase()===next) k.classList.add("hl");
+    });
+}
+function clearHl(){document.querySelectorAll(".key.hl").forEach(k=>k.classList.remove("hl"));}
+
+// QUITAR TILDE
+function sa(c){return c.toLowerCase().replace(/[áàä]/g,'a').replace(/[éèë]/g,'e').replace(/[íìï]/g,'i').replace(/[óòö]/g,'o').replace(/[úùü]/g,'u');}
+
+// TECLA
+function handleKey(key){
+    if(!currentWord) return;
+    if(key==="Backspace"){
+        if(typedSoFar.length>0){
+            typedSoFar=typedSoFar.slice(0,-1);
+            // Recalcular si quedan errores en lo que hay escrito
+            let hayError=false;
+            for(let i=0;i<typedSoFar.length;i++){
+                if(sa(typedSoFar[i])!==sa(currentWord.p[i])){hayError=true;break;}
+            }
+            errEnIntento=hayError;
+            renderSlots();
+        }
+        return;
+    }
+    const letra=key.toLowerCase();
+    if(!/^[a-zñ]$/.test(letra)) return;
+    const pos=typedSoFar.length;
+    if(pos>=currentWord.p.length) return;
+    const expected=sa(currentWord.p[pos]);
+    typedSoFar+=letra;
+    renderSlots();
+    const slot=document.getElementById("sl"+pos);
+    if(sa(letra)===expected){
+        slot.classList.add("correct");
+        slot.textContent=fmt(letra);
+        if(typedSoFar.length===currentWord.p.length){
+            wordDone();
+        } else {
+            if(nivelJuego===1) hlNext();
+        }
+    } else {
+        slot.classList.add("wrong");
+        slot.textContent=fmt(letra);
+        errEnIntento=true;
+        const wp=document.getElementById("word-panel");
+        wp.classList.add("ko");
+        setTimeout(()=>wp.classList.remove("ko"),400);
+    }
+}
+
+function wordDone(){
+    intentosPalabra++;
+    if(!errEnIntento){
+        // intento limpio
+        const pts=intentosPalabra===1?20:intentosPalabra===2?10:intentosPalabra===3?5:0;
+        score+=pts;
+        document.getElementById("score-display").textContent=score+" pts";
+        document.getElementById("bonus-indicator").textContent=pts>0?"+"+pts+" puntos ✨":"Palabra completada 👍";
+        document.getElementById("word-panel").classList.add("ok");
+        clearHl();
+        sessionLog.push({h:new Date().toLocaleTimeString(),palabra:currentWord.p,r:"ACIERTO",intento:intentosPalabra,puntos:pts});
+        speak("¡Muy bien!");
+        setTimeout(()=>{currentIdx++;loadWord();},1200);
+    } else {
+        // había errores: resetear para reescribir
+        errEnIntento=false;
+        const wp=document.getElementById("word-panel");
+        wp.classList.add("ko");
+        setTimeout(()=>{
+            wp.classList.remove("ko");
+            typedSoFar="";
+            renderSlots();
+        },500);
+    }
+}
+
+// EVENTOS TECLADO FÍSICO
+document.addEventListener("keydown",e=>{
+    if(document.getElementById("parental-modal").classList.contains("vis")){
+        if(e.key==="Escape"){e.preventDefault();e.stopPropagation();}
+        return;
+    }
+    if(!document.getElementById("game-container").classList.contains("hidden")){
+        const btn=document.querySelector(".key[data-k='"+e.key.toLowerCase()+"']")||
+                   document.querySelector(".key[data-k='"+e.key+"']");
+        if(btn){btn.classList.add("pressed");setTimeout(()=>btn.classList.remove("pressed"),120);}
+        handleKey(e.key==="Backspace"?"Backspace":e.key);
+        if(e.key==="Backspace") e.preventDefault();
+    }
+});
+
+// TECLADO PANTALLA
+document.querySelectorAll(".key[data-k]").forEach(btn=>{
+    btn.addEventListener("mousedown",e=>{
+        e.preventDefault();
+        const k=btn.dataset.k;
+        if(!["Tab","CapsLock","Shift","Enter"].includes(k)) handleKey(k);
+    });
+});
+
+// PARENTAL
+function abrirParental(accion){
+    pAccion=accion;
+    const n1=Math.floor(Math.random()*8)+2, n2=Math.floor(Math.random()*8)+2;
+    pEsperado=n1+n2;
+    document.getElementById("p-desc").textContent=accion==="fs"?"Resuelve la suma para pantalla completa:":"Resuelve la suma para salir:";
+    document.getElementById("p-suma").textContent=n1+" + "+n2+" = ?";
+    document.getElementById("p-inp").value="";
+    document.getElementById("p-err").textContent="";
+    document.getElementById("parental-modal").classList.add("vis");
+    setTimeout(()=>document.getElementById("p-inp").focus(),120);
+}
+function verificarParental(){
+    const val=parseInt(document.getElementById("p-inp").value,10);
+    if(val===pEsperado){
+        cerrarParental();
+        if(pAccion==="salir"){
+            enviarSheet("salida manual");
+            document.getElementById("game-container").classList.add("hidden");
+            document.getElementById("final-screen").classList.remove("vis");
+            document.getElementById("splash-screen").classList.remove("hidden");
+        } else toggleFS();
+    } else {
+        document.getElementById("p-err").textContent="❌ Incorrecto, inténtalo de nuevo.";
+        document.getElementById("p-inp").value="";
+        document.getElementById("p-inp").focus();
+    }
+}
+function cerrarParental(){document.getElementById("parental-modal").classList.remove("vis");}
+document.addEventListener("keydown",e=>{
+    if(e.key==="Escape"&&document.getElementById("parental-modal").classList.contains("vis")){
+        e.preventDefault();e.stopPropagation();
+    }
+},true);
+
+function toggleFS(){
+    if(!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{});
+    else document.exitFullscreen();
+}
+
+// FIN SESIÓN
+function finSession(){
+    enviarSheet("fin sesion");
+    const p1=sessionLog.filter(l=>l.intento===1).length;
+    const p2=sessionLog.filter(l=>l.intento===2).length;
+    const pm=sessionLog.filter(l=>l.intento>=3).length;
+    const estrellas=score>=300?"⭐⭐⭐":score>=150?"⭐⭐":"⭐";
+    document.getElementById("fs-pts").textContent=score+" pts";
+    document.getElementById("fs-stars").textContent=estrellas;
+    document.getElementById("fs-pal").textContent=sessionLog.length+"/"+N_PALABRAS;
+    document.getElementById("fs-p1").textContent=p1;
+    document.getElementById("fs-p2").textContent=p2;
+    document.getElementById("fs-pm").textContent=pm;
+    document.getElementById("game-container").classList.add("hidden");
+    document.getElementById("final-screen").classList.add("vis");
+    speak("Fantastico. Has conseguido "+score+" puntos.");
+}
+
+// SHEETS
+function enviarSheet(motivo){
+    if(!enviarInforme) return;
+    const aciertos=sessionLog.filter(l=>l.r==="ACIERTO").length;
+    const errores=sessionLog.filter(l=>l.r==="ERROR").length;
+    const falladas=[...new Set(sessionLog.filter(l=>l.r==="ERROR").map(l=>l.palabra))].join(", ")||"Ninguna";
+    fetch(SHEET_URL,{
+        method:"POST",
+        body:JSON.stringify({
+            Nombre:nombreAlumno,
+            Actividad:NOMBRE_ACT+" - Nivel "+nivelJuego+" - "+(modoLetra==="may"?"Mayusculas":"Minusculas"),
+            Aciertos:aciertos, Errores:errores,
+            PalabrasFalladas:falladas+(motivo?" ("+motivo+")":""),
+            Puntuacion:score
+        }),
+        headers:{"Content-Type":"application/json"}
+    }).catch(e=>console.log(e));
+}
+
+// INFORME
+function generateReport(){
+    enviarSheet("descarga informe");
+    const rows=sessionLog.map(l=>"<tr><td>"+l.h+"</td><td style='font-weight:700'>"+l.palabra+"</td><td style='color:"+(l.r==="ACIERTO"?"#2b9348":"#d62828")+";font-weight:700'>"+l.r+"</td><td>"+l.intento+"</td><td style='color:#FF9800;font-weight:700'>"+(l.puntos!==undefined?"+"+l.puntos:"0")+"</td></tr>").join("");
+    const html="<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'><style>body{font-family:Nunito,sans-serif;background:#f0f8ff;padding:30px;color:#333;}h1{color:#2193b0;margin-bottom:4px;}.chips{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0 24px;}.chip{background:white;border-radius:12px;padding:10px 18px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.08);}.chip span{color:#2196F3;}table{width:100%;border-collapse:collapse;background:white;border-radius:12px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.08);}th{background:linear-gradient(135deg,#6dd5ed,#2193b0);color:white;padding:10px 12px;text-align:left;}td{padding:9px 12px;border-bottom:1px solid #eee;font-size:.9rem;}</style></head><body><h1>⌨️ "+NOMBRE_ACT+" — Informe</h1><p style='color:#666'>Alumno/a: <strong>"+nombreAlumno+"</strong></p><div class='chips'><div class='chip'>Nivel: <span>"+(nivelJuego===1?"🌱 Principiante":"🚀 Autonomo")+"</span></div><div class='chip'>Letra: <span>"+(modoLetra==="may"?"ABC":"abc")+"</span></div><div class='chip'>Puntuacion: <span>"+score+" pts</span></div></div><table><thead><tr><th>Hora</th><th>Palabra</th><th>Resultado</th><th>Intento</th><th>Puntos</th></tr></thead><tbody>"+(rows||"<tr><td colspan='5' style='text-align:center;color:#999'>Sin registros</td></tr>")+"</tbody></table></body></html>";
+    const a=Object.assign(document.createElement("a"),{href:URL.createObjectURL(new Blob([html],{type:"text/html"})),download:"informe_teclado_"+nombreAlumno+"_"+new Date().toISOString().slice(0,10)+".html"});
+    a.click();
+}
+
+// VOZ
+function speak(t){
+    return new Promise(r=>{
+        const m=new SpeechSynthesisUtterance(t);
+        m.lang="es-ES"; m.rate=0.8; m.onend=r;
+        synth.cancel(); synth.speak(m);
+    });
+}
+
+
+/* ── ACTUALIZAR TEXTO TECLAS SEGÚN MODO LETRA ── */
+function updateKeyLabels() {
+    document.querySelectorAll('.key[data-k]').forEach(k => {
+        const v = k.dataset.k;
+        if (v && v.length === 1 && /[a-zñ]/i.test(v)) {
+            k.textContent = modoLetra === 'may' ? v.toUpperCase() : v.toLowerCase();
+            k.classList.remove('kfont-min','kfont-may');
+            k.classList.add(modoLetra === 'may' ? 'kfont-may' : 'kfont-min');
+        }
+    });
+}
+/* ── DETECCIÓN ORIENTACIÓN MÓVIL ── */
+function checkOrientation() {
+    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth < 900;
+    const isPortrait = window.innerHeight > window.innerWidth;
+    const rmsg = document.getElementById('rotate-msg');
+    // Solo mostrar si es móvil Y estamos en el juego activo Y es portrait
+    const gameActive = !document.getElementById('game-container').classList.contains('hidden');
+    if (isMobile && isPortrait && gameActive) {
+        rmsg.classList.add('vis');
+    } else {
+        rmsg.classList.remove('vis');
+    }
+}
+window.addEventListener('resize', checkOrientation);
+window.addEventListener('orientationchange', () => setTimeout(checkOrientation, 300));
+// Comprobar también al cargar el juego
+const _origStartGame = startGame;
+startGame = function(nivel) {
+    _origStartGame(nivel);
+    setTimeout(checkOrientation, 100);
+};
+
+</script>
+</body>
+</html>

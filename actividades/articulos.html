@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Detective de Artículos - Juego Educativo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Varela+Round&family=Playwrite+HR+Lijeva:wght@100..400&family=Playwrite+DE+Grund:wght@100..400&family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap');
+        
+        :root {
+            --pri: #2193b0; --pri-l: #6dd5ed;
+            --ok: #4CAF50;  --err: #f44336;
+            --lv1: #4CAF50; --lv2: #2196F3;
+            --fn: 'Varela Round',sans-serif;
+            --ft: 'Fredoka One',cursive;
+            --fu: 'Nunito',sans-serif;
+            --fmin: 'Playwrite HR Lijeva',cursive;
+            --fmay: 'Playwrite DE Grund',cursive;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;user-select:none;}
+        body{font-family:var(--fn);background:#e8f4f8;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+
+        /* PANTALLA DE REGISTRO DE NOMBRE */
+        #nombre-screen{position:fixed;inset:0;background:linear-gradient(135deg,var(--pri-l),var(--pri));z-index:2000;display:flex;align-items:center;justify-content:center;}
+        .ncard{background:white;padding:2.5rem 2rem;border-radius:32px;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.2);}
+        .ncard h2{font-family:var(--ft);font-size:1.6rem;color:var(--pri);margin:0 0 .4rem;}
+        .ncard p{color:#555;font-size:.9rem;margin-bottom:1.2rem;line-height:1.6;}
+        .ninp{width:100%;padding:.8rem 1.2rem;border-radius:100px;border:2px solid #cce5f0;font-size:1rem;font-family:var(--fu);text-align:center;outline:none;margin-bottom:1rem;transition:border-color .2s;}
+        .ninp:focus{border-color:var(--pri);}
+        .nok{width:100%;padding:.9rem;border:none;border-radius:100px;background:linear-gradient(135deg,var(--pri-l),var(--pri));color:white;font-family:var(--ft);font-size:1.1rem;cursor:pointer;margin-bottom:.7rem;box-shadow:0 6px 20px rgba(33,147,176,.35);transition:transform .15s;}
+        .nok:hover{transform:translateY(-1px);}
+        .nno{background:none;border:none;color:#aaa;font-size:.85rem;font-family:var(--fu);cursor:pointer;text-decoration:underline;}
+        .nnota{font-size:.75rem;color:#bbb;margin-top:1rem;border-top:1px solid #f0f0f0;padding-top:.8rem;line-height:1.5;}
+
+        /* MENÚ INICIAL DE CONFIGURACIÓN DUA */
+        #splash-screen{position:fixed;inset:0;background:linear-gradient(135deg,var(--pri-l),var(--pri));z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;padding:20px;text-align:center;overflow-y:auto;}
+        .bg-emoji{position:fixed;font-size:2rem;opacity:.2;pointer-events:none;animation:float 6s infinite ease-in-out;z-index:0;}
+        @keyframes float{0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-20px) rotate(20deg);}}
+        .wbox{background:rgba(255,255,255,.2);padding:24px 30px 18px;border-radius:40px;backdrop-filter:blur(10px);margin-bottom:16px;max-width:520px;width:100%;position:relative;z-index:1;}
+        .wbox h1{font-family:var(--ft);font-size:2.2rem;margin-bottom:6px;}
+        .wbox p{font-size:1.1rem;opacity:.9;}
+        
+        .lpanel{background:rgba(255,255,255,.2);border-radius:24px;padding:14px 20px;margin-bottom:12px;max-width:520px;width:100%;backdrop-filter:blur(6px);position:relative;z-index:1;}
+        .lpanel h3{font-family:var(--ft);font-size:1rem;margin-bottom:8px;opacity:.9;}
+        .lfila{display:flex;gap:10px;justify-content:center;}
+        .btnl{flex:1;padding:10px 14px;border:3px solid rgba(255,255,255,.4);border-radius:16px;background:rgba(255,255,255,.15);cursor:pointer;color:white;font-family:var(--fu);font-size:.95rem;font-weight:700;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:4px;}
+        .btnl.sel{background:rgba(255,255,255,.35);border-color:white;box-shadow:0 0 20px rgba(255,255,255,.3);}
+        .prev-min{font-family:var(--fmin);font-size:1.4rem;font-weight:300;}
+        .prev-may{font-family:var(--fmay);font-size:1.1rem;font-weight:300;text-transform:uppercase;}
+        
+        .lvcard{background:white;color:#333;width:95%;max-width:520px;padding:18px 22px;margin:6px auto;border-radius:24px;cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:20px;box-shadow:0 6px 15px rgba(0,0,0,.1);position:relative;z-index:1;}
+        .lvcard:hover{transform:translateY(-3px);box-shadow:0 10px 25px rgba(0,0,0,.15);}
+        .volver{display:inline-block;margin-top:14px;padding:10px 26px;border-radius:999px;border:2px solid rgba(255,255,255,.5);background:rgba(255,255,255,.15);color:white;font-family:var(--fu);font-size:.95rem;font-weight:700;text-decoration:none;transition:all .2s;backdrop-filter:blur(4px);position:relative;z-index:1;}
+        .volver:hover{background:rgba(255,255,255,.3);border-color:white;}
+
+        /* CONTENEDOR DE INTERFAZ DE JUEGO */
+        #game-container{background:white;width:98vw;height:96vh;border-radius:40px;border:8px solid #eee;display:flex;flex-direction:column;padding:12px;position:relative;overflow:hidden;}
+        .topbar{display:flex;justify-content:space-between;align-items:center;padding:6px 16px;flex-shrink:0;}
+        .bsys{width:50px;height:50px;border-radius:18px;border:none;cursor:pointer;color:white;font-size:1.4rem;display:flex;align-items:center;justify-content:center;transition:transform .15s;}
+        .bsys:hover{transform:scale(1.08);}
+        #score-bar{display:flex;align-items:center;gap:20px;font-family:var(--ft);font-size:1.1rem;color:#555;}
+        #score-display{background:linear-gradient(135deg,var(--pri-l),var(--pri));color:white;padding:6px 20px;border-radius:100px;font-size:1.3rem;}
+        #progress-display{color:#999;font-size:1rem;}
+        #main-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;min-height:0;}
+
+        /* CONFIGURACIÓN VISUAL VERTICAL (EMOJI ARRIBA, TEXTO ABAJO) */
+        #word-area{display:flex;flex-direction:column;gap:16px;align-items:center;justify-content:center;width:100%;padding:0 20px;}
+        
+        #img-panel{background:#e8f4fb;border-radius:24px;width:130px;height:130px;display:flex;align-items:center;justify-content:center;font-size:5rem;flex-shrink:0;cursor:pointer;transition:transform 0.1s;position:relative;box-shadow:0 6px 15px rgba(0,0,0,0.04);}
+        #img-panel:active { transform: scale(0.93); }
+        #img-panel::after { content: '🔊'; position: absolute; font-size: 0.9rem; bottom: 6px; right: 8px; opacity: 0.5; }
+
+        #word-panel{background:#e8f4fb;border-radius:28px;width:100%;max-width:720px;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 30px;gap:12px;border:4px solid transparent;transition:background .3s,border-color .3s;}
+        #word-panel.ok{background:#e8f8e8;border-color:var(--ok);animation:pok .4s ease;}
+        #word-panel.ko{background:#ffeaea;border-color:var(--err);animation:shake .35s ease;}
+        @keyframes pok{0%,100%{transform:scale(1);}50%{transform:scale(1.04);}}
+        @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
+        
+        #sentence-display{font-size:clamp(1.5rem, 3.5vw, 2.6rem);text-align:center;line-height:1.4;color:#2c3e50;}
+        .blank-slot{display:inline-block;border-bottom:4px dashed var(--pri);min-width:110px;margin:0 10px;color:var(--pri);font-weight:700;}
+        .blank-slot.correct{color:var(--ok);border-bottom-style:solid;border-bottom-color:var(--ok);}
+        
+        #bonus-indicator{font-family:var(--ft);font-size:1rem;color:#FF9800;min-height:1.4rem;}
+
+        /* TECLADO DE BOTONES DE RESPUESTA */
+        #options-keyboard{width:100%;max-width:720px;background:#f0f0f0;border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:10px;flex-shrink:0;}
+        .kbrow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+        
+        .key{height:60px;min-width:90px;border-radius:14px;border:none;cursor:pointer;font-family:var(--fu);font-size:1.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;transition:transform .08s;box-shadow:0 4px 0 rgba(0,0,0,.18);flex:1;}
+        .key:active{transform:translateY(4px);box-shadow:none;}
+        
+        .kq{background:#3a7bd5;color:white;}
+        .ka{background:#4a9a6a;color:white;}
+        .kz{background:#8b6bb1;color:white;}
+        .kv{background:#52aacc;color:white;}
+
+        .kfont-min { font-family: var(--fmin) !important; font-weight: 400 !important; }
+        .kfont-may { font-family: var(--fmay) !important; font-weight: 400 !important; text-transform: uppercase; }
+
+        /* PANTALLA DE RESULTADOS FINAL */
+        #final-screen{position:fixed;inset:0;background:linear-gradient(135deg,var(--pri-l),var(--pri));z-index:1500;display:none;flex-direction:column;align-items:center;justify-content:center;color:white;text-align:center;padding:20px;}
+        #final-screen.vis{display:flex;}
+        .fcard{background:white;color:#333;border-radius:40px;padding:2.5rem 2rem;max-width:460px;width:95%;box-shadow:0 20px 60px rgba(0,0,0,.25);}
+        .fcard h2{font-family:var(--ft);font-size:2rem;color:var(--pri);margin-bottom:.3rem;}
+        .fscore{font-family:var(--ft);font-size:4rem;color:#FF9800;margin:.5rem 0;}
+        .fstars{font-size:2rem;margin:.5rem 0;}
+        .fstats{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:1rem 0;}
+        .schip{background:#f0f8ff;border-radius:14px;padding:10px 18px;font-family:var(--fu);font-weight:700;font-size:.9rem;}
+        .schip span{color:var(--pri);font-size:1.2rem;display:block;}
+        .breplay{width:100%;padding:1rem;border:none;border-radius:100px;margin-top:1rem;background:linear-gradient(135deg,var(--pri-l),var(--pri));color:white;font-family:var(--ft);font-size:1.2rem;cursor:pointer;box-shadow:0 6px 20px rgba(33,147,176,.35);transition:transform .15s;}
+        .breplay:hover{transform:translateY(-1px);}
+        .brep2{width:100%;padding:.8rem;border:2px solid #ddd;border-radius:100px;margin-top:.6rem;background:none;color:#888;font-family:var(--fu);font-size:1rem;cursor:pointer;transition:all .2s;}
+        .brep2:hover{border-color:var(--pri);color:var(--pri);}
+
+        /* VENTANA MODAL PARENTAL */
+        #parental-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:3000;align-items:center;justify-content:center;flex-direction:column;text-align:center;}
+        #parental-modal.vis{display:flex;}
+        .pcard{background:white;color:#333;border-radius:28px;padding:2.5rem 2rem;max-width:340px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+        .pcard h2{font-family:var(--ft);font-size:1.4rem;color:var(--pri);margin-bottom:.3rem;}
+        .pcard p{font-size:0.95rem;line-height:1.4;}
+        .psum{font-size:2.2rem;font-weight:900;color:#FF9800;margin:1rem 0;}
+        .pinp{width:100%;padding:.8rem;border:3px solid #cce5f0;border-radius:14px;font-size:1.5rem;font-weight:800;text-align:center;font-family:var(--fu);outline:none;margin-bottom:.8rem;}
+        .pinp:focus{border-color:var(--pri);}
+        .perr{color:var(--err);font-size:.9rem;min-height:1.2rem;margin-bottom:.5rem;}
+        .pok{width:100%;padding:.9rem;border:none;border-radius:14px;background:linear-gradient(135deg,var(--pri-l),var(--pri));color:white;font-family:var(--ft);font-size:1.2rem;cursor:pointer;margin-bottom:.5rem;transition:transform .15s;}
+        .pok:hover{transform:translateY(-1px);}
+        .pcancel{background:none;border:none;color:#aaa;font-size:.85rem;cursor:pointer;font-family:var(--fu);}
+
+        /* DISPOSITIVOS MÓVILES ROTACIÓN */
+        #rotate-msg {
+            display: none;
+            position: fixed; inset: 0; z-index: 4000;
+            background: linear-gradient(135deg, #6dd5ed, #2193b0);
+            flex-direction: column; align-items: center; justify-content: center;
+            color: white; text-align: center; padding: 30px;
+        }
+        #rotate-msg.vis { display: flex; }
+        #rotate-msg .rico { font-size: 5rem; animation: spin 2s infinite linear; }
+        @keyframes spin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+        #rotate-msg h2 { font-family: var(--ft); font-size: 2rem; margin: 1rem 0 .5rem; }
+        #rotate-msg p  { font-size: 1rem; opacity: .9; font-family: var(--fu); }
+
+        /* HORIZONTAL RESPONSIVE MÓVIL */
+        @media (max-height: 540px) and (orientation: landscape) {
+            #game-container { height: 100vh; border-radius: 0; border: none; padding: 4px 8px; }
+            .topbar { padding: 2px 10px; }
+            .bsys { width: 38px; height: 38px; font-size: 1rem; border-radius: 12px; }
+            #score-display { font-size: 1rem; padding: 4px 14px; }
+            #progress-display { font-size: .85rem; }
+            #word-area { gap: 8px; }
+            #img-panel { width: 75px; height: 75px; font-size: 2.8rem; border-radius: 14px; }
+            #word-panel { min-height: 75px; padding: 8px 16px; border-radius: 18px; max-width: 600px; }
+            #sentence-display { font-size: 1.4rem; }
+            #options-keyboard { padding: 6px; gap: 6px; border-radius: 16px; max-width: 600px; }
+            .key { height: 40px; min-width: 65px; font-size: 1.1rem; border-radius: 8px; }
+            #bonus-indicator { font-size: .8rem; min-height: 1rem; }
+        }
+        .hidden{display:none!important;}
+    </style>
+</head>
+
+<div style="position:fixed;bottom:10px;left:12px;z-index:9999;pointer-events:none;background:rgba(42,157,143,.75);color:white;font-family:sans-serif;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;letter-spacing:.03em;">© Creado por Inma Merino Rus</div>
+
+<body>
+
+<div id="rotate-msg">
+    <div class="rico">📱</div>
+    <h2>Gira el móvil</h2>
+    <p>Este juego se ve mejor en<br><strong>horizontal 🔄</strong></p>
+</div>
+
+<div id="nombre-screen">
+    <div class="ncard">
+        <div style="font-size:3rem;margin-bottom:.5rem;">🧩</div>
+        <h2>¿Quién va a jugar?</h2>
+        <p>Si quieres, escribe el nombre del niño o niña para que Inma pueda ver cómo ha ido la sesión.</p>
+        <input id="nombre-inp" class="ninp" type="text" placeholder="Nombre del niño/a…" maxlength="50"
+            onkeydown="if(event.key==='Enter')guardarNombre()">
+        <button class="nok" onclick="guardarNombre()">Enviar informe a Inma ✓</button>
+        <button class="nno" onclick="sinNombre()">Continuar sin enviar informe</button>
+        <p class="nnota">🔒 Si escribes el nombre, al terminar Inma recibirá un informe con los resultados.<br>Es voluntario y los datos solo los verá ella para el seguimiento terapéutico.</p>
+    </div>
+</div>
+
+<div id="splash-screen" class="hidden">
+    <div id="emoji-bg"></div>
+    <div class="wbox">
+        <h1>🧩 Detective de Artículos 🌟</h1>
+        <p>Elige la opción correcta para completar las palabras o frases</p>
+    </div>
+
+    <div class="lpanel">
+        <h3>🔤 Tipo de letra</h3>
+        <div class="lfila">
+            <button class="btnl sel" id="btn-min" onclick="setLetra('min',this)">
+                <span class="prev-min">abc</span><span>minúsculas</span>
+            </button>
+            <button class="btnl" id="btn-may" onclick="setLetra('may',this)">
+                <span class="prev-may">ABC</span><span>MAYÚSCULAS</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="lpanel">
+        <h3>🎨 Tipo de Artículos</h3>
+        <div class="lfila">
+            <button class="btnl sel" onclick="setArticulos('defined',this)"><span>el / la / los / las</span><span>Definidos</span></button>
+            <button class="btnl" onclick="setArticulos('indefinite',this)"><span>un / una / unos / unas</span><span>Indefinidos</span></button>
+            <button class="btnl" onclick="setArticulos('all',this)"><span>Mixtos</span><span>Todos</span></button>
+        </div>
+    </div>
+
+    <div class="lvcard" onclick="startGame(1)">
+        <div style="font-size:3rem;">🌱</div>
+        <div style="text-align:left;">
+            <h2 style="color:var(--lv1);font-family:var(--ft);">Nivel 1 — Principiante</h2>
+            <p>Trabaja la concordancia usando palabras sueltas</p>
+        </div>
+    </div>
+    <div class="lvcard" onclick="startGame(2)">
+        <div style="font-size:3rem;">🚀</div>
+        <div style="text-align:left;">
+            <h2 style="color:var(--lv2);font-family:var(--ft);">Nivel 2 — Avanzado</h2>
+            <p>Aplica los artículos dentro de frases completas</p>
+        </div>
+    </div>
+    <a href="https://manosconmuchoquecontar.github.io/" target="_blank" class="volver">🏠 Volver a los juegos</a>
+</div>
+
+<div id="game-container" class="hidden">
+    <div class="topbar">
+        <button class="bsys" style="background:#ff5722;" onclick="abrirParental('salir')">🏠</button>
+        <div id="score-bar">
+            <span id="progress-display">1 / 15</span>
+            <span id="score-display">0 pts</span>
+        </div>
+        <div style="display:flex;gap:10px;">
+            <button class="bsys" style="background:#9c27b0;" onclick="generateReport()">📋</button>
+            <button class="bsys" style="background:#607d8b;" onclick="abrirParental('fs')">⛶</button>
+        </div>
+    </div>
+    <div id="main-stage">
+        <div id="word-area">
+            <div id="img-panel" onclick="speakCurrentExercise()">❓</div>
+            <div id="word-panel">
+                <div id="sentence-display"></div>
+            </div>
+        </div>
+        <div id="bonus-indicator"></div>
+        
+        <div id="options-keyboard">
+            <div class="kbrow" id="row-container"></div>
+        </div>
+    </div>
+</div>
+
+<div id="final-screen">
+    <div class="fcard">
+        <div style="font-size:3rem;margin-bottom:.3rem;">🏆</div>
+        <h2>¡Sesión completada!</h2>
+        <div class="fscore" id="fs-pts">0 pts</div>
+        <div class="fstars" id="fs-stars">⭐</div>
+        <div class="fstats">
+            <div class="schip">Ejercicios<span id="fs-pal">0/15</span></div>
+            <div class="schip">A la 1ª<span id="fs-p1">0</span></div>
+            <div class="schip">A la 2ª<span id="fs-p2">0</span></div>
+            <div class="schip">Más intentos<span id="fs-pm">0</span></div>
+        </div>
+        <button class="breplay" onclick="replayGame()">🔄 Jugar otra vez</button>
+        <button class="brep2" onclick="generateReport()">📋 Descargar informe</button>
+    </div>
+</div>
+
+<div id="parental-modal">
+    <div class="pcard">
+        <h2>🔒 Control parental</h2>
+        <p style="color:#666;font-size:.9rem;margin-bottom:.3rem;" id="p-desc"></p>
+        <p class="psum" id="p-suma"></p>
+        <input type="number" class="pinp" id="p-inp" placeholder="?" onkeydown="if(event.key==='Enter')verificarParental()">
+        <p class="perr" id="p-err"></p>
+        <button class="pok" onclick="verificarParental()">✓ Comprobar</button><br>
+        <button class="pcancel" onclick="cerrarParental()">Cancelar</button>
+    </div>
+</div>
+
+<script>
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbw4AKlcc8-09jA0uBl7EYDW_lorkazvEOwhZTthN6FD_BIhM1Q6o4HJdNSeUvqba2an/exec";
+const NOMBRE_ACT = "Detective de Artículos";
+const N_EJERCICIOS = 15; // Muestra 15 elementos aleatorios en cada partida
+
+// BANCO AMPLIADO: 25 PALABRAS ADAPTADAS
+const BANCO_PALABRAS = [
+    {word: "casa", emoji: "🏠", def: "la", ind: "una"},
+    {word: "árbol", emoji: "🌳", def: "el", ind: "un"},
+    {word: "libros", emoji: "📚", def: "los", ind: "unos"},
+    {word: "estrellas", emoji: "⭐", def: "las", ind: "unas"},
+    {word: "coche", emoji: "🚗", def: "el", ind: "un"},
+    {word: "pelota", emoji: "⚽", def: "la", ind: "una"},
+    {word: "perros", emoji: "🐶", def: "los", ind: "unos"},
+    {word: "flores", emoji: "💐", def: "las", ind: "unas"},
+    {word: "gato", emoji: "🐱", def: "el", ind: "un"},
+    {word: "silla", emoji: "🪑", def: "la", ind: "una"},
+    {word: "juguetes", emoji: "🧸", def: "los", ind: "unos"},
+    {word: "mariposas", emoji: "🦋", def: "las", ind: "unas"},
+    {word: "manzana", emoji: "🍎", def: "la", ind: "una"},
+    {word: "lápiz", emoji: "✏️", def: "el", ind: "un"},
+    {word: "nubes", emoji: "☁️", def: "las", ind: "unas"},
+    {word: "pájaros", emoji: "🐦", def: "los", ind: "unos"},
+    {word: "cama", emoji: "🛏️", def: "la", ind: "una"},
+    {word: "tren", emoji: "🚂", def: "el", ind: "un"},
+    {word: "mesas", emoji: "🪑", def: "las", ind: "unas"},
+    {word: "zapatos", emoji: "👞", def: "los", ind: "unos"},
+    {word: "flor", emoji: "🌷", def: "la", ind: "una"},
+    {word: "pez", emoji: "🐟", def: "el", ind: "un"},
+    {word: "regalos", emoji: "🎁", def: "los", ind: "unos"},
+    {word: "monedas", emoji: "🪙", def: "las", ind: "unas"},
+    {word: "sol", emoji: "☀️", def: "el", ind: "un"}
+];
+
+// BANCO AMPLIADO: 25 FRASES 100% BIDIRECCIONALES Y NATURALES
+const BANCO_FRASES = [
+    {phrase: "___ pájaro canta en la rama.", emoji: "🐦", def: "el", ind: "un"},
+    {phrase: "___ gata duerme en el sofá.", emoji: "🐱", def: "la", ind: "una"},
+    {phrase: "___ perros corren por el parque.", emoji: "🐶", def: "los", ind: "unos"},
+    {phrase: "Mamá compró ___ flores hermosas.", emoji: "💐", def: "las", ind: "unas"},
+    {phrase: "___ árbol grande da mucha sombra.", emoji: "🌳", def: "el", ind: "un"},
+    {phrase: "Tengo ___ mochila muy bonita.", emoji: "🎒", def: "la", ind: "una"},
+    {phrase: "Papá trajo ___ libros nuevos.", emoji: "📚", def: "los", ind: "unos"},
+    {phrase: "Dibujé ___ estrellas amarillas.", emoji: "⭐", def: "las", ind: "unas"},
+    {phrase: "___ niño juega con la pelota.", emoji: "👦", def: "el", ind: "un"},
+    {phrase: "Encontré ___ lápiz en el suelo.", emoji: "✏️", def: "el", ind: "un"},
+    {phrase: "___ nubes grises tapan el sol.", emoji: "☁️", def: "las", ind: "unas"},
+    {phrase: "Escucho ___ tren a lo lejos.", emoji: "🚂", def: "el", ind: "un"},
+    {phrase: "___ manzana roja cayó al suelo.", emoji: "🍎", def: "la", ind: "una"},
+    {phrase: "Lavé ___ platos después de comer.", emoji: "🍽️", def: "los", ind: "unos"},
+    {phrase: "___ silla de madera es muy cómoda.", emoji: "🪑", def: "la", ind: "una"},
+    {phrase: "___ pez nada rápido en el agua.", emoji: "🐟", def: "el", ind: "un"},
+    {phrase: "Pintamos ___ mariposas de colores.", emoji: "🦋", def: "las", ind: "unas"},
+    {phrase: "Me puse ___ zapatos muy cómodos.", emoji: "👞", def: "los", ind: "unos"},
+    {phrase: "___ niña salta muy alto.", emoji: "👧", def: "la", ind: "una"},
+    {phrase: "Comimos ___ galletas de chocolate.", emoji: "🍪", def: "las", ind: "unas"},
+    {phrase: "___ barco grande navega por el mar.", emoji: "⛵", def: "el", ind: "un"},
+    {phrase: "Traigo ___ regalos para todos.", emoji: "🎁", def: "los", ind: "unos"},
+    {phrase: "___ puerta blanca está abierta.", emoji: "🚪", def: "la", ind: "una"},
+    {phrase: "___ pájaros pequeños vuelan alto.", emoji: "🐦", def: "los", ind: "unos"},
+    {phrase: "Corté ___ flor amarilla del jardín.", emoji: "🌷", def: "la", ind: "una"}
+];
+
+let nombreAlumno = "", enviarInforme = false, modoLetra = "min", modoArticulos = "defined", nivelJuego = 1;
+let sessionItems = [], currentIdx = 0, currentItem = null;
+let intentosEjercicio = 0, errEnIntento = false, score = 0;
+let sessionLog = [];
+let pAccion = "", pEsperado = 0;
+const synth = window.speechSynthesis;
+
+function bgEmojis() {
+    const c = document.getElementById("emoji-bg"); c.innerHTML = "";
+    ["🧩", "📝", "✏️", "🌟", "⭐", "🌳", "🏠", "🐱", "🐶", "📚"].forEach(e => {
+        for(let i = 0; i < 2; i++){
+            const s = document.createElement("span"); s.className = "bg-emoji"; s.innerText = e;
+            s.style.cssText = "left:" + Math.random()*90 + "vw;top:" + Math.random()*90 + "vh;animation-delay:" + Math.random()*5 + "s;position:fixed";
+            c.appendChild(s);
+        }
+    });
+}
+
+function guardarNombre(){
+    const n = document.getElementById("nombre-inp").value.trim();
+    if(!n){document.getElementById("nombre-inp").style.borderColor = "#f44336"; return;}
+    nombreAlumno = n; enviarInforme = true; irSplash();
+}
+function sinNombre(){nombreAlumno = "Anónimo"; enviarInforme = false; irSplash();}
+function irSplash(){
+    document.getElementById("nombre-screen").style.display = "none";
+    document.getElementById("splash-screen").classList.remove("hidden");
+    bgEmojis();
+}
+
+function setLetra(m, btn){
+    modoLetra = m;
+    btn.parentNode.querySelectorAll(".btnl").forEach(b => b.classList.remove("sel"));
+    btn.classList.add("sel");
+}
+function setArticulos(mode, btn){
+    modoArticulos = mode;
+    btn.parentNode.querySelectorAll(".btnl").forEach(b => b.classList.remove("sel"));
+    btn.classList.add("sel");
+}
+
+function fmt(t) {
+    return modoLetra === "may" ? t.toUpperCase() : t.toLowerCase();
+}
+function claseLetra() {
+    return modoLetra === "may" ? "kfont-may" : "kfont-min";
+}
+
+function startGame(nivel){
+    nivelJuego = nivel; score = 0; sessionLog = []; currentIdx = 0;
+    
+    // Sorteo aleatorio de 15 elementos sobre el banco de 25 disponibles
+    let pool = (nivelJuego === 1) ? [...BANCO_PALABRAS] : [...BANCO_FRASES];
+    sessionItems = pool.sort(() => Math.random() - .5).slice(0, N_EJERCICIOS);
+    
+    document.getElementById("splash-screen").classList.add("hidden");
+    document.getElementById("game-container").classList.remove("hidden");
+    document.getElementById("score-display").textContent = "0 pts";
+    
+    loadExercise();
+}
+
+function replayGame(){
+    document.getElementById("final-screen").classList.remove("vis");
+    document.getElementById("splash-screen").classList.remove("hidden");
+}
+
+function loadExercise(){
+    if(currentIdx >= sessionItems.length){finSession();return;}
+    currentItem = sessionItems[currentIdx];
+    intentosEjercicio = 0; errEnIntento = false;
+    
+    document.getElementById("progress-display").textContent = (currentIdx + 1) + " / " + sessionItems.length;
+    document.getElementById("img-panel").textContent = currentItem.emoji;
+    document.getElementById("bonus-indicator").textContent = "";
+    
+    const wp = document.getElementById("word-panel");
+    wp.classList.remove("ok", "ko");
+    
+    renderTargetLayout();
+    renderInteractiveButtons();
+    speakCurrentExercise();
+}
+
+function renderTargetLayout(){
+    const container = document.getElementById("sentence-display");
+    container.className = claseLetra();
+    
+    if (nivelJuego === 1) {
+        container.innerHTML = `<span class="blank-slot" id="target-slot">¿?</span> ${fmt(currentItem.word)}`;
+    } else {
+        let rawPhrase = currentItem.phrase;
+        let formattedPhrase = fmt(rawPhrase).replace("___", `<span class="blank-slot" id="target-slot">¿?</span>`);
+        container.innerHTML = formattedPhrase;
+    }
+}
+
+function renderInteractiveButtons(){
+    const container = document.getElementById("row-container");
+    container.innerHTML = "";
+    
+    let opcionesDisponibles = [];
+    if(modoArticulos === "defined") opcionesDisponibles = ["el", "la", "los", "las"];
+    else if(modoArticulos === "indefinite") opcionesDisponibles = ["un", "una", "unos", "unas"];
+    else opcionesDisponibles = ["el", "la", "los", "las", "un", "una", "unos", "unas"];
+    
+    const colores = ["kq", "ka", "kz", "kv"];
+    
+    opcionesDisponibles.forEach((articulo, index) => {
+        const btn = document.createElement("button");
+        btn.className = `key ${colores[index % colores.length]} ${claseLetra()}`;
+        btn.textContent = fmt(articulo);
+        btn.onclick = () => evaluarRespuesta(articulo);
+        container.appendChild(btn);
+    });
+}
+
+function evaluarRespuesta(articuloSeleccionado){
+    intentosEjercicio++;
+    let respuestaCorrecta = "";
+    if (modoArticulos === "defined") {
+        respuestaCorrecta = currentItem.def;
+    } else if (modoArticulos === "indefinite") {
+        respuestaCorrecta = currentItem.ind;
+    } else {
+        respuestaCorrecta = (articuloSeleccionado.toLowerCase() === currentItem.ind.toLowerCase()) ? currentItem.ind : currentItem.def;
+    }
+    
+    const wp = document.getElementById("word-panel");
+    const slot = document.getElementById("target-slot");
+    
+    if(articuloSeleccionado.toLowerCase() === respuestaCorrecta.toLowerCase()){
+        slot.textContent = fmt(articuloSeleccionado);
+        slot.classList.add("correct");
+        wp.classList.add("ok");
+        
+        const pts = intentosEjercicio === 1 ? 20 : intentosEjercicio === 2 ? 10 : 5;
+        if(!errEnIntento) score += pts;
+        
+        document.getElementById("score-display").textContent = score + " pts";
+        document.getElementById("bonus-indicator").textContent = !errEnIntento ? `+${pts} puntos ✨` : "¡Completado! 👍";
+        
+        sessionLog.push({
+            h: new Date().toLocaleTimeString(),
+            estimulo: (nivelJuego === 1) ? currentItem.word : currentItem.phrase,
+            r: "ACIERTO",
+            intento: intentosEjercicio,
+            puntos: !errEnIntento ? pts : 0
+        });
+
+        let lecturaCompleta = "";
+        if (nivelJuego === 1) {
+            lecturaCompleta = articuloSeleccionado + " " + currentItem.word;
+        } else {
+            lecturaCompleta = currentItem.phrase.replace("___", articuloSeleccionado);
+        }
+        
+        speak("¡Muy bien! " + lecturaCompleta).then(() => {
+            setTimeout(() => {
+                currentIdx++;
+                loadExercise();
+            }, 800);
+        });
+        
+    } else {
+        errEnIntento = true;
+        wp.classList.add("ko");
+        speak("Inténtalo otra vez");
+        
+        sessionLog.push({
+            h: new Date().toLocaleTimeString(),
+            estimulo: (nivelJuego === 1) ? currentItem.word : currentItem.phrase,
+            r: "ERROR",
+            intento: intentosEjercicio,
+            puntos: 0
+        });
+
+        setTimeout(() => wp.classList.remove("ko"), 400);
+    }
+}
+
+function speak(texto) {
+    return new Promise(resolve => {
+        const utterance = new SpeechSynthesisUtterance(texto);
+        utterance.lang = "es-ES"; 
+        utterance.rate = 0.7;
+        utterance.onend = resolve;
+        synth.cancel(); 
+        synth.speak(utterance);
+    });
+}
+
+function speakCurrentExercise(){
+    if(!currentItem) return;
+    if(nivelJuego === 1){
+        speak(`¿Qué artículo acompaña a? ${currentItem.word}`);
+    } else {
+        speak(`Completa la frase: ${currentItem.phrase.replace("___", "")}`);
+    }
+}
+
+function abrirParental(accion){
+    pAccion = accion;
+    const n1 = Math.floor(Math.random() * 7) + 2;
+    const n2 = Math.floor(Math.random() * 7) + 2;
+    pEsperado = n1 + n2;
+    
+    document.getElementById("p-desc").textContent = accion === "fs" ? "Resuelve para alternar pantalla completa:" : "Resuelve para salir al menú:";
+    document.getElementById("p-suma").textContent = `${n1} + ${n2} = ?`;
+    document.getElementById("p-inp").value = "";
+    document.getElementById("p-err").textContent = "";
+    document.getElementById("parental-modal").classList.add("vis");
+    setTimeout(() => document.getElementById("p-inp").focus(), 120);
+}
+
+function verificarParental(){
+    const val = parseInt(document.getElementById("p-inp").value, 10);
+    if(val === pEsperado){
+        cerrarParental();
+        if(pAccion === "salir"){
+            enviarSheet("salida manual");
+            document.getElementById("game-container").classList.add("hidden");
+            document.getElementById("final-screen").classList.remove("vis");
+            document.getElementById("splash-screen").classList.remove("hidden");
+        } else {
+            toggleFS();
+        }
+    } else {
+        document.getElementById("p-err").textContent = "❌ Incorrecto, inténtalo de nuevo.";
+        document.getElementById("p-inp").value = "";
+        document.getElementById("p-inp").focus();
+    }
+}
+function cerrarParental(){document.getElementById("parental-modal").classList.remove("vis");}
+
+function toggleFS(){
+    if(!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{});
+    else document.exitFullscreen();
+}
+
+function finSession(){
+    enviarSheet("fin sesion");
+    const p1 = sessionLog.filter(l => l.intento === 1 && l.r === "ACIERTO").length;
+    const p2 = sessionLog.filter(l => l.intento === 2 && l.r === "ACIERTO").length;
+    const pm = sessionLog.filter(l => l.intento >= 3 && l.r === "ACIERTO").length;
+    
+    // Puntuación ajustada para 15 tarjetas (Máximo 300 pts)
+    const estrellas = score >= 240 ? "⭐⭐⭐" : score >= 140 ? "⭐⭐" : "⭐";
+    
+    document.getElementById("fs-pts").textContent = score + " pts";
+    document.getElementById("fs-stars").textContent = estrellas;
+    document.getElementById("fs-pal").textContent = N_EJERCICIOS + " / " + N_EJERCICIOS;
+    document.getElementById("fs-p1").textContent = p1;
+    document.getElementById("fs-p2").textContent = p2;
+    document.getElementById("fs-pm").textContent = pm;
+    
+    document.getElementById("game-container").classList.add("hidden");
+    document.getElementById("final-screen").classList.add("vis");
+    speak(`¡Sesión terminada! Conseguiste ${score} puntos. ¡Buen trabajo!`);
+}
+
+function enviarSheet(motivo){
+    if(!enviarInforme) return;
+    const aciertos = sessionLog.filter(l => l.r === "ACIERTO").length;
+    const errores = sessionLog.filter(l => l.r === "ERROR").length;
+    const detalladoFallos = [...new Set(sessionLog.filter(l => l.r === "ERROR").map(l => l.estimulo))].join(", ") || "Ninguno";
+    
+    fetch(SHEET_URL, {
+        method: "POST",
+        body: JSON.stringify({
+            Nombre: nombreAlumno,
+            Actividad: `${NOMBRE_ACT} - Nivel ${nivelJuego} - Artículos: ${modoArticulos} (${modoLetra})`,
+            Aciertos: aciertos, Errores: errores,
+            PalabrasFalladas: detalladoFallos + (motivo ? " ("+motivo+")" : ""),
+            Puntuacion: score
+        }),
+        headers: {"Content-Type": "application/json"}
+    }).catch(e => console.log(e));
+}
+
+function generateReport(){
+    enviarSheet("descarga informe");
+    const rows = sessionLog.map(l => `<tr><td>${l.h}</td><td style='font-weight:700'>${l.estimulo}</td><td style='color:${l.r === "ACIERTO" ? "#2b9348":"#d62828"};font-weight:700'>${l.r}</td><td>${l.intento}</td><td style='color:#FF9800;font-weight:700'>+${l.puntos}</td></tr>`).join("");
+    
+    const html = `<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'><style>body{font-family:Nunito,sans-serif;background:#f0f8ff;padding:30px;color:#333;}h1{color:#2193b0;margin-bottom:4px;}.chips{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0 24px;}.chip{background:white;border-radius:12px;padding:10px 18px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.08);}.chip span{color:#2196F3;}table{width:100%;border-collapse:collapse;background:white;border-radius:12px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.08);}th{background:linear-gradient(135deg,#6dd5ed,#2193b0);color:white;padding:10px 12px;text-align:left;}td{padding:9px 12px;border-bottom:1px solid #eee;font-size:.9rem;}</style></head><body><h1>🧩 ${NOMBRE_ACT} — Informe Clínico/Pedagógico</h1><p style='color:#666'>Alumno/a: <strong>${nombreAlumno}</strong></p><div class='chips'><div class='chip'>Nivel: <span>${nivelJuego === 1 ? "🌱 Principiante (Palabras)" : "🚀 Avanzado (Frases)"}</span></div><div class='chip'>Filtro Artículos: <span>${modoArticulos}</span></div><div class='chip'>Letra: <span>${modoLetra === "may" ? "MAYÚSCULAS" : "minúsculas"}</span></div><div class='chip'>Puntuación Total: <span>${score} pts</span></div></div><table><thead><tr><th>Hora</th><th>Estímulo Evaluado</th><th>Resultado</th><th>Intento N°</th><th>Puntos Obtenidos</th></tr></thead><tbody>${rows || "<tr><td colspan='5' style='text-align:center;color:#999'>Sin registros en esta sesión</td></tr>"}</tbody></table></body></html>`;
+    
+    const a = Object.assign(document.createElement("a"), {
+        href: URL.createObjectURL(new Blob([html], {type: "text/html"})),
+        download: `informe_articulos_${nombreAlumno.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.html`
+    });
+    a.click();
+}
+
+function checkOrientation() {
+    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth < 900;
+    const isPortrait = window.innerHeight > window.innerWidth;
+    const rmsg = document.getElementById('rotate-msg');
+    const gameActive = !document.getElementById('game-container').classList.contains('hidden');
+    
+    if (isMobile && isPortrait && gameActive) {
+        rmsg.classList.add('vis');
+    } else {
+        rmsg.classList.remove('vis');
+    }
+}
+window.addEventListener('resize', checkOrientation);
+window.addEventListener('orientationchange', () => setTimeout(checkOrientation, 300));
+
+const hookStartGame = startGame;
+startGame = function(nivel) {
+    hookStartGame(nivel);
+    setTimeout(checkOrientation, 100);
+};
+</script>
+</body>
+</html>

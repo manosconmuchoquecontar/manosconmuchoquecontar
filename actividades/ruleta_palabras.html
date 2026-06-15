@@ -400,10 +400,38 @@ body.modo-minus .f3-hint-letra{font-family:var(--font-minus);text-transform:lowe
 .btn-nueva-tirada:hover{transform:translateY(-2px);}
 #marca-agua{position:fixed;bottom:10px;left:12px;z-index:9999;pointer-events:none;background:rgba(42,157,143,0.75);color:white;font-family:sans-serif;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;letter-spacing:0.03em;user-select:none;white-space:nowrap;}
 @media(max-width:480px){#marca-agua{font-size:10px;padding:3px 8px;bottom:8px;left:8px;}}
+
+/* ── Modal bienvenida ── */
+#modal-bienvenida{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;}
+#modal-bienvenida .mbv-card{background:white;border-radius:24px;padding:28px 24px 22px;max-width:400px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.18);display:flex;flex-direction:column;gap:14px;}
+#modal-bienvenida .mbv-icon{font-size:2.4rem;text-align:center;}
+#modal-bienvenida .mbv-title{font-size:1.1rem;font-weight:900;color:var(--teal-dark);text-align:center;font-family:var(--font-ui);}
+#modal-bienvenida .mbv-bloque{background:var(--teal-bg);border-radius:14px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;}
+#modal-bienvenida .mbv-bloque-icon{font-size:1.3rem;flex-shrink:0;margin-top:1px;}
+#modal-bienvenida .mbv-bloque-text{font-size:0.82rem;color:var(--text-dark);line-height:1.5;}
+#modal-bienvenida .mbv-pin{display:inline-block;background:var(--teal-dark);color:white;font-weight:900;padding:1px 8px;border-radius:8px;letter-spacing:2px;font-size:0.9rem;}
+#modal-bienvenida .mbv-ok{background:linear-gradient(135deg,var(--teal-dark),var(--teal-mid));color:white;border:none;border-radius:14px;padding:13px;font-family:var(--font-ui);font-weight:900;font-size:0.95rem;cursor:pointer;width:100%;margin-top:2px;}
 </style>
 </head>
 <body>
 <div id="marca-agua">© Creado por Inma Merino Rus</div>
+
+<!-- MODAL BIENVENIDA -->
+<div id="modal-bienvenida">
+  <div class="mbv-card">
+    <div class="mbv-icon">🎡</div>
+    <div class="mbv-title">Bienvenido a La Ruleta del Vocabulario</div>
+    <div class="mbv-bloque">
+      <div class="mbv-bloque-icon">⚙️</div>
+      <div class="mbv-bloque-text">Para <strong>configurar la app</strong> — añadir o quitar palabras, crear campos semánticos y gestionar alumnos — accede al <strong>Panel del Profesor</strong> desde la pantalla principal.<br><br>La contraseña es <span class="mbv-pin">1234</span> y puedes cambiarla dentro del panel.</div>
+    </div>
+    <div class="mbv-bloque">
+      <div class="mbv-bloque-icon">🎯</div>
+      <div class="mbv-bloque-text">En el panel también puedes <strong>activar o desactivar niveles</strong> para cada alumno según lo que esté trabajando: desde el reconocimiento global hasta el trazado guiado letra a letra.</div>
+    </div>
+    <button class="mbv-ok" onclick="document.getElementById('modal-bienvenida').style.display='none'">¡Entendido! →</button>
+  </div>
+</div>
 
 <!-- PANTALLA 0: ALUMNOS -->
 <div class="screen activa" id="screen-alumnos">
@@ -848,30 +876,34 @@ const Storage = {
     return {
       pin:'1234',
       alumnos:[
-        {id:1,nombre:'Lucía', avatar:'👧',campoIds:[1,2],fasesActivas:[1,2,3,4,5]},
-        {id:2,nombre:'Marcos',avatar:'👦',campoIds:[1],  fasesActivas:[1]},
+        {id:1,nombre:'Lucía', avatar:'👧',campoIds:[1,2],  fasesActivas:[1,2,3,4,5],modoLetra:'minus'},
+        {id:2,nombre:'Marcos',avatar:'👦',campoIds:[1],    fasesActivas:[1]},
         {id:3,nombre:'Sara',  avatar:'⭐',campoIds:[1,2,3],fasesActivas:[1,2,3]},
       ],
       campos:[
         {id:1,nombre:'Animales',emoji:'🐾',palabras:[
-          {p:'gato',  art:'el',sil:['ga','to'],      arasaac:2406},
-          {p:'perro', art:'el',sil:['pe','rro'],     arasaac:2517},
-          {p:'vaca',  art:'la',sil:['va','ca'],      arasaac:3139},
-          {p:'pato',  art:'el',sil:['pa','to'],      arasaac:null},
-          {p:'caballo',art:'el',sil:['ca','ba','llo'],arasaac:null},
-          {p:'mono',  art:'el',sil:['mo','no'],      arasaac:null},
+          {p:'gato',   art:'el',sil:['ga','to'],        arasaac:2406},
+          {p:'perro',  art:'el',sil:['pe','rro'],       arasaac:2517},
+          {p:'vaca',   art:'la',sil:['va','ca'],        arasaac:2609},
+          {p:'pato',   art:'el',sil:['pa','to'],        arasaac:28479},
+          {p:'caballo',art:'el',sil:['ca','ba','llo'],  arasaac:2294},
+          {p:'mono',   art:'el',sil:['mo','no'],        arasaac:2477},
         ]},
         {id:2,nombre:'Familia',emoji:'👨‍👩‍👧',palabras:[
-          {p:'mamá',  art:'la',sil:['ma','má'],      arasaac:null},
-          {p:'papá',  art:'el',sil:['pa','pá'],      arasaac:null},
-          {p:'bebé',  art:'el',sil:['be','bé'],      arasaac:null},
-          {p:'abuela',art:'la',sil:['a','bue','la'], arasaac:null},
+          {p:'mamá',  art:'la',sil:['ma','má'],       arasaac:2458},
+          {p:'papá',  art:'el',sil:['pa','pá'],       arasaac:31146},
+          {p:'bebé',  art:'el',sil:['be','bé'],       arasaac:2275},
+          {p:'abuela',art:'la',sil:['a','bue','la'],  arasaac:23710},
+          {p:'abuelo',art:'el',sil:['a','bue','lo'],  arasaac:23718},
         ]},
         {id:3,nombre:'Alimentos',emoji:'🍎',palabras:[
-          {p:'pan',    art:'el',sil:['pan'],           arasaac:null},
-          {p:'leche',  art:'la',sil:['le','che'],      arasaac:null},
-          {p:'manzana',art:'la',sil:['man','za','na'], arasaac:null},
-          {p:'huevo',  art:'el',sil:['hue','vo'],      arasaac:null},
+          {p:'pan',    art:'el',sil:['pan'],            arasaac:2494},
+          {p:'leche',  art:'la',sil:['le','che'],       arasaac:2445},
+          {p:'manzana',art:'la',sil:['man','za','na'],  arasaac:2462},
+          {p:'huevo',  art:'el',sil:['hue','vo'],       arasaac:38868},
+          {p:'pera',   art:'la',sil:['pe','ra'],        arasaac:2561},
+          {p:'galleta',art:'la',sil:['ga','lle','ta'],  arasaac:3331},
+          {p:'sopa',   art:'la',sil:['so','pa'],        arasaac:2573},
         ]},
       ],
     };
@@ -1730,7 +1762,7 @@ function iniciarF2(){
     t.onclick=()=>fxTocaF2(s,sils,t);
     sel.appendChild(t);
   });
-  setTimeout(()=>hablar(silsRaw.join(' ')),400);
+  setTimeout(()=>hablar(palabraActiva.p),400);
 }
 
 function fxTocaF2(sel, correctas, tokenEl){

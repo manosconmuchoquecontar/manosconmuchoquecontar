@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Veo Veo un Tesoro - Exploración en la Selva</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Varela+Round&family=Playwrite+HR+Lijeva:wght@100..400&family=Playwrite+DE+Grund:wght@100..400&family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap');
+        
+        :root {
+            /* Paleta de Colores de la Selva de Alto Contraste DUA */
+            --jungle-dark: #2E7D32;
+            --jungle-light: #81C784;
+            --jungle-bg: #E8F5E9;
+            --wood: #795548;
+            --wood-light: #A1887F;
+            --gold: #FFC107;
+            --gold-dark: #FF9800;
+            --ok: #4CAF50;  
+            --err: #f44336;
+            
+            --fn: 'Varela Round', sans-serif;
+            --ft: 'Fredoka One', cursive;
+            --fu: 'Nunito', sans-serif;
+            --fmin: 'Playwrite HR Lijeva', cursive;
+            --fmay: 'Playwrite DE Grund', cursive;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;user-select:none;}
+        body{font-family:var(--fn);background-color:var(--jungle-bg);background-image:radial-gradient(circle at 50% 50%, #ffffff 0%, var(--jungle-bg) 100%);height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+
+        /* MARCA DE AGUA OFICIAL INMA MERINO RUS */
+        .watermark-signature {
+            position: fixed;
+            bottom: 10px;
+            left: 12px;
+            z-index: 9999;
+            pointer-events: none;
+            background: #2a9d8f;
+            color: white;
+            font-family: sans-serif;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 5px 14px;
+            border-radius: 20px;
+            letter-spacing: .03em;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* CLASES TIPOGRÁFICAS DINÁMICAS DUA */
+        .kfont-min { font-family: var(--fmin) !important; font-weight: 400 !important; }
+        .kfont-may { font-family: var(--fmay) !important; font-weight: 400 !important; text-transform: uppercase; }
+
+        /* PANTALLAS RESPONSIVAS */
+        .screen { display: none; position: fixed; inset: 0; z-index: 1000; flex-direction: column; align-items: center; padding: 60px 20px 40px 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .screen.active { display: flex; }
+
+        /* DECORACIÓN SELVA DE FONDO */
+        .jungle-leaves { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.15; font-size: 4rem; overflow: hidden; }
+        .leaf { position: absolute; animation: sway 6s infinite ease-in-out alternate; }
+        @keyframes sway { 0% { transform: rotate(-10deg) translateX(0); } 100% { transform: rotate(10deg) translateX(15px); } }
+
+        /* TARJETAS BASE CON ARQUITECTURA RESPONSIVA AUTO-CENTRABLE */
+        .card { background: white; padding: 2rem 1.5rem; border-radius: 32px; max-width: 540px; width: 100%; text-align: center; box-shadow: 0 20px 50px rgba(46,125,50,.15); position: relative; z-index: 1; border: 6px solid var(--jungle-light); margin: auto; }
+        .card h1 { font-family: var(--ft); font-size: clamp(1.6rem, 5vw, 2.2rem); color: var(--jungle-dark); margin-bottom: 10px; }
+        .card p { color: #555; font-size: clamp(0.95rem, 3vw, 1.1rem); margin-bottom: 1.2rem; line-height: 1.4; font-family: var(--fu); font-weight: 700; }
+
+        /* BOTONES PRINCIPALES */
+        .btn-main { width: 100%; padding: 0.9rem; border: none; border-radius: 100px; background: linear-gradient(135deg, var(--jungle-light), var(--jungle-dark)); color: white; font-family: var(--ft); font-size: 1.1rem; cursor: pointer; box-shadow: 0 6px 20px rgba(46,125,50,.3); transition: transform 0.15s, filter 0.15s; margin-bottom: 10px; }
+        .btn-main:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .btn-sec { background: linear-gradient(135deg, var(--wood-light), var(--wood)); box-shadow: 0 6px 20px rgba(121,85,72,.3); border: none; color: white; cursor: pointer; transition: transform 0.15s; border-radius:100px; width:100%; padding: 12px; font-family: var(--ft); font-size: 1.1rem; text-align: center; display: block; text-decoration: none; }
+        .btn-sec:hover { transform: translateY(-2px); }
+
+        /* REGISTRO MULTIUSUARIO ADAPTABLE */
+        .profiles-container { background: var(--jungle-bg); border-radius: 20px; padding: 12px; margin-bottom: 15px; border: 2px dashed var(--jungle-dark); max-height: 160px; overflow-y: auto; }
+        .profiles-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .profile-btn { background: white; border: 3px solid var(--jungle-light); border-radius: 15px; padding: 8px 16px; font-family: var(--ft); font-size: 1.1rem; color: var(--jungle-dark); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+        .profile-btn:hover { background: var(--jungle-light); color: white; transform: scale(1.05); }
+        
+        .avatar-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 15px; }
+        .avatar-btn { font-size: clamp(1.8rem, 4vw, 2.3rem); background: #f0f0f0; border: 3px solid transparent; border-radius: 18px; padding: 6px 12px; cursor: pointer; transition: all 0.2s; }
+        .avatar-btn.sel { background: var(--jungle-bg); border-color: var(--jungle-dark); transform: scale(1.08); }
+        .ninp { width: 100%; padding: 0.8rem; border-radius: 100px; border: 3px solid #cce5f0; font-size: 1.2rem; font-family: var(--fu); text-align: center; outline: none; margin-bottom: 15px; transition: border-color 0.2s; font-weight: 700; }
+        .ninp:focus { border-color: var(--jungle-dark); }
+
+        /* PANEL DUA SELECTORES */
+        .lpanel { background: rgba(129, 199, 132, 0.15); border-radius: 24px; padding: 12px 18px; margin-bottom: 12px; width: 100%; }
+        .lpanel h3 { font-family: var(--ft); font-size: 1rem; margin-bottom: 8px; color: var(--jungle-dark); }
+        .lfila { display: flex; gap: 10px; justify-content: center; }
+        .btnl { flex: 1; padding: 8px; border: 3px solid rgba(46, 125, 50, 0.2); border-radius: 16px; background: white; cursor: pointer; color: var(--jungle-dark); font-family: var(--fu); font-size: 0.95rem; font-weight: 700; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; }
+        .btnl.sel { background: var(--jungle-dark); color: white; border-color: var(--jungle-dark); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .btnl span:first-child { font-size: 1.2rem; margin-bottom: 2px; }
+        
+        .player-info { display: flex; align-items: center; justify-content: center; gap: 12px; background: var(--gold); padding: 8px 18px; border-radius: 100px; color: #333; font-family: var(--ft); font-size: 1.1rem; margin-bottom: 15px; border: 3px solid var(--gold-dark); }
+
+        /* ENTORNO JUEGO BARRA SUPERIOR */
+        .topbar { position: absolute; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; z-index: 2000; }
+        .bsys { width: 48px; height: 45px; border-radius: 16px; border: none; cursor: pointer; color: white; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; transition: transform 0.15s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .bsys:hover { transform: scale(1.05); }
+        .stats-bar { display: flex; gap: 12px; background: white; padding: 6px 16px; border-radius: 100px; font-family: var(--ft); font-size: 1.1rem; color: var(--jungle-dark); border: 3px solid var(--jungle-light); }
+
+        .exit-fullscreen-container { position: relative; display: inline-block; }
+        .progress-overlay { position: absolute; bottom: 0; left: 0; height: 5px; background: var(--err); width: 0%; transition: width 0.1s linear; border-radius: 0 0 16px 16px; }
+
+        /* JUEGO: ZONA DE INSTRUCCIÓN */
+        .mission-card { background: white; padding: 30px; border-radius: 40px; text-align: center; border: 8px solid var(--wood); box-shadow: 0 20px 40px rgba(0,0,0,0.1); max-width: 760px; width: 100%; position: relative; margin: auto; }
+        .audio-btn { position: absolute; top: -20px; right: -10px; width: 60px; height: 60px; background: var(--gold); border: 4px solid white; border-radius: 50%; font-size: 1.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
+        #instruction-text { font-size: clamp(1.5rem, 4vw, 2.5rem); color: #2C3E50; line-height: 1.3; margin: 20px 0; padding: 0 10px; }
+        
+        /* BOTÓN COMPLETADO GIGANTE */
+        .btn-huge { background: linear-gradient(135deg, var(--ok), #388E3C); font-size: clamp(1.5rem, 3.5vw, 2.1rem); padding: 16px 32px; border-radius: 100px; border: none; color: white; font-family: var(--ft); cursor: pointer; box-shadow: 0 10px 25px rgba(76, 175, 80, 0.3); width: 100%; max-width: 380px; margin: 10px auto 0 auto; display: block; }
+
+        /* ÁLBUM EXPANDIDO CON 80 CROMOS */
+        .album-title { color: var(--gold); font-family: var(--ft); font-size: 2.2rem; margin-bottom: 15px; text-align: center; }
+        .stickers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 12px; width: 100%; max-width: 780px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 24px; max-height: 55vh; overflow-y: auto; margin: auto; }
+        .sticker-slot { background: rgba(255,255,255,0.8); border: 3px dashed #A1887F; border-radius: 16px; height: 85px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; filter: grayscale(1) opacity(0.3); }
+        .sticker-slot.unlocked { filter: grayscale(0) opacity(1); background: linear-gradient(135deg, #FFFDE7, #FFECB3); border: 3px solid var(--gold); box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3); }
+
+        /* RECOMPENSA COFRE */
+        .chest-container { font-size: 6.5rem; margin: 15px 0; cursor: pointer; }
+        .chest-text { color: var(--gold); font-family: var(--ft); font-size: 1.7rem; margin-bottom: 8px; }
+
+        /* SEGURIDAD MODAL */
+        #parental-modal{display:none; position:fixed; inset:0; background:rgba(0,0,0,.92); z-index:3000; align-items:center; justify-content:center; flex-direction:column; text-align:center;}
+        #parental-modal.vis{display:flex;}
+        .pcard { background: white; color:#333; border-radius:28px; padding:2rem; max-width:330px; width:90%; text-align:center; margin: auto; }
+        .pcard h2 { font-family: var(--ft); font-size: 1.3rem; color: var(--jungle-dark); margin-bottom: .3rem; }
+        .psum { font-size: 2rem; font-weight: 900; color: var(--gold-dark); margin: 0.8rem 0; font-family: var(--fu); }
+        .pinp { width: 100%; padding: .7rem; border: 3px solid #cce5f0; border-radius: 14px; font-size: 1.4rem; text-align: center; font-family: var(--fu); outline: none; margin-bottom: .6rem; }
+
+        /* ROTACIÓN */
+        #rotate-msg { display: none; position: fixed; inset: 0; z-index: 4000; background: var(--jungle-dark); flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; padding: 30px; }
+        #rotate-msg.vis { display: flex; }
+        #rotate-msg .rico { font-size: 4rem; animation: spin 2s infinite linear; }
+
+        /* ADAPTACIÓN SECCIONES HORIZONTALES */
+        @media (max-height: 580px) and (orientation: landscape) {
+            .screen { padding-top: 50px; padding-bottom: 15px; }
+            .card { padding: 1rem 1.2rem; border-width: 4px; }
+            .mission-card { padding: 15px 25px; border-width: 5px; }
+            #instruction-text { font-size: 1.6rem; margin: 10px 0; }
+            .btn-huge { font-size: 1.4rem; padding: 10px 20px; max-width: 320px; }
+            .avatar-grid { margin-bottom: 8px; gap: 6px; }
+            .avatar-btn { font-size: 1.7rem; padding: 4px 10px; border-radius: 12px; }
+            .ninp { padding: 0.6rem; margin-bottom: 10px; font-size: 1rem; }
+            .lpanel { padding: 8px 12px; margin-bottom: 8px; }
+            .lpanel h3 { font-size: 0.9rem; margin-bottom: 4px; }
+            .btn-main { padding: 0.7rem; font-size: 1rem; margin-bottom: 6px; }
+            .btn-sec { padding: 8px; font-size: 1rem; }
+            .player-info { padding: 5px 15px; font-size: 1rem; margin-bottom: 10px; }
+            .topbar { padding: 5px 15px; }
+            .bsys { width: 42px; height: 38px; font-size: 1.1rem; border-radius: 12px; }
+            .stats-bar { padding: 4px 12px; font-size: 1rem; }
+            .profiles-container { max-height: 90px; padding: 6px; margin-bottom: 10px; }
+            .profile-btn { padding: 5px 12px; font-size: 0.95rem; border-width: 2px; }
+            .stickers-grid { max-height: 42vh; gap: 8px; padding: 10px; }
+            .sticker-slot { height: 60px; font-size: 2rem; border-width: 2px; }
+            .chest-container { font-size: 4.5rem; margin: 5px 0; }
+            .chest-text { font-size: 1.3rem; }
+        }
+
+        /* ESCALADO PISARRAS DIGITALES */
+        @media (min-width: 1200px) {
+            .card { max-width: 620px; padding: 3rem; }
+            .mission-card { max-width: 900px; padding: 50px; }
+            #instruction-text { font-size: 2.8rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- MARCA DE AGUA FLOTANTE -->
+<div class="watermark-signature">© Creado por Inma Merino Rus</div>
+
+<div id="leaves-container"></div>
+
+<div id="rotate-msg">
+    <div class="rico">📱</div>
+    <h2>Gira el móvil</h2>
+    <p style="font-family:var(--fu)">Este juego de exploración se ve mejor en<br><strong>horizontal 🔄</strong></p>
+</div>
+
+<!-- TOP BAR DEL COMPAÑERO -->
+<div class="topbar" id="global-topbar" style="display:none;">
+    <button class="bsys" style="background:#ff5722;" onclick="abrirParental('home')" title="Volver al Menú">🏠</button>
+    <div class="stats-bar">
+        <span>Nivel <span id="ui-level">1</span></span>
+        <span>|</span>
+        <span id="ui-progress">0/15</span>
+    </div>
+    <div style="display:flex;gap:10px;">
+        <button class="bsys" style="background:#9c27b0;" onclick="downloadReport()" title="Descargar Informe">📋</button>
+        <div class="exit-fullscreen-container">
+            <button class="bsys" style="background:#607d8b; width: auto; padding: 0 15px; font-size: 1rem; font-family: var(--fu);" id="fullscreen-btn">⛶ Pantalla Completa</button>
+            <div class="progress-overlay" id="hold-progress"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 1. PANTALLA PASAPORTE MULTI-JUGADOR -->
+<div class="screen active" id="login-screen">
+    <div class="card">
+        <h1>🧭 Pasaporte Explorador</h1>
+        
+        <div id="existing-profiles-container" style="display:none;">
+            <div class="profiles-container">
+                <p style="margin-bottom: 8px; font-family: var(--fu); font-weight:700;">Elige tu pasaporte:</p>
+                <div class="profiles-list" id="existing-profiles-list"></div>
+            </div>
+            <p style="font-family: var(--fu); color:#888; font-size: 0.9rem; margin-bottom: 5px;">--- O crea uno nuevo ---</p>
+        </div>
+
+        <p style="margin-top:5px; margin-bottom: 5px;">¿Eres un nuevo explorador?</p>
+        <input type="text" id="player-name" class="ninp" placeholder="Escribe tu nombre..." maxlength="20">
+        <p style="margin-bottom: 8px;">Elige tu compañero de aventuras:</p>
+        <div class="avatar-grid" id="avatar-selection"></div>
+        <button class="btn-main" onclick="saveNewPlayer()">Crear Nuevo Pasaporte ✓</button>
+    </div>
+</div>
+
+<!-- 2. MENÚ DE OPCIONES DUA -->
+<div class="screen" id="menu-screen">
+    <div class="card">
+        <div class="player-info">
+            <span id="menu-avatar" style="font-size:2rem;">🐒</span>
+            <span id="menu-name">Explorador</span>
+        </div>
+        <h1>Veo Veo un Tesoro 🗺️</h1>
+        
+        <div class="lpanel">
+            <h3>🔤 ¿Cómo quieres leer las pistas?</h3>
+            <div class="lfila">
+                <button class="btnl sel" onclick="setLetra('min', this)"><span style="font-family:var(--fmin)">abc</span><span>minúsculas</span></button>
+                <button class="btnl" onclick="setLetra('may', this)"><span style="font-family:var(--fmay);text-transform:uppercase;">ABC</span><span>MAYÚSCULAS</span></button>
+            </div>
+        </div>
+
+        <button class="btn-main" onclick="startLevel()" style="font-size:1.4rem; padding: 12px; margin-bottom: 12px;">▶️ Empezar Nivel <span id="menu-level-num">1</span></button>
+        <button class="btn-sec" onclick="showAlbum()">📖 Mi Álbum de Tesoros</button>
+        
+        <div style="margin-top:15px; display: flex; justify-content: center; gap: 10px; align-items: center;">
+            <div class="exit-fullscreen-container">
+                <button class="bsys" style="background:#2196F3; width:auto; padding:0 20px; font-size:1.1rem; font-family:var(--fu);" id="menu-fullscreen-btn">⛶ Pantalla Completa</button>
+                <div class="progress-overlay" id="menu-hold-progress"></div>
+            </div>
+            <button class="bsys" style="background:#9c27b0; display:inline-flex; width:auto; padding:0 20px; font-size:1.1rem; font-family:var(--fu); gap:10px;" onclick="downloadReport()">📋 Descargar Informe</button>
+        </div>
+        <button style="background:none;border:none;color:#aaa;text-decoration:underline;margin-top:12px;cursor:pointer;font-family:var(--fu)" onclick="abrirParental('change-player')">Cambiar de Jugador</button>
+    </div>
+</div>
+
+<!-- 3. INSTRUCCIONES LOGOPÉDICAS / SENSOMOTORAS -->
+<div class="screen" id="game-screen">
+    <div class="mission-card">
+        <button class="audio-btn" onclick="readInstruction()">🔊</button>
+        <div id="instruction-text" class="kfont-min">Busca algo de color verde</div>
+        <button class="btn-huge" onclick="completeInstruction()">✅ ¡MISIÓN CUMPLIDA!</button>
+    </div>
+</div>
+
+<!-- 4. APERTURA DE COFRE DE PREMIOS -->
+<div class="screen" id="reward-screen">
+    <div class="card" style="background: var(--jungle-dark); border-color: var(--gold); color: white;">
+        <h1 style="color:var(--gold);">¡Nivel Completado!</h1>
+        <p style="color:white;">Has encontrado todas las pistas.<br>¡Abre el cofre para ver tu recompensa!</p>
+        <div class="chest-container" id="chest" onclick="openChest()">📦</div>
+        <div id="reward-result" style="display:none;">
+            <div class="chest-text">¡Has conseguido un cromo nuevo!</div>
+            <div id="reward-sticker" style="font-size:6rem; margin:15px; animation: popIn 0.6s ease;">🦁</div>
+            <button class="btn-main" onclick="goToMenu()">Guardar y Volver</button>
+        </div>
+    </div>
+</div>
+
+<!-- 5. COLECCIÓN DE 80 CROMOS -->
+<div class="screen" id="album-screen">
+    <h1 class="album-title">📖 Álbum de la Selva</h1>
+    <div class="stickers-grid" id="album-grid"></div>
+    <div style="width:100%; display:flex; justify-content:center;">
+        <button class="btn-main" style="max-width:280px; margin-top:15px;" onclick="goToMenu()">⬅️ Volver al Menú</button>
+    </div>
+</div>
+
+<!-- SEGUROS DE RESTRICCIÓN PARENTAL -->
+<div id="parental-modal">
+    <div class="pcard">
+        <h2>🔒 Seguridad</h2>
+        <p id="p-desc">Resuelve para continuar:</p>
+        <p class="psum" id="p-suma"></p>
+        <input type="number" class="pinp" id="p-inp" placeholder="?" onkeydown="if(event.key==='Enter')verificarParental()">
+        <p class="perr" id="p-err"></p>
+        <button class="pok" onclick="verificarParental()">✓ Comprobar</button><br>
+        <button class="pcancel" onclick="cerrarParental()">Cancelar</button>
+    </div>
+</div>
+
+<script>
+// --- BANCOS DE DATOS COGNITIVOS EXPANDIDOS ---
+const AVATARES = ['🐒','🐅','🐘','🦜','🐊','🐍','🦓','🦒'];
+
+const CROMOS_COLECCION = [
+    '🐵','🦁','🐯','🐆','🐎','🦌','🦏','🦛','🐃','🦇','🦋','🐞','🐢','🦎','🐍','🦖','🦕','🦅','🦆','🦉',
+    '🐬','🐳','🐋','🦈','🐙','🦑','🦐','🦞','🦀','🐡','🐠','🐟','🦭','🐧','🦢','🦩','🐸','🐊','🦦','🐚',
+    '🦄','🐉','🐲','🦚','🦥','🐼','🐨','🦘','🦡','🦨','🦊','🐺','🐗','🦓','🦒','🐪','🐫','🦙','🐘','🦍',
+    '💎','🔮','🧿','🔭','🧭','🗺️','🗿','🌋','🏕️','🏜️','🏝️','🚀','🛸','🚁','⛵','⚓','👑','🏺','🪙','🏆'
+]; 
+
+const BANCO_INSTRUCCIONES = [
+    "Busca algo de color naranja.",
+    "Toca algo que sea de color blanco.",
+    "Encuentra un objeto que tenga dos colores a la vez.",
+    "Busca algo que sea de color marrón.",
+    "Toca algo de color rosa.",
+    "Encuentra algo que tenga tu color favorito.",
+    "Toca algo de color lila o morado.",
+    "Encuentra algo que tenga los colores del arcoíris.",
+    "Busca algo que sea de un color muy brillante.",
+    "Busca algo que tenga forma de triángulo.",
+    "Encuentra algo que sea completamente rectangular.",
+    "Toca algo que sea largo y fino.",
+    "Busca un objeto que sea redondo como una pelota.",
+    "Busca un objeto que solo tenga líneas rectas.",
+    "Encuentra algo que tenga forma de cubo.",
+    "Toca algo que sea perfectamente plano.",
+    "Toca algo que esté muy rugoso o áspero.",
+    "Busca algo que se sienta un poco templado o calentito.",
+    "Encuentra algo que sea blando y se pueda aplastar un poco con el dedo.",
+    "Toca algo que esté completamente seco.",
+    "Busca algo que sea duro como una piedra.",
+    "Busca algo que sea elástico y se pueda estirar.",
+    "Encuentra algo que esté frío como el metal.",
+    "Toca algo que se sienta muy liso y suave.",
+    "Busca algo que sea más alto que tú.",
+    "Encuentra un objeto que sea más pesado que un libro.",
+    "Toca algo que quepa entero dentro de tu mano cerrada.",
+    "Busca algo que sea más largo que tu pie.",
+    "Encuentra algo que sea súper ligero y no pese casi nada.",
+    "Toca algo que sea más ancho que tus dos manos juntas.",
+    "Busca el objeto más pequeño que veas en la habitación.",
+    "Encuentra algo que sea más bajo que tus rodillas.",
+    "Toca algo que sea el doble de grande que un lápiz.",
+    "Encuentra algo hecho de papel.",
+    "Toca algo que sea de metal.",
+    "Busca algo hecho de cartón.",
+    "Encuentra algo hecho de vidrio o cristal.",
+    "Toca un objeto hecho de goma.",
+    "Busca algo que sirva para guardar cosas dentro.",
+    "Encuentra algo que se use para comer o beber.",
+    "Toca algo que sirva para cortar.",
+    "Busca algo que sirva para colgar la ropa o la mochila.",
+    "Encuentra algo que se use para jugar.",
+    "Toca algo que sirva para proteger o tapar otra cosa.",
+    "Busca algo que sirva para medir el tiempo o el tamaño.",
+    "Encuentra algo que se use para pegar.",
+    "Toca algo que sirva para iluminar cuando está oscuro.",
+    "Busca algo que sirva para transportar cosas de un lado a otro.",
+    "Toca algo que esté debajo de una mesa o una silla.",
+    "Busca algo que esté colgado en la pared.",
+    "Encuentra algo que esté justo detrás de una puerta.",
+    "Busca algo que esté en un rincón o esquina.",
+    "Encuentra dos objetos iguales.",
+    "Toca algo que esté justo al lado de una ventana.",
+    "Busca algo que esté guardado dentro de un cajón.",
+    "Encuentra algo que esté en el suelo, pero que no sea un mueble.",
+    "Toca algo que esté a la derecha de la pizarra.",
+    "Encuentra algo que sea completamente silencioso aunque lo muevas.",
+    "Encuentra algo que tenga dibujada una línea curva.",
+    "Busca un objeto que tenga el número 1 escrito en alguna parte.",
+    "Toca algo que empiece por la misma letra que tu nombre.",
+    "Encuentra algo que tenga rayas.",
+    "Busca un objeto decorado con lunares o puntos.",
+    "Encuentra algo que tenga una palabra muy larga escrita.",
+    "Busca algo que tenga el dibujo de un animal.",
+    "Toca algo donde aparezca el número 0 o un círculo completamente vacío.",
+    "Da tres pasos gigantes y toca lo primero que alcances.",
+    "Ponte de puntillas y toca algo que esté arriba del todo.",
+    "Salta tres veces como un canguro y busca algo a tu izquierda.",
+    "Agáchate como una rana y toca algo que esté muy cerca del suelo.",
+    "Camina hacia atrás con cuidado y toca la pared más cercana.",
+    "Cruza los brazos y señala con la punta de la nariz algo amarillo.",
+    "Posa un solo pie en el suelo y mantén el equilibrio durante 3 segundos.",
+    "Da una vuelta sobre ti mismo y toca lo primero que sea de metal.",
+    "Toca el suelo con un solo pie y una sola mano a la vez.",
+    "Corre en tu sitio durante 5 segundos y luego toca algo blando."
+];
+
+// --- ARQUITECTURA DE CONTROL ---
+let playersArray = []; 
+let currentPlayerIndex = -1; 
+let player = null; 
+let modoLetra = "min";
+const synth = window.speechSynthesis;
+
+let sessionLog = [];
+let poolPartida = [];
+let currentInstructionIdx = 0;
+let totalLevelInstructions = 0;
+let timeStartInstruction = 0;
+let pAccion = "", pEsperado = 0;
+
+let holdTimer = null;
+let holdProgressInterval = null;
+let progressPercent = 0;
+
+function init() {
+    generarHojasFondos();
+    setupFullscreenHoldControl(document.getElementById('fullscreen-btn'), document.getElementById('hold-progress'));
+    setupFullscreenHoldControl(document.getElementById('menu-fullscreen-btn'), document.getElementById('menu-hold-progress'));
+    
+    const guardado = localStorage.getItem('veoveo_tesoro_players');
+    if (guardado) {
+        playersArray = JSON.parse(guardado);
+    }
+    renderLoginScreen();
+    checkOrientation();
+}
+
+function generarHojasFondos() {
+    const c = document.getElementById('leaves-container');
+    const hojas = ['🌿','🍃','🌱'];
+    for(let i=0; i<15; i++) {
+        const span = document.createElement('span');
+        span.className = 'leaf';
+        span.innerText = hojas[Math.floor(Math.random()*hojas.length)];
+        span.style.left = Math.random()*100 + 'vw';
+        span.style.top = Math.random()*100 + 'vh';
+        span.style.animationDelay = (Math.random()*5) + 's';
+        span.style.fontSize = (2 + Math.random()*3) + 'rem';
+        c.appendChild(span);
+    }
+}
+
+function setupFullscreenHoldControl(btn, progressOverlay) {
+    function enterFullscreen() {
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().catch(()=>{});
+        }
+    }
+    function exitFullscreen() {
+        if (document.exitFullscreen) {
+            document.exitFullscreen().catch(()=>{});
+        }
+    }
+    function startHold(e) {
+        e.preventDefault();
+        if (!document.fullscreenElement) {
+            enterFullscreen();
+            return;
+        }
+        progressPercent = 0;
+        progressOverlay.style.width = '0%';
+        
+        holdTimer = setTimeout(() => {
+            exitFullscreen();
+            clearInterval(holdProgressInterval);
+            progressOverlay.style.width = '0%';
+        }, 3000);
+
+        holdProgressInterval = setInterval(() => {
+            progressPercent += (100 / 30);
+            progressOverlay.style.width = `${Math.min(progressPercent, 100)}%`;
+        }, 100);
+    }
+    function cancelHold() {
+        if (holdTimer) clearTimeout(holdTimer);
+        if (holdProgressInterval) clearInterval(holdProgressInterval);
+        progressOverlay.style.width = '0%';
+    }
+    btn.addEventListener('mousedown', startHold);
+    btn.addEventListener('mouseup', cancelHold);
+    btn.addEventListener('mouseleave', cancelHold);
+    btn.addEventListener('touchstart', startHold, {passive: false});
+    btn.addEventListener('touchend', cancelHold);
+}
+
+document.addEventListener('fullscreenchange', () => {
+    const fsBtnGame = document.getElementById('fullscreen-btn');
+    const fsBtnMenu = document.getElementById('menu-fullscreen-btn');
+    if (document.fullscreenElement) {
+        fsBtnGame.innerText = "Mantén 3s para salir ⛶";
+        fsBtnMenu.innerText = "Mantén 3s para salir ⛶";
+    } else {
+        fsBtnGame.innerText = "⛶ Pantalla Completa";
+        fsBtnMenu.innerText = "⛶ Pantalla Completa";
+    }
+});
+
+function renderLoginScreen() {
+    renderAvatars();
+    document.getElementById('player-name').value = "";
+    
+    const container = document.getElementById('existing-profiles-container');
+    const list = document.getElementById('existing-profiles-list');
+    
+    if (playersArray.length > 0) {
+        container.style.display = 'block';
+        list.innerHTML = '';
+        playersArray.forEach((p, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'profile-btn';
+            btn.innerHTML = `<span style="font-size:1.8rem;">${p.avatar}</span> <span>${p.name}</span>`;
+            btn.onclick = () => loadExistingPlayer(index);
+            list.appendChild(btn);
+        });
+    } else {
+        container.style.display = 'none';
+    }
+    switchScreen('login-screen');
+}
+
+function renderAvatars() {
+    const cont = document.getElementById('avatar-selection');
+    cont.innerHTML = "";
+    AVATARES.forEach(av => {
+        const btn = document.createElement('button');
+        btn.className = 'avatar-btn';
+        btn.innerText = av;
+        btn.onclick = () => {
+            document.querySelectorAll('.avatar-btn').forEach(b => b.classList.remove('sel'));
+            btn.classList.add('sel');
+        };
+        cont.appendChild(btn);
+    });
+}
+
+function saveNewPlayer() {
+    const name = document.getElementById('player-name').value.trim();
+    const avatarBtn = document.querySelector('.avatar-btn.sel');
+    
+    if (!name) { alert("¡Escribe tu nombre de explorador!"); return; }
+    if (!avatarBtn) { alert("¡Elige un compañero animal!"); return; }
+
+    const newPlayer = {
+        name: name,
+        avatar: avatarBtn.innerText,
+        currentLevel: 1,
+        stickers: [],
+        usedInstructions: []
+    };
+    
+    playersArray.push(newPlayer);
+    currentPlayerIndex = playersArray.length - 1;
+    player = playersArray[currentPlayerIndex];
+    
+    syncLocalStorage();
+    showMenu();
+}
+
+function loadExistingPlayer(index) {
+    currentPlayerIndex = index;
+    player = playersArray[currentPlayerIndex];
+    if (!player.usedInstructions) player.usedInstructions = [];
+    showMenu();
+}
+
+function syncLocalStorage() {
+    if (currentPlayerIndex !== -1 && player !== null) {
+        playersArray[currentPlayerIndex] = player;
+    }
+    localStorage.setItem('veoveo_tesoro_players', JSON.stringify(playersArray));
+}
+
+function showMenu() {
+    document.getElementById('global-topbar').style.display = 'none';
+    document.getElementById('menu-avatar').innerText = player.avatar;
+    document.getElementById('menu-name').innerText = player.name;
+    document.getElementById('menu-level-num').innerText = player.currentLevel;
+    switchScreen('menu-screen');
+}
+
+function setLetra(m, btn) {
+    modoLetra = m;
+    btn.parentNode.querySelectorAll(".btnl").forEach(b => b.classList.remove("sel"));
+    btn.classList.add("sel");
+}
+function fmt(text) {
+    return modoLetra === 'may' ? text.toUpperCase() : text.toLowerCase();
+}
+function getClaseLetra() {
+    return modoLetra === 'may' ? 'kfont-may' : 'kfont-min';
+}
+
+function startLevel() {
+    totalLevelInstructions = player.currentLevel + 2;
+    if (totalLevelInstructions > 20) totalLevelInstructions = 20; 
+    
+    let availableInstructions = BANCO_INSTRUCCIONES.filter(inst => !player.usedInstructions.includes(inst));
+    if (availableInstructions.length < totalLevelInstructions) {
+        player.usedInstructions = [];
+        availableInstructions = [...BANCO_INSTRUCCIONES];
+    }
+    
+    poolPartida = availableInstructions.sort(() => Math.random() - 0.5).slice(0, totalLevelInstructions);
+    player.usedInstructions.push(...poolPartida);
+    syncLocalStorage();
+    
+    currentInstructionIdx = 0;
+    sessionLog = []; 
+    
+    document.getElementById('ui-level').innerText = player.currentLevel;
+    document.getElementById('global-topbar').style.display = 'flex';
+    
+    switchScreen('game-screen');
+    loadInstruction();
+}
+
+function loadInstruction() {
+    document.getElementById('ui-progress').innerText = (currentInstructionIdx + 1) + "/" + totalLevelInstructions;
+    
+    const texto = poolPartida[currentInstructionIdx];
+    const textDiv = document.getElementById('instruction-text');
+    textDiv.className = getClaseLetra();
+    textDiv.innerText = fmt(texto);
+    
+    timeStartInstruction = Date.now();
+    readInstruction();
+}
+
+function readInstruction() {
+    const texto = poolPartida[currentInstructionIdx];
+    speak(texto);
+}
+
+function completeInstruction() {
+    const timeTakenSecs = Math.round((Date.now() - timeStartInstruction) / 1000);
+    
+    sessionLog.push({
+        instruccion: poolPartida[currentInstructionIdx],
+        tiempo: timeTakenSecs
+    });
+    
+    speak("¡Misión cumplida!");
+    const btn = document.querySelector('.btn-huge');
+    btn.style.background = "linear-gradient(135deg, #FFC107, #FF9800)";
+    setTimeout(() => { btn.style.background = ""; }, 500);
+
+    currentInstructionIdx++;
+    
+    if (currentInstructionIdx < totalLevelInstructions) {
+        setTimeout(loadInstruction, 800);
+    } else {
+        setTimeout(winLevel, 1000);
+    }
+}
+
+function winLevel() {
+    document.getElementById('global-topbar').style.display = 'none';
+    document.getElementById('chest').innerText = "📦";
+    document.getElementById('reward-result').style.display = "none";
+    document.getElementById('chest').style.display = "block";
+    switchScreen('reward-screen');
+    speak("¡Nivel superado! Abre el cofre para ver tu recompensa.");
+}
+
+function openChest() {
+    document.getElementById('chest').style.display = "none";
+    document.getElementById('reward-result').style.display = "block";
+    
+    const nuevoCromo = CROMOS_COLECCION[(player.currentLevel - 1) % CROMOS_COLECCION.length];
+    document.getElementById('reward-sticker').innerText = nuevoCromo;
+    speak("¡Estupendo! Has conseguido un nuevo cromo para tu álbum.");
+    
+    if (!player.stickers.includes(nuevoCromo)) {
+        player.stickers.push(nuevoCromo);
+    }
+    player.currentLevel++;
+    syncLocalStorage();
+}
+
+function goToMenu() {
+    showMenu();
+}
+
+function showAlbum() {
+    document.getElementById('global-topbar').style.display = 'none';
+    const grid = document.getElementById('album-grid');
+    grid.innerHTML = "";
+    
+    CROMOS_COLECCION.forEach(cromo => {
+        const slot = document.createElement('div');
+        slot.className = 'sticker-slot';
+        slot.innerText = cromo;
+        if (player.stickers.includes(cromo)) {
+            slot.classList.add('unlocked');
+        }
+        grid.appendChild(slot);
+    });
+    switchScreen('album-screen');
+}
+
+// LECTURA A 0.5 (MÁS LENTA, MARCANDO PAUSAS)
+function speak(texto) {
+    return new Promise(resolve => {
+        const utterance = new SpeechSynthesisUtterance(texto);
+        utterance.lang = "es-ES";
+        utterance.rate = 0.5; // REDUCIDO DRÁSTICAMENTE A 0.5
+        utterance.onend = resolve;
+        synth.cancel();
+        synth.speak(utterance);
+    });
+}
+
+function switchScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+function downloadReport() {
+    if (sessionLog.length === 0) {
+        alert("Aún no se ha completado ninguna instrucción en esta sesión activa.");
+        return;
+    }
+    const d = new Date();
+    const fecha = d.toLocaleDateString() + " " + d.toLocaleTimeString();
+    let filas = "";
+    sessionLog.forEach((log, i) => {
+        filas += `<tr>
+            <td style="padding:10px;border-bottom:1px solid #ddd;">${i+1}</td>
+            <td style="padding:10px;border-bottom:1px solid #ddd;font-weight:bold;">${log.instruccion}</td>
+            <td style="padding:10px;border-bottom:1px solid #ddd;color:#2E7D32;">${log.tiempo} seg</td>
+        </tr>`;
+    });
+
+    const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><style>body{font-family:Nunito,sans-serif;background:#E8F5E9;padding:30px;color:#333;}h1{color:#2E7D32;}table{width:100%;border-collapse:collapse;background:white;border-radius:12px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.1);}th{background:#81C784;color:#1B5E20;padding:12px;text-align:left;}</style></head><body>
+    <h1>🧭 Informe Clínico - Veo Veo un Tesoro</h1>
+    <p><strong>Jugador/a:</strong> ${player.name} ${player.avatar}</p>
+    <p><strong>Fecha sesión:</strong> ${fecha}</p>
+    <p><strong>Dificultad Alcanzada:</strong> Nivel ${player.currentLevel - 1}</p>
+    <table>
+        <thead><tr><th>#</th><th>Instrucción de Búsqueda</th><th>Tiempo Empleado</th></tr></thead>
+        <tbody>${filas}</tbody>
+    </table>
+    </body></html>`;
+
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([html], {type: "text/html"}));
+    a.download = `Informe_Tesoros_${player.name.replace(/\s+/g,'_')}_${d.toISOString().slice(0,10)}.html`;
+    a.click();
+}
+
+function abrirParental(accion) {
+    pAccion = accion;
+    const n1 = Math.floor(Math.random() * 7) + 2;
+    const n2 = Math.floor(Math.random() * 7) + 2;
+    pEsperado = n1 + n2;
+    
+    const desc = document.getElementById("p-desc");
+    if(accion === 'home') desc.innerText = "Resuelve para abortar el nivel y volver al menú:";
+    else if(accion === 'change-player') desc.innerText = "Resuelve para cambiar de usuario/jugador sin perder datos:";
+    
+    document.getElementById("p-suma").innerText = `${n1} + ${n2} = ?`;
+    document.getElementById("p-inp").value = "";
+    document.getElementById("p-err").innerText = "";
+    document.getElementById("parental-modal").classList.add("vis");
+    setTimeout(() => document.getElementById("p-inp").focus(), 120);
+}
+
+function verificarParental() {
+    const val = parseInt(document.getElementById("p-inp").value, 10);
+    if(val === pEsperado) {
+        cerrarParental();
+        if(pAccion === 'home') showMenu();
+        else if(pAccion === 'change-player') {
+            player = null;
+            currentPlayerIndex = -1;
+            renderLoginScreen();
+        }
+    } else {
+        document.getElementById("p-err").innerText = "❌ Incorrecto, inténtalo de nuevo.";
+        document.getElementById("p-inp").value = "";
+        document.getElementById("p-inp").focus();
+    }
+}
+function cerrarParental() { document.getElementById("parental-modal").classList.remove("vis"); }
+
+function checkOrientation() {
+    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth < 900;
+    const isPortrait = window.innerHeight > window.innerWidth;
+    const msg = document.getElementById('rotate-msg');
+    if (isMobile && isPortrait) msg.classList.add('vis');
+    else msg.classList.remove('vis');
+}
+window.addEventListener('resize', checkOrientation);
+window.addEventListener('orientationchange', () => setTimeout(checkOrientation, 300));
+
+window.onload = init;
+</script>
+</body>
+</html>

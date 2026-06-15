@@ -158,7 +158,7 @@
             .chest-text { font-size: 1.3rem; }
         }
 
-        /* ESCALADO PISARRAS DIGITALES */
+        /* ESCALADO PIZARRAS DIGITALES */
         @media (min-width: 1200px) {
             .card { max-width: 620px; padding: 3rem; }
             .mission-card { max-width: 900px; padding: 50px; }
@@ -169,7 +169,7 @@
 
 <body>
 
-<!-- MARCA DE AGUA FLOTANTE -->
+<!-- MARCA DE AGUA FLOTANTE INMA MERINO RUS -->
 <div class="watermark-signature">© Creado por Inma Merino Rus</div>
 
 <div id="leaves-container"></div>
@@ -688,12 +688,19 @@ function showAlbum() {
     switchScreen('album-screen');
 }
 
-// LECTURA A 0.5 (MÁS LENTA, MARCANDO PAUSAS)
+// --- SÍNTESIS DE VOZ DINÁMICA SEGÚN DISPOSITIVO ---
 function speak(texto) {
     return new Promise(resolve => {
         const utterance = new SpeechSynthesisUtterance(texto);
         utterance.lang = "es-ES";
-        utterance.rate = 0.5; // REDUCIDO DRÁSTICAMENTE A 0.5
+        
+        // Detección de dispositivo para ajustar la velocidad de forma inteligente
+        const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth < 900;
+        
+        // Tablets y móviles necesitan un rate mayor (0.7) para no sonar defectuosos.
+        // Ordenadores y pizarras procesan bien el ritmo lento (0.5).
+        utterance.rate = isMobile ? 0.7 : 0.5; 
+        
         utterance.onend = resolve;
         synth.cancel();
         synth.speak(utterance);

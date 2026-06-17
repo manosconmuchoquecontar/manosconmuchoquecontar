@@ -328,6 +328,23 @@
     .selector-categorias{ grid-template-columns:1fr 1fr 1fr 1fr; max-width:900px; }
   }
 
+  /* Pantallas grandes: pizarras digitales y monitores grandes */
+  @media (min-width:1200px){
+    .titulo-juego{ font-size:54px; }
+    .subtitulo{ max-width:680px; font-size:19px; }
+    .tarjeta-personaje{ width:250px; padding:18px 14px; }
+    .marco-img{ width:220px; height:220px; }
+    .selector-personajes{ max-width:880px; gap:22px; }
+    .selector-categorias{ max-width:1040px; gap:16px; }
+    .tarjeta-categoria{ padding:22px 16px; }
+    .marco-huntrix{ width:270px; height:270px; }
+    .plataforma{ --img-size:240px; padding:16px; }
+    .zona-personas{ gap:30px; }
+    .escenario{ max-width:840px; }
+    .hud{ font-size:17px; padding:12px 24px; }
+    .etiqueta-palabra{ font-size:26px; }
+  }
+
   @media (prefers-reduced-motion: reduce){
     *{ animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
   }
@@ -570,6 +587,9 @@
     window.speechSynthesis.onvoiceschanged = cargarVoces;
   }
 
+  var VOLUMEN_MUSICA = 0.18;
+  var VOLUMEN_MUSICA_HABLANDO = 0.04;
+
   function hablar(texto){
     if(!sonidoActivado) return;
     if('speechSynthesis' in window){
@@ -578,6 +598,10 @@
       u.lang = 'es-ES';
       u.rate = 0.7;
       if(vozElegida){ u.voice = vozElegida; }
+      musicaFondo.volume = VOLUMEN_MUSICA_HABLANDO;
+      var restaurarVolumen = function(){ musicaFondo.volume = VOLUMEN_MUSICA; };
+      u.onend = restaurarVolumen;
+      u.onerror = restaurarVolumen;
       window.speechSynthesis.speak(u);
     }
   }
@@ -673,7 +697,7 @@
     pantallaJuego.classList.remove('oculto');
     imgHuntrix.src = PERSONAJES[personajeElegido];
     imgHuntrix.className = personajeElegido === 'mira' ? 'huntrix-img crop-personas' : ('huntrix-img crop-' + personajeElegido);
-    if(sonidoActivado){ musicaFondo.play().catch(function(){}); }
+    if(sonidoActivado){ musicaFondo.volume = VOLUMEN_MUSICA; musicaFondo.play().catch(function(){}); }
     iniciarPartida();
   });
 
@@ -682,6 +706,7 @@
     sonidoActivado = !sonidoActivado;
     btnSonido.textContent = sonidoActivado ? '🔊' : '🔇';
     if(sonidoActivado){
+      musicaFondo.volume = VOLUMEN_MUSICA;
       musicaFondo.play().catch(function(){});
     } else {
       musicaFondo.pause();

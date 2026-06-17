@@ -336,6 +336,7 @@
 <body>
 
 <div class="barra-superior">
+  <button id="btnInicio" class="btn-icono" aria-label="Volver al inicio">🏠</button>
   <button id="btnSonido" class="btn-icono" aria-label="Activar o desactivar sonido">🔊</button>
   <button id="btnInforme" class="btn-icono" aria-label="Descargar informe">📄</button>
   <button id="btnPantallaCompleta" class="btn-icono" aria-label="Pantalla completa">⤢</button>
@@ -520,6 +521,7 @@
   var pantallaFinal = document.getElementById('pantallaFinal');
 
   var btnEmpezar = document.getElementById('btnEmpezar');
+  var btnInicio = document.getElementById('btnInicio');
   var btnSonido = document.getElementById('btnSonido');
   var btnEscuchar = document.getElementById('btnEscuchar');
   var btnInforme = document.getElementById('btnInforme');
@@ -890,6 +892,22 @@
 
   btnDescargarInforme.addEventListener('click', descargarInforme);
   btnInforme.addEventListener('click', descargarInforme);
+
+  btnInicio.addEventListener('click', function(){
+    var enPartida = !pantallaJuego.classList.contains('oculto');
+    if(enPartida && !confirm('¿Volver al inicio? Perderás el progreso de esta partida.')) return;
+    window.speechSynthesis.cancel();
+    pantallaJuego.classList.add('oculto');
+    pantallaFinal.classList.add('oculto');
+    pantallaInicio.classList.remove('oculto');
+    document.querySelectorAll('.tarjeta-personaje, .tarjeta-categoria, .tarjeta-letra').forEach(function(t){
+      t.classList.remove('seleccionada');
+    });
+    personajeElegido = null;
+    categoriaElegida = null;
+    letraElegida = null;
+    comprobarHabilitarBoton();
+  });
 
   var btnPantallaCompleta = document.getElementById('btnPantallaCompleta');
   btnPantallaCompleta.addEventListener('click', function(){

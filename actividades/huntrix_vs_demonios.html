@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Huntrix vs Demonios · Discriminación Fonológica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&family=Playwrite+HR+Lijeva&family=Playwrite+DE+Grund&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1:#150a2e;
+    --bg-2:#2b1356;
+    --purple:#7c3aed;
+    --pink:#ff3d9a;
+    --gold:#ffd166;
+    --text:#f5f0ff;
+    --success:#43e6b5;
+    --warn:#ff9466;
+    --card-bg: rgba(21,10,46,0.72);
+    --card-border: rgba(255,255,255,0.12);
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{
+    margin:0; padding:0; min-height:100%;
+    font-family:'Nunito', sans-serif;
+    color:var(--text);
+    background:
+      linear-gradient(180deg, rgba(10,4,26,0.78), rgba(10,4,26,0.92)),
+      url('https://i.postimg.cc/P5vM5Sh2/Gemini-Generated-Image-c67a7ic67a7ic67a.png') center / cover no-repeat fixed;
+    overflow-x:hidden;
+  }
+
+  h1,h2,.btn-principal,.btn-secundario,.cat-titulo,.mensaje-feedback,.titulo-personaje{
+    font-family:'Fredoka One', cursive;
+  }
+
+  button{ font-family:inherit; color:inherit; cursor:pointer; border:none; }
+  button:focus-visible{ outline:3px solid var(--gold); outline-offset:3px; }
+
+  .pantalla{
+    min-height:100vh;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:18px 14px 90px;
+  }
+  .oculto{ display:none !important; }
+
+  /* ---------- BARRA SUPERIOR DE ICONOS ---------- */
+  .barra-superior{
+    position:fixed; top:12px; right:12px; z-index:50;
+    display:flex; gap:8px;
+  }
+  .btn-icono{
+    width:46px; height:46px; border-radius:50%;
+    background:var(--card-bg); border:1px solid var(--card-border);
+    font-size:20px; color:var(--text);
+    display:flex; align-items:center; justify-content:center;
+    backdrop-filter:blur(4px);
+  }
+
+  /* ---------- PANTALLA INICIO ---------- */
+  .titulo-juego{
+    font-size:clamp(28px,7vw,46px);
+    text-align:center;
+    margin:18px 0 4px;
+    letter-spacing:1px;
+    color:var(--gold);
+    text-shadow: 0 0 16px rgba(255,209,102,0.55), 0 0 2px #000;
+  }
+  .titulo-juego span{ color:var(--pink); text-shadow:0 0 16px rgba(255,61,154,0.6); }
+  .subtitulo{
+    text-align:center; max-width:520px; margin:0 0 22px;
+    font-weight:700; opacity:0.92; font-size:clamp(14px,3.6vw,17px);
+  }
+  .paso{
+    font-size:clamp(16px,4.2vw,20px);
+    color:var(--text); margin:18px 0 10px; text-align:center;
+  }
+
+  .selector-personajes{
+    display:flex; gap:16px; flex-wrap:wrap; justify-content:center;
+    max-width:720px; width:100%;
+  }
+  .tarjeta-personaje{
+    background:var(--card-bg); border:2px solid var(--card-border);
+    border-radius:18px; padding:14px 10px 14px;
+    width:clamp(160px,36vw,220px);
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+  }
+  .marco-img{
+    width:clamp(140px,34vw,190px); height:clamp(140px,34vw,190px);
+    overflow:hidden; position:relative;
+    flex-shrink:0;
+  }
+  .marco-img img{
+    display:block;
+    filter:drop-shadow(0 6px 10px rgba(0,0,0,0.4));
+  }
+  /* Recortes calculados a partir del hexágono real de cada imagen origen */
+  .crop-rumi{ width:165.6%; height:148.4%; margin-left:-32.6%; margin-top:-15.0%; }
+  .crop-zoey{ width:166.7%; height:149.3%; margin-left:-33.2%; margin-top:-17.5%; }
+  .crop-personas{ width:166.4%; height:149.0%; margin-left:-25.8%; margin-top:-26.6%; }
+  .tarjeta-personaje span{ font-weight:800; font-size:clamp(14px,3.4vw,17px); }
+  .tarjeta-personaje:active{ transform:scale(0.96); }
+  .tarjeta-personaje.seleccionada{
+    border-color:var(--gold);
+    box-shadow:0 0 0 3px rgba(255,209,102,0.25), 0 0 18px rgba(255,209,102,0.45);
+    transform:translateY(-3px);
+  }
+
+  .selector-categorias{
+    display:grid; grid-template-columns:1fr 1fr; gap:12px;
+    max-width:600px; width:100%;
+  }
+  .tarjeta-categoria{
+    background:var(--card-bg); border:2px solid var(--card-border);
+    border-radius:16px; padding:18px 12px;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+    text-align:center;
+    transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+  }
+  .tarjeta-categoria .cat-titulo{ color:var(--text); font-size:clamp(15px,3.8vw,19px); }
+  .tarjeta-categoria .cat-sub{ font-size:clamp(13px,3vw,15px); color:var(--gold); opacity:0.9; font-weight:700; letter-spacing:0.5px; }
+  .tarjeta-categoria:active{ transform:scale(0.96); }
+  .tarjeta-categoria.seleccionada{
+    border-color:var(--pink);
+    box-shadow:0 0 0 3px rgba(255,61,154,0.25), 0 0 18px rgba(255,61,154,0.45);
+    transform:translateY(-3px);
+  }
+
+  .selector-letras{
+    display:flex; gap:16px; justify-content:center; flex-wrap:wrap;
+    max-width:420px; width:100%;
+  }
+  .tarjeta-letra{
+    background:var(--card-bg); border:2px solid var(--card-border);
+    border-radius:16px; padding:14px 22px;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+    transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+  }
+  .tarjeta-letra .vista-letra{ font-size:30px; line-height:1; color:var(--text); }
+  .tarjeta-letra .letra-nombre{ font-weight:800; font-size:14px; }
+  .tarjeta-letra:active{ transform:scale(0.96); }
+  .tarjeta-letra.seleccionada{
+    border-color:var(--success);
+    box-shadow:0 0 0 3px rgba(67,230,181,0.25), 0 0 18px rgba(67,230,181,0.45);
+    transform:translateY(-3px);
+  }
+
+  .btn-principal{
+    margin-top:26px;
+    background:linear-gradient(135deg, var(--pink), var(--purple));
+    color:#fff; font-size:clamp(16px,4vw,20px);
+    padding:14px 34px; border-radius:50px;
+    box-shadow:0 6px 0 rgba(0,0,0,0.25), 0 0 24px rgba(255,61,154,0.4);
+    transition:opacity .2s ease, transform .15s ease;
+  }
+  .btn-principal:disabled{ opacity:0.35; box-shadow:none; }
+  .btn-principal:not(:disabled):active{ transform:translateY(3px); }
+
+  .btn-secundario{
+    margin-top:12px;
+    background:rgba(255,255,255,0.08);
+    border:1px solid var(--card-border);
+    color:var(--text); font-size:15px;
+    padding:11px 24px; border-radius:50px;
+  }
+
+  /* ---------- PANTALLA JUEGO ---------- */
+  .hud{
+    display:flex; gap:10px; flex-wrap:wrap; justify-content:center;
+    background:var(--card-bg); border:1px solid var(--card-border);
+    border-radius:14px; padding:8px 16px; margin-bottom:18px;
+    font-weight:800; font-size:clamp(12px,3.2vw,14px);
+  }
+
+  .instruccion{
+    text-align:center; font-weight:700; margin-bottom:10px; opacity:0.9;
+    font-size:clamp(13px,3.4vw,15px);
+  }
+
+  .escenario{
+    width:100%; max-width:640px;
+    display:flex; flex-direction:column; align-items:center; gap:18px;
+  }
+
+  .zona-huntrix{ display:flex; justify-content:center; }
+  .marco-huntrix{
+    width:clamp(150px,38vw,230px); height:clamp(150px,38vw,230px);
+    overflow:hidden; position:relative;
+  }
+  .huntrix-img{
+    display:block;
+    filter:drop-shadow(0 10px 16px rgba(0,0,0,0.5));
+  }
+  .marco-huntrix.atacando{ animation:ataque .6s ease-in-out; }
+  .marco-huntrix.atacando .huntrix-img{ filter:drop-shadow(0 0 22px var(--gold)); }
+  @keyframes ataque{
+    0%{ transform:translateX(0) scale(1); }
+    40%{ transform:translateX(18px) scale(1.08) rotate(-4deg); }
+    70%{ transform:translateX(-6px) scale(1.03); }
+    100%{ transform:translateX(0) scale(1); }
+  }
+
+  .zona-personas{
+    display:flex; gap:18px; justify-content:center; width:100%;
+  }
+  .plataforma{
+    --img-size: clamp(150px,42vw,210px);
+    background:rgba(0,0,0,0.25);
+    border:2px solid var(--card-border);
+    border-radius:26px;
+    padding:10px;
+    width:calc(var(--img-size) + 20px);
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    transition:transform .12s ease, border-color .2s ease;
+    position:relative; overflow:visible;
+  }
+  .plataforma:active{ transform:scale(0.97); }
+
+  .espada-fx{
+    position:absolute; top:42%; left:50%;
+    width:150%; height:6px; border-radius:4px;
+    background:linear-gradient(90deg, transparent, #fff 25%, var(--gold) 50%, #fff 75%, transparent);
+    box-shadow:0 0 14px rgba(255,255,255,0.85);
+    transform:translate(-50%,-50%) rotate(-35deg) scaleX(0);
+    opacity:0; pointer-events:none; z-index:5;
+  }
+  .espada-fx.golpe{ animation:espadazo .45s ease-out; }
+  @keyframes espadazo{
+    0%{ opacity:0; transform:translate(-50%,-50%) rotate(-35deg) scaleX(0); }
+    35%{ opacity:1; transform:translate(-50%,-50%) rotate(-35deg) scaleX(1.3); }
+    60%{ opacity:1; transform:translate(-50%,-50%) rotate(25deg) scaleX(1.3); }
+    100%{ opacity:0; transform:translate(-50%,-50%) rotate(25deg) scaleX(1.3); }
+  }
+
+  .bomba-fx{
+    position:absolute; top:38%; left:50%;
+    width:14px; height:14px; border-radius:50%;
+    background:radial-gradient(circle, #fff 0%, var(--gold) 35%, var(--pink) 65%, transparent 100%);
+    transform:translate(-50%,-50%) scale(0);
+    opacity:0; pointer-events:none; z-index:6;
+  }
+  .bomba-fx.bum{ animation:bomba .5s ease-out; }
+  @keyframes bomba{
+    0%{ opacity:0; transform:translate(-50%,-50%) scale(0); }
+    35%{ opacity:1; transform:translate(-50%,-50%) scale(9); }
+    100%{ opacity:0; transform:translate(-50%,-50%) scale(12); }
+  }
+
+  .marco-persona{
+    width:var(--img-size); height:var(--img-size);
+    overflow:hidden; position:relative;
+    flex-shrink:0;
+  }
+  .persona-img{
+    display:block;
+    transition:opacity .4s ease;
+    filter:drop-shadow(0 6px 10px rgba(0,0,0,0.45));
+  }
+  .persona-img.explotando{ animation:encoger .45s ease-in forwards; }
+  @keyframes encoger{
+    0%{ opacity:1; transform:scale(1); }
+    35%{ opacity:1; transform:scale(1.15); }
+    100%{ opacity:0; transform:scale(0.1); }
+  }
+  .etiqueta-palabra{
+    font-weight:800; font-size:clamp(16px,4.4vw,22px);
+    background:rgba(0,0,0,0.35); padding:5px 14px; border-radius:10px;
+  }
+  .etiqueta-palabra.letra-mayus{ font-family:'Playwrite DE Grund', cursive; text-transform:uppercase; }
+  .etiqueta-palabra.letra-minus{ font-family:'Playwrite HR Lijeva', cursive; text-transform:lowercase; }
+  .vista-letra.letra-mayus{ font-family:'Playwrite DE Grund', cursive; }
+  .vista-letra.letra-minus{ font-family:'Playwrite HR Lijeva', cursive; }
+
+  .plataforma.transformando{ border-color:var(--gold); }
+  .plataforma.transformando .persona-img{ animation:destello .35s ease-in-out; }
+  @keyframes destello{
+    0%{ filter:brightness(1) drop-shadow(0 6px 10px rgba(0,0,0,0.45)); }
+    50%{ filter:brightness(2.4) saturate(1.6) drop-shadow(0 0 22px var(--gold)); }
+    100%{ filter:brightness(1) drop-shadow(0 6px 10px rgba(0,0,0,0.45)); }
+  }
+  .persona-img.es-demonio{ filter:drop-shadow(0 0 16px var(--pink)); }
+
+  .plataforma.sacude{ animation:sacudir .4s ease-in-out; border-color:var(--warn); }
+  @keyframes sacudir{
+    0%,100%{ transform:translateX(0); }
+    20%{ transform:translateX(-8px); }
+    40%{ transform:translateX(8px); }
+    60%{ transform:translateX(-6px); }
+    80%{ transform:translateX(6px); }
+  }
+
+  .plataforma.derrotado .etiqueta-palabra{ opacity:0; }
+
+  .zona-control{
+    margin-top:20px; display:flex; flex-direction:column; align-items:center; gap:10px;
+  }
+  .btn-escuchar{
+    background:rgba(255,255,255,0.1); border:1px solid var(--card-border);
+    color:var(--text); padding:10px 22px; border-radius:50px; font-weight:800; font-size:14px;
+  }
+  .mensaje-feedback{
+    min-height:30px; font-size:clamp(16px,4.2vw,22px); margin:0;
+  }
+  .mensaje-correcto{ color:var(--success); text-shadow:0 0 12px rgba(67,230,181,0.5); }
+  .mensaje-error{ color:var(--warn); text-shadow:0 0 12px rgba(255,148,102,0.5); }
+
+  /* ---------- PANTALLA FINAL ---------- */
+  #pantallaFinal h2{ color:var(--gold); font-size:clamp(24px,6vw,34px); text-align:center; margin-top:60px; }
+  #resumenTexto{ max-width:480px; text-align:center; font-weight:700; font-size:16px; line-height:1.5; }
+
+  /* ---------- WATERMARK ---------- */
+  .watermark{
+    position:fixed; bottom:10px; left:50%; transform:translateX(-50%);
+    background:rgba(42,157,143,0.75); color:#fff; font-weight:700;
+    font-size:11px; padding:5px 14px; border-radius:50px; z-index:40;
+    white-space:nowrap;
+  }
+
+  @media (min-width:700px){
+    .selector-categorias{ grid-template-columns:1fr 1fr 1fr 1fr; max-width:900px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="barra-superior">
+  <button id="btnSonido" class="btn-icono" aria-label="Activar o desactivar sonido">🔊</button>
+  <button id="btnInforme" class="btn-icono" aria-label="Descargar informe">📄</button>
+  <button id="btnPantallaCompleta" class="btn-icono" aria-label="Pantalla completa">⤢</button>
+</div>
+
+<div id="app">
+
+  <!-- PANTALLA INICIO -->
+  <section id="pantallaInicio" class="pantalla">
+    <h1 class="titulo-juego">HUNTRIX <span>vs</span> DEMONIOS</h1>
+    <p class="subtitulo">Escucha bien y descubre qué humano dice la palabra correcta antes de convertirlo en demonio.</p>
+
+    <h2 class="paso">1. Elige tu Huntrix</h2>
+    <div class="selector-personajes" id="selectorPersonajes">
+      <button class="tarjeta-personaje" data-personaje="rumi">
+        <div class="marco-img"><img class="crop-rumi" src="https://i.postimg.cc/bwqzzBQX/Rumi.png" alt="Rumi"></div>
+        <span>Rumi</span>
+      </button>
+      <button class="tarjeta-personaje" data-personaje="zoey">
+        <div class="marco-img"><img class="crop-zoey" src="https://i.postimg.cc/zBHNtZ1n/Zoey.png" alt="Zoey"></div>
+        <span>Zoey</span>
+      </button>
+      <button class="tarjeta-personaje" data-personaje="mira">
+        <div class="marco-img"><img class="crop-personas" src="https://i.postimg.cc/YqzHyzJp/Mira.png" alt="Mira"></div>
+        <span>Mira</span>
+      </button>
+    </div>
+
+    <h2 class="paso">2. Elige los sonidos a trabajar</h2>
+    <div class="selector-categorias" id="selectorCategorias">
+      <button class="tarjeta-categoria" data-categoria="oclusion">
+        <span class="cat-titulo">Sonidos gemelos</span>
+        <span class="cat-sub">P-B · T-D · C-G</span>
+      </button>
+      <button class="tarjeta-categoria" data-categoria="liquidas">
+        <span class="cat-titulo">Sonidos resbaladizos</span>
+        <span class="cat-sub">L · R · RR</span>
+      </button>
+      <button class="tarjeta-categoria" data-categoria="nasales">
+        <span class="cat-titulo">Sonidos parecidos</span>
+        <span class="cat-sub">M · N · Ñ y otros</span>
+      </button>
+      <button class="tarjeta-categoria" data-categoria="vocalica">
+        <span class="cat-titulo">Sonidos vocales</span>
+        <span class="cat-sub">A · E · I · O · U</span>
+      </button>
+    </div>
+
+    <h2 class="paso">3. Elige el tipo de letra</h2>
+    <div class="selector-letras" id="selectorLetras">
+      <button class="tarjeta-letra" data-letra="mayuscula">
+        <span class="vista-letra letra-mayus">Aa</span>
+        <span class="letra-nombre">MAYÚSCULA</span>
+      </button>
+      <button class="tarjeta-letra" data-letra="minuscula">
+        <span class="vista-letra letra-minus">aa</span>
+        <span class="letra-nombre">minúscula ligada</span>
+      </button>
+    </div>
+
+    <button id="btnEmpezar" class="btn-principal" disabled>¡A cazar demonios!</button>
+  </section>
+
+  <!-- PANTALLA JUEGO -->
+  <section id="pantallaJuego" class="pantalla oculto">
+    <div class="hud">
+      <span id="hudPuntos">Puntos: 0</span>
+      <span id="hudRonda">Ronda 1/10</span>
+      <span id="hudErrores">Errores: 0</span>
+    </div>
+
+    <p class="instruccion">Toca al humano que ha dicho la palabra correcta</p>
+
+    <div class="escenario">
+      <div class="zona-huntrix">
+        <div class="marco-huntrix" id="marcoHuntrix">
+          <img id="imgHuntrix" class="huntrix-img" src="" alt="Tu Huntrix">
+        </div>
+      </div>
+
+      <div class="zona-personas">
+        <button class="plataforma" id="plataformaIzq" data-lado="izq">
+          <div class="marco-persona"><img class="persona-img crop-personas" id="imgIzq" src="" alt="Humano izquierda"></div>
+          <span class="etiqueta-palabra" id="palabraIzq"></span>
+          <div class="espada-fx"></div>
+          <div class="bomba-fx"></div>
+        </button>
+        <button class="plataforma" id="plataformaDer" data-lado="der">
+          <div class="marco-persona"><img class="persona-img crop-personas" id="imgDer" src="" alt="Humano derecha"></div>
+          <span class="etiqueta-palabra" id="palabraDer"></span>
+          <div class="espada-fx"></div>
+          <div class="bomba-fx"></div>
+        </button>
+      </div>
+    </div>
+
+    <div class="zona-control">
+      <button id="btnEscuchar" class="btn-escuchar">🔊 Escuchar otra vez</button>
+      <p id="mensajeFeedback" class="mensaje-feedback"></p>
+    </div>
+  </section>
+
+  <!-- PANTALLA FINAL -->
+  <section id="pantallaFinal" class="pantalla oculto">
+    <h2>¡Demonios derrotados!</h2>
+    <p id="resumenTexto"></p>
+    <button id="btnOtraVez" class="btn-principal">Jugar otra vez</button>
+    <button id="btnCambiarCategoria" class="btn-secundario">Cambiar sonidos</button>
+    <button id="btnDescargarInforme" class="btn-secundario">Descargar informe de fallos</button>
+  </section>
+
+</div>
+
+<audio id="musicaFondo" src="fotos/Golden (Karaoke) - KPop Demon Hunters [b_oS9bo-hh0].mp3" loop preload="none"></audio>
+
+<div class="watermark">© Creado por Inma Merino Rus</div>
+
+<script>
+(function(){
+
+  // ---------- DATOS ----------
+  var CATEGORIAS = {
+    oclusion: [
+      ["Pata","Bata"],["Pala","Bala"],["Peso","Beso"],["Pino","Vino"],["Piña","Viña"],
+      ["Tía","Día"],["Moto","Modo"],["Cana","Gana"],["Casa","Gasa"],["Coma","Goma"],
+      ["Pato","Gato"],["Bota","Gota"]
+    ],
+    liquidas: [
+      ["Pelo","Pero"],["Pala","Para"],["Toro","Loro"],["Toro","Todo"],["Lana","Rana"],
+      ["Carro","Caro"],["Perro","Pero"],["Corro","Coro"],["Parra","Para"],["Barra","Vara"]
+    ],
+    nasales: [
+      ["Cama","Cana"],["Mano","Sano"],["Piña","Niña"],["Moño","Mono"],["Peña","Pena"],
+      ["Caña","Cana"],["Uña","Una"],["Sopa","Ropa"],["Casa","Masa"],["Foca","Boca"],
+      ["Pino","Fino"],["Boca","Roca"],["Gato","Rato"],["Luna","Cuna"],["Rata","Mata"],
+      ["Pala","Mala"],["Bota","Nota"],["Tapa","Mapa"]
+    ],
+    vocalica: [
+      ["Masa","Mesa"],["Pisa","Pesa"],["Saco","Seco"],["Bola","Bala"],["Pelo","Palo"],
+      ["Sol","Sal"],["Piso","Paso"],["Mula","Mala"],["Bota","Bote"],["Casa","Cosa"]
+    ]
+  };
+
+  var PERSONAJES = {
+    rumi: "https://i.postimg.cc/bwqzzBQX/Rumi.png",
+    zoey: "https://i.postimg.cc/zBHNtZ1n/Zoey.png",
+    mira: "https://i.postimg.cc/YqzHyzJp/Mira.png"
+  };
+
+  var PERSONAS_IMG = [
+    "https://i.postimg.cc/tTWfnXjc/JUEGOS-(28).png",
+    "https://i.postimg.cc/YqpVjKyb/JUEGOS-(29).png",
+    "https://i.postimg.cc/R0np2MNn/JUEGOS-(30).png",
+    "https://i.postimg.cc/QNq42Yxp/JUEGOS-(31).png"
+  ];
+
+  var DEMONIOS_IMG = [
+    "https://i.postimg.cc/7Ld8TsTS/JUEGOS-(27).png",
+    "https://i.postimg.cc/qqc9SpDK/JUEGOS-(26).png",
+    "https://i.postimg.cc/x1pBWx5g/JUEGOS-(25).png"
+  ];
+
+  var RONDAS_TOTAL = 10;
+
+  // ---------- ESTADO ----------
+  var personajeElegido = null;
+  var categoriaElegida = null;
+  var letraElegida = null;
+  var mazoRonda = [];
+  var rondaActual = 0;
+  var puntos = 0;
+  var errores = 0;
+  var ladoCorrecto = null;
+  var palabraObjetivoActual = "";
+  var bloqueado = false;
+  var sonidoActivado = true;
+  var fallosRegistro = [];
+
+  // ---------- ELEMENTOS ----------
+  var pantallaInicio = document.getElementById('pantallaInicio');
+  var pantallaJuego = document.getElementById('pantallaJuego');
+  var pantallaFinal = document.getElementById('pantallaFinal');
+
+  var btnEmpezar = document.getElementById('btnEmpezar');
+  var btnSonido = document.getElementById('btnSonido');
+  var btnEscuchar = document.getElementById('btnEscuchar');
+  var btnInforme = document.getElementById('btnInforme');
+  var btnOtraVez = document.getElementById('btnOtraVez');
+  var btnCambiarCategoria = document.getElementById('btnCambiarCategoria');
+  var btnDescargarInforme = document.getElementById('btnDescargarInforme');
+
+  var imgHuntrix = document.getElementById('imgHuntrix');
+  var marcoHuntrix = document.getElementById('marcoHuntrix');
+  var imgIzq = document.getElementById('imgIzq');
+  var imgDer = document.getElementById('imgDer');
+  var palabraIzqEl = document.getElementById('palabraIzq');
+  var palabraDerEl = document.getElementById('palabraDer');
+  var plataformaIzq = document.getElementById('plataformaIzq');
+  var plataformaDer = document.getElementById('plataformaDer');
+
+  var hudPuntos = document.getElementById('hudPuntos');
+  var hudRonda = document.getElementById('hudRonda');
+  var hudErrores = document.getElementById('hudErrores');
+  var mensajeFeedback = document.getElementById('mensajeFeedback');
+  var resumenTexto = document.getElementById('resumenTexto');
+  var musicaFondo = document.getElementById('musicaFondo');
+
+  // ---------- UTILIDADES ----------
+  function shuffle(arr){
+    var a = arr.slice();
+    for(var i = a.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  var vozElegida = null;
+  function cargarVoces(){
+    if(!('speechSynthesis' in window)) return;
+    var voces = window.speechSynthesis.getVoices();
+    var candidatas = voces.filter(function(v){ return v.lang && v.lang.toLowerCase().indexOf('es') === 0; });
+    var masculina = candidatas.find(function(v){
+      return /male|hombre|jorge|diego|carlos|pablo|miguel|juan|男/i.test(v.name);
+    });
+    vozElegida = masculina || candidatas[0] || null;
+  }
+  if('speechSynthesis' in window){
+    cargarVoces();
+    window.speechSynthesis.onvoiceschanged = cargarVoces;
+  }
+
+  function hablar(texto){
+    if(!sonidoActivado) return;
+    if('speechSynthesis' in window){
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(texto);
+      u.lang = 'es-ES';
+      u.rate = 0.7;
+      if(vozElegida){ u.voice = vozElegida; }
+      window.speechSynthesis.speak(u);
+    }
+  }
+
+  var audioCtx = null;
+  function getAudioCtx(){
+    if(!audioCtx){
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if(AC){ audioCtx = new AC(); }
+    }
+    return audioCtx;
+  }
+
+  function sonidoExplosion(){
+    if(!sonidoActivado) return;
+    try{
+      var ctx = getAudioCtx();
+      if(!ctx) return;
+      if(ctx.state === 'suspended'){ ctx.resume(); }
+      var ahora = ctx.currentTime;
+      var duracion = 0.4;
+
+      // ruido (estallido)
+      var bufferSize = Math.floor(ctx.sampleRate * duracion);
+      var buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      var data = buffer.getChannelData(0);
+      for(var i = 0; i < bufferSize; i++){
+        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2);
+      }
+      var ruido = ctx.createBufferSource();
+      ruido.buffer = buffer;
+      var filtro = ctx.createBiquadFilter();
+      filtro.type = 'lowpass';
+      filtro.frequency.setValueAtTime(2200, ahora);
+      filtro.frequency.exponentialRampToValueAtTime(200, ahora + duracion);
+      var gananciaRuido = ctx.createGain();
+      gananciaRuido.gain.setValueAtTime(0.55, ahora);
+      gananciaRuido.gain.exponentialRampToValueAtTime(0.001, ahora + duracion);
+      ruido.connect(filtro);
+      filtro.connect(gananciaRuido);
+      gananciaRuido.connect(ctx.destination);
+      ruido.start(ahora);
+
+      // golpe grave
+      var osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(160, ahora);
+      osc.frequency.exponentialRampToValueAtTime(40, ahora + 0.25);
+      var gananciaOsc = ctx.createGain();
+      gananciaOsc.gain.setValueAtTime(0.5, ahora);
+      gananciaOsc.gain.exponentialRampToValueAtTime(0.001, ahora + 0.3);
+      osc.connect(gananciaOsc);
+      gananciaOsc.connect(ctx.destination);
+      osc.start(ahora);
+      osc.stop(ahora + 0.3);
+    }catch(e){}
+  }
+
+  // ---------- SELECCIÓN INICIAL ----------
+  document.getElementById('selectorPersonajes').addEventListener('click', function(e){
+    var tarjeta = e.target.closest('.tarjeta-personaje');
+    if(!tarjeta) return;
+    document.querySelectorAll('.tarjeta-personaje').forEach(function(t){ t.classList.remove('seleccionada'); });
+    tarjeta.classList.add('seleccionada');
+    personajeElegido = tarjeta.getAttribute('data-personaje');
+    comprobarHabilitarBoton();
+  });
+
+  document.getElementById('selectorCategorias').addEventListener('click', function(e){
+    var tarjeta = e.target.closest('.tarjeta-categoria');
+    if(!tarjeta) return;
+    document.querySelectorAll('.tarjeta-categoria').forEach(function(t){ t.classList.remove('seleccionada'); });
+    tarjeta.classList.add('seleccionada');
+    categoriaElegida = tarjeta.getAttribute('data-categoria');
+    comprobarHabilitarBoton();
+  });
+
+  document.getElementById('selectorLetras').addEventListener('click', function(e){
+    var tarjeta = e.target.closest('.tarjeta-letra');
+    if(!tarjeta) return;
+    document.querySelectorAll('.tarjeta-letra').forEach(function(t){ t.classList.remove('seleccionada'); });
+    tarjeta.classList.add('seleccionada');
+    letraElegida = tarjeta.getAttribute('data-letra');
+    comprobarHabilitarBoton();
+  });
+
+  function comprobarHabilitarBoton(){
+    btnEmpezar.disabled = !(personajeElegido && categoriaElegida && letraElegida);
+  }
+
+  btnEmpezar.addEventListener('click', function(){
+    pantallaInicio.classList.add('oculto');
+    pantallaJuego.classList.remove('oculto');
+    imgHuntrix.src = PERSONAJES[personajeElegido];
+    imgHuntrix.className = personajeElegido === 'mira' ? 'huntrix-img crop-personas' : ('huntrix-img crop-' + personajeElegido);
+    if(sonidoActivado){ musicaFondo.play().catch(function(){}); }
+    iniciarPartida();
+  });
+
+  // ---------- SONIDO ----------
+  btnSonido.addEventListener('click', function(){
+    sonidoActivado = !sonidoActivado;
+    btnSonido.textContent = sonidoActivado ? '🔊' : '🔇';
+    if(sonidoActivado){
+      musicaFondo.play().catch(function(){});
+    } else {
+      musicaFondo.pause();
+      window.speechSynthesis.cancel();
+    }
+  });
+
+  // ---------- PARTIDA ----------
+  function iniciarPartida(){
+    mazoRonda = shuffle(CATEGORIAS[categoriaElegida]).slice(0, RONDAS_TOTAL);
+    rondaActual = 0;
+    puntos = 0;
+    errores = 0;
+    fallosRegistro = [];
+    hudPuntos.textContent = 'Puntos: 0';
+    hudErrores.textContent = 'Errores: 0';
+    prepararRonda();
+  }
+
+  function prepararRonda(){
+    if(rondaActual >= mazoRonda.length){
+      terminarPartida();
+      return;
+    }
+    bloqueado = false;
+    mensajeFeedback.textContent = '';
+    mensajeFeedback.className = 'mensaje-feedback';
+
+    var par = mazoRonda[rondaActual];
+    var invertido = Math.random() < 0.5;
+    var palabraIzq = invertido ? par[1] : par[0];
+    var palabraDer = invertido ? par[0] : par[1];
+
+    ladoCorrecto = Math.random() < 0.5 ? 'izq' : 'der';
+    palabraObjetivoActual = ladoCorrecto === 'izq' ? palabraIzq : palabraDer;
+
+    var indices = shuffle([0,1,2,3]).slice(0,2);
+    imgIzq.src = PERSONAS_IMG[indices[0]];
+    imgDer.src = PERSONAS_IMG[indices[1]];
+    imgIzq.className = 'persona-img crop-personas';
+    imgDer.className = 'persona-img crop-personas';
+    var claseLetra = letraElegida === 'mayuscula' ? 'letra-mayus' : 'letra-minus';
+    palabraIzqEl.className = 'etiqueta-palabra ' + claseLetra;
+    palabraDerEl.className = 'etiqueta-palabra ' + claseLetra;
+    palabraIzqEl.textContent = palabraIzq;
+    palabraDerEl.textContent = palabraDer;
+
+    plataformaIzq.className = 'plataforma';
+    plataformaDer.className = 'plataforma';
+
+    hudRonda.textContent = 'Ronda ' + (rondaActual + 1) + '/' + mazoRonda.length;
+
+    setTimeout(function(){ hablar(palabraObjetivoActual); }, 450);
+  }
+
+  function elegirLado(lado){
+    if(bloqueado) return;
+    bloqueado = true;
+    if(lado === ladoCorrecto){
+      acierto(lado);
+    } else {
+      fallo(lado);
+    }
+  }
+
+  plataformaIzq.addEventListener('click', function(){ elegirLado('izq'); });
+  plataformaDer.addEventListener('click', function(){ elegirLado('der'); });
+
+  function acierto(lado){
+    puntos += 10;
+    hudPuntos.textContent = 'Puntos: ' + puntos;
+    mensajeFeedback.textContent = '¡Correcto!';
+    mensajeFeedback.className = 'mensaje-feedback mensaje-correcto';
+
+    var imgPersona = lado === 'izq' ? imgIzq : imgDer;
+    var plataforma = lado === 'izq' ? plataformaIzq : plataformaDer;
+    var espada = plataforma.querySelector('.espada-fx');
+    var bomba = plataforma.querySelector('.bomba-fx');
+
+    // 1) la espada golpea al humano disfrazado
+    marcoHuntrix.classList.add('atacando');
+    espada.classList.add('golpe');
+    setTimeout(function(){
+      marcoHuntrix.classList.remove('atacando');
+      espada.classList.remove('golpe');
+    }, 480);
+
+    // 2) tras el golpe se revela el demonio
+    setTimeout(function(){
+      plataforma.classList.add('transformando');
+      imgPersona.src = DEMONIOS_IMG[Math.floor(Math.random() * DEMONIOS_IMG.length)];
+      imgPersona.classList.add('es-demonio');
+    }, 380);
+
+    // 3) el demonio estalla y desaparece
+    setTimeout(function(){
+      plataforma.classList.remove('transformando');
+      bomba.classList.add('bum');
+      imgPersona.classList.add('explotando');
+      sonidoExplosion();
+    }, 730);
+
+    setTimeout(function(){
+      bomba.classList.remove('bum');
+      plataforma.classList.add('derrotado');
+    }, 1180);
+
+    setTimeout(function(){
+      rondaActual++;
+      prepararRonda();
+    }, 1680);
+  }
+
+  function fallo(lado){
+    errores++;
+    hudErrores.textContent = 'Errores: ' + errores;
+    mensajeFeedback.textContent = 'Casi... ¡escucha otra vez!';
+    mensajeFeedback.className = 'mensaje-feedback mensaje-error';
+
+    var palabraElegida = lado === 'izq' ? palabraIzqEl.textContent : palabraDerEl.textContent;
+    fallosRegistro.push({ objetivo: palabraObjetivoActual, elegida: palabraElegida });
+
+    var plataforma = lado === 'izq' ? plataformaIzq : plataformaDer;
+    plataforma.classList.add('sacude');
+    setTimeout(function(){ plataforma.classList.remove('sacude'); }, 500);
+
+    setTimeout(function(){
+      hablar(palabraObjetivoActual);
+      bloqueado = false;
+    }, 900);
+  }
+
+  btnEscuchar.addEventListener('click', function(){
+    hablar(palabraObjetivoActual);
+  });
+
+  function terminarPartida(){
+    pantallaJuego.classList.add('oculto');
+    pantallaFinal.classList.remove('oculto');
+    resumenTexto.textContent = 'Has conseguido ' + puntos + ' puntos venciendo a ' + mazoRonda.length + ' demonios, con ' + errores + ' despistes por el camino. ¡Buen trabajo, cazadora de demonios!';
+  }
+
+  btnOtraVez.addEventListener('click', function(){
+    pantallaFinal.classList.add('oculto');
+    pantallaJuego.classList.remove('oculto');
+    iniciarPartida();
+  });
+
+  btnCambiarCategoria.addEventListener('click', function(){
+    pantallaFinal.classList.add('oculto');
+    pantallaInicio.classList.remove('oculto');
+    document.querySelectorAll('.tarjeta-categoria').forEach(function(t){ t.classList.remove('seleccionada'); });
+    categoriaElegida = null;
+    comprobarHabilitarBoton();
+  });
+
+  var NOMBRES_CATEGORIA = {
+    oclusion: 'Sonidos gemelos (P-B · T-D · C-G)',
+    liquidas: 'Sonidos resbaladizos (L · R · RR)',
+    nasales: 'Sonidos parecidos (M · N · Ñ y otros)',
+    vocalica: 'Sonidos vocales (A · E · I · O · U)'
+  };
+
+  function descargarInforme(){
+    var fecha = new Date().toLocaleString('es-ES');
+    var nombrePersonaje = personajeElegido ? (personajeElegido.charAt(0).toUpperCase() + personajeElegido.slice(1)) : '-';
+    var nombreCategoria = NOMBRES_CATEGORIA[categoriaElegida] || '-';
+
+    var filas = '';
+    if(fallosRegistro.length === 0){
+      filas = '<tr><td colspan="2" style="text-align:center;">Sin fallos en esta sesión</td></tr>';
+    } else {
+      fallosRegistro.forEach(function(f){
+        filas += '<tr><td>' + f.objetivo + '</td><td>' + f.elegida + '</td></tr>';
+      });
+    }
+
+    var html = '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">' +
+      '<title>Informe Huntrix vs Demonios</title>' +
+      '<style>' +
+      'body{font-family:Arial,sans-serif;background:#150a2e;color:#f5f0ff;padding:24px;max-width:640px;margin:0 auto;}' +
+      'h1{color:#ffd166;font-size:22px;} h2{color:#ff3d9a;font-size:17px;margin-top:28px;}' +
+      'table{width:100%;border-collapse:collapse;margin-top:10px;}' +
+      'td,th{border:1px solid rgba(255,255,255,0.2);padding:8px;text-align:left;font-size:14px;}' +
+      'th{background:#2b1356;} p{font-size:14px;}' +
+      '.watermark{margin-top:30px;font-size:11px;opacity:0.7;text-align:center;}' +
+      '</style></head><body>' +
+      '<h1>Informe de sesión · Huntrix vs Demonios</h1>' +
+      '<p><strong>Fecha:</strong> ' + fecha + '</p>' +
+      '<p><strong>Huntrix elegida:</strong> ' + nombrePersonaje + '</p>' +
+      '<p><strong>Sonidos trabajados:</strong> ' + nombreCategoria + '</p>' +
+      '<p><strong>Puntos:</strong> ' + puntos + ' &nbsp;|&nbsp; <strong>Rondas jugadas:</strong> ' + mazoRonda.length + ' &nbsp;|&nbsp; <strong>Errores totales:</strong> ' + errores + '</p>' +
+      '<h2>Detalle de pares fallados</h2>' +
+      '<table><tr><th>Palabra correcta</th><th>Palabra elegida (incorrecta)</th></tr>' + filas + '</table>' +
+      '<p class="watermark">© Creado por Inma Merino Rus</p>' +
+      '</body></html>';
+
+    var blob = new Blob([html], { type: 'text/html' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'informe_huntrix_' + Date.now() + '.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  }
+
+  btnDescargarInforme.addEventListener('click', descargarInforme);
+  btnInforme.addEventListener('click', descargarInforme);
+
+  var btnPantallaCompleta = document.getElementById('btnPantallaCompleta');
+  btnPantallaCompleta.addEventListener('click', function(){
+    var elFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+    if(!elFullscreen){
+      var el = document.documentElement;
+      if(el.requestFullscreen){ el.requestFullscreen(); }
+      else if(el.webkitRequestFullscreen){ el.webkitRequestFullscreen(); }
+    } else {
+      if(document.exitFullscreen){ document.exitFullscreen(); }
+      else if(document.webkitExitFullscreen){ document.webkitExitFullscreen(); }
+    }
+  });
+  function actualizarIconoPantalla(){
+    var activo = document.fullscreenElement || document.webkitFullscreenElement;
+    btnPantallaCompleta.textContent = activo ? '⤡' : '⤢';
+  }
+  document.addEventListener('fullscreenchange', actualizarIconoPantalla);
+  document.addEventListener('webkitfullscreenchange', actualizarIconoPantalla);
+
+})();
+</script>
+</body>
+</html>

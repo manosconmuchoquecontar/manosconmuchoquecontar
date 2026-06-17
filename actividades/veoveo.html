@@ -8,7 +8,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Varela+Round&family=Playwrite+HR+Lijeva:wght@100..400&family=Playwrite+DE+Grund:wght@100..400&family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap');
         
         :root {
-            /* Paleta de Colores de la Selva de Alto Contraste DUA */
+            /* Paleta de Colores de la Selva DUA */
             --jungle-dark: #2E7D32;
             --jungle-light: #81C784;
             --jungle-bg: #E8F5E9;
@@ -59,7 +59,7 @@
         .leaf { position: absolute; animation: sway 6s infinite ease-in-out alternate; }
         @keyframes sway { 0% { transform: rotate(-10deg) translateX(0); } 100% { transform: rotate(10deg) translateX(15px); } }
 
-        /* TARJETAS BASE CON ARQUITECTURA RESPONSIVA AUTO-CENTRABLE */
+        /* TARJETAS BASE */
         .card { background: white; padding: 2rem 1.5rem; border-radius: 32px; max-width: 540px; width: 100%; text-align: center; box-shadow: 0 20px 50px rgba(46,125,50,.15); position: relative; z-index: 1; border: 6px solid var(--jungle-light); margin: auto; }
         .card h1 { font-family: var(--ft); font-size: clamp(1.6rem, 5vw, 2.2rem); color: var(--jungle-dark); margin-bottom: 10px; }
         .card p { color: #555; font-size: clamp(0.95rem, 3vw, 1.1rem); margin-bottom: 1.2rem; line-height: 1.4; font-family: var(--fu); font-weight: 700; }
@@ -581,6 +581,12 @@ function getClaseLetra() {
 }
 
 function startLevel() {
+    // 💡 DESBLOQUEO DEL AUDIO (AUTOPLAY POLICY) PARA PIZARRAS DIGITALES
+    synth.cancel();
+    const unlockMsg = new SpeechSynthesisUtterance("¡A jugar!");
+    unlockMsg.volume = 0; // Lo ponemos a 0 para que no suene, solo "despierte" la API
+    synth.speak(unlockMsg);
+
     totalLevelInstructions = player.currentLevel + 2;
     if (totalLevelInstructions > 20) totalLevelInstructions = 20; 
     
@@ -601,7 +607,9 @@ function startLevel() {
     document.getElementById('global-topbar').style.display = 'flex';
     
     switchScreen('game-screen');
-    loadInstruction();
+    
+    // Le damos 500ms de respiro para asegurar que el desbloqueo del audio ha funcionado en la pizarra
+    setTimeout(loadInstruction, 500);
 }
 
 function loadInstruction() {
@@ -688,20 +696,18 @@ function showAlbum() {
     switchScreen('album-screen');
 }
 
-// --- SÍNTESIS DE VOZ DINÁMICA SEGÚN DISPOSITIVO ---
+// 💡 SÍNTESIS DE VOZ SEGURA A NIVEL CROSS-PLATFORM
 function speak(texto) {
     return new Promise(resolve => {
         const utterance = new SpeechSynthesisUtterance(texto);
         utterance.lang = "es-ES";
         
-        // Detección de dispositivo para ajustar la velocidad de forma inteligente
-        const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth < 900;
-        
-        // Tablets y móviles necesitan un rate mayor (0.7) para no sonar defectuosos.
-        // Ordenadores y pizarras procesan bien el ritmo lento (0.5).
-        utterance.rate = isMobile ? 0.7 : 0.5; 
+        // El valor 0.9 es una velocidad ligeramente pausada pero que 
+        // NO rompe el motor de síntesis de voz en las tablets Android/iOS.
+        utterance.rate = 0.9; 
         
         utterance.onend = resolve;
+        utterance.onerror = resolve; // Previene cuelgues si el dispositivo falla
         synth.cancel();
         synth.speak(utterance);
     });

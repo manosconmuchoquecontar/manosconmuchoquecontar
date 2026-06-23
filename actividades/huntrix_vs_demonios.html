@@ -529,7 +529,7 @@
   var ladoCorrecto = null;
   var palabraObjetivoActual = "";
   var bloqueado = false;
-  var sonidoActivado = true;
+  var musicaActivada = true;
   var fallosRegistro = [];
 
   // ---------- ELEMENTOS ----------
@@ -591,15 +591,14 @@
   var VOLUMEN_MUSICA_HABLANDO = 0.04;
 
   function hablar(texto){
-    if(!sonidoActivado) return;
     if('speechSynthesis' in window){
       window.speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(texto);
       u.lang = 'es-ES';
       u.rate = 0.7;
       if(vozElegida){ u.voice = vozElegida; }
-      musicaFondo.volume = VOLUMEN_MUSICA_HABLANDO;
-      var restaurarVolumen = function(){ musicaFondo.volume = VOLUMEN_MUSICA; };
+      if(musicaActivada){ musicaFondo.volume = VOLUMEN_MUSICA_HABLANDO; }
+      var restaurarVolumen = function(){ if(musicaActivada){ musicaFondo.volume = VOLUMEN_MUSICA; } };
       u.onend = restaurarVolumen;
       u.onerror = restaurarVolumen;
       window.speechSynthesis.speak(u);
@@ -616,7 +615,7 @@
   }
 
   function sonidoExplosion(){
-    if(!sonidoActivado) return;
+    if(!musicaActivada) return;
     try{
       var ctx = getAudioCtx();
       if(!ctx) return;
@@ -697,20 +696,19 @@
     pantallaJuego.classList.remove('oculto');
     imgHuntrix.src = PERSONAJES[personajeElegido];
     imgHuntrix.className = personajeElegido === 'mira' ? 'huntrix-img crop-personas' : ('huntrix-img crop-' + personajeElegido);
-    if(sonidoActivado){ musicaFondo.volume = VOLUMEN_MUSICA; musicaFondo.play().catch(function(){}); }
+    if(musicaActivada){ musicaFondo.volume = VOLUMEN_MUSICA; musicaFondo.play().catch(function(){}); }
     iniciarPartida();
   });
 
   // ---------- SONIDO ----------
   btnSonido.addEventListener('click', function(){
-    sonidoActivado = !sonidoActivado;
-    btnSonido.textContent = sonidoActivado ? '🔊' : '🔇';
-    if(sonidoActivado){
+    musicaActivada = !musicaActivada;
+    btnSonido.textContent = musicaActivada ? '🔊' : '🔇';
+    if(musicaActivada){
       musicaFondo.volume = VOLUMEN_MUSICA;
       musicaFondo.play().catch(function(){});
     } else {
       musicaFondo.pause();
-      window.speechSynthesis.cancel();
     }
   });
 
@@ -922,7 +920,7 @@
     if(document.hidden){
       musicaFondo.pause();
       window.speechSynthesis.cancel();
-    } else if(sonidoActivado){
+    } else if(musicaActivada){
       musicaFondo.play().catch(function(){});
     }
   });
